@@ -14,7 +14,8 @@ import { useDispatch } from "react-redux";
 import { Button, H4, ScrollView, Spinner, View } from "tamagui";
 
 export default function LoginForm() {
-  const [mostrarAnimacionCargando, setMostrarAnimacionCargando] = useState(false);
+  const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
+    useState(false);
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
       email: "",
@@ -39,7 +40,6 @@ export default function LoginForm() {
       await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
       router.navigate("/(app)/(maindreawer)");
     } catch (error) {
-      Alert.alert("Algo ha salido mal", "Error al autenticar.");
       setMostrarAnimacionCargando(false);
     }
   };
@@ -75,7 +75,7 @@ export default function LoginForm() {
                 message: Validaciones.comunes.minimoCaracteres + 8,
               },
             }}
-          /> 
+          />
           <Button
             theme="blue"
             icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
@@ -89,7 +89,7 @@ export default function LoginForm() {
             variant="outlined"
             onPress={() => {
               reset();
-              router.navigate("/CrearCuenta")
+              router.navigate("/CrearCuenta");
             }}
             chromeless
           >
@@ -100,8 +100,8 @@ export default function LoginForm() {
             theme="blue"
             variant="outlined"
             onPress={() => {
-              reset()
-              router.navigate("/OlvidoClave")
+              reset();
+              router.navigate("/OlvidoClave");
             }}
             chromeless
           >

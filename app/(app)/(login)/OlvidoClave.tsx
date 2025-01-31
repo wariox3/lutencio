@@ -37,13 +37,9 @@ export default function OlvidoClave() {
 
       if (respuestaApiLogin.user) {
         router.replace("/(app)/(login)");
-      } else {
-        // Manejar errores específicos aquí si es necesario.
-        console.log("Usuario no encontrado o error en la solicitud.");
       }
     } catch (error: any) {
       setMostrarAnimacionCargando(false);
-      console.error("Error al enviar el formulario:", error);
     }
   };
 

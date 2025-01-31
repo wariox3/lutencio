@@ -77,7 +77,6 @@ export default function CrearCuenta() {
         setMostrarAnimacionCargando(false);
       }
     } catch (error: any) {
-      Alert.alert("Error", "Hubo un problema al registrar la cuenta.");
       setMostrarAnimacionCargando(false);
     }
   };
@@ -95,7 +94,6 @@ export default function CrearCuenta() {
       await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
       router.replace("/(app)/(maindreawer)");
     } catch (error: any) {
-      Alert.alert("Error", "No se pudo iniciar sesión.");
       setMostrarAnimacionCargando(false);
     }
   };

@@ -1,6 +1,7 @@
-import Axios, { AxiosResponse } from "axios";
+import Axios, { AxiosError, AxiosResponse } from "axios";
 import { authInterceptor } from "./interceptor/authInterceptor";
 import { Alert } from "react-native";
+import { handleErrorResponse } from "./interceptor/errorInterceptor";
 
 interface Configuracion {
   method?: "post" | "get" | "put" | "delete";
@@ -16,14 +17,28 @@ axios.interceptors.request.use(authInterceptor, (error) =>
 
 // Interceptor para manejar errores de respuesta
 axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      Alert.alert("Token inválido o expirado.")
-    }
+  (response: AxiosResponse) => response,
+  (error: AxiosError) => {
+    handleErrorResponse(error);
     return Promise.reject(error);
   }
 );
+
+// axios.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response?.status === 400) {
+//       Alert.alert(
+//         `Error ${error?.response?.data?.codigo}`,
+//         error?.response?.data?.mensaje
+//       );
+//     }
+//     if (error.response?.status === 401) {
+//       Alert.alert("Token inválido o expirado.");
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 export const consultarApi = async <T>(
   urlConsulta: string,
