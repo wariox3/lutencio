@@ -1,84 +1,49 @@
-import {
-  KeyboardAvoidingView,
-  Image,
-  ScrollView,
-  Keyboard,
-} from "react-native";
-import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-// import Contenedor from "@/components/common/Contenedor";
-// import TextInput from "@/components/common/TextInput";
-// import Button from "@/components/common/Button";
-// import { validarCorreoElectronico } from "@/constants/personalidades";
-import { consultarApi } from "@/utils/api";
-import { router, useRouter } from "expo-router";
-import { Button, Form, H4, Input, Label, Spinner } from "tamagui";
+import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import APIS from "@/constants/endpoint";
+import { Validaciones } from "@/constants/mensajes";
+import { consultarApi } from "@/utils/api";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { Keyboard, KeyboardAvoidingView, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, H4, Spinner, View } from "tamagui";
 
 export default function OlvidoClave() {
-  const [email, setEmail] = useState({ value: "", error: "" });
-  const router = useRouter();
+
+  const { control, handleSubmit} = useForm<FieldValues>({
+    defaultValues: {
+      email: "",
+    },
+  });
 
   const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
     useState(false);
+  const router = useRouter();
 
-  const crearCuentaPressed = async () => {
-    Keyboard.dismiss();
+  const crearCuentaPressed = async (data: { email: string }) => {
     setMostrarAnimacionCargando(true);
+    Keyboard.dismiss();
 
     try {
       const respuestaApiLogin = await consultarApi<any>(
         APIS.seguridad.cambioClaveSolicitar,
         {
-          username: email.value,
+          username: data.email,
         }
       );
 
       setMostrarAnimacionCargando(false);
 
       if (respuestaApiLogin.user) {
-        //       let informacionUsuario = respuestaApiLogin.usuario;
-        //       informacionUsuario = {
-        //         ...informacionUsuario,
-        //         ...{ tokenFireBase: "" },
-        //       };
-
-        //       // let consultaFireBase = await database()
-        //       //   .ref(`/session/${informacionUsuario.codigo}`)
-        //       //   .once('value');
-        //       // const informacionFirebase = await consultaFireBase._snapshot.value;
-        //       // if (informacionFirebase) {
-        //       //   actualizarRegistroFireBase(informacionUsuario.codigo, {
-        //       //     fechaAutenticacion: `${fechaActual().fecha} ${
-        //       //       fechaActual().hora
-        //       //     }`,
-        //       //     token: tokenFirebase,
-        //       //   });
-        //       // } else {
-        //       //   crearRegistroFireBase(
-        //       //     informacionUsuario.codigo,
-        //       //     tokenFirebase,
-        //       //   );
-        //       // }
-        //       // const db = await getDbConeccion();
-        //       // const usuarioObtenido = await obtenerUsuarios(db, usuario);
-        //       // if (usuarioObtenido.length === 0) {
-        //       //   await guardarUsuarioOffline(db, informacionUsuario);
-        //       //   db.close();
-        //       //   dispatch(setUsuarioInformacion(informacionUsuario));
-        //       // }
-
         router.replace("/(app)/(login)");
       } else {
-        //       // toast.show({
-        //       //   title: 'Algo ha salido mal',
-        //       //   //status: 'warning',
-        //       //   description: 'error al autenticar',
-        //       //   placement: 'bottom-right',
-        //       // });
+        // Manejar errores específicos aquí si es necesario.
+        console.log("Usuario no encontrado o error en la solicitud.");
       }
     } catch (error: any) {
       setMostrarAnimacionCargando(false);
+      console.error("Error al enviar el formulario:", error);
     }
   };
 
@@ -86,29 +51,31 @@ export default function OlvidoClave() {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Form
-            gap="$4"
-            onSubmit={() => crearCuentaPressed()}
-            paddingInline="$4"
-          >
+          <View gap="$4" flex={1} paddingInline="$4">
             <H4 mt="$8">Recordar contraseña</H4>
-
-            <Label>Correo</Label>
-            <Input
-              size="$4"
-              borderWidth={2}
-              onChangeText={(text) => setEmail({ value: text, error: "" })}
+            <BasicInput
+              name="email"
+              control={control}
+              isRequired={true}
+              label="Correo"
+              placeholder="Introduce tu correo"
+              rules={{
+                required: Validaciones.comunes.requerido,
+                pattern: {
+                  value: /^[^@ ]+@[^@ ]+\.[^@ ]+$/,
+                  message: Validaciones.comunes.correoNoValido,
+                },
+              }}
             />
 
-            <Form.Trigger asChild disabled={mostrarAnimacionCargando}>
-              <Button
-                theme="blue"
-                icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
-              >
-                Enviar
-              </Button>
-            </Form.Trigger>
-          </Form>
+            <Button
+              theme="blue"
+              icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
+              onPress={handleSubmit(crearCuentaPressed)}
+            >
+              Enviar
+            </Button>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

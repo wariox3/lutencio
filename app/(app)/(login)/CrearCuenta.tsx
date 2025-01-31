@@ -1,104 +1,101 @@
+import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
+import CheckInput from "@/components/ui/form/inputs/CheckInput";
+import { PasswordInput } from "@/components/ui/form/inputs/PasswordInput";
 import APIS from "@/constants/endpoint";
+import { Validaciones } from "@/constants/mensajes";
 import { setUsuarioInformacion } from "@/store/reducers/usuarioReducer";
 import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Check as CheckIcon, Eye, EyeOff } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { FieldValues, useForm } from "react-hook-form";
 import { Alert, Keyboard, KeyboardAvoidingView } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
-import {
-  Button,
-  Checkbox,
-  Form,
-  H4,
-  Input,
-  Label,
-  Spinner,
-  View,
-  XStack,
-} from "tamagui";
-
-// import Contenedor from "@/components/common/Contenedor";
-// import TextInput from "@/components/common/TextInput";
-// import Button from "@/components/common/Button";
-// import { validarCorreoElectronico } from "@/constants/personalidades";
-// import { consultarApi } from "@/utils/api";
+import { Button, H4, Spinner, View } from "tamagui";
 
 export default function CrearCuenta() {
-  const [email, setEmail] = useState({ value: "", error: "" });
-  const [password, setPassword] = useState({ value: "", error: "" });
-  const [confirmarPassword, setConfirmarPassword] = useState({
-    value: "",
-    error: "",
-  });
-  const [aceptarTerminosCondiciones, setAceptarTerminosCondiciones] =
-    useState<boolean>(false);
   const [mostrarClave, setMostrarClave] = useState<boolean>(false);
   const [mostrarConfirmarClave, setMostrarConfirmarClave] =
     useState<boolean>(false);
-
   const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
     useState(false);
+
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const crearCuentaPressed = async () => {
+  const {
+    control,
+    handleSubmit,
+  } = useForm<FieldValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmarPassword: "",
+      aceptarTerminosCondiciones: false,
+    },
+  });
+
+
+
+  const crearCuentaPressed = async (data: {
+    email: string;
+    password: string;
+    confirmarPassword: string;
+    aceptarTerminosCondiciones: boolean;
+  }) => {
     Keyboard.dismiss();
     setMostrarAnimacionCargando(true);
-    if (aceptarTerminosCondiciones) {
-      if (password === confirmarPassword) {
-        try {
-          const respuestaApiCrearUsuario = await consultarApi<any>(
-            APIS.seguridad.usuario,
-            {
-              username: email.value,
-              password: password.value,
-            },
-            {
-              requiereToken: false,
-            }
-          );
-          if (respuestaApiCrearUsuario.usuario) {
-            loginPostRegistro();
-          } else {
-            Alert.alert("Algo ha salido mal", "error al crear usuario.");
-            setMostrarAnimacionCargando(false);
-          }
-        } catch (error: any) {
-          Alert.alert("Algo ha salido mal", "los campos son requeridos");
-          setMostrarAnimacionCargando(false);
-        }
+
+    if (!data.aceptarTerminosCondiciones) {
+      Alert.alert("Error", "Debes aceptar los términos y condiciones.");
+      setMostrarAnimacionCargando(false);
+      return;
+    }
+
+    if (data.password !== data.confirmarPassword) {
+      Alert.alert("Error", "Las contraseñas no coinciden.");
+      setMostrarAnimacionCargando(false);
+      return;
+    }
+
+    try {
+      const respuestaApiCrearUsuario = await consultarApi<any>(
+        APIS.seguridad.usuario,
+        {
+          username: data.email,
+          password: data.password,
+        },
+        { requiereToken: false }
+      );
+
+      if (respuestaApiCrearUsuario.usuario) {
+        await loginPostRegistro(data.email, data.password);
       } else {
-        Alert.alert("Algo ha salido mal", "Claves diferentes");
+        Alert.alert("Error", "No se pudo crear el usuario.");
         setMostrarAnimacionCargando(false);
       }
-    } else {
-      Alert.alert("Algo ha salido mal", "Aceptar terminos y condiciones");
+    } catch (error: any) {
+      Alert.alert("Error", "Hubo un problema al registrar la cuenta.");
       setMostrarAnimacionCargando(false);
     }
   };
 
-  const loginPostRegistro = async () => {
+  const loginPostRegistro = async (email: string, password: string) => {
     try {
       const respuestaApiLogin = await consultarApi<any>(
         APIS.seguridad.login,
-        {
-          username: email.value,
-          password: password.value,
-        },
-        {
-          requiereToken: false,
-        }
+        { username: email, password },
+        { requiereToken: false }
       );
+
       setMostrarAnimacionCargando(false);
       dispatch(setUsuarioInformacion(respuestaApiLogin.user));
       await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
-      router.navigate("/(app)/(maindreawer)");
+      router.replace("/(app)/(maindreawer)");
     } catch (error: any) {
-      Alert.alert("Algo ha salido mal", "error al autenticar.");
+      Alert.alert("Error", "No se pudo iniciar sesión.");
       setMostrarAnimacionCargando(false);
     }
   };
@@ -109,109 +106,69 @@ export default function CrearCuenta() {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View gap="$4" flex={1} paddingInline="$4">
             <H4 mt="$8">Crear cuenta</H4>
-            <Label>Correo</Label>
-            <Input
-              size="$4"
-              borderWidth={2}
-              onChangeText={(text) => setEmail({ value: text, error: "" })}
+
+            {/* Campo de correo */}
+            <BasicInput
+              name="email"
+              control={control}
+              isRequired={true}
+              label="Correo"
+              placeholder="Introduce tu correo"
+              rules={{
+                required: Validaciones.comunes.requerido,
+                pattern: {
+                  value: /^[^@ ]+@[^@ ]+\.[^@ ]+$/,
+                  message: Validaciones.comunes.correoNoValido,
+                },
+              }}
             />
-            <Label htmlFor="name">Clave</Label>
-            <XStack
-              paddingEnd="$1"
-              borderColor="$borderColor"
-              borderEndEndRadius="$5"
-              borderEndStartRadius="$5"
-              borderStartStartRadius="$5"
-              borderStartEndRadius="$5"
-              style={{
-                padding: 0,
+
+            <PasswordInput
+              name="password"
+              control={control}
+              isRequired={true}
+              label="Clave"
+              rules={{
+                required: Validaciones.comunes.requerido,
+                minLength: {
+                  value: 8,
+                  message: Validaciones.comunes.minimoCaracteres + 8,
+                },
               }}
-            >
-              <Input
-                flex={6}
-                fontSize="$4"
-                style={{
-                  borderTopRightRadius: 0,
-                  borderBottomRightRadius: 0,
-                }}
-                onChangeText={(text) => setPassword({ value: text, error: "" })}
-                secureTextEntry={!mostrarClave}
-              />
-              <Button
-                borderStartStartRadius="$0"
-                borderStartEndRadius="$0"
-                borderEndEndRadius="$5"
-                borderEndStartRadius="$5"
-                icon={
-                  mostrarClave ? <Eye size="$1.5" /> : <EyeOff size="$1.5" />
-                }
-                onPress={() => setMostrarClave(!mostrarClave)}
-              />
-            </XStack>
+            />
 
-            <Label htmlFor="name">Confirmar clave</Label>
-
-            <XStack
-              paddingEnd="$1"
-              borderColor="$borderColor"
-              borderEndEndRadius="$5"
-              borderEndStartRadius="$5"
-              borderStartStartRadius="$5"
-              borderStartEndRadius="$5"
-              style={{
-                padding: 0,
+            <PasswordInput
+              name="confirmarPassword"
+              control={control}
+              isRequired={true}
+              label="Confirmar clave"
+              rules={{
+                required: Validaciones.comunes.requerido,
+                minLength: {
+                  value: 8,
+                  message: Validaciones.comunes.minimoCaracteres + 8,
+                },
               }}
-            >
-              <Input
-                flex={6}
-                fontSize="$4"
-                style={{
-                  borderTopRightRadius: 0,
-                  borderBottomRightRadius: 0,
-                }}
-                onChangeText={(text) =>
-                  setConfirmarPassword({ value: text, error: "" })
-                }
-                secureTextEntry={!mostrarConfirmarClave}
-              />
-              <Button
-                borderStartStartRadius="$0"
-                borderStartEndRadius="$0"
-                borderEndEndRadius="$5"
-                borderEndStartRadius="$5"
-                icon={
-                  mostrarConfirmarClave ? (
-                    <Eye size="$1.5" />
-                  ) : (
-                    <EyeOff size="$1.5" />
-                  )
-                }
-                onPress={() => setMostrarConfirmarClave(!mostrarConfirmarClave)}
-              />
-            </XStack>
+            />
 
-            <XStack width={300} alignItems="center" gap="$4">
-              <Checkbox
-                size="$5"
-                checked={aceptarTerminosCondiciones}
-                onCheckedChange={() =>
-                  setAceptarTerminosCondiciones(!aceptarTerminosCondiciones)
-                }
-              >
-                <Checkbox.Indicator>
-                  <CheckIcon />
-                </Checkbox.Indicator>
-              </Checkbox>
+            <CheckInput
+              label="Aceptar terminos & condiciones"
+              name="aceptarTerminosCondiciones"
+              isRequired={true}
+              control={control}
+              rules={{
+                validate: (value) =>
+                  value || "Debes aceptar los términos y condiciones.",
+              }}
+            />
 
-              <Label size="$5">Aceptar terminios y condiciones </Label>
-            </XStack>
-
+            {/* Botón de envío */}
             <Button
               theme="blue"
               icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
-              onPress={() => crearCuentaPressed()}
+              onPress={handleSubmit(crearCuentaPressed)}
             >
-              Enviar
+              Crear cuenta
             </Button>
           </View>
         </ScrollView>

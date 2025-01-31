@@ -1,189 +1,114 @@
-import { useState } from "react";
-import {
-  Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  StyleSheet,
-} from "react-native";
-import { useDispatch } from "react-redux";
-import { useRouter } from "expo-router";
-import {
-  Button,
-  Form,
-  H4,
-  Input,
-  Label,
-  ScrollView,
-  Spinner,
-  Text,
-  View,
-  XStack,
-} from "tamagui";
-import { consultarApi } from "@/utils/api";
+import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
+import { PasswordInput } from "@/components/ui/form/inputs/PasswordInput";
 import APIS from "@/constants/endpoint";
-import { setUsuarioInformacion } from "@/store/reducers/usuarioReducer";
-import { Eye, EyeOff } from "@tamagui/lucide-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Validaciones } from "@/constants/mensajes";
-import { validarCorreoElectronico } from "@/utils/funciones";
+import { setUsuarioInformacion } from "@/store/reducers/usuarioReducer";
+import { consultarApi } from "@/utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { Alert } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
+import { Button, H4, ScrollView, Spinner, View } from "tamagui";
 
-export default function LoginIndex() {
-  const [email, setEmail] = useState({ value: "", error: "" });
-  const [password, setPassword] = useState({ value: "", error: "" });
-  const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
-    useState<boolean>(false);
-  const [mostrarClave, setMostrarClave] = useState<boolean>(false);
-
-  const dispatch = useDispatch();
+export default function LoginForm() {
+  const [mostrarAnimacionCargando, setMostrarAnimacionCargando] = useState(false);
+  const { control, handleSubmit, reset } = useForm<FieldValues>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  const onLoginPressed = async () => {
-    Keyboard.dismiss();
+  const onLoginPressed = async (data: { email: string; password: string }) => {
     setMostrarAnimacionCargando(true);
-    validacionesFormulario();
-    if (validarCorreoElectronico(email.value)) {
-      try {
-        const respuestaApiLogin = await consultarApi<any>(
-          APIS.seguridad.login,
-          {
-            username: email.value,
-            password: password.value,
-          },
-          {
-            requiereToken: false,
-          }
-        );
-        setMostrarAnimacionCargando(false);
-        dispatch(setUsuarioInformacion(respuestaApiLogin.user));
-        await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
-        router.navigate("/(app)/(maindreawer)");
-      } catch (error: any) {
-        Alert.alert("Algo ha salido mal", "error al autenticar.");
-        setMostrarAnimacionCargando(false);
-      }
-    } else {
+
+    try {
+      const respuestaApiLogin = await consultarApi<any>(
+        APIS.seguridad.login,
+        { username: data.email, password: data.password },
+        { requiereToken: false }
+      );
+
       setMostrarAnimacionCargando(false);
-      setEmail((prevState) => ({
-        ...prevState,
-        error: Validaciones.comunes.correoNoValido,
-      }));
+      dispatch(setUsuarioInformacion(respuestaApiLogin.user));
+      await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
+      router.navigate("/(app)/(maindreawer)");
+    } catch (error) {
+      Alert.alert("Algo ha salido mal", "Error al autenticar.");
+      setMostrarAnimacionCargando(false);
     }
   };
-
-  const validacionesFormulario = () => {
-    if (email.value === "") {
-      setEmail((prevState) => ({
-        ...prevState,
-        error: Validaciones.comunes.requerido,
-      }));
-    }
-
-    if (password.value === "") {
-      setPassword((prevState) => ({
-        ...prevState,
-        error: Validaciones.comunes.requerido,
-      }));
-    }
-
-  };
-  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
-      <KeyboardAvoidingView>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View gap="$4" flex={1} paddingInline="$4">
-            <H4 mt="$6">Ingresar</H4>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View gap="$4" flex={1} paddingInline="$4">
+          <H4 mt="$6">Ingresar</H4>
+          <BasicInput
+            name="email"
+            control={control}
+            label="Correo"
+            isRequired={true}
+            placeholder="Introduce tu correo"
+            rules={{
+              required: Validaciones.comunes.requerido,
+              pattern: {
+                value: /^[^@ ]+@[^@ ]+\.[^@ ]+$/,
+                message: Validaciones.comunes.correoNoValido,
+              },
+            }}
+          />
+          <PasswordInput
+            name="password"
+            control={control}
+            label="Clave"
+            isRequired={true}
+            rules={{
+              required: Validaciones.comunes.requerido,
+              minLength: {
+                value: 8,
+                message: Validaciones.comunes.minimoCaracteres + 8,
+              },
+            }}
+          /> 
+          <Button
+            theme="blue"
+            icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
+            onPress={handleSubmit(onLoginPressed)}
+          >
+            Enviar
+          </Button>
 
-            <Label>Correo *</Label>
-            <Input
-              size="$4"
-              borderWidth={1}
-              onChangeText={(text) =>   setEmail({ value: text, error: "" })}
-            />
+          <Button
+            theme="blue"
+            variant="outlined"
+            onPress={() => {
+              reset();
+              router.navigate("/CrearCuenta")
+            }}
+            chromeless
+          >
+            Crear cuenta
+          </Button>
 
-             {email.error !== '' ? <Text color={'red'}>{email.error}</Text> : null}
-            <Label htmlFor="name">Clave</Label>
-            <XStack
-              paddingEnd="$1"
-              borderColor="$borderColor"
-              borderEndEndRadius="$5"
-              borderEndStartRadius="$5"
-              borderStartStartRadius="$5"
-              borderStartEndRadius="$5"
-              style={{
-                padding: 0,
-              }}
-            >
-              <Input
-                flex={6}
-                fontSize="$4"
-                style={{
-                  borderTopRightRadius: 0,
-                  borderBottomRightRadius: 0,
-                }}
-                onChangeText={(text) => setPassword({ value: text, error: "" })}
-                secureTextEntry={!mostrarClave}
-              />
-
-              <Button
-                borderStartStartRadius="$0"
-                borderStartEndRadius="$0"
-                borderEndEndRadius="$5"
-                borderEndStartRadius="$5"
-                icon={
-                  mostrarClave ? <Eye size="$1.5" /> : <EyeOff size="$1.5" />
-                }
-                onPress={() => setMostrarClave(!mostrarClave)}
-              />
-            </XStack>
-            <Button
-              theme="blue"
-              icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
-              onPress={() => onLoginPressed()}
-            >
-              Enviar
-            </Button>
-
-            <Button
-              theme="blue"
-              variant="outlined"
-              onPress={() => router.navigate("/CrearCuenta")}
-              chromeless
-            >
-              Crear cuenta
-            </Button>
-            <Button
-              theme="blue"
-              variant="outlined"
-              onPress={() => router.navigate("/OlvidoClave")}
-              chromeless
-            >
-              ¿Olvidaste la contraseña?
-            </Button>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          <Button
+            theme="blue"
+            variant="outlined"
+            onPress={() => {
+              reset()
+              router.navigate("/OlvidoClave")
+            }}
+            chromeless
+          >
+            ¿Olvidaste la contraseña?
+          </Button>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-  },
-});
