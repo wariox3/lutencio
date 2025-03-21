@@ -8,7 +8,7 @@ export const handleErrorResponse = (error: AxiosError): void => {
   _errores.set(401, () => error401());
   _errores.set(404, () => error404());
   _errores.set(405, () => error405());
-  _errores.set(500, () => error500());
+  _errores.set(500, () => error500(error));
 
   // Obtener el código de error de la respuesta
   const statusCode = error.response?.status || 500;
@@ -43,7 +43,7 @@ const error405 = (): void => {
   Alert.alert(`Error 405`, "Servidor fuera de línea, intente más tarde.");
 };
 
-const error500 = (): void => {
+const error500 = (error: AxiosError): void => {  
   Alert.alert(
     `Error 500`,
     "Error interno del servidor. Por favor, intente más tarde."

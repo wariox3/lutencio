@@ -1,4 +1,5 @@
 const URL_BASE = "http://reddocapi.online";
+const URL_SUBDOMINIO = "http://subdominio.reddocapi.online";
 
 const APIS = {
   seguridad: {
@@ -10,6 +11,12 @@ const APIS = {
     cambioClaveVerificar: `${URL_BASE}/seguridad/usuario/cambio-clave-verificar/`,
     cambioClave: `${URL_BASE}/seguridad/usuario/cambio-clave/`,
   },
+  entrega:{
+    verticalEntrega: `${URL_BASE}/vertical/entrega/`,
+  },
+  general:{
+    funcionalidadLista:  `${URL_SUBDOMINIO}/general/funcionalidad/lista/`,
+  }
 };
 
 export default APIS;
