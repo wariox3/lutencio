@@ -1,30 +1,31 @@
-import { Cloud, Moon, Star, Sun } from "@tamagui/lucide-icons";
+import { EntregaCargar } from "@/components/ui/entrega/entregaCargar";
+import { Visita } from "@/interface/entrega/visita";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
-import { Button, Card, H4, ListItem, ScrollView, Text, View, XStack, YGroup } from "tamagui";
-import { EntregaCargar } from "@/components/ui/entrega/entregaCargar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Visita } from "@/interface/entrega/visita";
+import { Button, Card, H4, Text, View, XStack } from "tamagui";
 
 export default function EntregaDreawer() {
   const navigation = useNavigation();
-  const [arrVisita, setArrVisitas] = useState<Visita[]>([]);
-  const [arrVisitaSeleccionada, setArrVisitaSeleccionada] = useState<number[]>([]);
+  const [arrEntregas, setarrEntregas] = useState<Visita[]>([]);
+  const [arrEntregasSeleccionada, setarrEntregaseleccionada] = useState<
+    number[]
+  >([]);
 
   useEffect(() => {
-    const obtenerVisitas = async () => {
+    const obtenerEntregas = async () => {
       try {
-        const visitasGuardadas = await AsyncStorage.getItem("visitas");
-        if (visitasGuardadas !== null) {
-          setArrVisitas(JSON.parse(visitasGuardadas)); // Convertir de JSON si es necesario
+        const entregaGuardadas = await AsyncStorage.getItem("visitas");
+        if (entregaGuardadas !== null) {
+          setarrEntregas(JSON.parse(entregaGuardadas)); // Convertir de JSON si es necesario
         }
       } catch (error) {
         console.error("Error al obtener visitas:", error);
       }
     };
 
-    obtenerVisitas();
+    obtenerEntregas();
   }, []); // Se ejecuta una vez al montar el componente
 
   useEffect(() => {
@@ -34,24 +35,30 @@ export default function EntregaDreawer() {
       headerRight: () => <EntregaCargar />,
     });
   }, [navigation]);
-  
+
+  const gestionEntrega = (id: number) => {
+    setarrEntregaseleccionada((prev) => [...prev, id]);
+    setarrEntregas((prev) => prev.filter((entrega) => entrega.id !== id));
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
-
         <FlatList
-          data={arrVisita}
+          data={arrEntregas}
           keyExtractor={(item, index) => index.toString()}
-          ListHeaderComponent={() => 
+          ListHeaderComponent={() => (
             <XStack justifyContent="space-between" px="$3" mb="$2">
-            <H4 mb="$2">Entrega</H4>
-            <Button size="$3" variant="outlined">
-              Outlined <Text>{arrVisitaSeleccionada.length}</Text>
-            </Button>
-          </XStack>
-          }
+              <H4 mb="$2">Entregas</H4>
+              {arrEntregasSeleccionada.length > 0 ? (
+                <Button size="$3" variant="outlined">
+                  seleccionadas <Text>{arrEntregasSeleccionada.length}</Text>
+                </Button>
+              ) : null}
+            </XStack>
+          )}
           renderItem={({ item }) => (
-              <Card px="$3" onPress={() => setArrVisitaSeleccionada((prev) => [...prev, item.id])}>
+            <Card px="$3" onPress={() => gestionEntrega(item.id)}>
               <Text>ID: {item.id}</Text>
               <Text>Guía: {item.guia}</Text>
               <Text>Destinatario: {item.destinatario}</Text>
