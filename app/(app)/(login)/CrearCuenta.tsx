@@ -25,10 +25,7 @@ export default function CrearCuenta() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const {
-    control,
-    handleSubmit,
-  } = useForm<FieldValues>({
+  const { control, handleSubmit } = useForm<FieldValues>({
     defaultValues: {
       email: "",
       password: "",
@@ -36,8 +33,6 @@ export default function CrearCuenta() {
       aceptarTerminosCondiciones: false,
     },
   });
-
-
 
   const crearCuentaPressed = async (data: {
     email: string;
@@ -73,7 +68,6 @@ export default function CrearCuenta() {
       if (respuestaApiCrearUsuario.usuario) {
         await loginPostRegistro(data.email, data.password);
       } else {
-        Alert.alert("Error", "No se pudo crear el usuario.");
         setMostrarAnimacionCargando(false);
       }
     } catch (error: any) {

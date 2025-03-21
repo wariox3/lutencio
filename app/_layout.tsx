@@ -11,11 +11,12 @@ import { PersistGate } from "redux-persist/integration/react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Stack } from "expo-router";
 import { themes } from "@/assets/theme/themes";
+import { PortalProvider } from "tamagui";
 
 // you usually export this from a tamagui.config.ts file
 const config = createTamagui({
   ...themes,
-  ...defaultConfig
+  ...defaultConfig,
 });
 
 type Conf = typeof config;
@@ -24,8 +25,6 @@ type Conf = typeof config;
 declare module "@tamagui/core" {
   interface TamaguiCustomConfig extends Conf {}
 }
-
-
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -50,12 +49,14 @@ export default function RootLayout() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <TamaguiProvider config={config}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <Stack>
-              <Stack.Screen name="(app)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-          </GestureHandlerRootView>
+          <PortalProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <Stack>
+                <Stack.Screen name="(app)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </GestureHandlerRootView>
+          </PortalProvider>
         </TamaguiProvider>
       </PersistGate>
     </Provider>

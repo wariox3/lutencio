@@ -24,21 +24,26 @@ axios.interceptors.response.use(
   }
 );
 
-// axios.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response?.status === 400) {
-//       Alert.alert(
-//         `Error ${error?.response?.data?.codigo}`,
-//         error?.response?.data?.mensaje
-//       );
-//     }
-//     if (error.response?.status === 401) {
-//       Alert.alert("Token inválido o expirado.");
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 400) {
+      const errorData = error?.response?.data;
+      const mensajeCompleto =
+        errorData.mensaje +
+        (errorData.validaciones
+          ? " " + Object.values(errorData.validaciones).flat().join(", ")
+          : "");
+
+      Alert.alert(`Error ${errorData.codigo}`, mensajeCompleto);
+
+      //     }
+      //     if (error.response?.status === 401) {
+      //       Alert.alert("Token inválido o expirado.");
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const consultarApi = async <T>(
   urlConsulta: string,
@@ -59,7 +64,7 @@ export const consultarApi = async <T>(
 
     return informacionConsulta.data;
   } catch (error: any) {
-    console.error("Error en la consulta API:", error.message);
+    //console.error("Error en la consulta API:", error);
     throw error; // Lanzar el error para que el controlador de llamadas pueda manejarlo
   }
 };

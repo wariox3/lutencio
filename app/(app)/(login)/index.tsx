@@ -81,7 +81,7 @@ export default function LoginForm() {
             icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
             onPress={handleSubmit(onLoginPressed)}
           >
-            Enviar
+            Ingresar
           </Button>
 
           <Button
