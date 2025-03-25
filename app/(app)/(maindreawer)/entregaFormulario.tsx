@@ -6,7 +6,7 @@ import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { H4, ScrollView, Text, View, XStack } from "tamagui";
+import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
 
 const entregaFormulario = () => {
   const { control, handleSubmit, reset } = useForm<FieldValues>({
@@ -44,6 +44,7 @@ const entregaFormulario = () => {
     fotoSeleccionada: [],
   });
 
+
   const actualizarState = (newState: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
@@ -73,6 +74,27 @@ const entregaFormulario = () => {
     actualizarState({
       firmarBase64: null,
     });
+  };
+
+  const onLoginPressed = async (data: { email: string; password: string }) => {
+    // setMostrarAnimacionCargando(true);
+    actualizarState({
+      mostrarAnimacionCargando: true,
+    });
+    // try {
+    //   const respuestaApiLogin = await consultarApi<any>(
+    //     APIS.seguridad.login,
+    //     { username: data.email, password: data.password },
+    //     { requiereToken: false }
+    //   );
+
+    //   setMostrarAnimacionCargando(false);
+    //   dispatch(setUsuarioInformacion(respuestaApiLogin.user));
+    //   await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
+    //   router.navigate("/(app)/(maindreawer)");
+    // } catch (error) {
+    //   setMostrarAnimacionCargando(false);
+    // }
   };
 
   return (
@@ -127,12 +149,19 @@ const entregaFormulario = () => {
               Firma
               {state.exigeFirmaEntrega ? <Text> Requerido * </Text> : null}
             </Text>
-            <EntregaFirma onCapture={handleFirma}  ></EntregaFirma>
+            <EntregaFirma onCapture={handleFirma}></EntregaFirma>
           </XStack>
           <EntregaFirmaPreview
             imagen={state.firmarBase64}
             RemoverFirma={RemoverFirma}
           ></EntregaFirmaPreview>
+          <Button
+            theme="blue"
+            icon={state.mostrarAnimacionCargando ? () => <Spinner /> : undefined}
+            onPress={handleSubmit(onLoginPressed)}
+          >
+            Entregar
+          </Button>
         </View>
       </ScrollView>
     </SafeAreaView>
