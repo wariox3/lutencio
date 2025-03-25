@@ -26,7 +26,7 @@ export const EntregaCamara = ({
   return (
     <>
       <Button
-        icon={<CameraIcons size="$4" />}
+        icon={<CameraIcons size="$2" />}
         onPress={() => setOpen(true)}
       ></Button>
 

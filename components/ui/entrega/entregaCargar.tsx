@@ -21,15 +21,8 @@ export const EntregaCargar = () => {
   const isPercent = snapPointsMode === "percent";
   const isConstant = snapPointsMode === "constant";
   const isFit = snapPointsMode === "fit";
-  const snapPoints = isPercent
-    ? [85, 50, 25]
-    : isConstant
-    ? [256, 190]
-    : isFit
-    ? undefined
-    : mixedFitDemo
-    ? ["fit", 110]
-    : ["80%", 256, 190];
+  const snapPoints = ["80%", 256, 190];
+
 
   return (
     <>
