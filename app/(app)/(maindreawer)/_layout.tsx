@@ -5,32 +5,43 @@ import CustomDrawerContent from "@/components/ui/dreawer/CustomDrawerContent";
 export default function Layout() {
   return (
     <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />}>
-    <Drawer.Screen
-        name="index" // This is the name of the page and must match the url from root
+      <Drawer.Screen
+        name="index"
         options={{
           drawerLabel: "Home",
           title: "overview",
         }}
       />
       <Drawer.Screen
-        name="entrega" // This is the name of the page and must match the url from root
+        name="entrega"
         options={{
-          headerTitle: "", // Oculta solo el título
+          headerTitle: "",
           headerStyle: {
-            elevation: 0, // Elimina la sombra en Android
-            shadowOpacity: 0, // Elimina la sombra en iOS
-            borderBottomWidth: 0, // Elimina el borde inferior
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
           },
         }}
       />
       <Drawer.Screen
-        name="entregaCargar" // This is the name of the page and must match the url from root
+        name="entregaCargar"
         options={{
-          headerTitle: "", // Oculta solo el título
+          headerTitle: "",
           headerStyle: {
-            elevation: 0, // Elimina la sombra en Android
-            shadowOpacity: 0, // Elimina la sombra en iOS
-            borderBottomWidth: 0, // Elimina el borde inferior
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+        }}
+      />
+      <Drawer.Screen
+        name="entregaFormulario"
+        options={{
+          headerTitle: "",
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
           },
         }}
       />

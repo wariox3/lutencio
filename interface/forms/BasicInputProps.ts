@@ -1,4 +1,5 @@
 import { Control, FieldValues } from "react-hook-form";
+import { KeyboardType } from "react-native";
 
 export interface BasicInputProps {
   name: string;
@@ -10,4 +11,6 @@ export interface BasicInputProps {
   };
   placeholder?: string;
   label: string;
+  keyboardType?: KeyboardType,
+  secureTextEntry?: boolean
 }

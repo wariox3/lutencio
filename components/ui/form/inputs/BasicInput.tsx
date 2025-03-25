@@ -9,6 +9,8 @@ export const BasicInput: React.FC<BasicInputProps> = ({
   placeholder,
   label,
   isRequired = false,
+  secureTextEntry= false,
+  keyboardType = 'default'
 }) => {
   return (
     <View>
@@ -40,6 +42,8 @@ export const BasicInput: React.FC<BasicInputProps> = ({
               onChangeText={onChange}
               value={value}
               placeholder={placeholder}
+              keyboardType={keyboardType}
+              secureTextEntry={secureTextEntry}
             />
             {error && <Text color="red">{error.message}</Text>}
           </>

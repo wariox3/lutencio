@@ -1,7 +1,8 @@
+import { menuItems } from "@/constants/menuItems";
 import { cerrarSesionUsuario } from "@/store/reducers/usuarioReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { Home, LogOut, Settings, StickyNote } from "@tamagui/lucide-icons";
+import { LogOut } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
 import { Alert } from "react-native";
 import { useDispatch } from "react-redux";
@@ -10,11 +11,6 @@ import { ListItem, XStack, YGroup } from "tamagui";
 export default function CustomDrawerContent(props: any) {
   const dispatch = useDispatch();
   const router = useRouter();
-
-  const MENU_ITEMS: Record<string, { icon: any; ruta: string }> = {
-    home: { icon: Home, ruta: "/(app)/(maindreawer)" },
-    entrega: { icon: StickyNote, ruta: "/(app)/(maindreawer)/entrega" },
-  };
 
   const cerrarSession = () => {
     return Alert.alert(
@@ -47,7 +43,7 @@ export default function CustomDrawerContent(props: any) {
     <DrawerContentScrollView {...props}>
       <XStack $sm={{ flexDirection: "column" }}>
         <YGroup width={300} size="$4">
-          {Object.keys(MENU_ITEMS).map((name: any, index: number) =>
+          {Object.keys(menuItems).map((name: any, index: number) =>
             CutomDrawerContentItem(index, name)
           )}
 
@@ -70,7 +66,7 @@ export default function CustomDrawerContent(props: any) {
   );
 
   function CutomDrawerContentItem(index: number, name: string) {
-    const item = MENU_ITEMS[name] || MENU_ITEMS.home; // Usa home si no encuentra el nombre
+    const item = menuItems[name] || menuItems.home; // Usa home si no encuentra el nombre
     const IconComponent = item.icon;
 
     return (

@@ -3,7 +3,7 @@ import { Entrega } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
 import { seleccionarEntrega } from "@/store/reducers/entregaReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,7 @@ export default function EntregaDreawer() {
   const dispatch = useDispatch();
   const arrEntregas = useSelector((state: RootState) => state.entregas.entregas || []);
   const entregasSeleccionadas = useSelector((state: RootState) => state.entregas.entregasSeleccionadas || []);
+  const router = useRouter();
   
   useEffect(() => {
     navigation.setOptions({
@@ -23,10 +24,13 @@ export default function EntregaDreawer() {
 
   const gestionEntrega = (id: number) => {
     dispatch(seleccionarEntrega(id));
-
-    // setarrEntregaseleccionada((prev) => [...prev, id]);
     // setarrEntregas((prev) => prev.filter((entrega) => entrega.id !== id));
   };
+
+  const navegarFormulario = () => {
+    router.push("/(app)/(maindreawer)/entregaFormulario");
+    
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -38,7 +42,7 @@ export default function EntregaDreawer() {
             <XStack justifyContent="space-between" px="$3" mb="$2">
               <H4 mb="$2">Entregas</H4>
               {entregasSeleccionadas.length > 0 ? (
-                <Button size="$3" variant="outlined">
+                <Button size="$3" variant="outlined" onPress={() => navegarFormulario()}>
                   seleccionadas <Text>{entregasSeleccionadas.length}</Text>
                 </Button>
               ) : null} 
