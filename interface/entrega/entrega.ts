@@ -1,4 +1,4 @@
-export interface Visita {
+export interface Entrega {
     id: number
     guia: any
     numero: number
