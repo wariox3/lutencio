@@ -6,7 +6,7 @@ import { setUsuarioInformacion } from "@/store/reducers/usuarioReducer";
 import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
@@ -23,6 +23,16 @@ export default function LoginForm() {
   });
   const router = useRouter();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const verificarToken = async () => {
+      const token = await AsyncStorage.getItem("jwtToken");
+      if (token) {
+        router.navigate("/(app)/(maindreawer)");
+      }
+    };
+    verificarToken();
+  }, []);
 
   const onLoginPressed = async (data: { email: string; password: string }) => {
     setMostrarAnimacionCargando(true);
