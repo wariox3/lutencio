@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
+import * as Location from 'expo-location';
 
 export default function EntregaDreawer() {
   const navigation = useNavigation();
@@ -15,11 +16,26 @@ export default function EntregaDreawer() {
   const arrEntregas = useSelector((state: RootState) => state.entregas.entregas || []);
   const entregasSeleccionadas = useSelector((state: RootState) => state.entregas.entregasSeleccionadas || []);
   const router = useRouter();
-  
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => <EntregaCargar />,
     });
+    async function getCurrentLocation() {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    }
+
+    getCurrentLocation();
   }, [navigation]);
 
   const gestionEntrega = (id: number) => {
