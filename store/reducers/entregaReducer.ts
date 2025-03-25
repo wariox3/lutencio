@@ -26,6 +26,12 @@ const entregasSlice = createSlice({
       }
       state.entregasSeleccionadas.push(action.payload);
     },
+    cambiarEstadoEntrega: (state, action: PayloadAction<number>) => {
+      const entrega = state.entregas.find((e) => e.id === action.payload);
+      if (entrega) {
+        entrega.seleccionado = !entrega.seleccionado;
+      }
+    },
     quitarEntregaSeleccionada: (state, action: PayloadAction<number>) => {
       if (!state.entregasSeleccionadas) return;
       state.entregasSeleccionadas = state.entregasSeleccionadas.filter(
@@ -35,6 +41,10 @@ const entregasSlice = createSlice({
   },
 });
 
-export const { setEntregas, seleccionarEntrega, quitarEntregaSeleccionada } =
-  entregasSlice.actions;
+export const {
+  setEntregas,
+  seleccionarEntrega,
+  cambiarEstadoEntrega,
+  quitarEntregaSeleccionada,
+} = entregasSlice.actions;
 export default entregasSlice.reducer;
