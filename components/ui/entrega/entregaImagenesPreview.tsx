@@ -1,13 +1,12 @@
+import { XCircle } from "@tamagui/lucide-icons";
+import React from "react";
 import {
   Dimensions,
   FlatList,
-  ImageBackground,
-  TouchableOpacity,
+  ImageBackground
 } from "react-native";
-import React from "react";
 import { Button, View } from "tamagui";
-import { XCircle } from "@tamagui/lucide-icons";
-
+  
 const { width } = Dimensions.get("window");
 
 const EntregaImagenesPreview = ({
@@ -29,7 +28,7 @@ const EntregaImagenesPreview = ({
             imageStyle={{ borderRadius: 15 }}
             style={{
               height: item.base64 ? 180 : 0,
-              width: width - 110,
+              width: width,
               marginVertical: item.base64 ? 5 : 0,
               alignItems: "flex-end",
               marginRight: 20,

@@ -1,4 +1,6 @@
 import { EntregaCamara } from "@/components/ui/entrega/entregaCamara";
+import { EntregaFirma } from "@/components/ui/entrega/entregaFirma";
+import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import React, { useState } from "react";
@@ -48,7 +50,13 @@ const entregaFormulario = () => {
 
   const handleCapture = (base64: string) => {
     actualizarState({
-      arrImagenes: [...state.arrImagenes, { base64 }], // 🔹 Agrega la imagen también en arrImagenes
+      arrImagenes: [...state.arrImagenes, { base64 }],
+    });
+  };
+
+  const handleFirma = (base64: string) => {
+    actualizarState({
+      firmarBase64: base64,
     });
   };
 
@@ -57,7 +65,13 @@ const entregaFormulario = () => {
       return index !== indexArrImagen;
     });
     actualizarState({
-      arrImagenes: arrImagenTemporal, // 🔹 Agrega la imagen también en arrImagenes
+      arrImagenes: arrImagenTemporal,
+    });
+  };
+
+  const RemoverFirma = () => {
+    actualizarState({
+      firmarBase64: null,
     });
   };
 
@@ -66,12 +80,12 @@ const entregaFormulario = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View gap="$4" flex={1} paddingInline="$4">
           <H4 mt="$2">Entrega</H4>
-          <XStack justify={'space-between'}>
-          <Text>
-            Fotografías disponibles {state.arrImagenes.length} de 5
-            {state.exigeImagenEntrega ? <Text> Requerido * </Text> : null}
-          </Text>
-          <EntregaCamara onCapture={handleCapture}></EntregaCamara>
+          <XStack justify={"space-between"}>
+            <Text>
+              Fotografías disponibles {state.arrImagenes.length} de 5
+              {state.exigeImagenEntrega ? <Text> Requerido * </Text> : null}
+            </Text>
+            <EntregaCamara onCapture={handleCapture}></EntregaCamara>
           </XStack>
 
           <EntregaImagenesPreview
@@ -108,46 +122,18 @@ const entregaFormulario = () => {
             placeholder="000000"
           />
 
-          <Text>
-            Firma
-            {state.exigeFirmaEntrega ? <Text> Requerido * </Text> : null}
-          </Text>
+          <XStack justify={"space-between"}>
+            <Text>
+              Firma
+              {state.exigeFirmaEntrega ? <Text> Requerido * </Text> : null}
+            </Text>
+            <EntregaFirma onCapture={handleFirma}  ></EntregaFirma>
+          </XStack>
+          <EntregaFirmaPreview
+            imagen={state.firmarBase64}
+            RemoverFirma={RemoverFirma}
+          ></EntregaFirmaPreview>
         </View>
-        {/* <View>
-            {arrImagenes ? (
-              <FlatList
-                snapToInterval={width - 65}
-                horizontal
-                data={arrImagenes}
-                renderItem={({item, index}) => (
-                  <ImageBackground
-                    source={{uri: `data:image/jpeg;base64,${item.base64}`}}
-                    imageStyle={{borderRadius: 15}}
-                    style={{
-                      height: item.base64 ? 180 : 0,
-                      width: width - 110,
-                      marginVertical: item.base64 ? 5 : 0,
-                      alignItems: 'flex-end',
-                      marginRight: 20,
-                    }}>
-                    <TouchableOpacity onPress={() => removerFoto(index)}>
-                      <Ionicons
-                        name="close"
-                        size={20}
-                        style={[
-                          {
-                            color: colores.rojo[500],
-                            padding: 10,
-                          },
-                        ]}
-                      />
-                    </TouchableOpacity>
-                  </ImageBackground>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            ) : null}
-          </View>*/}
       </ScrollView>
     </SafeAreaView>
   );
