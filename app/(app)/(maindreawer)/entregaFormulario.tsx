@@ -3,20 +3,28 @@ import { EntregaFirma } from "@/components/ui/entrega/entregaFirma";
 import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
-import { cambiarEstadoEntrega, quitarEntregaSeleccionada } from "@/store/reducers/entregaReducer";
+import { RootState } from "@/store/reducers";
+import {
+  cambiarEstadoEntrega,
+  nuevaEntregaGestion,
+  quitarEntregaSeleccionada,
+} from "@/store/reducers/entregaReducer";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
 
 const entregaFormulario = () => {
   const dispatch = useDispatch();
+  const entregasSeleccionadas = useSelector(
+    (state: RootState) => state.entregas.entregasSeleccionadas || []
+  );
   const router = useRouter();
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
-      Recibe: "",
+      recibe: "",
       parentesco: "",
       numeroIdentificacion: "",
       celular: "",
@@ -49,7 +57,6 @@ const entregaFormulario = () => {
     fotoSeleccionada: [],
   });
 
-
   const actualizarState = (newState: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
@@ -81,24 +88,46 @@ const entregaFormulario = () => {
     });
   };
 
-  const onLoginPressed = async (data: { email: string; password: string }) => {
-    // setMostrarAnimacionCargando(true);
-    actualizarState({
-      mostrarAnimacionCargando: true,
-    });
-    dispatch(cambiarEstadoEntrega(5));
-    dispatch(quitarEntregaSeleccionada(5));
-    actualizarState({
-      mostrarAnimacionCargando: false,
-    });    
-    router.navigate("/(app)/(maindreawer)/entrega");
+  const onLoginPressed = async (data: {
+    recibe: string;
+    parentesco: string;
+    numeroIdentificacion: string;
+    celular: string;
+  }) => {
+    try {
+      actualizarState({
+        mostrarAnimacionCargando: true,
+      });
+      dispatch(
+        nuevaEntregaGestion({
+          arrImagenes: state.arrImagenes,
+          celular: data.celular,
+          numeroIdentificacion: data.numeroIdentificacion,
+          recibe: data.recibe,
+          parentesco: data.parentesco,
+          guias: entregasSeleccionadas,
+          firmarBase64: state.firmarBase64
+        })
+      );
+      entregasSeleccionadas.map((entrega)=> {
+        dispatch(cambiarEstadoEntrega(entrega));
+        dispatch(quitarEntregaSeleccionada(entrega));
+      })
+      router.navigate("/(app)/(maindreawer)/entrega");
+    } catch (error) {
+      actualizarState({
+        mostrarAnimacionCargando: false,
+      });
+    }
+
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View gap="$4" flex={1} paddingInline="$4">
-          <H4 mt="$2">Entrega</H4>
+          <H4 my="$2">Entregas</H4>
+          <Text>Seleccionas: {entregasSeleccionadas.join(", ")}</Text>
           <XStack justify={"space-between"}>
             <Text>
               Fotografías disponibles {state.arrImagenes.length} de 5
@@ -112,7 +141,7 @@ const entregaFormulario = () => {
             removerFoto={RemoverFoto}
           ></EntregaImagenesPreview>
           <BasicInput
-            name="Recibe"
+            name="recibe"
             control={control}
             label="Correo"
             isRequired={false}
@@ -154,7 +183,9 @@ const entregaFormulario = () => {
           ></EntregaFirmaPreview>
           <Button
             theme="blue"
-            icon={state.mostrarAnimacionCargando ? () => <Spinner /> : undefined}
+            icon={
+              state.mostrarAnimacionCargando ? () => <Spinner /> : undefined
+            }
             onPress={handleSubmit(onLoginPressed)}
           >
             Entregar

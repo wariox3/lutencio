@@ -1,19 +1,16 @@
-import { EntregaCargar } from "@/components/ui/entrega/entregaCargar";
-import { Entrega } from "@/interface/entrega/entrega";
+import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
 import { RootState } from "@/store/reducers";
 import {
-  cambiarEstadoEntrega,
   cambiarEstadoSeleccionado,
   quitarEntregaSeleccionada,
-  seleccionarEntrega,
+  seleccionarEntrega
 } from "@/store/reducers/entregaReducer";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Location from "expo-location";
 import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
-import * as Location from "expo-location";
 
 export default function EntregaDreawer() {
   const navigation = useNavigation();
@@ -35,7 +32,7 @@ export default function EntregaDreawer() {
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <EntregaCargar />,
+      headerRight: () => <EntregaOpciones />,
     });
     async function getCurrentLocation() {
       let { status } = await Location.requestForegroundPermissionsAsync();

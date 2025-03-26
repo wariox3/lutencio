@@ -104,3 +104,13 @@ export interface PlusCode {
   global_code: string;
   compound_code: string;
 }
+
+export interface EntregaGestion {
+  recibe: string;
+  parentesco: string;
+  numeroIdentificacion: string;
+  celular: string;
+  guias: number[];
+  arrImagenes: { base64: string }[];
+  firmarBase64: string | null;
+}

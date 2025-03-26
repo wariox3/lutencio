@@ -65,11 +65,11 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
     };
   
     const handleEmpty = () => {
-      console.log("Empty");
+      //console.log("Empty");
     };
   
     const handleClear = () => {
-      console.log("clear success!");
+      //console.log("clear success!");
     };
   
     // Called after end of stroke
@@ -79,7 +79,7 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
   
     // Called after ref.current.getData()
     const handleData = (data: any) => {
-      console.log(data);
+      //console.log(data);
     };
   
     return (

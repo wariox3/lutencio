@@ -16,7 +16,7 @@ export const EntregaCamara = ({
   const [open, setOpen] = React.useState(false);
   const [modal] = React.useState(true);
   const [snapPointsMode] = React.useState<(typeof spModes)[number]>("mixed");
-  const snapPoints = ["100%", 256, 190];
+  const snapPoints = ["100%"];
 
   return (
     <>
@@ -62,7 +62,13 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
 
   if (!permission) {
     // Camera permissions are still loading.
-    return <View />;
+    return (
+      <View px="$4">
+      <H4 mb="$2">Información</H4>
+
+      <Text mb="$4">No se cuenta con el permiso de la camara</Text>
+    </View>
+    );
   }
 
   if (!permission.granted) {

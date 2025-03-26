@@ -1,16 +1,18 @@
-import { Entrega } from "@/interface/entrega/entrega";
+import { Entrega, EntregaGestion } from "@/interface/entrega/entrega";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Definimos el tipo del estado
 interface EntregasState {
   entregas: Entrega[];
   entregasSeleccionadas: number[];
+  gestion: EntregaGestion[];
 }
 
 // Estado inicial con tipado correcto
 const initialState: EntregasState = {
   entregas: [],
   entregasSeleccionadas: [],
+  gestion: []
 };
 
 const entregasSlice = createSlice({
@@ -25,6 +27,9 @@ const entregasSlice = createSlice({
         state.entregasSeleccionadas = []; // Asegurar que existe antes de modificar
       }
       state.entregasSeleccionadas.push(action.payload);
+    },
+    nuevaEntregaGestion: (state, action: PayloadAction<EntregaGestion>) => {
+      state.gestion.push(action.payload);
     },
     cambiarEstadoSeleccionado: (state, action: PayloadAction<number>) => {
       const entrega = state.entregas.find((e) => e.id === action.payload);
@@ -57,5 +62,6 @@ export const {
   cambiarEstadoSeleccionado,
   limpiarEntregaSeleccionada,
   quitarEntregaSeleccionada,
+  nuevaEntregaGestion
 } = entregasSlice.actions;
 export default entregasSlice.reducer;
