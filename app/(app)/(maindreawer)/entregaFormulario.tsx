@@ -3,12 +3,17 @@ import { EntregaFirma } from "@/components/ui/entrega/entregaFirma";
 import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
+import { cambiarEstadoEntrega, quitarEntregaSeleccionada } from "@/store/reducers/entregaReducer";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch } from "react-redux";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
 
 const entregaFormulario = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
       Recibe: "",
@@ -81,20 +86,12 @@ const entregaFormulario = () => {
     actualizarState({
       mostrarAnimacionCargando: true,
     });
-    // try {
-    //   const respuestaApiLogin = await consultarApi<any>(
-    //     APIS.seguridad.login,
-    //     { username: data.email, password: data.password },
-    //     { requiereToken: false }
-    //   );
-
-    //   setMostrarAnimacionCargando(false);
-    //   dispatch(setUsuarioInformacion(respuestaApiLogin.user));
-    //   await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
-    //   router.navigate("/(app)/(maindreawer)");
-    // } catch (error) {
-    //   setMostrarAnimacionCargando(false);
-    // }
+    dispatch(cambiarEstadoEntrega(5));
+    dispatch(quitarEntregaSeleccionada(5));
+    actualizarState({
+      mostrarAnimacionCargando: false,
+    });    
+    router.navigate("/(app)/(maindreawer)/entrega");
   };
 
   return (

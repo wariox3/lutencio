@@ -1,23 +1,30 @@
+import { RootState } from "@/store/reducers";
+import { cambiarEstadoSeleccionado, limpiarEntregaSeleccionada } from "@/store/reducers/entregaReducer";
 import {
   ClipboardX,
   FileSearch,
   FileUp,
+  FileX,
   MoreVertical,
   XCircle,
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
 import { useRouter } from "expo-router";
 import React, { memo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, H4, ListItem, XStack, YGroup } from "tamagui";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
 export const EntregaCargar = () => {
+  const entregasSeleccionadas = useSelector(
+    (state: RootState) => state.entregas.entregasSeleccionadas || []
+  );
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [modal] = React.useState(true);
   const [snapPointsMode] = React.useState<(typeof spModes)[number]>("mixed");
-  const snapPoints = ["40%", 256, 190];
+  const snapPoints = [entregasSeleccionadas.length > 0 ? "50%": "30%", 256, 190];
 
   return (
     <>
@@ -45,7 +52,7 @@ export const EntregaCargar = () => {
 
         <Sheet.Handle />
         <Sheet.Frame p="$4" gap="$5">
-          <SheetContents {...{ setOpen }} />
+          <SheetContents {...{ setOpen, entregasSeleccionadas }} />
         </Sheet.Frame>
       </Sheet>
     </>
@@ -53,13 +60,22 @@ export const EntregaCargar = () => {
 };
 
 // in general good to memoize the contents to avoid expensive renders during animations
-const SheetContents = memo(({ setOpen }: any) => {
+const SheetContents = memo(({ setOpen, entregasSeleccionadas }: any) => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const navegarEntregaCargar = () => {
     router.push("/(app)/(maindreawer)/entregaCargar");
     setOpen(false);
   };
+
+  const retirarSeleccionadas = () => {
+    setOpen(false)
+    entregasSeleccionadas.map((entrega: number) => {
+      dispatch(cambiarEstadoSeleccionado(entrega))
+    })
+    dispatch(limpiarEntregaSeleccionada())
+  }
 
   return (
     <>
@@ -94,12 +110,23 @@ const SheetContents = memo(({ setOpen }: any) => {
             title="Retirar"
             subTitle="Retire el despacho actual"
           />
-          <ListItem
-            hoverTheme
-            icon={<FileUp size="$2" />}
-            title="Sincronizar"
-            subTitle="Cargar a la nube las gestiones realizadas"
-          />
+          {entregasSeleccionadas.length > 0 ? (
+            <>
+              <ListItem
+                hoverTheme
+                icon={<FileUp size="$2" />}
+                title="Sincronizar"
+                subTitle="Cargar a la nube las gestiones realizadas"
+              />
+              <ListItem
+                hoverTheme
+                icon={<FileX size="$2" />}
+                title="Retirar seleccionados"
+                subTitle="Retirar todos los elementos seleccionados"
+                onPress={() => retirarSeleccionadas()}
+              />
+            </>
+          ) : null}
         </YGroup.Item>
       </YGroup>
     </>

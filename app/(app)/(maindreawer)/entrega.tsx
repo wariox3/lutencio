@@ -3,6 +3,7 @@ import { Entrega } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoEntrega,
+  cambiarEstadoSeleccionado,
   quitarEntregaSeleccionada,
   seleccionarEntrega,
 } from "@/store/reducers/entregaReducer";
@@ -18,7 +19,10 @@ export default function EntregaDreawer() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const arrEntregas = useSelector(
-    (state: RootState) => state.entregas.entregas || []
+    (state: RootState) =>
+      state.entregas.entregas.filter(
+        (entrega) => entrega.estado_entregado === false
+      ) || []
   );
   const entregasSeleccionadas = useSelector(
     (state: RootState) => state.entregas.entregasSeleccionadas || []
@@ -48,13 +52,12 @@ export default function EntregaDreawer() {
   }, [navigation]);
 
   const gestionEntrega = (id: number) => {
-    if(entregasSeleccionadas.includes(id)){
+    if (entregasSeleccionadas.includes(id)) {
       dispatch(quitarEntregaSeleccionada(id));
     } else {
       dispatch(seleccionarEntrega(id));
     }
-    dispatch(cambiarEstadoEntrega(id));
-
+    dispatch(cambiarEstadoSeleccionado(id));
   };
 
   const navegarFormulario = () => {
@@ -86,8 +89,8 @@ export default function EntregaDreawer() {
               p="$3"
               mx="$3"
               onPress={() => gestionEntrega(item.id)}
-              bg={item.seleccionado ? '#2ecc71' : null} // Verde si está seleccionado
-              >
+              bg={item.seleccionado ? "#2ecc71" : null} // Verde si está seleccionado
+            >
               <Text>ID: {item.id}</Text>
               <Text>Guía: {item.guia}</Text>
               <Text>Destinatario: {item.destinatario}</Text>
