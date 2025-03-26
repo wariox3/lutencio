@@ -1,14 +1,9 @@
-import { SwitchCamera, Camera as CameraIcons } from "@tamagui/lucide-icons";
+import { Camera as CameraIcons, Circle } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
-import {
-  Camera,
-  CameraType,
-  CameraView,
-  useCameraPermissions,
-} from "expo-camera";
+import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import React, { memo, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { Button, Text, View } from "tamagui";
+import { Button, H4, Text, View } from "tamagui";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -73,9 +68,13 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
   if (!permission.granted) {
     // Camera permissions are not granted yet.
     return (
-      <View>
-        <Text>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission}>grant permission</Button>
+      <View px="$4">
+        <H4 mb="$2">Información</H4>
+
+        <Text mb="$4">Necesitamos su permiso para mostrar la cámara.</Text>
+        <Button onPress={requestPermission} variant="outlined">
+          Conceder permiso
+        </Button>
       </View>
     );
   }
@@ -107,7 +106,13 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
                 onPress={tomarFoto}
                 size="$4"
                 circular
-                icon={<SwitchCamera size="$3" />}
+                icon={
+                  <Circle
+                    size="$4"
+                    backgroundColor={"#ffff"}
+                    style={{ borderRadius: 999 }} // Añade un borderRadius alto para formar un círculo
+                  />
+                }
                 variant="outlined"
               />
             </TouchableOpacity>
