@@ -1,6 +1,7 @@
 import {
   ClipboardX,
   FileSearch,
+  FileUp,
   MoreVertical,
   XCircle,
 } from "@tamagui/lucide-icons";
@@ -16,7 +17,7 @@ export const EntregaCargar = () => {
   const [open, setOpen] = React.useState(false);
   const [modal] = React.useState(true);
   const [snapPointsMode] = React.useState<(typeof spModes)[number]>("mixed");
-  const snapPoints = ["30%", 256, 190];
+  const snapPoints = ["40%", 256, 190];
 
   return (
     <>
@@ -82,16 +83,22 @@ const SheetContents = memo(({ setOpen }: any) => {
         <YGroup.Item>
           <ListItem
             hoverTheme
-            icon={FileSearch}
+            icon={<FileSearch size="$2" />}
             title="Cargar"
             subTitle="obtener información de un despacho"
             onPress={() => navegarEntregaCargar()}
           />
           <ListItem
             hoverTheme
-            icon={ClipboardX}
+            icon={<ClipboardX size="$2" />}
             title="Retirar"
             subTitle="Retire el despacho actual"
+          />
+          <ListItem
+            hoverTheme
+            icon={<FileUp size="$2" />}
+            title="Sincronizar"
+            subTitle="Cargar a la nube las gestiones realizadas"
           />
         </YGroup.Item>
       </YGroup>
