@@ -20,7 +20,7 @@ export const EntregaCamara = ({
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [modal] = React.useState(true);
-  const [snapPointsMode] = React.useState<(typeof spModes)[number]>("constant");
+  const [snapPointsMode] = React.useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%", 256, 190];
 
   return (

@@ -15,14 +15,8 @@ export const EntregaCargar = () => {
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [modal] = React.useState(true);
-  const [snapPointsMode] = React.useState<(typeof spModes)[number]>("percent");
-  const [mixedFitDemo] = React.useState(false);
-
-  const isPercent = snapPointsMode === "percent";
-  const isConstant = snapPointsMode === "constant";
-  const isFit = snapPointsMode === "fit";
-  const snapPoints = ["80%", 256, 190];
-
+  const [snapPointsMode] = React.useState<(typeof spModes)[number]>("mixed");
+  const snapPoints = ["30%", 256, 190];
 
   return (
     <>
@@ -43,17 +37,13 @@ export const EntregaCargar = () => {
       >
         <Sheet.Overlay
           animation="lazy"
-          backgroundColor="$shadow6"
+          background="#4cafe3"
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
         />
 
         <Sheet.Handle />
-        <Sheet.Frame
-          p="$4"
-          // justifyContent="center"
-          gap="$5"
-        >
+        <Sheet.Frame p="$4" gap="$5">
           <SheetContents {...{ setOpen }} />
         </Sheet.Frame>
       </Sheet>

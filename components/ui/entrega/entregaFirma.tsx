@@ -15,7 +15,7 @@ export const EntregaFirma = ({
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [modal] = React.useState(true);
-  const [snapPointsMode] = React.useState<(typeof spModes)[number]>("fit");
+  const [snapPointsMode] = React.useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["50%", 256, 190];
  
   return (
