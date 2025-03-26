@@ -10,7 +10,7 @@ import {
   FileUp,
   FileX,
   MoreVertical,
-  XCircle
+  XCircle,
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
 import { useRouter } from "expo-router";
@@ -23,6 +23,9 @@ const spModes = ["percent", "constant", "fit", "mixed"] as const;
 export const EntregaOpciones = () => {
   const entregasSeleccionadas = useSelector(
     (state: RootState) => state.entregas.entregasSeleccionadas || []
+  );
+  const entregasGestion = useSelector(
+    (state: RootState) => state.entregas.gestion || []
   );
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
@@ -56,7 +59,7 @@ export const EntregaOpciones = () => {
 
         <Sheet.Handle />
         <Sheet.Frame p="$4" gap="$5">
-          <SheetContents {...{ setOpen, entregasSeleccionadas }} />
+          <SheetContents {...{ setOpen, entregasSeleccionadas, entregasGestion }} />
         </Sheet.Frame>
       </Sheet>
     </>
@@ -64,7 +67,7 @@ export const EntregaOpciones = () => {
 };
 
 // in general good to memoize the contents to avoid expensive renders during animations
-const SheetContents = memo(({ setOpen, entregasSeleccionadas }: any) => {
+const SheetContents = memo(({ setOpen, entregasSeleccionadas, entregasGestion }: any) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -112,13 +115,20 @@ const SheetContents = memo(({ setOpen, entregasSeleccionadas }: any) => {
 
           {entregasSeleccionadas.length > 0 ? (
             <>
-              <H6 mb="$2">Gestión</H6>
+              <H6 mb="$2">Seleccionadas</H6>
               <ListItem
                 hoverTheme
-                icon={<FileUp size="$2" />}
-                title="Sincronizar"
-                subTitle="Cargar a la nube las gestiones realizadas"
+                icon={<FileX size="$2" />}
+                title="Retirar seleccionados"
+                subTitle="Retirar todos los elementos seleccionados"
+                onPress={() => retirarSeleccionadas()}
               />
+            </>
+          ) : null}
+
+          {entregasGestion.length > 0 ? (
+            <>
+              <H6 mb="$2">Gestión</H6>
               <ListItem
                 hoverTheme
                 icon={<FileStack size="$2" />}
@@ -127,10 +137,9 @@ const SheetContents = memo(({ setOpen, entregasSeleccionadas }: any) => {
               />
               <ListItem
                 hoverTheme
-                icon={<FileX size="$2" />}
-                title="Retirar seleccionados"
-                subTitle="Retirar todos los elementos seleccionados"
-                onPress={() => retirarSeleccionadas()}
+                icon={<FileUp size="$2" />}
+                title="Sincronizar"
+                subTitle="Cargar a la nube las gestiones realizadas"
               />
             </>
           ) : null}
