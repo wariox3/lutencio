@@ -63,7 +63,7 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   return (
     <>
-      <XStack justifyContent="space-between">
+      <XStack justify="space-between">
         <H4 mb="$2">Opciones</H4>
         <Button
           size="$4"
