@@ -33,7 +33,6 @@ export const EntregaFirma = ({
     return (
       <View px="$4">
         <H4 mb="$2">Información</H4>
-
         <Text mb="$4">No se cuenta con el permiso de la galeria</Text>
       </View>
     );
@@ -93,15 +92,15 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
 
   const handleOK = async (signature: string) => {
     try {
-      const base64Code = signature.split(",")[1]; 
-        const fileUri = FileSystem.documentDirectory + "firma.png";
-  
+      const base64Code = signature.split(",")[1];
+      const fileUri = FileSystem.documentDirectory + "firma.png";
+
       await FileSystem.writeAsStringAsync(fileUri, base64Code, {
         encoding: FileSystem.EncodingType.Base64,
       });
-  
+
       const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== "granted") {
         alert("❌ Permiso denegado para acceder a la galería");
         return;
       }

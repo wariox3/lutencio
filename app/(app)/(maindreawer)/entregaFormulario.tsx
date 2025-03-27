@@ -106,20 +106,19 @@ const entregaFormulario = () => {
           recibe: data.recibe,
           parentesco: data.parentesco,
           guias: entregasSeleccionadas,
-          firmarBase64: state.firmarBase64
+          firmarBase64: state.firmarBase64,
         })
       );
-      entregasSeleccionadas.map((entrega)=> {
+      entregasSeleccionadas.map((entrega) => {
         dispatch(cambiarEstadoEntrega(entrega));
         dispatch(quitarEntregaSeleccionada(entrega));
-      })
+      });
       router.navigate("/(app)/(maindreawer)/entrega");
     } catch (error) {
       actualizarState({
         mostrarAnimacionCargando: false,
       });
     }
-
   };
 
   return (
@@ -133,7 +132,9 @@ const entregaFormulario = () => {
               Fotografías disponibles {state.arrImagenes.length} de 5
               {state.exigeImagenEntrega ? <Text> Requerido * </Text> : null}
             </Text>
-            <EntregaCamara onCapture={handleCapture}></EntregaCamara>
+            {state.arrImagenes.length <= 4 ? (
+              <EntregaCamara onCapture={handleCapture}></EntregaCamara>
+            ) : null}
           </XStack>
 
           <EntregaImagenesPreview
@@ -175,7 +176,9 @@ const entregaFormulario = () => {
               Firma
               {state.exigeFirmaEntrega ? <Text> Requerido * </Text> : null}
             </Text>
-            <EntregaFirma onCapture={handleFirma}></EntregaFirma>
+            {state.firmarBase64 === null ? (
+              <EntregaFirma onCapture={handleFirma}></EntregaFirma>
+            ) : null}
           </XStack>
           <EntregaFirmaPreview
             imagen={state.firmarBase64}
