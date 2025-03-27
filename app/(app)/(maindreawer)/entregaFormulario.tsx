@@ -144,7 +144,7 @@ const entregaFormulario = () => {
           <BasicInput
             name="recibe"
             control={control}
-            label="Correo"
+            label="Recibe"
             isRequired={false}
             placeholder="Persona que recibe el paquete"
           />
@@ -154,6 +154,7 @@ const entregaFormulario = () => {
             label="Numero identificación"
             isRequired={false}
             placeholder="000000"
+            keyboardType="numeric"
           />
           <BasicInput
             name="parentesco"
