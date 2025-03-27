@@ -76,6 +76,11 @@ const SheetContents = memo(({ setOpen, entregasSeleccionadas, entregasGestion }:
     setOpen(false);
   };
 
+  const navegarEntregaGestion = () => {
+    router.push("/(app)/(maindreawer)/entregaGestion");
+    setOpen(false);
+  };
+
   const retirarSeleccionadas = () => {
     setOpen(false);
     entregasSeleccionadas.map((entrega: number) => {
@@ -134,6 +139,7 @@ const SheetContents = memo(({ setOpen, entregasSeleccionadas, entregasGestion }:
                 icon={<FileStack size="$2" />}
                 title="Gestiones"
                 subTitle="Ver información de las gestiones hechas"
+                onPress={() => navegarEntregaGestion()}
               />
               <ListItem
                 hoverTheme

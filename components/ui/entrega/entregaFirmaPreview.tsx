@@ -10,7 +10,7 @@ const EntregaFirmaPreview = ({
   RemoverFirma,
 }: {
   imagen: string | null;
-  RemoverFirma: () => void;
+  RemoverFirma?: () => void;
 }) => {
   return (
     <View>
@@ -26,12 +26,14 @@ const EntregaFirmaPreview = ({
             marginRight: 20,
           }}
         >
-          <Button
-            size="$4"
-            circular
-            icon={<XCircle size="$3" color={"red"} />}
-            onPress={() => RemoverFirma()}
-          />
+          {RemoverFirma !== undefined ? (
+            <Button
+              size="$4"
+              circular
+              icon={<XCircle size="$3" color={"red"} />}
+              onPress={() => RemoverFirma()}
+            />
+          ) : null}
         </ImageBackground>
       ) : null}
     </View>

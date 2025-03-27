@@ -1,12 +1,8 @@
 import { XCircle } from "@tamagui/lucide-icons";
 import React from "react";
-import {
-  Dimensions,
-  FlatList,
-  ImageBackground
-} from "react-native";
+import { Dimensions, FlatList, ImageBackground } from "react-native";
 import { Button, View } from "tamagui";
-  
+
 const { width } = Dimensions.get("window");
 
 const EntregaImagenesPreview = ({
@@ -14,7 +10,7 @@ const EntregaImagenesPreview = ({
   removerFoto,
 }: {
   arrImagenes: { base64: string }[];
-  removerFoto: (index: number) => void;
+  removerFoto?: (index: number) => void;
 }) => {
   return (
     <View>
@@ -34,12 +30,14 @@ const EntregaImagenesPreview = ({
               marginRight: 20,
             }}
           >
-            <Button
-              size="$4"
-              circular
-              icon={<XCircle size="$3" color={"red"} />}
-              onPress={() => removerFoto(index)}
-            />
+            {removerFoto !== undefined ? (
+              <Button
+                size="$4"
+                circular
+                icon={<XCircle size="$3" color={"red"} />}
+                onPress={() => removerFoto(index)}
+              />
+            ) : null}
           </ImageBackground>
         )}
         keyExtractor={(_, index) => index.toString()}
