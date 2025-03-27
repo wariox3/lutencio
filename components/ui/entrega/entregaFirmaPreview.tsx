@@ -16,7 +16,7 @@ const EntregaFirmaPreview = ({
     <View>
       {imagen !== null ? (
         <ImageBackground
-          source={{ uri: `data:image/jpeg;base64,${imagen}` }}
+          source={{ uri: imagen }}
           imageStyle={{ borderRadius: 15 }}
           style={{
             height: 180,
