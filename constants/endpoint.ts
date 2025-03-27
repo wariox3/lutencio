@@ -13,6 +13,7 @@ const APIS = {
   },
   entrega:{
     verticalEntrega: `${URL_BASE}/vertical/entrega/`,
+    ruteoVisitaEntrega:  `${URL_SUBDOMINIO}/ruteo/visita/entrega/`,
   },
   general:{
     funcionalidadLista:  `${URL_SUBDOMINIO}/general/funcionalidad/lista/`,

@@ -28,24 +28,24 @@ const error400 = (error: AxiosError): void => {
   const codigo = error.response?.data?.codigo || "Desconocido";
   const mensaje =
     error.response?.data?.mensaje || "Ha ocurrido un error inesperado.";
-  Alert.alert(`Error ${codigo}`, mensaje);
+  Alert.alert(`❌ Error ${codigo}`, mensaje);
 };
 
 const error401 = (): void => {
-  Alert.alert("Token inválido o expirado.");
+  Alert.alert(`❌ Error`, "Token inválido o expirado.");
 };
 
 const error404 = (): void => {
-  Alert.alert(`Error 404`, "El recurso solicitado no se encontró.");
+  Alert.alert(`❌ Error 404`, "El recurso solicitado no se encontró.");
 };
 
 const error405 = (): void => {
-  Alert.alert(`Error 405`, "Servidor fuera de línea, intente más tarde.");
+  Alert.alert(`❌ Error 405`, "Servidor fuera de línea, intente más tarde.");
 };
 
 const error500 = (error: AxiosError): void => {  
   Alert.alert(
-    `Error 500`,
+    `❌ Error 500`,
     "Error interno del servidor. Por favor, intente más tarde."
   );
 };

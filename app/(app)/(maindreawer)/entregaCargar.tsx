@@ -23,6 +23,7 @@ const entregaCargar = () => {
       codigo: "",
     },
   });
+  
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -51,13 +52,13 @@ const entregaCargar = () => {
           } as any,
           {
             requiereToken: true,
-            subdomino: respuestaApiVerticalEntrega.schema_name,
+            subdominio: respuestaApiVerticalEntrega.schema_name,
           }
         );
-        // await AsyncStorage.setItem(
-        //   "visitas",
-        //   JSON.stringify(respuestaApi.registros)
-        // );
+        await AsyncStorage.setItem(
+          "subdominio",
+          respuestaApiVerticalEntrega.schema_name
+        );
         dispatch(setEntregas(respuestaApi.registros));
         router.navigate("/(app)/(maindreawer)/entrega");
       }

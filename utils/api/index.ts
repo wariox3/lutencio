@@ -6,7 +6,7 @@ import { handleErrorResponse } from "./interceptor/errorInterceptor";
 interface Configuracion {
   method?: "post" | "get" | "put" | "delete";
   requiereToken?: boolean;
-  subdomino?: string;
+  subdominio?: string;
 }
 
 const axios = Axios.create();
@@ -74,7 +74,7 @@ export const consultarApi = async <T>(
       data,
       headers: {
         requiereToken: configuracion.requiereToken, // Pasar `requiereToken` en headers para ser usado por el interceptor
-        "X-Schema-Name": configuracion.subdomino,  // Pasar el subdominio en los headers
+        "X-Schema-Name": configuracion.subdominio,  // Pasar el subdominio en los headers
       },
     });
     

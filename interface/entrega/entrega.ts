@@ -20,6 +20,7 @@ export interface Entrega {
   estado_decodificado_alerta: boolean;
   estado_despacho: boolean;
   estado_entregado: boolean;
+  estado_sinconizado: boolean;
   latitud: number;
   longitud: number;
   orden: number;

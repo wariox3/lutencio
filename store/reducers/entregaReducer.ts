@@ -43,8 +43,18 @@ const entregasSlice = createSlice({
         entrega.estado_entregado = !entrega.estado_entregado;
       }
     },
+    cambiarEstadoSinconizado: (state, action: PayloadAction<number>) => {
+      const entrega = state.entregas.find((e) => e.id === action.payload);
+      if (entrega) {
+        entrega.estado_sinconizado = !entrega.estado_sinconizado;
+      }
+    },
     limpiarEntregaSeleccionada: (state) => {
       state.entregasSeleccionadas = [];
+    },
+    quitarEntregaGestion: (state, action: PayloadAction<number>) => {
+      if (!state.entregasSeleccionadas) return;
+      state.gestion = state.gestion.filter((_, index) => index !== action.payload);
     },
     quitarEntregaSeleccionada: (state, action: PayloadAction<number>) => {
       if (!state.entregasSeleccionadas) return;
@@ -62,6 +72,8 @@ export const {
   cambiarEstadoSeleccionado,
   limpiarEntregaSeleccionada,
   quitarEntregaSeleccionada,
-  nuevaEntregaGestion
+  nuevaEntregaGestion,
+  cambiarEstadoSinconizado,
+  quitarEntregaGestion
 } = entregasSlice.actions;
 export default entregasSlice.reducer;
