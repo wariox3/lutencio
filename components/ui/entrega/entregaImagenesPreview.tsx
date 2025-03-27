@@ -24,7 +24,7 @@ const EntregaImagenesPreview = ({
         data={arrImagenes}
         renderItem={({ item, index }) => (
           <ImageBackground
-            source={{ uri: `data:image/jpeg;base64,${item.base64}` }}
+            source={{ uri: item.base64 }}
             imageStyle={{ borderRadius: 15 }}
             style={{
               height: item.base64 ? 180 : 0,

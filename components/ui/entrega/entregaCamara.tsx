@@ -1,9 +1,10 @@
 import { Camera as CameraIcons, Circle } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Button, H4, Text, View } from "tamagui";
+import * as MediaLibrary from 'expo-media-library';
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -57,10 +58,20 @@ export const EntregaCamara = ({
 // in general good to memoize the contents to avoid expensive renders during animations
 const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
   const [permission, requestPermission] = useCameraPermissions();
+  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState<boolean>(false);
+
   const cameraRef = useRef<any>(null);
   const [facing] = useState<CameraType>("back");
 
-  if (!permission) {
+
+  useEffect(() => {
+    (async () => {
+      const mediaStatus = await MediaLibrary.requestPermissionsAsync();
+      setHasMediaLibraryPermission(mediaStatus.status === 'granted');
+    })();
+  }, []);
+
+  if (!permission && !hasMediaLibraryPermission) {
     // Camera permissions are still loading.
     return (
       <View px="$4">
@@ -71,13 +82,13 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
     );
   }
 
-  if (!permission.granted) {
+  if (!permission.granted && !hasMediaLibraryPermission) {
     // Camera permissions are not granted yet.
     return (
       <View px="$4">
         <H4 mb="$2">Información</H4>
 
-        <Text mb="$4">Necesitamos su permiso para mostrar la cámara.</Text>
+        <Text mb="$4">Necesitamos su permiso para mostrar la cámara y galeria.</Text>
         <Button onPress={requestPermission} variant="outlined">
           Conceder permiso
         </Button>
@@ -88,13 +99,9 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
   const tomarFoto = async () => {
     try {
       if (cameraRef.current) {
-        const photo = await cameraRef.current.takePictureAsync({
-          quality: 1,
-          base64: true,
-          exif: true,
-        });
-
-        onCapture(photo.base64);
+        const photo = await cameraRef.current.takePictureAsync();
+        const asset = await MediaLibrary.createAssetAsync(photo.uri);
+        onCapture(photo.uri);
         setOpen(false);
       }
     } catch (error) {
