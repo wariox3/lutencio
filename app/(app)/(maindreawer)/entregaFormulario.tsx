@@ -3,14 +3,15 @@ import { EntregaFirma } from "@/components/ui/entrega/entregaFirma";
 import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
+import Volver from "@/components/ui/navegacion/volver";
 import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoEntrega,
   nuevaEntregaGestion,
   quitarEntregaSeleccionada,
 } from "@/store/reducers/entregaReducer";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useNavigation, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +23,8 @@ const entregaFormulario = () => {
     (state: RootState) => state.entregas.entregasSeleccionadas || []
   );
   const router = useRouter();
+  const navigation = useNavigation();
+
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
       recibe: "",
@@ -31,7 +34,7 @@ const entregaFormulario = () => {
     },
   });
 
-  const [state, setState] = useState<{
+  const estadoInicial: {
     arrImagenes: { base64: string }[];
     mostrarAnimacionCargando: boolean;
     ubicacionHabilitada: boolean;
@@ -43,7 +46,7 @@ const entregaFormulario = () => {
     camaraTipo: string;
     firmarBase64: string | null;
     fotoSeleccionada: any[];
-  }>({
+  } = {
     arrImagenes: [],
     mostrarAnimacionCargando: false,
     ubicacionHabilitada: false,
@@ -55,7 +58,22 @@ const entregaFormulario = () => {
     camaraTipo: "",
     firmarBase64: null,
     fotoSeleccionada: [],
-  });
+  };
+
+  const [state, setState] = useState(estadoInicial);
+
+  useEffect(() => {
+    // Aquí puedes realizar lógica de inicialización si es necesario.
+    navigation.setOptions({
+      headerLeft: () => <Volver ruta="entrega" />,
+    });
+    reiniciarState();
+    reset();
+  }, []);
+
+  const reiniciarState = () => {
+    setState(estadoInicial);
+  };
 
   const actualizarState = (newState: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...newState }));
