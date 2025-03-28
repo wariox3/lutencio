@@ -3,7 +3,7 @@ import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoSeleccionado,
   quitarEntregaSeleccionada,
-  seleccionarEntrega
+  seleccionarEntrega,
 } from "@/store/reducers/entregaReducer";
 import * as Location from "expo-location";
 import { useNavigation, useRouter } from "expo-router";
@@ -25,24 +25,17 @@ export default function EntregaDreawer() {
     (state: RootState) => state.entregas.entregasSeleccionadas || []
   );
   const router = useRouter();
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null
-  );
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [location, setLocation] = useState<any>();
 
   useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => <EntregaOpciones />,
-    });
     async function getCurrentLocation() {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
+      setLocation(status);
+      if (location === "granted") {
+        navigation.setOptions({
+          headerRight: () => <EntregaOpciones />,
+        });
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
     }
 
     getCurrentLocation();
@@ -63,42 +56,50 @@ export default function EntregaDreawer() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <KeyboardAvoidingView>
-        <FlatList
-          data={arrEntregas}
-          keyExtractor={(item, index) => index.toString()}
-          ListHeaderComponent={() => (
-            <XStack justify="space-between" px="$3" mb="$2">
-              <H4 mb="$2">Entregas</H4>
-              {entregasSeleccionadas.length > 0 ? (
-                <Button
-                  size="$3"
-                  variant="outlined"
-                  onPress={() => navegarFormulario()}
-                >
-                  seleccionadas <Text>{entregasSeleccionadas.length}</Text>
-                </Button>
-              ) : null}
-            </XStack>
-          )}
-          renderItem={({ item }) => (
-            <Card
-              p="$3"
-              mx="$3"
-              onPress={() => gestionEntrega(item.id)}
-              bg={item.seleccionado ? "#2ecc71" : null} // Verde si está seleccionado
-            >
-              <Text>ID: {item.id}</Text>
-              <Text>Guía: {item.guia}</Text>
-              <Text>Destinatario: {item.destinatario}</Text>
-              <Text>Dirección: {item.destinatario_direccion}</Text>
-              <Text>Fecha: {item.fecha}</Text>
-              {item.estado_entregado ? <Text>Entregado</Text> : null}
-            </Card>
-          )}
-          ItemSeparatorComponent={() => <View my={"$2"}></View>}
-        />
-      </KeyboardAvoidingView>
+      {location === "granted" ? (
+        <KeyboardAvoidingView>
+          <FlatList
+            data={arrEntregas}
+            keyExtractor={(item, index) => index.toString()}
+            ListHeaderComponent={() => (
+              <XStack justify="space-between" px="$3" mb="$2">
+                <H4 mb="$2">Entregas</H4>
+                {entregasSeleccionadas.length > 0 ? (
+                  <Button
+                    size="$3"
+                    variant="outlined"
+                    onPress={() => navegarFormulario()}
+                  >
+                    seleccionadas <Text>{entregasSeleccionadas.length}</Text>
+                  </Button>
+                ) : null}
+              </XStack>
+            )}
+            renderItem={({ item }) => (
+              <Card
+                p="$3"
+                mx="$3"
+                onPress={() => gestionEntrega(item.id)}
+                bg={item.seleccionado ? "#2ecc71" : null} // Verde si está seleccionado
+              >
+                <Text>ID: {item.id}</Text>
+                <Text>Guía: {item.guia}</Text>
+                <Text>Destinatario: {item.destinatario}</Text>
+                <Text>Dirección: {item.destinatario_direccion}</Text>
+                <Text>Fecha: {item.fecha}</Text>
+                {item.estado_entregado ? <Text>Entregado</Text> : null}
+              </Card>
+            )}
+            ItemSeparatorComponent={() => <View my={"$2"}></View>}
+          />
+        </KeyboardAvoidingView>
+      ) : (
+        <View px="$4">
+          <H4 mb="$2">Información</H4>
+
+          <Text mb="$4">No se cuenta con el permiso de la localización</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

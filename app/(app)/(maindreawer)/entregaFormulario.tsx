@@ -73,6 +73,12 @@ const entregaFormulario = () => {
       headerLeft: () => <Volver ruta="entrega" />,
     });
     reiniciarState()
+    reset({
+      recibe: "",
+      parentesco: "",
+      numeroIdentificacion: "",
+      celular: "",
+    });
   }, [navigate]);
 
   const reiniciarState = () => {
