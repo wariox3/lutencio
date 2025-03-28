@@ -1,12 +1,16 @@
 import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
+import { EntregaGestion } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
 import {
+  cambiarEstadoEntrega,
   cambiarEstadoSeleccionado,
+  quitarEntregaGestion,
   quitarEntregaSeleccionada,
   seleccionarEntrega,
 } from "@/store/reducers/entregaReducer";
+import { Trash2 } from "@tamagui/lucide-icons";
 import * as Location from "expo-location";
 import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -21,10 +25,6 @@ export default function entregaGestion() {
     (state: RootState) => state.entregas.gestion || []
   );
   const router = useRouter();
-  // const [location, setLocation] = useState<Location.LocationObject | null>(
-  //   null
-  // );
-  // const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // useEffect(() => {
   //   navigation.setOptions({
@@ -44,18 +44,14 @@ export default function entregaGestion() {
   //   getCurrentLocation();
   // }, [navigation]);
 
-  // const gestionEntrega = (id: number) => {
-  //   if (entregasSeleccionadas.includes(id)) {
-  //     dispatch(quitarEntregaSeleccionada(id));
-  //   } else {
-  //     dispatch(seleccionarEntrega(id));
-  //   }
-  //   dispatch(cambiarEstadoSeleccionado(id));
-  // };
-
-  // const navegarFormulario = () => {
-  //   router.push("/(app)/(maindreawer)/entregaFormulario");
-  // };
+  const retirarGestion = (item: EntregaGestion, id: number) => {
+    item.guias.map((guias) => {
+      dispatch(cambiarEstadoEntrega(guias));
+      dispatch(quitarEntregaSeleccionada(guias));
+      dispatch(seleccionarEntrega(guias));
+    });
+    dispatch(quitarEntregaGestion(id));
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -68,9 +64,18 @@ export default function entregaGestion() {
               <H4 mb="$2">Gestión</H4>
             </XStack>
           )}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <Card p="$3" mx="$3">
-              <Text>Guias: {item.guias.join(",")}</Text>
+              <XStack justify={"space-between"}>
+                <Text>Guias: {item.guias.join(",")}</Text>
+                <Button
+                  icon={<Trash2 size="$2" color={"$red10"} />}
+                  variant="outlined"
+                  theme={"red"}
+                  onPress={() => retirarGestion(item, index)}
+                ></Button>
+              </XStack>
+
               <Text>Recibe: {item.recibe}</Text>
               <Text>Parentesco: {item.parentesco}</Text>
               <Text>Celular: {item.celular}</Text>

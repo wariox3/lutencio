@@ -20,6 +20,7 @@ import * as FileSystem from "expo-file-system";
 import { requestPermissionsAsync } from "expo-media-library"; // Para fotos en la galería
 import * as MediaLibrary from "expo-media-library";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
+import { navigate } from "expo-router/build/global-state/routing";
 
 const entregaFormulario = () => {
   const dispatch = useDispatch();
@@ -71,7 +72,8 @@ const entregaFormulario = () => {
     navigation.setOptions({
       headerLeft: () => <Volver ruta="entrega" />,
     });
-  }, []);
+    reiniciarState()
+  }, [navigate]);
 
   const reiniciarState = () => {
     setState(estadoInicial);
