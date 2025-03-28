@@ -1,3 +1,4 @@
+import APIS from "@/constants/endpoint";
 import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoSeleccionado,
@@ -5,6 +6,7 @@ import {
   limpiarEntregaSeleccionada,
   quitarEntregaGestion,
 } from "@/store/reducers/entregaReducer";
+import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ClipboardPlus,
@@ -166,17 +168,17 @@ const SheetContents = memo(
           for (const guia of entrega.guias) {
             console.log(`📤 Enviando guía: ${guia}`);
 
-            // const respuestaApi = await consultarApi<any>(
-            //   APIS.entrega.ruteoVisitaEntrega,
-            //   {
-            //     id: guia,
-            //     imagenes: imagenes, // Enviar imágenes convertidas
-            //   },
-            //   {
-            //     requiereToken: true,
-            //     subdominio: subdominio,
-            //   }
-            // );
+            const respuestaApi = await consultarApi<any>(
+              APIS.entrega.ruteoVisitaEntrega,
+              {
+                id: guia,
+                imagenes: imagenes, // Enviar imágenes convertidas
+              },
+              {
+                requiereToken: true,
+                subdominio: subdominio,
+              }
+            );
 
             //Borrar las imágenes después de éxito
 
