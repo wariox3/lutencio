@@ -12,7 +12,7 @@ interface EntregasState {
 const initialState: EntregasState = {
   entregas: [],
   entregasSeleccionadas: [],
-  gestion: []
+  gestion: [],
 };
 
 const entregasSlice = createSlice({
@@ -21,6 +21,9 @@ const entregasSlice = createSlice({
   reducers: {
     setEntregas: (state, action: PayloadAction<Entrega[]>) => {
       state.entregas = action.payload;
+    },
+    quitarEntregas: (state) => {
+      state.entregas = [];
     },
     seleccionarEntrega: (state, action: PayloadAction<number>) => {
       if (!state.entregasSeleccionadas) {
@@ -54,14 +57,19 @@ const entregasSlice = createSlice({
     },
     quitarEntregaGestion: (state, action: PayloadAction<number>) => {
       if (!state.entregasSeleccionadas) return;
-      state.gestion = state.gestion.filter((_, index) => index !== action.payload);
+      state.gestion = state.gestion.filter(
+        (_, index) => index !== action.payload
+      );
     },
     quitarEntregaSeleccionada: (state, action: PayloadAction<number>) => {
       if (!state.entregasSeleccionadas) return;
-      
+
       state.entregasSeleccionadas = state.entregasSeleccionadas.filter(
         (id) => id !== action.payload
       );
+    },
+    quitarEntregaGestiones: (state) => {
+      state.gestion = [];
     },
   },
 });
@@ -75,6 +83,8 @@ export const {
   quitarEntregaSeleccionada,
   nuevaEntregaGestion,
   cambiarEstadoSinconizado,
-  quitarEntregaGestion
+  quitarEntregaGestion,
+  quitarEntregas,
+  quitarEntregaGestiones
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

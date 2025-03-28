@@ -36,11 +36,13 @@ const entregaCargar = () => {
     navigation.setOptions({
       headerLeft: () => <Volver ruta="entrega" />,
     });
-    reset(valoresFormularioCargar);
   }, [navigation]);
 
   const onLoginPressed = async (data: { codigo: string }) => {
     setMostrarAnimacionCargando(true);
+    reset({
+      codigo: ''
+    });
     try {
       const respuestaApiVerticalEntrega = await consultarApi<VerticalEntrega>(
         `${APIS.entrega.verticalEntrega}${data.codigo}/`,

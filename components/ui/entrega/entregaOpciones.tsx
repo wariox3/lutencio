@@ -6,6 +6,8 @@ import {
   cambiarEstadoSinconizado,
   limpiarEntregaSeleccionada,
   quitarEntregaGestion,
+  quitarEntregaGestiones,
+  quitarEntregas,
 } from "@/store/reducers/entregaReducer";
 import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,7 +25,7 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { useRouter } from "expo-router";
 import React, { memo } from "react";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, H4, H6, ListItem, XStack, YGroup } from "tamagui";
 
@@ -32,6 +34,9 @@ const spModes = ["percent", "constant", "fit", "mixed"] as const;
 export const EntregaOpciones = () => {
   const entregasSeleccionadas = useSelector(
     (state: RootState) => state.entregas.entregasSeleccionadas || []
+  );
+  const entregas = useSelector(
+    (state: RootState) => state.entregas.entregas || []
   );
   const entregasGestion = useSelector(
     (state: RootState) => state.entregas.gestion || []
@@ -69,7 +74,7 @@ export const EntregaOpciones = () => {
         <Sheet.Handle />
         <Sheet.Frame p="$4" gap="$5">
           <SheetContents
-            {...{ setOpen, entregasSeleccionadas, entregasGestion }}
+            {...{ setOpen, entregasSeleccionadas, entregasGestion, entregas }}
           />
         </Sheet.Frame>
       </Sheet>
@@ -79,7 +84,7 @@ export const EntregaOpciones = () => {
 
 // in general good to memoize the contents to avoid expensive renders during animations
 const SheetContents = memo(
-  ({ setOpen, entregasSeleccionadas, entregasGestion }: any) => {
+  ({ setOpen, entregasSeleccionadas, entregasGestion, entregas }: any) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const arrEntregas = useSelector(
@@ -98,11 +103,11 @@ const SheetContents = memo(
     };
 
     const retirarSeleccionadas = () => {
-      setOpen(false);
       entregasSeleccionadas.map((entrega: number) => {
         dispatch(cambiarEstadoSeleccionado(entrega));
       });
       dispatch(limpiarEntregaSeleccionada());
+      setOpen(false);
     };
 
     const gestionGuias = async () => {
@@ -220,6 +225,60 @@ const SheetContents = memo(
       }
     };
 
+    const confirmarRetirarDespacho = async () => {
+      Alert.alert(
+        "⚠️ Advertencia",
+        "Esta acción retirara las entregas y las visitas pendientes por sincronizar no se puede desacer una vez completa",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+          },
+          { text: "Confirmar", onPress: () => _retirarDespacho() },
+        ]
+      );
+    };
+
+    const _retirarDespacho = async () => {
+      //retirar las entregas
+      dispatch(quitarEntregas());
+
+
+
+      //eliminar gestiones
+      for (const entrega of arrEntregas) {
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+        if (status === "granted") {
+          console.log("Permiso  para acceder a la galería");
+        }
+        // elimianr imagenes
+        for (const img of entrega.arrImagenes) {
+          const fileInfo = await FileSystem.getInfoAsync(img.base64);
+          if (fileInfo.exists) {
+            await deleteFileFromGallery(img.base64);
+          }
+        }
+
+        // //eliminar firma
+        if (entrega.firmarBase64) {
+          const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
+          if (fileInfo.exists) {
+            await deleteFileFromGallery(entrega.firmarBase64);
+          }
+        }
+      }
+
+      //retirar gestiones
+      entregasSeleccionadas.map((entrega: number) => {
+        dispatch(cambiarEstadoSeleccionado(entrega));
+      });
+      dispatch(limpiarEntregaSeleccionada());
+      dispatch(quitarEntregaGestiones());
+
+      //cerrar el sheet
+      setOpen(false);
+    };
+
     return (
       <>
         <XStack justify="space-between">
@@ -227,8 +286,9 @@ const SheetContents = memo(
           <Button
             size="$4"
             circular
-            icon={<XCircle size="$3" />}
+            icon={<XCircle size="$3" color={"$red10"} />}
             onPress={() => setOpen(false)}
+            theme={"red"}
           />
         </XStack>
         <YGroup width={"auto"} flex={1} size="$4" gap="$4">
@@ -242,12 +302,15 @@ const SheetContents = memo(
               subTitle="obtener información de un despacho"
               onPress={() => navegarEntregaCargar()}
             />
-            <ListItem
-              hoverTheme
-              icon={<ClipboardX size="$2" />}
-              title="Retirar"
-              subTitle="Retire el despacho actual"
-            />
+            {entregas.length > 0 ? (
+              <ListItem
+                hoverTheme
+                icon={<ClipboardX size="$2" />}
+                title="Retirar"
+                subTitle="Retire el despacho actual"
+                onPress={() => confirmarRetirarDespacho()}
+              />
+            ) : null}
 
             {entregasSeleccionadas.length > 0 ? (
               <>
