@@ -31,7 +31,7 @@ export default function EntregaDreawer() {
     async function getCurrentLocation() {
       let { status } = await Location.requestForegroundPermissionsAsync();
       setLocation(status);
-      if (location === "granted") {
+      if (status === "granted") {
         navigation.setOptions({
           headerRight: () => <EntregaOpciones />,
         });

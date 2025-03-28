@@ -72,7 +72,7 @@ const entregaFormulario = () => {
     navigation.setOptions({
       headerLeft: () => <Volver ruta="entrega" />,
     });
-    reiniciarState()
+    reiniciarState();
     reset({
       recibe: "",
       parentesco: "",
@@ -205,7 +205,6 @@ const entregaFormulario = () => {
             keyboardType="numeric"
             placeholder="000000"
           />
-
           <XStack justify={"space-between"}>
             <Text>
               Firma

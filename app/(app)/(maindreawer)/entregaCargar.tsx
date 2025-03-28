@@ -19,10 +19,12 @@ import { Button, H4, Spinner, View } from "tamagui";
 const entregaCargar = () => {
   const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
     useState(false);
+
+  const valoresFormularioCargar = {
+    codigo: "",
+  };
   const { control, handleSubmit, reset } = useForm<FieldValues>({
-    defaultValues: {
-      codigo: "",
-    },
+    defaultValues: valoresFormularioCargar,
   });
   const navigation = useNavigation();
 
@@ -34,7 +36,7 @@ const entregaCargar = () => {
     navigation.setOptions({
       headerLeft: () => <Volver ruta="entrega" />,
     });
-    reset({codigo: ""});
+    reset(valoresFormularioCargar);
   }, [navigation]);
 
   const onLoginPressed = async (data: { codigo: string }) => {

@@ -24,7 +24,7 @@ const EntregaImagenesPreview = ({
             imageStyle={{ borderRadius: 15 }}
             style={{
               height: item.base64 ? 180 : 0,
-              width: width,
+              width: width-110,
               marginVertical: item.base64 ? 5 : 0,
               alignItems: "flex-end",
               marginRight: 20,
