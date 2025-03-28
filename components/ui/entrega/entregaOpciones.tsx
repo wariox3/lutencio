@@ -19,7 +19,6 @@ import {
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
 import * as FileSystem from 'expo-file-system';
-import { File, Paths } from 'expo-file-system/next';
 import * as MediaLibrary from "expo-media-library";
 import { useRouter } from "expo-router";
 import React, { memo } from "react";

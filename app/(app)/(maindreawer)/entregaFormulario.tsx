@@ -16,6 +16,10 @@ import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
+import * as FileSystem from "expo-file-system";
+import { requestPermissionsAsync } from "expo-media-library"; // Para fotos en la galería
+import * as MediaLibrary from "expo-media-library";
+import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 
 const entregaFormulario = () => {
   const dispatch = useDispatch();
@@ -24,7 +28,7 @@ const entregaFormulario = () => {
   );
   const router = useRouter();
   const navigation = useNavigation();
-
+  const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
       recibe: "",
@@ -91,13 +95,20 @@ const entregaFormulario = () => {
     });
   };
 
-  const RemoverFoto = (indexArrImagen: number) => {
-    const arrImagenTemporal = state.arrImagenes.filter((item, index) => {
-      return index !== indexArrImagen;
-    });
-    actualizarState({
-      arrImagenes: arrImagenTemporal,
-    });
+  const RemoverFoto = async (indexArrImagen: number) => {
+    try {
+      const imagen = state.arrImagenes[indexArrImagen];
+
+      await deleteFileFromGallery(imagen.base64);
+
+      // Aquí deberías también actualizar tu estado para reflejar la eliminación
+      const newArrImagenes = [...state.arrImagenes];
+      newArrImagenes.splice(indexArrImagen, 1);
+      // Suponiendo que tienes una función para actualizar el estado
+      setState((prev) => ({ ...prev, arrImagenes: newArrImagenes }));
+    } catch (error) {
+      console.error("Error al eliminar el archivo:", error);
+    }
   };
 
   const RemoverFirma = () => {
