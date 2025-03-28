@@ -1,4 +1,5 @@
 import APIS from "@/constants/endpoint";
+import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoSeleccionado,
@@ -18,7 +19,7 @@ import {
   XCircle,
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { useRouter } from "expo-router";
 import React, { memo } from "react";
@@ -84,6 +85,8 @@ const SheetContents = memo(
     const arrEntregas = useSelector(
       (state: RootState) => state.entregas.gestion || []
     );
+    const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
+
     const navegarEntregaCargar = () => {
       router.push("/(app)/(maindreawer)/entregaCargar");
       setOpen(false);
@@ -104,15 +107,13 @@ const SheetContents = memo(
 
     const gestionGuias = async () => {
       try {
-
-        if (Platform.OS === 'android') {
+        if (Platform.OS === "android") {
           const { status } = await MediaLibrary.requestPermissionsAsync();
-          if (status !== 'granted') {
-            alert('Se necesitan permisos para guardar en la galería');
+          if (status !== "granted") {
+            alert("Se necesitan permisos para guardar en la galería");
             return;
           }
         }
-      
 
         const subdominio = await AsyncStorage.getItem("subdominio");
         if (!subdominio) {
@@ -125,19 +126,22 @@ const SheetContents = memo(
 
           // Verificar si entrega tiene imágenes
           if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
-            for (const img of entrega.arrImagenes) {
-              if (img.base64.startsWith("file://")) {
+            for (const imagen of entrega.arrImagenes) {
+              if (imagen.base64.startsWith("file://")) {
                 // Verificar si el archivo existe
-                const fileInfo = await FileSystem.getInfoAsync(img.base64);
+                const fileInfo = await FileSystem.getInfoAsync(imagen.base64);
                 if (!fileInfo.exists) {
-                  console.warn(`⚠️ Imagen no encontrada: ${img.base64}`);
+                  console.warn(`⚠️ Imagen no encontrada: ${imagen.base64}`);
                   continue; // Saltar esta imagen si fue eliminada
                 }
 
                 // Convertir la imagen a Base64
-                const base64 = await FileSystem.readAsStringAsync(img.base64, {
-                  encoding: FileSystem.EncodingType.Base64,
-                });
+                const base64 = await FileSystem.readAsStringAsync(
+                  imagen.base64,
+                  {
+                    encoding: FileSystem.EncodingType.Base64,
+                  }
+                );
 
                 imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
               }
@@ -182,17 +186,15 @@ const SheetContents = memo(
             //Borrar las imágenes después de éxito
 
             const { status } = await MediaLibrary.requestPermissionsAsync();
-            if (status === 'granted') {
-              console.log('Permiso  para acceder a la galería');
+            if (status === "granted") {
+              console.log("Permiso  para acceder a la galería");
             }
 
             for (const img of entrega.arrImagenes) {
               const fileInfo = await FileSystem.getInfoAsync(img.base64);
               if (fileInfo.exists) {
-                await FileSystem.deleteAsync(img.base64);
-                const asset = await MediaLibrary.createAssetAsync(img.base64);
-                await MediaLibrary.deleteAssetsAsync([asset]);
-              } 
+                await deleteFileFromGallery(img.base64);
+              }
             }
 
             //Borrar las firma después de éxito
@@ -201,7 +203,7 @@ const SheetContents = memo(
                 entrega.firmarBase64
               );
               if (fileInfo.exists) {
-                let eliminarFirma = await FileSystem.deleteAsync(entrega.firmarBase64);
+                await deleteFileFromGallery(entrega.firmarBase64);
               }
             }
 
@@ -281,8 +283,6 @@ const SheetContents = memo(
             ) : null}
           </YGroup.Item>
         </YGroup>
-
-        
       </>
     );
   }

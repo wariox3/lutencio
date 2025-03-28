@@ -71,8 +71,6 @@ const entregaFormulario = () => {
     navigation.setOptions({
       headerLeft: () => <Volver ruta="entrega" />,
     });
-    reiniciarState();
-    reset();
   }, []);
 
   const reiniciarState = () => {
@@ -109,7 +107,7 @@ const entregaFormulario = () => {
     }
   };
 
-  const RemoverFirma = async () => {
+  const removerFirma = async () => {
     await deleteFileFromGallery(state.firmarBase64!);
     actualizarState({
       firmarBase64: null,
@@ -211,7 +209,7 @@ const entregaFormulario = () => {
           </XStack>
           <EntregaFirmaPreview
             imagen={state.firmarBase64}
-            RemoverFirma={RemoverFirma}
+            removerFirma={removerFirma}
           ></EntregaFirmaPreview>
           <Button
             theme="blue"

@@ -93,8 +93,15 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
   const handleOK = async (signature: string) => {
     try {
       const base64Code = signature.split(",")[1];
-      const fileUri = FileSystem.documentDirectory + "firma.png";
-
+      const ahora = new Date();
+      const fechaHora = ahora.toISOString()
+        .replace(/T/, '_')
+        .replace(/\..+/, '')
+        .replace(/-/g, '')
+        .replace(/:/g, '');
+      
+      const fileUri = FileSystem.documentDirectory + `firma_${fechaHora}.png`;
+      
       await FileSystem.writeAsStringAsync(fileUri, base64Code, {
         encoding: FileSystem.EncodingType.Base64,
       });
