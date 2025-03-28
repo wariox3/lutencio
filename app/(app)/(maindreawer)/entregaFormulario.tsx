@@ -98,9 +98,7 @@ const entregaFormulario = () => {
   const RemoverFoto = async (indexArrImagen: number) => {
     try {
       const imagen = state.arrImagenes[indexArrImagen];
-
       await deleteFileFromGallery(imagen.base64);
-
       // Aquí deberías también actualizar tu estado para reflejar la eliminación
       const newArrImagenes = [...state.arrImagenes];
       newArrImagenes.splice(indexArrImagen, 1);
@@ -111,7 +109,8 @@ const entregaFormulario = () => {
     }
   };
 
-  const RemoverFirma = () => {
+  const RemoverFirma = async () => {
+    await deleteFileFromGallery(state.firmarBase64!);
     actualizarState({
       firmarBase64: null,
     });
