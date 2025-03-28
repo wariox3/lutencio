@@ -306,8 +306,8 @@ const SheetContents = memo(
               <ListItem
                 hoverTheme
                 icon={<ClipboardX size="$2" />}
-                title="Retirar"
-                subTitle="Retire el despacho actual"
+                title="Desvincular"
+                subTitle="Desvincular el despacho actual"
                 onPress={() => confirmarRetirarDespacho()}
               />
             ) : null}
