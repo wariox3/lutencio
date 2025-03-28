@@ -1,19 +1,17 @@
 import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
-import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
+import Volver from "@/components/ui/navegacion/volver";
 import { EntregaGestion } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoEntrega,
   cambiarEstadoSeleccionado,
   quitarEntregaGestion,
-  quitarEntregaSeleccionada,
-  seleccionarEntrega,
+  quitarEntregaSeleccionada
 } from "@/store/reducers/entregaReducer";
 import { Trash2 } from "@tamagui/lucide-icons";
-import * as Location from "expo-location";
 import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
@@ -26,29 +24,18 @@ export default function entregaGestion() {
   );
   const router = useRouter();
 
-  // useEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => <EntregaOpciones />,
-  //   });
-  //   async function getCurrentLocation() {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       setErrorMsg("Permission to access location was denied");
-  //       return;
-  //     }
-
-  //     let location = await Location.getCurrentPositionAsync({});
-  //     setLocation(location);
-  //   }
-
-  //   getCurrentLocation();
-  // }, [navigation]);
+  useEffect(() => {
+    // Aquí puedes realizar lógica de inicialización si es necesario.
+    navigation.setOptions({
+      headerLeft: () => <Volver ruta="entrega" />,
+    });
+  }, [navigation]);
 
   const retirarGestion = (item: EntregaGestion, id: number) => {
     item.guias.map((guias) => {
       dispatch(cambiarEstadoEntrega(guias));
       dispatch(quitarEntregaSeleccionada(guias));
-      dispatch(seleccionarEntrega(guias));
+      dispatch(cambiarEstadoSeleccionado(guias));
     });
     dispatch(quitarEntregaGestion(id));
   };

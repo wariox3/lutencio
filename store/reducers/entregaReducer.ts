@@ -58,6 +58,7 @@ const entregasSlice = createSlice({
     },
     quitarEntregaSeleccionada: (state, action: PayloadAction<number>) => {
       if (!state.entregasSeleccionadas) return;
+      
       state.entregasSeleccionadas = state.entregasSeleccionadas.filter(
         (id) => id !== action.payload
       );

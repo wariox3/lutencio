@@ -1,4 +1,5 @@
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
+import Volver from "@/components/ui/navegacion/volver";
 import APIS from "@/constants/endpoint";
 import { Validaciones } from "@/constants/mensajes";
 import { ConsultarLista } from "@/interface/comun/consultarLista";
@@ -7,8 +8,8 @@ import { VerticalEntrega } from "@/interface/entrega/verticalEntrega";
 import { setEntregas } from "@/store/reducers/entregaReducer";
 import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useNavigation, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,10 +24,18 @@ const entregaCargar = () => {
       codigo: "",
     },
   });
-  
+  const navigation = useNavigation();
+
   const router = useRouter();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    // Aquí puedes realizar lógica de inicialización si es necesario.
+    navigation.setOptions({
+      headerLeft: () => <Volver ruta="entrega" />,
+    });
+    reset({codigo: ""});
+  }, [navigation]);
 
   const onLoginPressed = async (data: { codigo: string }) => {
     setMostrarAnimacionCargando(true);
