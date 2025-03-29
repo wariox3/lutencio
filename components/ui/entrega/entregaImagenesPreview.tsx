@@ -12,6 +12,8 @@ const EntregaImagenesPreview = ({
   arrImagenes: { uri: string }[];
   removerFoto?: (index: number) => void;
 }) => {
+  console.log({arrImagenes});
+  
   return (
     <View>
       <FlatList

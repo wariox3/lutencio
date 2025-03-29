@@ -16,7 +16,11 @@ const entregasSlice = createSlice({
   initialState,
   reducers: {
     setEntregas: (state, action: PayloadAction<Entrega[]>) => {
-      state.entregas = action.payload;
+      state.entregas = action.payload.map((entrega) => ({
+        ...entrega,
+        estado_entregado: false,  // Valor inicial por defecto
+        estado_sincronizado: false  // Valor inicial por defecto
+      }));
     },
     quitarEntregas: (state) => {
       state.entregas = [];
@@ -85,7 +89,7 @@ const entregasSlice = createSlice({
     cambiarEstadoSinconizado: (state, action: PayloadAction<number>) => {
       const entrega = state.entregas.find((e) => e.id === action.payload);
       if (entrega) {
-        entrega.estado_sinconizado = !entrega.estado_sinconizado;
+        entrega.estado_sincronizado = !entrega.estado_sincronizado;
       }
     },
     limpiarEntregaSeleccionada: (state) => {

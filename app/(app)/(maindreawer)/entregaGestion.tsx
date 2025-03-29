@@ -1,26 +1,26 @@
 import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import Volver from "@/components/ui/navegacion/volver";
-import { EntregaGestion } from "@/interface/entrega/entrega";
+import { Entrega } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
-import {
-  cambiarEstadoEntrega,
-  cambiarEstadoSeleccionado,
-  quitarEntregaGestion,
-  quitarEntregaSeleccionada
-} from "@/store/reducers/entregaReducer";
 import { Trash2 } from "@tamagui/lucide-icons";
 import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
 
 export default function entregaGestion() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const arrEntregas = useSelector(
-    (state: RootState) => state.entregas.gestion || []
+    (state: RootState) =>
+      state.entregas.entregas.filter(
+        (entrega: Entrega) =>
+          entrega.estado_entregado === true &&
+          entrega.estado_sincronizado === false
+      ) || [],
+    shallowEqual
   );
   const router = useRouter();
 
@@ -31,13 +31,13 @@ export default function entregaGestion() {
     });
   }, [navigation]);
 
-  const retirarGestion = (item: EntregaGestion, id: number) => {
-    item.guias.map((guias) => {
-      dispatch(cambiarEstadoEntrega(guias));
-      dispatch(quitarEntregaSeleccionada(guias));
-      dispatch(cambiarEstadoSeleccionado(guias));
-    });
-    dispatch(quitarEntregaGestion(id));
+  const retirarGestion = (item: Entrega, id: number) => {
+    // item.guias.map((guias) => {
+    //   dispatch(cambiarEstadoEntrega(guias));
+    //   dispatch(quitarEntregaSeleccionada(guias));
+    //   dispatch(cambiarEstadoSeleccionado(guias));
+    // });
+    // dispatch(quitarEntregaGestion(id));
   };
 
   return (
@@ -45,16 +45,16 @@ export default function entregaGestion() {
       <KeyboardAvoidingView>
         <FlatList
           data={arrEntregas}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(_, index) => index.toString()}
           ListHeaderComponent={() => (
             <XStack justify="space-between" px="$3" mb="$2">
-              <H4 mb="$2">Gestión</H4>
+              <H4 mb="$2">Visitas</H4>
             </XStack>
           )}
           renderItem={({ item, index }) => (
             <Card p="$3" mx="$3">
               <XStack justify={"space-between"}>
-                <Text>Guias: {item.guias.join(",")}</Text>
+                <Text>Guias</Text>
                 <Button
                   icon={<Trash2 size="$2" color={"$red10"} />}
                   variant="outlined"
@@ -62,19 +62,26 @@ export default function entregaGestion() {
                   onPress={() => retirarGestion(item, index)}
                 ></Button>
               </XStack>
-
-              <Text>Recibe: {item.recibe}</Text>
-              <Text>Parentesco: {item.parentesco}</Text>
-              <Text>Celular: {item.celular}</Text>
-              <Text>Número identificación: {item.numeroIdentificacion}</Text>
+              <Text>Destinatario: {item.destinatario}</Text>
+              <Text>Destinatario dirección:</Text>
+              <Text>{item.destinatario_direccion}</Text>
               <Text>Imagenes</Text>
-              <EntregaImagenesPreview
-                arrImagenes={item.arrImagenes}
-              ></EntregaImagenesPreview>
+              {item.arrImagenes ? (
+                <EntregaImagenesPreview
+                  arrImagenes={item.arrImagenes}
+                ></EntregaImagenesPreview>
+              ) : (
+                <Text>No registra imagenes</Text>
+              )}
               <Text>Firma</Text>
-              <EntregaFirmaPreview
-                imagen={item.firmarBase64}
-              ></EntregaFirmaPreview>
+
+              {item.firmarBase64 !== null ? (
+                <EntregaFirmaPreview
+                  imagen={item.firmarBase64}
+                ></EntregaFirmaPreview>
+              ) : (
+                <Text>No registra firma</Text>
+              )}
             </Card>
           )}
           ItemSeparatorComponent={() => <View my={"$2"}></View>}
