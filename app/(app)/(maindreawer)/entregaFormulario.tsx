@@ -4,23 +4,22 @@ import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import Volver from "@/components/ui/navegacion/volver";
+import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { RootState } from "@/store/reducers";
 import {
+  actualizarFirmaEntrega,
+  agregarImagenEntrega,
   cambiarEstadoEntrega,
-  nuevaEntregaGestion,
   quitarEntregaSeleccionada,
+  quitarImagenEntrega,
 } from "@/store/reducers/entregaReducer";
 import { useNavigation, useRouter } from "expo-router";
+import { navigate } from "expo-router/build/global-state/routing";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
-import * as FileSystem from "expo-file-system";
-import { requestPermissionsAsync } from "expo-media-library"; // Para fotos en la galería
-import * as MediaLibrary from "expo-media-library";
-import { useMediaLibrary } from "@/hooks/useMediaLibrary";
-import { navigate } from "expo-router/build/global-state/routing";
 
 const entregaFormulario = () => {
   const dispatch = useDispatch();
@@ -40,7 +39,7 @@ const entregaFormulario = () => {
   });
 
   const estadoInicial: {
-    arrImagenes: { base64: string }[];
+    arrImagenes: { uri: string }[];
     mostrarAnimacionCargando: boolean;
     ubicacionHabilitada: boolean;
     activarCamara: boolean;
@@ -89,27 +88,36 @@ const entregaFormulario = () => {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
 
-  const handleCapture = (base64: string) => {
+  const handleCapture = (uri: string) => {
     actualizarState({
-      arrImagenes: [...state.arrImagenes, { base64 }],
+      arrImagenes: [...state.arrImagenes, { uri }],
     });
+    entregasSeleccionadas.map((entregaId) => {
+      dispatch(agregarImagenEntrega({ entregaId, imagen: { uri } }));
+    })
   };
 
   const handleFirma = (base64: string) => {
     actualizarState({
       firmarBase64: base64,
     });
+    entregasSeleccionadas.map((entregaId) => {
+      dispatch(actualizarFirmaEntrega({ entregaId, firmarBase64: base64 }));
+    })
   };
 
-  const RemoverFoto = async (indexArrImagen: number) => {
+  const removerFoto = async (indexArrImagen: number) => {
     try {
       const imagen = state.arrImagenes[indexArrImagen];
-      await deleteFileFromGallery(imagen.base64);
+      await deleteFileFromGallery(imagen.uri);
       // Aquí deberías también actualizar tu estado para reflejar la eliminación
       const newArrImagenes = [...state.arrImagenes];
       newArrImagenes.splice(indexArrImagen, 1);
       // Suponiendo que tienes una función para actualizar el estado
       setState((prev) => ({ ...prev, arrImagenes: newArrImagenes }));
+      entregasSeleccionadas.map((entregaId) => {
+        dispatch(quitarImagenEntrega({ entregaId, imagenUri: imagen.uri  }));
+      })
     } catch (error) {
       console.error("Error al eliminar el archivo:", error);
     }
@@ -120,6 +128,9 @@ const entregaFormulario = () => {
     actualizarState({
       firmarBase64: null,
     });
+    entregasSeleccionadas.map((entregaId) => {
+      dispatch(actualizarFirmaEntrega({ entregaId, firmarBase64: null }));
+    })
   };
 
   const onLoginPressed = async (data: {
@@ -132,17 +143,18 @@ const entregaFormulario = () => {
       actualizarState({
         mostrarAnimacionCargando: true,
       });
-      dispatch(
-        nuevaEntregaGestion({
-          arrImagenes: state.arrImagenes,
-          celular: data.celular,
-          numeroIdentificacion: data.numeroIdentificacion,
-          recibe: data.recibe,
-          parentesco: data.parentesco,
-          guias: entregasSeleccionadas,
-          firmarBase64: state.firmarBase64,
-        })
-      );
+
+      // dispatch(
+      //   nuevaEntregaGestion({
+      //     arrImagenes: state.arrImagenes,
+      //     celular: data.celular,
+      //     numeroIdentificacion: data.numeroIdentificacion,
+      //     recibe: data.recibe,
+      //     parentesco: data.parentesco,
+      //     guias: entregasSeleccionadas,
+      //     firmarBase64: state.firmarBase64,
+      //   })
+      // );
       entregasSeleccionadas.map((entrega) => {
         dispatch(cambiarEstadoEntrega(entrega));
         dispatch(quitarEntregaSeleccionada(entrega));
@@ -173,7 +185,7 @@ const entregaFormulario = () => {
 
           <EntregaImagenesPreview
             arrImagenes={state.arrImagenes}
-            removerFoto={RemoverFoto}
+            removerFoto={removerFoto}
           ></EntregaImagenesPreview>
           <BasicInput
             name="recibe"
@@ -224,6 +236,7 @@ const entregaFormulario = () => {
               state.mostrarAnimacionCargando ? () => <Spinner /> : undefined
             }
             onPress={handleSubmit(onLoginPressed)}
+            mb={"$2"}
           >
             Entregar
           </Button>

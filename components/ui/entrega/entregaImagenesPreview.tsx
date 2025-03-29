@@ -9,7 +9,7 @@ const EntregaImagenesPreview = ({
   arrImagenes,
   removerFoto,
 }: {
-  arrImagenes: { base64: string }[];
+  arrImagenes: { uri: string }[];
   removerFoto?: (index: number) => void;
 }) => {
   return (
@@ -20,12 +20,12 @@ const EntregaImagenesPreview = ({
         data={arrImagenes}
         renderItem={({ item, index }) => (
           <ImageBackground
-            source={{ uri: item.base64 }}
+            source={{ uri: item.uri }}
             imageStyle={{ borderRadius: 15 }}
             style={{
-              height: item.base64 ? 180 : 0,
+              height: item.uri ? 180 : 0,
               width: width-110,
-              marginVertical: item.base64 ? 5 : 0,
+              marginVertical: item.uri ? 5 : 0,
               alignItems: "flex-end",
               marginRight: 20,
             }}

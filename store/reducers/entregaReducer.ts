@@ -1,18 +1,14 @@
-import { Entrega, EntregaGestion } from "@/interface/entrega/entrega";
+import { Entrega } from "@/interface/entrega/entrega";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Definimos el tipo del estado
 interface EntregasState {
   entregas: Entrega[];
   entregasSeleccionadas: number[];
-  gestion: EntregaGestion[];
 }
 
-// Estado inicial con tipado correcto
 const initialState: EntregasState = {
   entregas: [],
   entregasSeleccionadas: [],
-  gestion: [],
 };
 
 const entregasSlice = createSlice({
@@ -27,12 +23,52 @@ const entregasSlice = createSlice({
     },
     seleccionarEntrega: (state, action: PayloadAction<number>) => {
       if (!state.entregasSeleccionadas) {
-        state.entregasSeleccionadas = []; // Asegurar que existe antes de modificar
+        state.entregasSeleccionadas = [];
       }
       state.entregasSeleccionadas.push(action.payload);
     },
-    nuevaEntregaGestion: (state, action: PayloadAction<EntregaGestion>) => {
-      state.gestion.push(action.payload);
+    agregarImagenEntrega: (
+      state,
+      action: PayloadAction<{
+        entregaId: number;
+        imagen: { uri: string };
+      }>
+    ) => {
+      const { entregaId, imagen } = action.payload;
+      const entrega = state.entregas.find((e) => e.id === entregaId);
+      if (entrega) {
+        // Asegurarnos que arrImagenes existe
+        if (!entrega.arrImagenes) {
+          entrega.arrImagenes = [];
+        }
+        entrega.arrImagenes.push(imagen);
+      }
+    },
+    quitarImagenEntrega: (
+      state,
+      action: PayloadAction<{
+        entregaId: number;
+        imagenUri: string;
+      }>
+    ) => {
+      const { entregaId, imagenUri } = action.payload;
+      const entrega = state.entregas.find((e) => e.id === entregaId);
+      if (entrega && entrega.arrImagenes) {
+        entrega.arrImagenes = entrega.arrImagenes.filter(
+          (img) => img.uri !== imagenUri
+        );
+      }
+    },
+    actualizarFirmaEntrega: (
+      state,
+      action: PayloadAction<{ entregaId: number; firmarBase64: string | null }>
+    ) => {
+      const { entregaId, firmarBase64 } = action.payload;
+
+      const entrega = state.entregas.find((e) => e.id === entregaId);
+      if (entrega) {
+        entrega.firmarBase64 = firmarBase64;
+      }
     },
     cambiarEstadoSeleccionado: (state, action: PayloadAction<number>) => {
       const entrega = state.entregas.find((e) => e.id === action.payload);
@@ -55,21 +91,11 @@ const entregasSlice = createSlice({
     limpiarEntregaSeleccionada: (state) => {
       state.entregasSeleccionadas = [];
     },
-    quitarEntregaGestion: (state, action: PayloadAction<number>) => {
-      if (!state.entregasSeleccionadas) return;
-      state.gestion = state.gestion.filter(
-        (_, index) => index !== action.payload
-      );
-    },
     quitarEntregaSeleccionada: (state, action: PayloadAction<number>) => {
       if (!state.entregasSeleccionadas) return;
-
       state.entregasSeleccionadas = state.entregasSeleccionadas.filter(
         (id) => id !== action.payload
       );
-    },
-    quitarEntregaGestiones: (state) => {
-      state.gestion = [];
     },
   },
 });
@@ -81,10 +107,10 @@ export const {
   cambiarEstadoSeleccionado,
   limpiarEntregaSeleccionada,
   quitarEntregaSeleccionada,
-  nuevaEntregaGestion,
   cambiarEstadoSinconizado,
-  quitarEntregaGestion,
   quitarEntregas,
-  quitarEntregaGestiones
+  agregarImagenEntrega,
+  quitarImagenEntrega,
+  actualizarFirmaEntrega
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

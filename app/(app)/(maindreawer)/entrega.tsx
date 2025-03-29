@@ -1,4 +1,5 @@
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
+import { Entrega } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoSeleccionado,
@@ -9,17 +10,15 @@ import * as Location from "expo-location";
 import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
 
 export default function EntregaDreawer() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const arrEntregas = useSelector(
-    (state: RootState) =>
-      state.entregas.entregas.filter(
-        (entrega) => entrega.estado_entregado === false
-      ) || []
+    (state: RootState) => state.entregas.entregas.filter((entrega) => !entrega.estado_entregado) || [],
+    shallowEqual
   );
   const entregasSeleccionadas = useSelector(
     (state: RootState) => state.entregas.entregasSeleccionadas || []

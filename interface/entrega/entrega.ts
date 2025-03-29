@@ -30,6 +30,8 @@ export interface Entrega {
   despacho_id: number;
   resultados: Resultado[];
   seleccionado: boolean;
+  arrImagenes: { uri: string }[];
+  firmarBase64: string | null;
 }
 
 export interface Resultado {
@@ -106,12 +108,3 @@ export interface PlusCode {
   compound_code: string;
 }
 
-export interface EntregaGestion {
-  recibe: string;
-  parentesco: string;
-  numeroIdentificacion: string;
-  celular: string;
-  guias: number[];
-  arrImagenes: { base64: string }[];
-  firmarBase64: string | null;
-}
