@@ -67,24 +67,25 @@ const entregaFormulario = () => {
   const [state, setState] = useState(estadoInicial);
 
   useEffect(() => {
-    // Aquí puedes realizar lógica de inicialización si es necesario.
-    navigation.setOptions({
-      headerLeft: () => <Volver ruta="entrega" />,
-    });
+    navigation.setOptions({ headerLeft: () => <Volver ruta="entrega" /> });
+    reiniciarEstadoCompleto();
+  }, []);
+
+  const reiniciarEstadoCompleto = () => {
+    setState(estadoInicial);
     reiniciarState();
+  };
+
+  const reiniciarState = () => {
     reset({
       recibe: "",
       parentesco: "",
       numeroIdentificacion: "",
       celular: "",
     });
-  }, [navigate]);
-
-  const reiniciarState = () => {
-    setState(estadoInicial);
   };
 
-  const actualizarState = (newState: Partial<typeof state>) => {
+  const actualizarState = (newState: Partial<typeof state>) => {    
     setState((prevState) => ({ ...prevState, ...newState }));
   };
 
@@ -94,7 +95,7 @@ const entregaFormulario = () => {
     });
     entregasSeleccionadas.map((entregaId) => {
       dispatch(agregarImagenEntrega({ entregaId, imagen: { uri } }));
-    })
+    });
   };
 
   const handleFirma = (base64: string) => {
@@ -103,7 +104,7 @@ const entregaFormulario = () => {
     });
     entregasSeleccionadas.map((entregaId) => {
       dispatch(actualizarFirmaEntrega({ entregaId, firmarBase64: base64 }));
-    })
+    });
   };
 
   const removerFoto = async (indexArrImagen: number) => {
@@ -116,8 +117,8 @@ const entregaFormulario = () => {
       // Suponiendo que tienes una función para actualizar el estado
       setState((prev) => ({ ...prev, arrImagenes: newArrImagenes }));
       entregasSeleccionadas.map((entregaId) => {
-        dispatch(quitarImagenEntrega({ entregaId, imagenUri: imagen.uri  }));
-      })
+        dispatch(quitarImagenEntrega({ entregaId, imagenUri: imagen.uri }));
+      });
     } catch (error) {
       console.error("Error al eliminar el archivo:", error);
     }
@@ -130,7 +131,7 @@ const entregaFormulario = () => {
     });
     entregasSeleccionadas.map((entregaId) => {
       dispatch(actualizarFirmaEntrega({ entregaId, firmarBase64: null }));
-    })
+    });
   };
 
   const onLoginPressed = async (data: {
@@ -143,23 +144,14 @@ const entregaFormulario = () => {
       actualizarState({
         mostrarAnimacionCargando: true,
       });
-
-      // dispatch(
-      //   nuevaEntregaGestion({
-      //     arrImagenes: state.arrImagenes,
-      //     celular: data.celular,
-      //     numeroIdentificacion: data.numeroIdentificacion,
-      //     recibe: data.recibe,
-      //     parentesco: data.parentesco,
-      //     guias: entregasSeleccionadas,
-      //     firmarBase64: state.firmarBase64,
-      //   })
-      // );
       entregasSeleccionadas.map((entrega) => {
         dispatch(cambiarEstadoEntrega(entrega));
         dispatch(quitarEntregaSeleccionada(entrega));
       });
       router.navigate("/(app)/(maindreawer)/entrega");
+      actualizarState({
+        mostrarAnimacionCargando: false,
+      });
     } catch (error) {
       actualizarState({
         mostrarAnimacionCargando: false,
