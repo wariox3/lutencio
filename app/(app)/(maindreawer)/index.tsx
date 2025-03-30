@@ -1,4 +1,3 @@
-import { HelloWave } from "@/components/HelloWave";
 import {
   KeyboardAvoidingView,
   SafeAreaView,
@@ -12,7 +11,6 @@ export default function MainDreawerIndex() {
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <HelloWave></HelloWave>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

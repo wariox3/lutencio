@@ -1,5 +1,6 @@
 import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
+import { EntregaSincronizar } from "@/components/ui/entrega/entregaSincronizar";
 import Volver from "@/components/ui/navegacion/volver";
 import { Entrega } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
@@ -23,11 +24,13 @@ export default function entregaGestion() {
     shallowEqual
   );
   const router = useRouter();
+  
 
   useEffect(() => {
     // Aquí puedes realizar lógica de inicialización si es necesario.
     navigation.setOptions({
       headerLeft: () => <Volver ruta="entrega" />,
+      headerRight: () => <EntregaSincronizar />
     });
   }, [navigation]);
 
