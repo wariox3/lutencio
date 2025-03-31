@@ -11,13 +11,17 @@ const APIS = {
     cambioClaveVerificar: `${URL_BASE}/seguridad/usuario/cambio-clave-verificar/`,
     cambioClave: `${URL_BASE}/seguridad/usuario/cambio-clave/`,
   },
-  entrega:{
+  entrega: {
     verticalEntrega: `${URL_BASE}/vertical/entrega/`,
-    ruteoVisitaEntrega:  `${URL_SUBDOMINIO}/ruteo/visita/entrega/`,
+    ruteoVisitaEntrega: `${URL_SUBDOMINIO}/ruteo/visita/entrega/`,
   },
-  general:{
-    funcionalidadLista:  `${URL_SUBDOMINIO}/general/funcionalidad/lista/`,
-  }
+  general: {
+    funcionalidadLista: `${URL_SUBDOMINIO}/general/funcionalidad/lista/`,
+  },
+  ruteo: {
+    ubicacion: `${URL_SUBDOMINIO}/ruteo/ubicacion/`,
+    visitaEntrega: `${URL_SUBDOMINIO}/ruteo/visita/entrega/`,
+  },
 };
 
 export default APIS;

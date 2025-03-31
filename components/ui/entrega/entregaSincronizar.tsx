@@ -1,23 +1,20 @@
+import APIS from "@/constants/endpoint";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
+import { Entrega } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
 import {
-  cambiarEstadoSeleccionado,
-  cambiarEstadoSinconizado,
-  limpiarEntregaSeleccionada,
+  cambiarEstadoSinconizado
 } from "@/store/reducers/entregaReducer";
+import { consultarApi } from "@/utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FileUp } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
-import { useRouter } from "expo-router";
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
 import React, { memo } from "react";
 import { Alert, Platform } from "react-native";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Button, Spinner } from "tamagui";
-import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Entrega } from "@/interface/entrega/entrega";
-import { consultarApi } from "@/utils/api";
-import APIS from "@/constants/endpoint";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -59,6 +56,7 @@ export const EntregaSincronizar = () => {
   };
 
   const gestionGuias = async () => {
+    setOpen(true);
     try {
       if (Platform.OS === "android") {
         const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -113,7 +111,7 @@ export const EntregaSincronizar = () => {
         // Iterar sobre las guías y enviar la información
         console.log(`📤 Enviando guía: ${entrega.id}`);
         await consultarApi<any>(
-          APIS.entrega.ruteoVisitaEntrega,
+          APIS.ruteo.visitaEntrega,
           {
             id: entrega.id,
             imagenes: imagenes, // Enviar imágenes convertidas
@@ -145,9 +143,12 @@ export const EntregaSincronizar = () => {
         }
         //cambiar estado estado_sincronizado
         dispatch(cambiarEstadoSinconizado(entrega.id));
+        setOpen(false);
       }
     } catch (error) {
       console.log("❌ Error en gestionGuias:", error);
+      setOpen(false);
+
     }
   };
 
@@ -156,7 +157,6 @@ export const EntregaSincronizar = () => {
       <Button
         icon={FileUp}
         onPress={() => {
-          //setOpen(true);
           confirmarRetirarDespacho();
         }}
       ></Button>

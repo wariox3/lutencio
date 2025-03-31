@@ -1,16 +1,16 @@
+import { themes } from "@/assets/theme/themes";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { persistor, store } from "@/store";
+import { defaultConfig } from "@tamagui/config/v4";
+import { TamaguiProvider, createTamagui } from "@tamagui/core";
 import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import "react-native-reanimated";
-import { TamaguiProvider, createTamagui } from "@tamagui/core";
-import { defaultConfig } from "@tamagui/config/v4";
-import { Provider } from "react-redux";
-import { persistor, store } from "@/store";
-import { PersistGate } from "redux-persist/integration/react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Stack } from "expo-router";
-import { themes } from "@/assets/theme/themes";
+import "react-native-reanimated";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import { PortalProvider } from "tamagui";
 
 // you usually export this from a tamagui.config.ts file

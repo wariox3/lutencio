@@ -72,6 +72,10 @@ const entregaCargar = () => {
           "subdominio",
           respuestaApiVerticalEntrega.schema_name
         );
+        await AsyncStorage.setItem(
+          "despacho",
+          data.codigo
+        );
         dispatch(setEntregas(respuestaApi.registros));
         router.navigate("/(app)/(maindreawer)/entrega");
       }

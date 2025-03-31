@@ -1,4 +1,6 @@
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
+import APIS from "@/constants/endpoint";
+import { useIntervalActivo } from "@/hooks/useIntervalActivo";
 import { Entrega } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
 import {
@@ -6,9 +8,11 @@ import {
   quitarEntregaSeleccionada,
   seleccionarEntrega,
 } from "@/store/reducers/entregaReducer";
+import { consultarApi } from "@/utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
@@ -24,21 +28,58 @@ export default function EntregaDreawer() {
     (state: RootState) => state.entregas.entregasSeleccionadas || []
   );
   const router = useRouter();
-  const [location, setLocation] = useState<any>();
+  const [permisoLocalizacion, setPermisoLocalizacion] = useState<string | null>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
 
   useEffect(() => {
     async function getCurrentLocation() {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      setLocation(status);
+      setPermisoLocalizacion(status);
       if (status === "granted") {
         navigation.setOptions({
           headerRight: () => <EntregaOpciones />,
         });
+        // Obtener ubicación inicial
+        const currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation(currentLocation);
       }
     }
 
     getCurrentLocation();
   }, [navigation]);
+
+  // Función que se ejecutará cada 30 segundos
+  const obtenerUbicacion = useCallback(async () => {
+    if (permisoLocalizacion === "granted") {
+      try {
+        const currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation(currentLocation);
+        const subdominio = await AsyncStorage.getItem("subdominio");
+        const despacho = await AsyncStorage.getItem("despacho");
+
+        const respuestaApiUbicacion = await consultarApi<any>(
+          APIS.ruteo.ubicacion,
+          {
+            despacho: despacho!,
+            "latitud":currentLocation.coords.latitude,
+            "longitud":currentLocation.coords.longitude
+          },
+          {
+            requiereToken: true,
+            subdominio: subdominio!,
+          }
+        );
+        console.log('Ubicación actualizada:', respuestaApiUbicacion);
+
+
+      } catch (error) {
+        console.error('Error al obtener ubicación:', error);
+      }
+    }
+  }, [permisoLocalizacion]);
+
+  // Usar el hook de intervalo cuando hay entregas pendientes
+  useIntervalActivo(arrEntregas.length > 0, obtenerUbicacion);
 
   const gestionEntrega = (id: number) => {
     if (entregasSeleccionadas.includes(id)) {
@@ -55,7 +96,7 @@ export default function EntregaDreawer() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      {location === "granted" ? (
+      {permisoLocalizacion === "granted" ? (
         <KeyboardAvoidingView>
           <FlatList
             data={arrEntregas}
@@ -79,7 +120,7 @@ export default function EntregaDreawer() {
                 p="$3"
                 mx="$3"
                 onPress={() => gestionEntrega(item.id)}
-                bg={item.seleccionado ? "#2ecc71" : null} // Verde si está seleccionado
+                bg={item.seleccionado ? "#2ecc71" : null}
               >
                 <Text>ID: {item.id}</Text>
                 <Text>Guía: {item.guia}</Text>
@@ -95,7 +136,6 @@ export default function EntregaDreawer() {
       ) : (
         <View px="$4">
           <H4 mb="$2">Información</H4>
-
           <Text mb="$4">No se cuenta con el permiso de la localización</Text>
         </View>
       )}
