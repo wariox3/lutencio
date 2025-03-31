@@ -97,9 +97,9 @@ const entregaFormulario = () => {
     });
   };
 
-  const handleFirma = (base64: string) => {
+  const handleFirma = (firma: string) => {
     actualizarState({
-      firmarBase64: base64,
+      firmarBase64: firma,
     });
   };
 
@@ -117,11 +117,9 @@ const entregaFormulario = () => {
   };
 
   const removerFirma = async () => {
-    await deleteFileFromGallery(state.firmarBase64!);
     actualizarState({
       firmarBase64: null,
     });
-
   };
 
   const guardarEntrega = async (data: {
@@ -132,7 +130,7 @@ const entregaFormulario = () => {
   }) => {
     try {
       actualizarState({ mostrarAnimacionCargando: true });
-  
+
       // Guardar fotos en el dispositivo
       const imagenesGuardadas = await Promise.all(
         state.arrImagenes.map(async (imagen) => {
@@ -141,11 +139,20 @@ const entregaFormulario = () => {
         })
       );
 
-      //guardar firma
-      entregasSeleccionadas.map((entregaId) => {
-        dispatch(actualizarFirmaEntrega({ entregaId, firmarBase64: state.firmarBase64 }));
-      });
-
+      if (state.firmarBase64 !== null) {
+        const firmaGuardada = await MediaLibrary.createAssetAsync(
+          state.firmarBase64
+        );
+        //guardar firma
+        entregasSeleccionadas.map((entregaId) => {
+          dispatch(
+            actualizarFirmaEntrega({
+              entregaId,
+              firmarBase64: firmaGuardada.uri,
+            })
+          );
+        });
+      }
 
       // Agregar imágenes a entregas seleccionadas
       entregasSeleccionadas.forEach((entregaId) => {
@@ -153,15 +160,13 @@ const entregaFormulario = () => {
           dispatch(agregarImagenEntrega({ entregaId, imagen: { uri } }));
         });
       });
-  
+
       // Actualizar el estado de las entregas seleccionadas
       entregasSeleccionadas.forEach((entrega) => {
         dispatch(cambiarEstadoEntrega(entrega));
         dispatch(quitarEntregaSeleccionada(entrega));
       });
-  
 
-      
       // Navegar a la pantalla de entrega
       router.navigate("/(app)/(maindreawer)/entrega");
     } catch (error) {
@@ -170,7 +175,7 @@ const entregaFormulario = () => {
       actualizarState({ mostrarAnimacionCargando: false });
     }
   };
-  
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
       <ScrollView showsVerticalScrollIndicator={false}>

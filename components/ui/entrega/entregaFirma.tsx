@@ -106,13 +106,13 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
         encoding: FileSystem.EncodingType.Base64,
       });
 
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== "granted") {
-        alert("❌ Permiso denegado para acceder a la galería");
-        return;
-      }
-      const asset = await MediaLibrary.createAssetAsync(fileUri);
-      onCapture(asset.uri);
+      // const { status } = await MediaLibrary.requestPermissionsAsync();
+      // if (status !== "granted") {
+      //   alert("❌ Permiso denegado para acceder a la galería");
+      //   return;
+      // }
+      //const asset = await MediaLibrary.createAssetAsync(fileUri);
+      onCapture(fileUri);
       setOpen(false);
     } catch (error) {
       console.error("❌ Error al guardar la firma:", error);
