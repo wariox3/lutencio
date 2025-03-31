@@ -34,7 +34,7 @@ export default function entregaGestion() {
     });
   }, [navigation]);
 
-  const retirarGestion = (item: Entrega, id: number) => {
+  const retirarGestion = (item: Entrega, id: number) => { 
     // item.guias.map((guias) => {
     //   dispatch(cambiarEstadoEntrega(guias));
     //   dispatch(quitarEntregaSeleccionada(guias));

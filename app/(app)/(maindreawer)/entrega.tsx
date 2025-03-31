@@ -69,9 +69,6 @@ export default function EntregaDreawer() {
             subdominio: subdominio!,
           }
         );
-        console.log('Ubicación actualizada:', respuestaApiUbicacion);
-
-
       } catch (error) {
         console.error('Error al obtener ubicación:', error);
       }

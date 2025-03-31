@@ -323,13 +323,6 @@ const SheetContents = memo(({ setOpen }: any) => {
                 subTitle="Ver listado de las visitas hechas"
                 onPress={() => navegarEntregaGestion()}
               />
-              <ListItem
-                hoverTheme
-                icon={<FileUp size="$2" />}
-                title="Sincronizar"
-                subTitle="Cargar a la nube las entregas realizadas"
-                onPress={() => gestionGuias()}
-              />
             </>
           ) : null}
         </YGroup.Item>
