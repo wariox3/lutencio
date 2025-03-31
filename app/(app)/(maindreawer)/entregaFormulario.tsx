@@ -13,8 +13,8 @@ import {
   quitarEntregaSeleccionada,
   quitarImagenEntrega,
 } from "@/store/reducers/entregaReducer";
+import * as MediaLibrary from "expo-media-library";
 import { useNavigation, useRouter } from "expo-router";
-import { navigate } from "expo-router/build/global-state/routing";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -95,9 +95,6 @@ const entregaFormulario = () => {
     actualizarState({
       arrImagenes: [...state.arrImagenes, { uri }],
     });
-    entregasSeleccionadas.map((entregaId) => {
-      dispatch(agregarImagenEntrega({ entregaId, imagen: { uri } }));
-    });
   };
 
   const handleFirma = (base64: string) => {
@@ -112,7 +109,6 @@ const entregaFormulario = () => {
   const removerFoto = async (indexArrImagen: number) => {
     try {
       const imagen = state.arrImagenes[indexArrImagen];
-      await deleteFileFromGallery(imagen.uri);
       // Aquí deberías también actualizar tu estado para reflejar la eliminación
       const newArrImagenes = [...state.arrImagenes];
       newArrImagenes.splice(indexArrImagen, 1);
@@ -136,31 +132,45 @@ const entregaFormulario = () => {
     });
   };
 
-  const onLoginPressed = async (data: {
+  const guardarEntrega = async (data: {
     recibe: string;
     parentesco: string;
     numeroIdentificacion: string;
     celular: string;
   }) => {
     try {
-      actualizarState({
-        mostrarAnimacionCargando: true,
+      actualizarState({ mostrarAnimacionCargando: true });
+  
+      // Guardar fotos en el dispositivo
+      const imagenesGuardadas = await Promise.all(
+        state.arrImagenes.map(async (imagen) => {
+          const asset = await MediaLibrary.createAssetAsync(imagen.uri);
+          return asset.uri;
+        })
+      );
+  
+      // Agregar imágenes a entregas seleccionadas
+      entregasSeleccionadas.forEach((entregaId) => {
+        imagenesGuardadas.forEach((uri) => {
+          dispatch(agregarImagenEntrega({ entregaId, imagen: { uri } }));
+        });
       });
-      entregasSeleccionadas.map((entrega) => {
+  
+      // Actualizar el estado de las entregas seleccionadas
+      entregasSeleccionadas.forEach((entrega) => {
         dispatch(cambiarEstadoEntrega(entrega));
         dispatch(quitarEntregaSeleccionada(entrega));
       });
+  
+      // Navegar a la pantalla de entrega
       router.navigate("/(app)/(maindreawer)/entrega");
-      actualizarState({
-        mostrarAnimacionCargando: false,
-      });
     } catch (error) {
-      actualizarState({
-        mostrarAnimacionCargando: false,
-      });
+      console.error("Error en onLoginPressed:", error);
+    } finally {
+      actualizarState({ mostrarAnimacionCargando: false });
     }
   };
-
+  
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -234,7 +244,7 @@ const entregaFormulario = () => {
             icon={
               state.mostrarAnimacionCargando ? () => <Spinner /> : undefined
             }
-            onPress={handleSubmit(onLoginPressed)}
+            onPress={handleSubmit(guardarEntrega)}
             mb={"$2.5"}
           >
             Entregar

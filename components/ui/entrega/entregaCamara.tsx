@@ -100,8 +100,7 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
     try {
       if (cameraRef.current) {
         const photo = await cameraRef.current.takePictureAsync();
-        const asset = await MediaLibrary.createAssetAsync(photo.uri);
-        onCapture(asset.uri);
+        onCapture(photo.uri);
         setOpen(false);
       }
     } catch (error) {
