@@ -101,9 +101,6 @@ const entregaFormulario = () => {
     actualizarState({
       firmarBase64: base64,
     });
-    entregasSeleccionadas.map((entregaId) => {
-      dispatch(actualizarFirmaEntrega({ entregaId, firmarBase64: base64 }));
-    });
   };
 
   const removerFoto = async (indexArrImagen: number) => {
@@ -124,9 +121,7 @@ const entregaFormulario = () => {
     actualizarState({
       firmarBase64: null,
     });
-    entregasSeleccionadas.map((entregaId) => {
-      dispatch(actualizarFirmaEntrega({ entregaId, firmarBase64: null }));
-    });
+
   };
 
   const guardarEntrega = async (data: {
@@ -145,7 +140,13 @@ const entregaFormulario = () => {
           return asset.uri;
         })
       );
-  
+
+      //guardar firma
+      entregasSeleccionadas.map((entregaId) => {
+        dispatch(actualizarFirmaEntrega({ entregaId, firmarBase64: state.firmarBase64 }));
+      });
+
+
       // Agregar imágenes a entregas seleccionadas
       entregasSeleccionadas.forEach((entregaId) => {
         imagenesGuardadas.forEach((uri) => {
@@ -159,6 +160,8 @@ const entregaFormulario = () => {
         dispatch(quitarEntregaSeleccionada(entrega));
       });
   
+
+      
       // Navegar a la pantalla de entrega
       router.navigate("/(app)/(maindreawer)/entrega");
     } catch (error) {
