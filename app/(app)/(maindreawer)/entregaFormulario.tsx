@@ -73,6 +73,8 @@ const entregaFormulario = () => {
 
   const reiniciarEstadoCompleto = () => {
     setState(estadoInicial);
+    console.log(state);
+
     reiniciarState();
   };
 
@@ -85,7 +87,7 @@ const entregaFormulario = () => {
     });
   };
 
-  const actualizarState = (newState: Partial<typeof state>) => {    
+  const actualizarState = (newState: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
 
@@ -174,11 +176,13 @@ const entregaFormulario = () => {
               <EntregaCamara onCapture={handleCapture}></EntregaCamara>
             ) : null}
           </XStack>
+          {state.arrImagenes.length > 0 ? (
+            <EntregaImagenesPreview
+              arrImagenes={state.arrImagenes}
+              removerFoto={removerFoto}
+            ></EntregaImagenesPreview>
+          ) : null}
 
-          <EntregaImagenesPreview
-            arrImagenes={state.arrImagenes}
-            removerFoto={removerFoto}
-          ></EntregaImagenesPreview>
           <BasicInput
             name="recibe"
             control={control}
@@ -218,17 +222,20 @@ const entregaFormulario = () => {
               <EntregaFirma onCapture={handleFirma}></EntregaFirma>
             ) : null}
           </XStack>
-          <EntregaFirmaPreview
-            imagen={state.firmarBase64}
-            removerFirma={removerFirma}
-          ></EntregaFirmaPreview>
+          {state.firmarBase64 !== null ? (
+            <EntregaFirmaPreview
+              imagen={state.firmarBase64}
+              removerFirma={removerFirma}
+            ></EntregaFirmaPreview>
+          ) : null}
+
           <Button
             theme="blue"
             icon={
               state.mostrarAnimacionCargando ? () => <Spinner /> : undefined
             }
             onPress={handleSubmit(onLoginPressed)}
-            mb={"$2"}
+            mb={"$2.5"}
           >
             Entregar
           </Button>
