@@ -38,7 +38,12 @@ export const EntregaOpciones = () => {
 
   return (
     <>
-      <Button icon={MoreVertical} onPress={() => setOpen(true)}></Button>
+      <Button
+        icon={<MoreVertical size={'$1.5'}  />}
+        onPress={() => setOpen(true)}
+        variant="outlined"
+        marginEnd={'$-0.75'}
+      ></Button>
 
       <Sheet
         forceRemoveScrollEnabled={open}
