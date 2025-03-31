@@ -1,4 +1,5 @@
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
+import EntregasSinElementos from "@/components/ui/entrega/entregasSinElementos";
 import APIS from "@/constants/endpoint";
 import { useIntervalActivo } from "@/hooks/useIntervalActivo";
 import { Entrega } from "@/interface/entrega/entrega";
@@ -128,6 +129,7 @@ export default function EntregaDreawer() {
               </Card>
             )}
             ItemSeparatorComponent={() => <View my={"$2"}></View>}
+            ListEmptyComponent={<EntregasSinElementos />}
           />
         </KeyboardAvoidingView>
       ) : (
