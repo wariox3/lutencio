@@ -69,7 +69,7 @@ const entregaFormulario = () => {
   useEffect(() => {
     navigation.setOptions({ headerLeft: () => <Volver ruta="entrega" /> });
     reiniciarEstadoCompleto();
-  }, []);
+  }, [entregasSeleccionadas]);
 
   const reiniciarEstadoCompleto = () => {
     setState(estadoInicial);
