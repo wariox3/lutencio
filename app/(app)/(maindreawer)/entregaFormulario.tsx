@@ -114,9 +114,6 @@ const entregaFormulario = () => {
       newArrImagenes.splice(indexArrImagen, 1);
       // Suponiendo que tienes una función para actualizar el estado
       setState((prev) => ({ ...prev, arrImagenes: newArrImagenes }));
-      entregasSeleccionadas.map((entregaId) => {
-        dispatch(quitarImagenEntrega({ entregaId, imagenUri: imagen.uri }));
-      });
     } catch (error) {
       console.error("Error al eliminar el archivo:", error);
     }
