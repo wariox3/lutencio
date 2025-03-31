@@ -155,7 +155,7 @@ export const EntregaSincronizar = () => {
   return (
     <>
       <Button
-        icon={FileUp}
+        icon={<FileUp size={"$1.5"}></FileUp>}
         onPress={() => {
           confirmarRetirarDespacho();
         }}
