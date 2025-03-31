@@ -34,15 +34,6 @@ export default function entregaGestion() {
     });
   }, [navigation]);
 
-  const retirarGestion = (item: Entrega, id: number) => { 
-    // item.guias.map((guias) => {
-    //   dispatch(cambiarEstadoEntrega(guias));
-    //   dispatch(quitarEntregaSeleccionada(guias));
-    //   dispatch(cambiarEstadoSeleccionado(guias));
-    // });
-    // dispatch(quitarEntregaGestion(id));
-  };
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
@@ -56,15 +47,6 @@ export default function entregaGestion() {
           )}
           renderItem={({ item, index }) => (
             <Card p="$3" mx="$3">
-              <XStack justify={"space-between"}>
-                <Text>Guias</Text>
-                <Button
-                  icon={<Trash2 size="$2" color={"$red10"} />}
-                  variant="outlined"
-                  theme={"red"}
-                  onPress={() => retirarGestion(item, index)}
-                ></Button>
-              </XStack>
               <Text>Destinatario: {item.destinatario}</Text>
               <Text>Destinatario dirección:</Text>
               <Text>{item.destinatario_direccion}</Text>
