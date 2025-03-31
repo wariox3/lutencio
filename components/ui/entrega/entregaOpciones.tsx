@@ -110,106 +110,10 @@ const SheetContents = memo(({ setOpen }: any) => {
     setOpen(false);
   };
 
-  const gestionGuias = async () => {
-    // try {
-    //   if (Platform.OS === "android") {
-    //     const { status } = await MediaLibrary.requestPermissionsAsync();
-    //     if (status !== "granted") {
-    //       alert("Se necesitan permisos para guardar en la galería");
-    //       return;
-    //     }
-    //   }
-    //   const subdominio = await AsyncStorage.getItem("subdominio");
-    //   if (!subdominio) {
-    //     console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
-    //     return;
-    //   }
-    //   for (const entrega of arrEntregas) {
-    //     let imagenes: { base64: string }[] = [];
-    //     // Verificar si entrega tiene imágenes
-    //     if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
-    //       for (const imagen of entrega.arrImagenes) {
-    //         if (imagen.base64.startsWith("file://")) {
-    //           // Verificar si el archivo existe
-    //           const fileInfo = await FileSystem.getInfoAsync(imagen.base64);
-    //           if (!fileInfo.exists) {
-    //             console.warn(`⚠️ Imagen no encontrada: ${imagen.base64}`);
-    //             continue; // Saltar esta imagen si fue eliminada
-    //           }
-    //           // Convertir la imagen a Base64
-    //           const base64 = await FileSystem.readAsStringAsync(imagen.base64, {
-    //             encoding: FileSystem.EncodingType.Base64,
-    //           });
-    //           imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
-    //         }
-    //       }
-    //     }
-    //     // Verificar si hay una firma y convertirla a Base64
-    //     let firmaBase64 = null;
-    //     if (entrega.firmarBase64?.startsWith("file://")) {
-    //       const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
-    //       if (fileInfo.exists) {
-    //         firmaBase64 = await FileSystem.readAsStringAsync(
-    //           entrega.firmarBase64,
-    //           {
-    //             encoding: FileSystem.EncodingType.Base64,
-    //           }
-    //         );
-    //         firmaBase64 = `data:image/png;base64,${firmaBase64}`;
-    //       } else {
-    //         console.warn(`⚠️ Firma no encontrada: ${entrega.firmarBase64}`);
-    //       }
-    //     }
-    //     // Iterar sobre las guías y enviar la información
-    //     for (const guia of entrega.guias) {
-    //       console.log(`📤 Enviando guía: ${guia}`);
-    //       const respuestaApi = await consultarApi<any>(
-    //         APIS.entrega.ruteoVisitaEntrega,
-    //         {
-    //           id: guia,
-    //           imagenes: imagenes, // Enviar imágenes convertidas
-    //         },
-    //         {
-    //           requiereToken: true,
-    //           subdominio: subdominio,
-    //         }
-    //       );
-    //       //Borrar las imágenes después de éxito
-    //       const { status } = await MediaLibrary.requestPermissionsAsync();
-    //       if (status === "granted") {
-    //         console.log("Permiso  para acceder a la galería");
-    //       }
-    //       for (const img of entrega.arrImagenes) {
-    //         const fileInfo = await FileSystem.getInfoAsync(img.base64);
-    //         if (fileInfo.exists) {
-    //           await deleteFileFromGallery(img.base64);
-    //         }
-    //       }
-    //       //Borrar las firma después de éxito
-    //       if (entrega.firmarBase64) {
-    //         const fileInfo = await FileSystem.getInfoAsync(
-    //           entrega.firmarBase64
-    //         );
-    //         if (fileInfo.exists) {
-    //           await deleteFileFromGallery(entrega.firmarBase64);
-    //         }
-    //       }
-    //       //cambiar estado estado_sincronizado
-    //       dispatch(cambiarEstadoSinconizado(guia));
-    //     }
-    //     //retriar la entrega
-    //     const indice = arrEntregas.indexOf(entrega);
-    //     dispatch(quitarEntregaGestion(indice));
-    //   }
-    // } catch (error) {
-    //   console.log("❌ Error en gestionGuias:", error);
-    // }
-  };
-
   const confirmarRetirarDespacho = async () => {
     Alert.alert(
       "⚠️ Advertencia",
-      "Esta acción retirara las entregas y las visitas pendientes por sincronizar no se puede desacer una vez completa",
+      "Esta acción retirará las entregas y las visitas pendientes por sincronizar no se puede deshacer una vez completa",
       [
         {
           text: "Cancel",
@@ -219,6 +123,204 @@ const SheetContents = memo(({ setOpen }: any) => {
       ]
     );
   };
+
+  const confirmarSincornizarEntregas = async () => {
+    Alert.alert(
+      "⚠️ Advertencia",
+      "Esta acción sincronizará las entregas pendientes por sincronizar no se puede deshacer una vez completa",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+        },
+        {
+          text: "Confirmar",
+          onPress: () => {
+            gestionGuias();
+          },
+        },
+      ]
+    );
+  };
+
+  const gestionGuias = async () => {
+    try {
+      if (Platform.OS === "android") {
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+        if (status !== "granted") {
+          alert("Se necesitan permisos para guardar en la galería");
+          return;
+        }
+      }
+  
+      const subdominio = await AsyncStorage.getItem("subdominio");
+      if (!subdominio) {
+        console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
+        return;
+      }
+  
+      for (const entrega of arrEntregas) {
+        try {
+          let imagenes: { base64: string }[] = [];
+          
+          // 1️⃣ Procesar imágenes (si existen)
+          if (entrega.arrImagenes?.length > 0) {
+            for (const imagen of entrega.arrImagenes) {
+              if (imagen.uri.startsWith("file://")) {
+                const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
+                if (!fileInfo.exists) {
+                  console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
+                  continue;
+                }
+                const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
+                  encoding: FileSystem.EncodingType.Base64,
+                });
+                imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
+              }
+            }
+          }
+  
+          // 2️⃣ Procesar firma (si existe)
+          let firmaBase64 = null;
+          if (entrega.firmarBase64?.startsWith("file://")) {
+            const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
+            if (fileInfo.exists) {
+              firmaBase64 = await FileSystem.readAsStringAsync(entrega.firmarBase64, {
+                encoding: FileSystem.EncodingType.Base64,
+              });
+              firmaBase64 = `data:image/png;base64,${firmaBase64}`;
+            } else {
+              console.warn(`⚠️ Firma no encontrada: ${entrega.firmarBase64}`);
+            }
+          }
+  
+          // 3️⃣ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
+          console.log(`📤 Enviando guía: ${entrega.id}`);
+          await consultarApi<any>(
+            APIS.ruteo.visitaEntrega,
+            { id: entrega.id, imagenes },
+            { requiereToken: true, subdominio }
+          );
+  
+          // 4️⃣ Solo si la API responde OK, borrar archivos y marcar como sincronizado
+          if (entrega.arrImagenes?.length > 0) {
+            for (const img of entrega.arrImagenes) {
+              const fileInfo = await FileSystem.getInfoAsync(img.uri);
+              if (fileInfo.exists) await deleteFileFromGallery(img.uri);
+            }
+          }
+  
+          if (entrega.firmarBase64) {
+            const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
+            if (fileInfo.exists) await deleteFileFromGallery(entrega.firmarBase64);
+          }
+  
+          dispatch(cambiarEstadoSinconizado(entrega.id)); // ✅ Sincronizado
+          setOpen(false);
+  
+        } catch (error) {
+          console.error(`❌ Error en la entrega ${entrega.id}:`, error);
+          continue
+        }
+      }
+    } catch (error) {
+      console.error("Error general en gestionGuias:", error);
+    }
+  };
+
+  // const gestionGuias = async () => {
+  //   try {
+  //     if (Platform.OS === "android") {
+  //       const { status } = await MediaLibrary.requestPermissionsAsync();
+  //       if (status !== "granted") {
+  //         alert("Se necesitan permisos para guardar en la galería");
+  //         return;
+  //       }
+  //     }
+
+  //     const subdominio = await AsyncStorage.getItem("subdominio");
+  //     if (!subdominio) {
+  //       console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
+  //       return;
+  //     }
+
+  //     for (const entrega of arrEntregas) {
+  //       let imagenes: { base64: string }[] = [];
+  //       // Verificar si entrega tiene imágenes
+  //       if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
+  //         for (const imagen of entrega.arrImagenes) {
+  //           if (imagen.uri.startsWith("file://")) {
+  //             // Verificar si el archivo existe
+  //             const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
+  //             if (!fileInfo.exists) {
+  //               console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
+  //               continue; // Saltar esta imagen si fue eliminada
+  //             }
+  //             // Convertir la imagen a Base64
+  //             const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
+  //               encoding: FileSystem.EncodingType.Base64,
+  //             });
+  //             imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
+  //           }
+  //         }
+  //       }
+  //       // Verificar si hay una firma y convertirla a Base64
+  //       let firmaBase64 = null;
+  //       if (entrega.firmarBase64?.startsWith("file://")) {
+  //         const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
+  //         if (fileInfo.exists) {
+  //           firmaBase64 = await FileSystem.readAsStringAsync(
+  //             entrega.firmarBase64,
+  //             {
+  //               encoding: FileSystem.EncodingType.Base64,
+  //             }
+  //           );
+  //           firmaBase64 = `data:image/png;base64,${firmaBase64}`;
+  //         } else {
+  //           console.warn(`⚠️ Firma no encontrada: ${entrega.firmarBase64}`);
+  //         }
+  //       }
+  //       // Iterar sobre las guías y enviar la información
+  //       console.log(`📤 Enviando guía: ${entrega.id}`);
+  //       await consultarApi<any>(
+  //         APIS.ruteo.visitaEntrega,
+  //         {
+  //           id: entrega.id,
+  //           imagenes: imagenes, // Enviar imágenes convertidas
+  //         },
+  //         {
+  //           requiereToken: true,
+  //           subdominio: subdominio,
+  //         }
+  //       );
+  //       //Borrar las imágenes después de éxito
+  //       const { status } = await MediaLibrary.requestPermissionsAsync();
+  //       if (status === "granted") {
+  //         console.log("Permiso  para acceder a la galería");
+  //       }
+  //       if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
+  //         for (const img of entrega.arrImagenes) {
+  //           const fileInfo = await FileSystem.getInfoAsync(img.uri);
+  //           if (fileInfo.exists) {
+  //             await deleteFileFromGallery(img.uri);
+  //           }
+  //         }
+  //       }
+  //       //Borrar las firma después de éxito
+  //       if (entrega.firmarBase64) {
+  //         const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
+  //         if (fileInfo.exists) {
+  //           await deleteFileFromGallery(entrega.firmarBase64);
+  //         }
+  //       }
+  //       //cambiar estado estado_sincronizado
+  //       dispatch(cambiarEstadoSinconizado(entrega.id));
+  //       setOpen(false);
+  //     }
+  //   } catch (error) {
+  //     console.log("❌ Error en gestionGuias:", error);
+  //   }
+  // };
 
   const retirarDespacho = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -300,13 +402,13 @@ const SheetContents = memo(({ setOpen }: any) => {
 
           {arrEntregas.length > 0 ? (
             <>
-              <H6 mb="$2">Visitas</H6>
+              <H6 mb="$2">Sincornizar</H6>
               <ListItem
                 hoverTheme
-                icon={<FileStack size="$2" />}
-                title="Visitas"
-                subTitle="Ver listado de las visitas hechas"
-                onPress={() => navegarEntregaGestion()}
+                icon={<FileUp size="$2" />}
+                title="Sinconizar"
+                subTitle="Entregas pendientes por entregar"
+                onPress={() => confirmarSincornizarEntregas()}
               />
             </>
           ) : null}

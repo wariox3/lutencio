@@ -45,17 +45,6 @@ export default function Layout() {
           },
         }}
       />
-      <Drawer.Screen
-        name="entregaGestion"
-        options={{
-          headerTitle: "",
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-          },
-        }}
-      />
     </Drawer>
   );
 }

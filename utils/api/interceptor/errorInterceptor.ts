@@ -1,5 +1,18 @@
+import APIS from "@/constants/endpoint";
 import { AxiosError } from "axios";
 import { Alert } from "react-native";
+
+
+// TODO: url exentas de visualizar error http
+
+const urlExentas = [
+  APIS.ruteo.visitaEntrega
+]
+
+const obtenerRuta = (url: string): string | null => {
+  const match = url.match(/online\/(.+)/); // Busca lo que hay después de "online/"
+  return match ? match[1] : null; // Devuelve solo la parte de la ruta
+};
 
 export const handleErrorResponse = (error: AxiosError): void => {
   let _errores = new Map<number, () => void>();
@@ -25,14 +38,29 @@ export const handleErrorResponse = (error: AxiosError): void => {
 };
 
 const error400 = (error: AxiosError): void => {
+
+  const urlFallida = error.config?.url || "URL desconocida";
+
+  // Obtener la parte relevante de la URL (después de "online/")
+  const rutaFallida = obtenerRuta(urlFallida);
+
+  // Verificar si la URL fallida coincide con alguna en urlExentas
+  const esExenta = urlExentas.some((exenta) => obtenerRuta(exenta) === rutaFallida);
+
+  if (esExenta) {
+    return; // No muestra la alerta si la URL está en la lista de exentas
+  }
+
+  // Obtener código de error y mensaje
   const codigo = error.response?.data?.codigo || "Desconocido";
-  const mensaje =
-    error.response?.data?.mensaje || "Ha ocurrido un error inesperado.";
-  Alert.alert(`❌ Error ${codigo}`, mensaje);
+  const mensaje = error.response?.data?.mensaje || "Ha ocurrido un error inesperado.";
+
+  // Mostrar alerta
+  Alert.alert(`❌ Error ${codigo}`, `${mensaje}`);
 };
 
 const error401 = (): void => {
-  Alert.alert(`❌ Error`, "Token inválido o expirado.");
+  Alert.alert(`❌ Error`, "Token inválido o expirado, por favor intente ");
 };
 
 const error404 = (): void => {
