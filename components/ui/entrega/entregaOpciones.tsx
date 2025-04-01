@@ -1,4 +1,5 @@
 import APIS from "@/constants/endpoint";
+import { rutasApp } from "@/constants/rutas";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { RootState } from "@/store/reducers";
 import {
@@ -12,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ClipboardPlus,
   ClipboardX,
+  FileQuestion,
   FileStack,
   FileUp,
   FileX,
@@ -39,10 +41,10 @@ export const EntregaOpciones = () => {
   return (
     <>
       <Button
-        icon={<MoreVertical size={'$1.5'}  />}
+        icon={<MoreVertical size={"$1.5"} />}
         onPress={() => setOpen(true)}
         variant="outlined"
-        marginEnd={'$-0.75'}
+        marginEnd={"$-0.75"}
       ></Button>
 
       <Sheet
@@ -90,15 +92,23 @@ const SheetContents = memo(({ setOpen }: any) => {
       [],
     shallowEqual
   );
+
+  const arrEntregasPendientes = useSelector(
+    (state: RootState) =>
+      state.entregas.entregas.filter((entrega) => entrega.estado_entregado === true && entrega.estado_sincronizado === false) ||
+      [],
+    shallowEqual
+  );
+
   const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
 
   const navegarEntregaCargar = () => {
-    router.push("/(app)/(maindreawer)/entregaCargar");
+    router.navigate(rutasApp.entregaCargar);
     setOpen(false);
   };
 
-  const navegarEntregaGestion = () => {
-    router.push("/(app)/(maindreawer)/entregaGestion");
+  const navegarEntregaPendietes = () => {
+    router.navigate(rutasApp.entregaPendientes);
     setOpen(false);
   };
 
@@ -152,17 +162,17 @@ const SheetContents = memo(({ setOpen }: any) => {
           return;
         }
       }
-  
+
       const subdominio = await AsyncStorage.getItem("subdominio");
       if (!subdominio) {
         console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
         return;
       }
-  
+
       for (const entrega of arrEntregas) {
         try {
           let imagenes: { base64: string }[] = [];
-          
+
           // 1️⃣ Procesar imágenes (si existen)
           if (entrega.arrImagenes?.length > 0) {
             for (const imagen of entrega.arrImagenes) {
@@ -179,21 +189,26 @@ const SheetContents = memo(({ setOpen }: any) => {
               }
             }
           }
-  
+
           // 2️⃣ Procesar firma (si existe)
           let firmaBase64 = null;
           if (entrega.firmarBase64?.startsWith("file://")) {
-            const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
+            const fileInfo = await FileSystem.getInfoAsync(
+              entrega.firmarBase64
+            );
             if (fileInfo.exists) {
-              firmaBase64 = await FileSystem.readAsStringAsync(entrega.firmarBase64, {
-                encoding: FileSystem.EncodingType.Base64,
-              });
+              firmaBase64 = await FileSystem.readAsStringAsync(
+                entrega.firmarBase64,
+                {
+                  encoding: FileSystem.EncodingType.Base64,
+                }
+              );
               firmaBase64 = `data:image/png;base64,${firmaBase64}`;
             } else {
               console.warn(`⚠️ Firma no encontrada: ${entrega.firmarBase64}`);
             }
           }
-  
+
           // 3️⃣ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
           console.log(`📤 Enviando guía: ${entrega.id}`);
           await consultarApi<any>(
@@ -201,7 +216,7 @@ const SheetContents = memo(({ setOpen }: any) => {
             { id: entrega.id, imagenes },
             { requiereToken: true, subdominio }
           );
-  
+
           // 4️⃣ Solo si la API responde OK, borrar archivos y marcar como sincronizado
           if (entrega.arrImagenes?.length > 0) {
             for (const img of entrega.arrImagenes) {
@@ -209,18 +224,20 @@ const SheetContents = memo(({ setOpen }: any) => {
               if (fileInfo.exists) await deleteFileFromGallery(img.uri);
             }
           }
-  
+
           if (entrega.firmarBase64) {
-            const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
-            if (fileInfo.exists) await deleteFileFromGallery(entrega.firmarBase64);
+            const fileInfo = await FileSystem.getInfoAsync(
+              entrega.firmarBase64
+            );
+            if (fileInfo.exists)
+              await deleteFileFromGallery(entrega.firmarBase64);
           }
-  
+
           dispatch(cambiarEstadoSinconizado(entrega.id)); // ✅ Sincronizado
           setOpen(false);
-  
         } catch (error) {
           console.error(`❌ Error en la entrega ${entrega.id}:`, error);
-          continue
+          continue;
         }
       }
     } catch (error) {
@@ -402,13 +419,22 @@ const SheetContents = memo(({ setOpen }: any) => {
 
           {arrEntregas.length > 0 ? (
             <>
-              <H6 mb="$2">Sincornizar</H6>
+              <H6 mb="$2">Sincronizar</H6>
               <ListItem
                 hoverTheme
                 icon={<FileUp size="$2" />}
-                title="Sinconizar"
+                title="Sincronizar"
                 subTitle="Entregas pendientes por entregar"
                 onPress={() => confirmarSincornizarEntregas()}
+              />
+              <ListItem
+                hoverTheme
+                icon={<FileQuestion size="$2" />}
+                title="Pendientes"
+                subTitle={
+                  "Cantidad pendientes por sincronizar: " + arrEntregasPendientes.length
+                }
+                onPress={() => navegarEntregaPendietes()}
               />
             </>
           ) : null}

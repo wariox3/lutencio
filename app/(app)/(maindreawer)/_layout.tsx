@@ -45,6 +45,32 @@ export default function Layout() {
           },
         }}
       />
+      <Drawer.Screen
+        name="entregaPendientes"
+        options={{
+          headerTitle: "",
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+        }}
+      />
+      <Drawer.Screen
+        name="entregaPendientesDetalle"
+        options={({ route }) => ({
+          drawerLabel: route.params?.entregaId
+            ? undefined
+            : "Detalle de Entrega",
+          drawerItemStyle: route.params?.entregaId ? { display: "none" } : {},
+          headerTitle: "",
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+        })}
+      />
     </Drawer>
   );
 }

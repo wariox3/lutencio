@@ -22,15 +22,22 @@ export default function EntregaDreawer() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const arrEntregas = useSelector(
-    (state: RootState) => state.entregas.entregas.filter((entrega) => !entrega.estado_entregado) || [],
+    (state: RootState) =>
+      state.entregas.entregas
+        .filter((entrega) => !entrega.estado_entregado)
+        .sort((a, b) => a.orden - b.orden) || [],
     shallowEqual
   );
   const entregasSeleccionadas = useSelector(
     (state: RootState) => state.entregas.entregasSeleccionadas || []
   );
   const router = useRouter();
-  const [permisoLocalizacion, setPermisoLocalizacion] = useState<string | null>(null);
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [permisoLocalizacion, setPermisoLocalizacion] = useState<string | null>(
+    null
+  );
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
 
   useEffect(() => {
     async function getCurrentLocation() {
@@ -62,8 +69,8 @@ export default function EntregaDreawer() {
           APIS.ruteo.ubicacion,
           {
             despacho: despacho!,
-            "latitud":currentLocation.coords.latitude,
-            "longitud":currentLocation.coords.longitude
+            latitud: currentLocation.coords.latitude,
+            longitud: currentLocation.coords.longitude,
           },
           {
             requiereToken: true,
@@ -71,7 +78,7 @@ export default function EntregaDreawer() {
           }
         );
       } catch (error) {
-        console.error('Error al obtener ubicación:', error);
+        console.error("Error al obtener ubicación:", error);
       }
     }
   }, [permisoLocalizacion]);
@@ -98,7 +105,7 @@ export default function EntregaDreawer() {
         <KeyboardAvoidingView>
           <FlatList
             data={arrEntregas}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(_, index) => index.toString()}
             ListHeaderComponent={() => (
               <XStack justify="space-between" px="$3" mb="$2">
                 <H4 mb="$2">Entregas</H4>
@@ -121,7 +128,6 @@ export default function EntregaDreawer() {
                 bg={item.seleccionado ? "#2ecc71" : null}
               >
                 <Text>ID: {item.id}</Text>
-                <Text>Guía: {item.guia}</Text>
                 <Text>Destinatario: {item.destinatario}</Text>
                 <Text>Dirección: {item.destinatario_direccion}</Text>
                 <Text>Fecha: {item.fecha}</Text>
