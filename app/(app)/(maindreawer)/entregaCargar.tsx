@@ -74,7 +74,7 @@ const entregaCargar = () => {
         );
         await AsyncStorage.setItem(
           "despacho",
-          data.codigo
+          `${respuestaApiVerticalEntrega.despacho_id}`
         );
         dispatch(setEntregas(respuestaApi.registros));
         router.navigate("/(app)/(maindreawer)/entrega");
