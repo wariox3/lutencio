@@ -8,8 +8,12 @@ export default function Layout() {
       <Drawer.Screen
         name="index"
         options={{
-          drawerLabel: "Home",
-          title: "overview",
+          headerTitle: "",
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
         }}
       />
       <Drawer.Screen
