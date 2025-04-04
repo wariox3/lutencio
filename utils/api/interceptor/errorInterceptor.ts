@@ -4,9 +4,9 @@ import { Alert } from "react-native";
 
 
 // TODO: url exentas de visualizar error http
-
 const urlExentas = [
-  APIS.ruteo.visitaEntrega
+  APIS.ruteo.visitaEntrega,
+  APIS.ruteo.ubicacion
 ]
 
 const obtenerRuta = (url: string): string | null => {
@@ -39,8 +39,6 @@ export const handleErrorResponse = (error: AxiosError): void => {
 
 const error400 = (error: AxiosError): void => {
 
-  //console.log(error.response?.data?.validaciones);
-  
   const urlFallida = error.config?.url || "URL desconocida";
 
   // Obtener la parte relevante de la URL (después de "online/")
@@ -55,8 +53,15 @@ const error400 = (error: AxiosError): void => {
 
   // Obtener código de error y mensaje
   const codigo = error.response?.data?.codigo || "Desconocido";
-  const mensaje = error.response?.data?.mensaje || "Ha ocurrido un error inesperado.";
-
+  let mensaje = error.response?.data?.mensaje || "Ha ocurrido un error inesperado.";
+  if (error.response?.data?.hasOwnProperty('validaciones')) {
+    for (const key in error.response?.data?.validaciones) {      
+       if (error.response?.data?.validaciones.hasOwnProperty(key)) {
+         const value = error.response?.data?.validaciones[key]; 
+          mensaje += `${key}: ${value}`;
+      }
+    }
+  }
   // Mostrar alerta
   Alert.alert(`❌ Error ${codigo}`, `${mensaje}`);
 };
