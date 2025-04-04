@@ -21,8 +21,7 @@ axios.interceptors.request.use((config) => {
 
   if (config.url && subdominio) {
     config.url = config.url.replace("subdominio", subdominio); // Reemplazo en la URL
-  }
-
+  }  
   return config;
 }, (error) => {
   return Promise.reject(error);
@@ -66,7 +65,7 @@ export const consultarApi = async <T>(
   configuracion: Configuracion = {
     requiereToken: true,
   }
-): Promise<T> => {
+): Promise<T> => {  
   try {
     const informacionConsulta: AxiosResponse<T> = await axios({
       method: configuracion.method ?? "post",
@@ -79,7 +78,7 @@ export const consultarApi = async <T>(
     });
     
     return informacionConsulta.data;
-  } catch (error: any) {
+  } catch (error: any) {    
     throw error; // Lanzar el error para que el controlador de llamadas pueda manejarlo
   }
 };

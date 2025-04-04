@@ -23,6 +23,8 @@ export default function MainDreawerIndex() {
     requestCamaraPermission()
     //permiso localización
     await Location.requestForegroundPermissionsAsync();
+    //permiso localización
+    await Location.requestBackgroundPermissionsAsync();
     //Permiso multimedia
     await requestMadiaPermission()
   }

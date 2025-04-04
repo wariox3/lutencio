@@ -57,7 +57,11 @@
     "redux-persist": "^6.0.0",
     "tamagui": "^1.123.4",
     "expo-location": "~18.0.8",
-    "expo-media-library": "~17.0.6"
+    "expo-media-library": "~17.0.6",
+    "expo-background-task": "~0.1.4",
+    "expo-dev-client": "~5.0.19",
+    "expo-background-fetch": "~13.0.6",
+    "expo-notifications": "~0.29.14"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

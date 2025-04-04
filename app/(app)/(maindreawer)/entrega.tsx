@@ -10,6 +10,7 @@ import {
   seleccionarEntrega,
 } from "@/store/reducers/entregaReducer";
 import { consultarApi } from "@/utils/api";
+import { LOCATION_TASK_NAME, startBackgroundLocation } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import { useNavigation, useRouter } from "expo-router";
@@ -17,6 +18,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
+import * as TaskManager from 'expo-task-manager';
 
 export default function EntregaDreawer() {
   const navigation = useNavigation();
@@ -29,6 +31,9 @@ export default function EntregaDreawer() {
     shallowEqual
   );
   const usuario_id = useSelector((state: RootState) => state.usuario.id)
+
+  AsyncStorage.setItem("usuario_id", `${usuario_id}`);
+
   const entregasSeleccionadas = useSelector(
     (state: RootState) => state.entregas.entregasSeleccionadas || []
   );
@@ -59,6 +64,12 @@ export default function EntregaDreawer() {
 
   // Función que se ejecutará cada 30 segundos
   const obtenerUbicacion = useCallback(async () => {
+
+    startBackgroundLocation();
+    const isTaskRegistered = await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME);
+    console.log({isTaskRegistered});
+    
+
     if (permisoLocalizacion === "granted") {
       try {
         const currentLocation = await Location.getCurrentPositionAsync({});
@@ -66,19 +77,19 @@ export default function EntregaDreawer() {
         const subdominio = await AsyncStorage.getItem("subdominio");
         const despacho = await AsyncStorage.getItem("despacho");
 
-        const respuestaApiUbicacion = await consultarApi<any>(
-          APIS.ruteo.ubicacion,
-          {
-            usuario_id,
-            despacho: despacho!,
-            latitud: currentLocation.coords.latitude,
-            longitud: currentLocation.coords.longitude,
-          },
-          {
-            requiereToken: true,
-            subdominio: subdominio!,
-          }
-        );
+        // const respuestaApiUbicacion = await consultarApi<any>(
+        //   APIS.ruteo.ubicacion,
+        //   {
+        //     usuario_id,
+        //     despacho: despacho!,
+        //     latitud: currentLocation.coords.latitude,
+        //     longitud: currentLocation.coords.longitude,
+        //   },
+        //   {
+        //     requiereToken: true,
+        //     subdominio: subdominio!,
+        //   }
+        // );
       } catch (error) {
         console.error("Error al obtener ubicación:", error);
       }

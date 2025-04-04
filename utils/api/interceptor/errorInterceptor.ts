@@ -38,6 +38,7 @@ export const handleErrorResponse = (error: AxiosError): void => {
 };
 
 const error400 = (error: AxiosError): void => {
+  console.log(error.response?.data);
 
   const urlFallida = error.config?.url || "URL desconocida";
 
@@ -50,6 +51,7 @@ const error400 = (error: AxiosError): void => {
   if (esExenta) {
     return; // No muestra la alerta si la URL está en la lista de exentas
   }
+  
 
   // Obtener código de error y mensaje
   const codigo = error.response?.data?.codigo || "Desconocido";
