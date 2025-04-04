@@ -28,7 +28,7 @@ export default function MainDreawerIndex() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
         </ScrollView>
