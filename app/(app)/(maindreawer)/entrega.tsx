@@ -28,6 +28,7 @@ export default function EntregaDreawer() {
         .sort((a, b) => a.orden - b.orden) || [],
     shallowEqual
   );
+  const usuario_id = useSelector((state: RootState) => state.usuario.id)
   const entregasSeleccionadas = useSelector(
     (state: RootState) => state.entregas.entregasSeleccionadas || []
   );
@@ -68,6 +69,7 @@ export default function EntregaDreawer() {
         const respuestaApiUbicacion = await consultarApi<any>(
           APIS.ruteo.ubicacion,
           {
+            usuario_id,
             despacho: despacho!,
             latitud: currentLocation.coords.latitude,
             longitud: currentLocation.coords.longitude,
