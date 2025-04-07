@@ -328,7 +328,7 @@ const SheetContents = memo(({ setOpen }: any) => {
             </>
           ) : null}
 
-          {arrEntregas.length > 0 ? (
+          {arrEntregasPendientes.length > 0 ? (
             <>
               <H6 mb="$2">Sincronizar</H6>
               <ListItem
