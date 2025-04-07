@@ -10,6 +10,7 @@ import {
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import EntregaUbicacion from "@/components/ui/entrega/entregaUbicacion";
+import EntregaCardDespachoCargado from "@/components/ui/entrega/EntregaCardDespachoCargado";
 
 export default function MainDreawerIndex() {
   const [permission, requestCamaraPermission] = useCameraPermissions();
@@ -43,6 +44,7 @@ export default function MainDreawerIndex() {
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
+          <EntregaCardDespachoCargado></EntregaCardDespachoCargado>
           <EntregaUbicacion></EntregaUbicacion>
         </ScrollView>
       </KeyboardAvoidingView>

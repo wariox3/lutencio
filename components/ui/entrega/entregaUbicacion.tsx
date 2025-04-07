@@ -37,29 +37,25 @@ const EntregaUbicacion = () => {
         setSeguimientoUbicacion(true);
       }
     } catch (error) {
-      console.error("Error al alternar el rastreo:", error);
+      //console.error("Error al alternar el rastreo:", error);
       alert("Ocurrió un error al cambiar el estado del seguimiento");
     }
   };
 
+  if (arrEntregas.length === 0) return null;
+
   return (
-    <>
-      {arrEntregas.length > 0 ? (
-        <Card p="$3" mx="$3">
-          <YStack justify="space-between" px="$3" mb="$2">
-            <H4 mb="$2">Ubicación</H4>
-            <Button
-              theme={seguimientoUbicacion ? "red" : "green"}
-              onPress={alternarSeguimientoUbicacion}
-            >
-              {seguimientoUbicacion
-                ? "Detener Seguimiento"
-                : "Iniciar Seguimiento"}
-            </Button>
-          </YStack>
-        </Card>
-      ) : null}
-    </>
+    <Card p="$3" mx="$3">
+      <YStack justify="space-between" px="$3" mb="$2">
+        <H4 mb="$2">Ubicación</H4>
+        <Button
+          theme={seguimientoUbicacion ? "red" : "green"}
+          onPress={alternarSeguimientoUbicacion}
+        >
+          {seguimientoUbicacion ? "Detener Seguimiento" : "Iniciar Seguimiento"}
+        </Button>
+      </YStack>
+    </Card>
   );
 };
 

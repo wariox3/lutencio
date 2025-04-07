@@ -246,100 +246,6 @@ const SheetContents = memo(({ setOpen }: any) => {
     }
   };
 
-  // const gestionGuias = async () => {
-  //   try {
-  //     if (Platform.OS === "android") {
-  //       const { status } = await MediaLibrary.requestPermissionsAsync();
-  //       if (status !== "granted") {
-  //         alert("Se necesitan permisos para guardar en la galería");
-  //         return;
-  //       }
-  //     }
-
-  //     const subdominio = await AsyncStorage.getItem("subdominio");
-  //     if (!subdominio) {
-  //       console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
-  //       return;
-  //     }
-
-  //     for (const entrega of arrEntregas) {
-  //       let imagenes: { base64: string }[] = [];
-  //       // Verificar si entrega tiene imágenes
-  //       if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
-  //         for (const imagen of entrega.arrImagenes) {
-  //           if (imagen.uri.startsWith("file://")) {
-  //             // Verificar si el archivo existe
-  //             const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
-  //             if (!fileInfo.exists) {
-  //               console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
-  //               continue; // Saltar esta imagen si fue eliminada
-  //             }
-  //             // Convertir la imagen a Base64
-  //             const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
-  //               encoding: FileSystem.EncodingType.Base64,
-  //             });
-  //             imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
-  //           }
-  //         }
-  //       }
-  //       // Verificar si hay una firma y convertirla a Base64
-  //       let firmaBase64 = null;
-  //       if (entrega.firmarBase64?.startsWith("file://")) {
-  //         const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
-  //         if (fileInfo.exists) {
-  //           firmaBase64 = await FileSystem.readAsStringAsync(
-  //             entrega.firmarBase64,
-  //             {
-  //               encoding: FileSystem.EncodingType.Base64,
-  //             }
-  //           );
-  //           firmaBase64 = `data:image/png;base64,${firmaBase64}`;
-  //         } else {
-  //           console.warn(`⚠️ Firma no encontrada: ${entrega.firmarBase64}`);
-  //         }
-  //       }
-  //       // Iterar sobre las guías y enviar la información
-  //       console.log(`📤 Enviando guía: ${entrega.id}`);
-  //       await consultarApi<any>(
-  //         APIS.ruteo.visitaEntrega,
-  //         {
-  //           id: entrega.id,
-  //           imagenes: imagenes, // Enviar imágenes convertidas
-  //         },
-  //         {
-  //           requiereToken: true,
-  //           subdominio: subdominio,
-  //         }
-  //       );
-  //       //Borrar las imágenes después de éxito
-  //       const { status } = await MediaLibrary.requestPermissionsAsync();
-  //       if (status === "granted") {
-  //         console.log("Permiso  para acceder a la galería");
-  //       }
-  //       if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
-  //         for (const img of entrega.arrImagenes) {
-  //           const fileInfo = await FileSystem.getInfoAsync(img.uri);
-  //           if (fileInfo.exists) {
-  //             await deleteFileFromGallery(img.uri);
-  //           }
-  //         }
-  //       }
-  //       //Borrar las firma después de éxito
-  //       if (entrega.firmarBase64) {
-  //         const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
-  //         if (fileInfo.exists) {
-  //           await deleteFileFromGallery(entrega.firmarBase64);
-  //         }
-  //       }
-  //       //cambiar estado estado_sincronizado
-  //       dispatch(cambiarEstadoSinconizado(entrega.id));
-  //       setOpen(false);
-  //     }
-  //   } catch (error) {
-  //     console.log("❌ Error en gestionGuias:", error);
-  //   }
-  // };
-
   const retirarDespacho = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status === "granted") {
@@ -366,6 +272,9 @@ const SheetContents = memo(({ setOpen }: any) => {
 
       //retirar las entregas
       dispatch(quitarEntregas());
+
+      // Limpiar el despacho almacenado
+      await AsyncStorage.removeItem("despacho");
 
       // deterner servicio de la ubicación
       await detenerTareaSeguimientoUbicacion();
