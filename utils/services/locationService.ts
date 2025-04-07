@@ -4,10 +4,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { consultarApi } from "../api";
 import APIS from "@/constants/endpoint";
 
-const LOCATION_TASK_NAME = "background-location-task";
+export const TAREA_SEGUIMIENTO_UBICACION = "tarea-seguimiento-ubicacion";
 
 // 1. Definir la tarea (esto debe ejecutarse al inicio de la app)
-TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
+TaskManager.defineTask(TAREA_SEGUIMIENTO_UBICACION, ({ data, error }) => {
   if (error) {
     console.error("Error en la tarea:", error);
     return;
@@ -21,7 +21,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
 const enviarUbicacion = async (locations: any) => {
   const subdominio = await AsyncStorage.getItem("subdominio");
   const usuario_id = await AsyncStorage.getItem("usuario_id");
-  const despacho = await AsyncStorage.getItem("despacho");  
+  const despacho = await AsyncStorage.getItem("despacho");
   const respuestaApiUbicacion = await consultarApi<any>(
     APIS.ruteo.ubicacion,
     {
@@ -43,11 +43,11 @@ const enviarUbicacion = async (locations: any) => {
   //     longitud: locations.coords.longitude,
   //   }
   // );
-  
+
   //console.log(respuestaApiUbicacion);
 };
 
-export async function startBackgroundLocation() {
+export async function iniciarTareaSeguimientoUbicacion() {
   try {
     // 2. Solicitar permisos
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -80,14 +80,14 @@ export async function startBackgroundLocation() {
 
     // console.log("Iniciando servicio...");
     const result = await Location.startLocationUpdatesAsync(
-      LOCATION_TASK_NAME,
+      TAREA_SEGUIMIENTO_UBICACION,
       options
     );
     // console.log("Servicio iniciado con éxito:", result);
 
     // 4. Verificar si la tarea está registrada
     const isRegistered = await TaskManager.isTaskRegisteredAsync(
-      LOCATION_TASK_NAME
+      TAREA_SEGUIMIENTO_UBICACION
     );
     // console.log("¿Tarea registrada?", isRegistered); // Debería ser `true`
   } catch (error: any) {
@@ -96,23 +96,30 @@ export async function startBackgroundLocation() {
   }
 }
 
-export async function stopBackgroundLocation() {
+export async function detenerTareaSeguimientoUbicacion() {
   try {
     // 1. Detener las actualizaciones de ubicación
-    await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-    
+    await Location.stopLocationUpdatesAsync(TAREA_SEGUIMIENTO_UBICACION);
+
     // 2. Verificar si la tarea está registrada (opcional)
     const isRegistered = await TaskManager.isTaskRegisteredAsync(
-      LOCATION_TASK_NAME
+      TAREA_SEGUIMIENTO_UBICACION
     );
-    console.log("¿Tarea aún registrada?", isRegistered); // Debería ser `false`
-    
+    //console.log("¿Tarea aún registrada?", isRegistered); // Debería ser `false`
+
     // 3. Opcional: Mostrar confirmación al usuario
-    console.log("Servicio de ubicación en segundo plano detenido con éxito");
+    //console.log("Servicio de ubicación en segundo plano detenido con éxito");
     return true;
   } catch (error: any) {
-    console.error("Error al detener el servicio:", error);
+    //console.error("Error al detener el servicio:", error);
     alert("Error al detener el servicio: " + error.message);
     return false;
   }
+}
+
+export async function registrarTareaSeguimientoUbicacion() {
+  const tareaRegistrada = await TaskManager.isTaskRegisteredAsync(
+    TAREA_SEGUIMIENTO_UBICACION
+  );
+  return tareaRegistrada;
 }

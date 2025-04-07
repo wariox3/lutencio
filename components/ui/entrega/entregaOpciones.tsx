@@ -9,6 +9,7 @@ import {
   quitarEntregas,
 } from "@/store/reducers/entregaReducer";
 import { consultarApi } from "@/utils/api";
+import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   ClipboardPlus,
@@ -365,6 +366,10 @@ const SheetContents = memo(({ setOpen }: any) => {
 
       //retirar las entregas
       dispatch(quitarEntregas());
+
+      // deterner servicio de la ubicación
+      await detenerTareaSeguimientoUbicacion();
+
 
       //cerrar el sheet
       setOpen(false);

@@ -73,8 +73,6 @@ const entregaFormulario = () => {
 
   const reiniciarEstadoCompleto = () => {
     setState(estadoInicial);
-    console.log(state);
-
     reiniciarState();
   };
 

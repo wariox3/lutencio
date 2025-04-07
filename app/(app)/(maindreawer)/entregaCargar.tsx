@@ -7,6 +7,7 @@ import { Entrega } from "@/interface/entrega/entrega";
 import { VerticalEntrega } from "@/interface/entrega/verticalEntrega";
 import { setEntregas } from "@/store/reducers/entregaReducer";
 import { consultarApi } from "@/utils/api";
+import { iniciarTareaSeguimientoUbicacion, registrarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -77,6 +78,10 @@ const entregaCargar = () => {
           `${respuestaApiVerticalEntrega.despacho_id}`
         );
         dispatch(setEntregas(respuestaApi.registros));
+
+        registrarTareaSeguimientoUbicacion()
+        iniciarTareaSeguimientoUbicacion();
+
         router.navigate("/(app)/(maindreawer)/entrega");
       }
     } catch (error) {

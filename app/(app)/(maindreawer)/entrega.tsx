@@ -1,16 +1,12 @@
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
 import EntregasSinElementos from "@/components/ui/entrega/entregasSinElementos";
-import APIS from "@/constants/endpoint";
 import { useIntervalActivo } from "@/hooks/useIntervalActivo";
-import { Entrega } from "@/interface/entrega/entrega";
 import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoSeleccionado,
   quitarEntregaSeleccionada,
   seleccionarEntrega,
 } from "@/store/reducers/entregaReducer";
-import { consultarApi } from "@/utils/api";
-import { LOCATION_TASK_NAME, startBackgroundLocation } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import { useNavigation, useRouter } from "expo-router";
@@ -18,7 +14,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
-import * as TaskManager from 'expo-task-manager';
+
 
 export default function EntregaDreawer() {
   const navigation = useNavigation();
@@ -61,43 +57,6 @@ export default function EntregaDreawer() {
 
     getCurrentLocation();
   }, [navigation]);
-
-  // Función que se ejecutará cada 30 segundos
-  const obtenerUbicacion = useCallback(async () => {
-
-    startBackgroundLocation();
-    const isTaskRegistered = await TaskManager.isTaskRegisteredAsync(LOCATION_TASK_NAME);
-    console.log({isTaskRegistered});
-    
-
-    if (permisoLocalizacion === "granted") {
-      try {
-        const currentLocation = await Location.getCurrentPositionAsync({});
-        setLocation(currentLocation);
-        const subdominio = await AsyncStorage.getItem("subdominio");
-        const despacho = await AsyncStorage.getItem("despacho");
-
-        // const respuestaApiUbicacion = await consultarApi<any>(
-        //   APIS.ruteo.ubicacion,
-        //   {
-        //     usuario_id,
-        //     despacho: despacho!,
-        //     latitud: currentLocation.coords.latitude,
-        //     longitud: currentLocation.coords.longitude,
-        //   },
-        //   {
-        //     requiereToken: true,
-        //     subdominio: subdominio!,
-        //   }
-        // );
-      } catch (error) {
-        console.error("Error al obtener ubicación:", error);
-      }
-    }
-  }, [permisoLocalizacion]);
-
-  // Usar el hook de intervalo cuando hay entregas pendientes
-  useIntervalActivo(arrEntregas.length > 0, obtenerUbicacion);
 
   const gestionEntrega = (id: number) => {
     if (entregasSeleccionadas.includes(id)) {

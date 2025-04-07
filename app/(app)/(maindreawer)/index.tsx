@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
+import EntregaUbicacion from "@/components/ui/entrega/entregaUbicacion";
 
 export default function MainDreawerIndex() {
   const [permission, requestCamaraPermission] = useCameraPermissions();
@@ -42,7 +43,7 @@ export default function MainDreawerIndex() {
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
-          
+          <EntregaUbicacion></EntregaUbicacion>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

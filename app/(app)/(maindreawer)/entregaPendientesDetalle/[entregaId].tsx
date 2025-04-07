@@ -38,10 +38,7 @@ const EntregaPendientesDetalle = () => {
       },
     });
   }, [navigation]);
-
-  console.log(arrEntregas);
   
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
