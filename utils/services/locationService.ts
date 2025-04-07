@@ -98,17 +98,14 @@ export async function iniciarTareaSeguimientoUbicacion() {
 
 export async function detenerTareaSeguimientoUbicacion() {
   try {
-    // 1. Detener las actualizaciones de ubicación
-    await Location.stopLocationUpdatesAsync(TAREA_SEGUIMIENTO_UBICACION);
-
-    // 2. Verificar si la tarea está registrada (opcional)
-    const isRegistered = await TaskManager.isTaskRegisteredAsync(
+    // 1. Verificar si la tarea está registrada
+    const tareaRegistrada = await TaskManager.isTaskRegisteredAsync(
       TAREA_SEGUIMIENTO_UBICACION
     );
-    //console.log("¿Tarea aún registrada?", isRegistered); // Debería ser `false`
-
-    // 3. Opcional: Mostrar confirmación al usuario
-    //console.log("Servicio de ubicación en segundo plano detenido con éxito");
+    if (tareaRegistrada) {
+      // 2. Detener las actualizaciones de ubicación
+      await Location.stopLocationUpdatesAsync(TAREA_SEGUIMIENTO_UBICACION);
+    }
     return true;
   } catch (error: any) {
     //console.error("Error al detener el servicio:", error);
