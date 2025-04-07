@@ -44,7 +44,7 @@ const enviarUbicacion = async (locations: any) => {
   //   }
   // );
   
-  console.log(respuestaApiUbicacion);
+  //console.log(respuestaApiUbicacion);
 };
 
 export async function startBackgroundLocation() {
@@ -93,5 +93,26 @@ export async function startBackgroundLocation() {
   } catch (error: any) {
     //console.error("Error crítico:", error);
     alert("Error al iniciar el servicio: " + error.message);
+  }
+}
+
+export async function stopBackgroundLocation() {
+  try {
+    // 1. Detener las actualizaciones de ubicación
+    await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+    
+    // 2. Verificar si la tarea está registrada (opcional)
+    const isRegistered = await TaskManager.isTaskRegisteredAsync(
+      LOCATION_TASK_NAME
+    );
+    console.log("¿Tarea aún registrada?", isRegistered); // Debería ser `false`
+    
+    // 3. Opcional: Mostrar confirmación al usuario
+    console.log("Servicio de ubicación en segundo plano detenido con éxito");
+    return true;
+  } catch (error: any) {
+    console.error("Error al detener el servicio:", error);
+    alert("Error al detener el servicio: " + error.message);
+    return false;
   }
 }
