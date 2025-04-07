@@ -38,27 +38,6 @@ axios.interceptors.response.use(
   }
 );
 
-// axios.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response?.status === 400) {
-//       const errorData = error?.response?.data;
-//       const mensajeCompleto =
-//         errorData.mensaje +
-//         (errorData.validaciones
-//           ? " " + Object.values(errorData.validaciones).flat().join(", ")
-//           : "");
-
-//       Alert.alert(`Error ${errorData.codigo}`, mensajeCompleto);
-
-//       //     }
-//       //     if (error.response?.status === 401) {
-//       //       Alert.alert("Token inválido o expirado.");
-//     }
-//     return Promise.reject(error);
-//   }
-// );
-
 export const consultarApi = async <T>(
   url: string,
   data?: T | null,
