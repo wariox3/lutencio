@@ -128,7 +128,6 @@ const SheetContents = memo(({ setOpen }: any) => {
       [
         {
           text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
         },
         { text: "Confirmar", onPress: () => retirarDespacho() },
       ]
@@ -142,7 +141,6 @@ const SheetContents = memo(({ setOpen }: any) => {
       [
         {
           text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
         },
         {
           text: "Confirmar",
@@ -174,7 +172,7 @@ const SheetContents = memo(({ setOpen }: any) => {
         try {
           let imagenes: { base64: string }[] = [];
 
-          // 1️⃣ Procesar imágenes (si existen)
+          // 1️ Procesar imágenes (si existen)
           if (entrega.arrImagenes?.length > 0) {
             for (const imagen of entrega.arrImagenes) {
               if (imagen.uri.startsWith("file://")) {
@@ -191,7 +189,7 @@ const SheetContents = memo(({ setOpen }: any) => {
             }
           }
 
-          // 2️⃣ Procesar firma (si existe)
+          // 2️ Procesar firma (si existe)
           let firmaBase64 = null;
           if (entrega.firmarBase64?.startsWith("file://")) {
             const fileInfo = await FileSystem.getInfoAsync(
@@ -210,15 +208,14 @@ const SheetContents = memo(({ setOpen }: any) => {
             }
           }
 
-          // 3️⃣ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
-          console.log(`📤 Enviando guía: ${entrega.id}`);
+          // 3️ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
           await consultarApi<any>(
             APIS.ruteo.visitaEntrega,
             { id: entrega.id, imagenes },
             { requiereToken: true, subdominio }
           );
 
-          // 4️⃣ Solo si la API responde OK, borrar archivos y marcar como sincronizado
+          // 4️ Solo si la API responde OK, borrar archivos y marcar como sincronizado
           if (entrega.arrImagenes?.length > 0) {
             for (const img of entrega.arrImagenes) {
               const fileInfo = await FileSystem.getInfoAsync(img.uri);

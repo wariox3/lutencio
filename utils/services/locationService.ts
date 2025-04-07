@@ -35,23 +35,12 @@ const enviarUbicacion = async (locations: any) => {
       subdominio: subdominio!,
     }
   );
-  // console.log(
-  //   {
-  //     usuario_id,
-  //     despacho: despacho!,
-  //     latitud: locations.coords.latitude,
-  //     longitud: locations.coords.longitude,
-  //   }
-  // );
-
-  //console.log(respuestaApiUbicacion);
 };
 
 export async function iniciarTareaSeguimientoUbicacion() {
   try {
     // 2. Solicitar permisos
     const { status } = await Location.requestForegroundPermissionsAsync();
-    //console.log("Permiso foreground:", status);
     if (status !== "granted") {
       alert("Se requieren permisos de ubicación para continuar.");
       return;
@@ -59,7 +48,6 @@ export async function iniciarTareaSeguimientoUbicacion() {
 
     const { status: backgroundStatus } =
       await Location.requestBackgroundPermissionsAsync();
-    //console.log("Permiso background:", backgroundStatus);
     if (backgroundStatus !== "granted") {
       alert(
         "Activa 'Permitir siempre' en ajustes para el rastreo en segundo plano."
@@ -69,27 +57,24 @@ export async function iniciarTareaSeguimientoUbicacion() {
 
     // 3. Iniciar la tarea
     const options = {
-      accuracy: Location.Accuracy.High,
-      timeInterval: 5000,
-      distanceInterval: 10,
+      accuracy: Location.Accuracy.Balanced,
+      timeInterval: 30000,
+      distanceInterval: 20,
       foregroundService: {
         notificationTitle: "Rastreo activo",
         notificationBody: "Tu ubicación se está registrando.",
       },
     };
 
-    // console.log("Iniciando servicio...");
     const result = await Location.startLocationUpdatesAsync(
       TAREA_SEGUIMIENTO_UBICACION,
       options
     );
-    // console.log("Servicio iniciado con éxito:", result);
 
     // 4. Verificar si la tarea está registrada
     const isRegistered = await TaskManager.isTaskRegisteredAsync(
       TAREA_SEGUIMIENTO_UBICACION
     );
-    // console.log("¿Tarea registrada?", isRegistered); // Debería ser `true`
   } catch (error: any) {
     //console.error("Error crítico:", error);
     alert("Error al iniciar el servicio: " + error.message);
@@ -109,7 +94,7 @@ export async function detenerTareaSeguimientoUbicacion() {
     return true;
   } catch (error: any) {
     //console.error("Error al detener el servicio:", error);
-    alert("Error al detener el servicio: " + error.message);
+    //alert("Error al detener el servicio: " + error.message);
     return false;
   }
 }

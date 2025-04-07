@@ -104,7 +104,6 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
         setOpen(false);
       }
     } catch (error) {
-      //console.log("Error al tomar la foto:", error);
     }
   };
 

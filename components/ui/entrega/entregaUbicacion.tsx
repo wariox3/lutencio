@@ -1,8 +1,8 @@
 import { useIntervalActivo } from "@/hooks/useIntervalActivo";
 import { RootState } from "@/store/reducers";
 import {
-  iniciarTareaSeguimientoUbicacion,
   detenerTareaSeguimientoUbicacion,
+  iniciarTareaSeguimientoUbicacion
 } from "@/utils/services/locationService";
 import React, { useCallback, useState } from "react";
 import { shallowEqual, useSelector } from "react-redux";

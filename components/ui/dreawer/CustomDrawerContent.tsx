@@ -19,7 +19,6 @@ export default function CustomDrawerContent(props: any) {
       [
         {
           text: "Cancelar",
-          onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
         {
