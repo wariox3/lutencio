@@ -96,8 +96,11 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   const arrEntregasPendientes = useSelector(
     (state: RootState) =>
-      state.entregas.entregas.filter((entrega) => entrega.estado_entregado === true && entrega.estado_sincronizado === false) ||
-      [],
+      state.entregas.entregas.filter(
+        (entrega) =>
+          entrega.estado_entregado === true &&
+          entrega.estado_sincronizado === false
+      ) || [],
     shallowEqual
   );
 
@@ -273,9 +276,11 @@ const SheetContents = memo(({ setOpen }: any) => {
       // Limpiar el despacho almacenado
       await AsyncStorage.removeItem("despacho");
 
+      // Limpiar el subdominio almacenado
+      await AsyncStorage.removeItem("subdominio");
+
       // deterner servicio de la ubicación
       await detenerTareaSeguimientoUbicacion();
-
 
       //cerrar el sheet
       setOpen(false);
@@ -343,7 +348,8 @@ const SheetContents = memo(({ setOpen }: any) => {
                 icon={<FileQuestion size="$2" />}
                 title="Pendientes"
                 subTitle={
-                  "Cantidad pendientes por sincronizar: " + arrEntregasPendientes.length
+                  "Cantidad pendientes por sincronizar: " +
+                  arrEntregasPendientes.length
                 }
                 onPress={() => navegarEntregaPendietes()}
               />
