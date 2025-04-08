@@ -27,6 +27,7 @@ export default function CustomDrawerContent(props: any) {
           text: "Confirmar",
           onPress: async () => {
             await AsyncStorage.removeItem("jwtToken");
+            await AsyncStorage.removeItem("usuario_id");
             await detenerTareaSeguimientoUbicacion()
             dispatch(cerrarSesionUsuario());
             router.navigate(rutasApp.login);

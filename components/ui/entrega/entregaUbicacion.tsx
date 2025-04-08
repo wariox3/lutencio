@@ -1,28 +1,26 @@
 import { useIntervalActivo } from "@/hooks/useIntervalActivo";
-import { RootState } from "@/store/reducers";
+import { obtenerEntregasPendientesOrdenadas } from "@/store/selects/entrega";
 import {
+  comprobarRegistroTareaGeolocalizacion,
   detenerTareaSeguimientoUbicacion,
-  iniciarTareaSeguimientoUbicacion
+  iniciarTareaSeguimientoUbicacion,
+  registrarTareaSeguimientoUbicacion,
 } from "@/utils/services/locationService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useState } from "react";
-import { shallowEqual, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Button, Card, H4, YStack } from "tamagui";
 
 const EntregaUbicacion = () => {
   const [seguimientoUbicacion, setSeguimientoUbicacion] = useState(true);
-  const arrEntregas = useSelector(
-    (state: RootState) =>
-      state.entregas.entregas
-        .filter((entrega) => !entrega.estado_entregado)
-        .sort((a, b) => a.orden - b.orden) || [],
-    shallowEqual
-  );
-
+  const arrEntregas = useSelector(obtenerEntregasPendientesOrdenadas);
+  
   // Mover la lógica del intervalo aquí
   useIntervalActivo(
-    seguimientoUbicacion && arrEntregas.length > 0,
+    seguimientoUbicacion,
     useCallback(async () => {
-      if (seguimientoUbicacion) {
+      let tareaUbicacion = await comprobarRegistroTareaGeolocalizacion()
+      if (tareaUbicacion) {
         await iniciarTareaSeguimientoUbicacion();
       }
     }, [seguimientoUbicacion])
@@ -30,14 +28,15 @@ const EntregaUbicacion = () => {
 
   const alternarSeguimientoUbicacion = async () => {
     try {
-      if (seguimientoUbicacion) {
+      let tareaUbicacion = await comprobarRegistroTareaGeolocalizacion()      
+      if (tareaUbicacion) {
         await detenerTareaSeguimientoUbicacion();
         setSeguimientoUbicacion(false);
       } else {
+        await iniciarTareaSeguimientoUbicacion()
         setSeguimientoUbicacion(true);
       }
     } catch (error) {
-      //console.error("Error al alternar el rastreo:", error);
       alert("Ocurrió un error al cambiar el estado del seguimiento");
     }
   };
