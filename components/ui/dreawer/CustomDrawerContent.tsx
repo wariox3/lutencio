@@ -1,5 +1,7 @@
 import { menuItems } from "@/constants/menuItems";
+import { rutasApp } from "@/constants/rutas";
 import { cerrarSesionUsuario } from "@/store/reducers/usuarioReducer";
+import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { LogOut } from "@tamagui/lucide-icons";
@@ -25,8 +27,9 @@ export default function CustomDrawerContent(props: any) {
           text: "Confirmar",
           onPress: async () => {
             await AsyncStorage.removeItem("jwtToken");
+            await detenerTareaSeguimientoUbicacion()
             dispatch(cerrarSesionUsuario());
-            router.navigate("/(app)/(login)");
+            router.navigate(rutasApp.login);
           },
         },
       ],
