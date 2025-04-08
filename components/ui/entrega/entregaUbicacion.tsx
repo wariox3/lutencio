@@ -3,10 +3,8 @@ import { obtenerEntregasPendientesOrdenadas } from "@/store/selects/entrega";
 import {
   comprobarRegistroTareaGeolocalizacion,
   detenerTareaSeguimientoUbicacion,
-  iniciarTareaSeguimientoUbicacion,
-  registrarTareaSeguimientoUbicacion,
+  iniciarTareaSeguimientoUbicacion
 } from "@/utils/services/locationService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Card, H4, YStack } from "tamagui";
@@ -14,6 +12,8 @@ import { Button, Card, H4, YStack } from "tamagui";
 const EntregaUbicacion = () => {
   const [seguimientoUbicacion, setSeguimientoUbicacion] = useState(true);
   const arrEntregas = useSelector(obtenerEntregasPendientesOrdenadas);
+  
+  comprobarRegistroTareaGeolocalizacion().then((valor) => setSeguimientoUbicacion(valor));
   
   // Mover la lógica del intervalo aquí
   useIntervalActivo(
