@@ -87,9 +87,12 @@ export async function detenerTareaSeguimientoUbicacion() {
     const tareaRegistrada = await TaskManager.isTaskRegisteredAsync(
       TAREA_SEGUIMIENTO_UBICACION
     );
+    console.log(tareaRegistrada);
+    
     if (tareaRegistrada) {
       // 2. Detener las actualizaciones de ubicación
       await Location.stopLocationUpdatesAsync(TAREA_SEGUIMIENTO_UBICACION);
+      await TaskManager.unregisterTaskAsync(TAREA_SEGUIMIENTO_UBICACION)
     }
     return true;
   } catch (error: any) {
