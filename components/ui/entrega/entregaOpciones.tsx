@@ -18,6 +18,7 @@ import {
   FileStack,
   FileUp,
   FileX,
+  MapPinned,
   MoreVertical,
   XCircle,
 } from "@tamagui/lucide-icons";
@@ -108,6 +109,11 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   const navegarEntregaCargar = () => {
     router.navigate(rutasApp.entregaCargar);
+    setOpen(false);
+  };
+
+  const navegarEntregaMapa = () => {
+    router.navigate(rutasApp.entregaMapa);
     setOpen(false);
   };
 
@@ -309,6 +315,13 @@ const SheetContents = memo(({ setOpen }: any) => {
             title="Cargar"
             subTitle="obtener información de un despacho"
             onPress={() => navegarEntregaCargar()}
+          />
+          <ListItem
+            hoverTheme
+            icon={<MapPinned size="$2" />}
+            title="Mapa"
+            subTitle="ubicación en mapa"
+            onPress={() => navegarEntregaMapa()}
           />
           {entregas.length > 0 ? (
             <ListItem

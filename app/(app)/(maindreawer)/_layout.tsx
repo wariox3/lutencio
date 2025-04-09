@@ -61,6 +61,17 @@ export default function Layout() {
         }}
       />
       <Drawer.Screen
+        name="entregaMapa"
+        options={{
+          headerTitle: "",
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+        }}
+      />
+      <Drawer.Screen
         name="entregaPendientesDetalle"
         options={({ route }) => ({
           drawerLabel: route.params?.entregaId

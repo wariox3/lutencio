@@ -61,7 +61,8 @@
     "expo-background-task": "~0.1.4",
     "expo-dev-client": "~5.0.19",
     "expo-background-fetch": "~13.0.6",
-    "expo-notifications": "~0.29.14"
+    "expo-notifications": "~0.29.14",
+    "react-native-maps": "1.18.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

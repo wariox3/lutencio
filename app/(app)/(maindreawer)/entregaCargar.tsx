@@ -77,6 +77,8 @@ const entregaCargar = () => {
           "despacho",
           `${respuestaApiVerticalEntrega.despacho_id}`
         );
+        console.log(respuestaApi);
+        
         dispatch(setEntregas(respuestaApi.registros));
         await iniciarTareaSeguimientoUbicacion();
         router.navigate("/(app)/(maindreawer)/entrega");
