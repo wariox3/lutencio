@@ -5,7 +5,7 @@ import { Validaciones } from "@/constants/mensajes";
 import { setUsuarioInformacion } from "@/store/reducers/usuarioReducer";
 import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -24,7 +24,7 @@ export default function LoginForm() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useFocusEffect(() => {
     const verificarToken = async () => {
       const token = await AsyncStorage.getItem("jwtToken");
       if (token) {
@@ -32,7 +32,7 @@ export default function LoginForm() {
       }
     };
     verificarToken();
-  }, []);
+  })
 
   const onLoginPressed = async (data: { email: string; password: string }) => {
     setMostrarAnimacionCargando(true);
@@ -47,7 +47,7 @@ export default function LoginForm() {
       setMostrarAnimacionCargando(false);
       dispatch(setUsuarioInformacion(respuestaApiLogin.user));
       await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
-      router.navigate("/(app)/(maindreawer)");
+      router.replace("/(app)/(maindreawer)");
     } catch (error) {
       setMostrarAnimacionCargando(false);
     }
