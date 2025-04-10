@@ -146,7 +146,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   const confirmarSincornizarEntregas = async () => {
     Alert.alert(
       "⚠️ Advertencia",
-      "Esta acción sincronizará las entregas pendientes por sincronizar no se puede deshacer una vez completa",
+      "Esta acción sincronizará las ordenes de entrega pendientes por sincronizar no se puede deshacer una vez completa",
       [
         {
           text: "Cancel",
