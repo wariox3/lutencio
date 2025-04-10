@@ -15,7 +15,7 @@ import MapView, { Marker, Region } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
-import { Button, Card, Text, View, XStack } from "tamagui";
+import { Button, Card, H6, Text, View, XStack } from "tamagui";
 
 const { width } = Dimensions.get("window");
 
@@ -77,82 +77,93 @@ const Index = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <Titulo texto="Mapa"></Titulo>
-      <View style={styles.mapContainer}>
-        {region ? (
-          <MapView
-            style={styles.map}
-            provider="google"
-            initialRegion={region}
-            showsUserLocation={true}
+      {entregasSeleccionadas.length > 0 ? (
+        <>
+          <Titulo texto="Mapa"></Titulo>
+          <View style={styles.mapContainer}>
+            {region ? (
+              <MapView
+                style={styles.map}
+                provider="google"
+                initialRegion={region}
+                showsUserLocation={true}
+              >
+                <Marker coordinate={region} />
+
+                {entregasSeleccionadas[currentIndex] ? (
+                  <>
+                    <Marker
+                      coordinate={{
+                        latitude: entregasSeleccionadas[currentIndex].latitud,
+                        longitude: entregasSeleccionadas[currentIndex].longitud,
+                      }}
+                    />
+                    <MapViewDirections
+                      origin={{
+                        latitude: region.latitude,
+                        longitude: region.latitude,
+                      }}
+                      destination={{
+                        latitude: entregasSeleccionadas[currentIndex].latitud,
+                        longitude: entregasSeleccionadas[currentIndex].longitud,
+                      }}
+                      apikey={"AIzaSyDnd8eb9Pq7Dnye_vGeo4MLT389Is_NjzI"}
+                      strokeWidth={3}
+                      strokeColor="hotpink"
+                      optimizeWaypoints={true}
+                    />
+                  </>
+                ) : null}
+              </MapView>
+            ) : (
+              <ActivityIndicator size="large" style={styles.loader} />
+            )}
+          </View>
+          <XStack
+            flex={0.1}
+            my={"$1"}
+            justify={"space-between"}
+            alignItems="center"
+            gap={"$4"}
           >
-            <Marker coordinate={region} />
-
-            <Marker
-              coordinate={{
-                latitude: entregasSeleccionadas[currentIndex].latitud,
-                longitude: entregasSeleccionadas[currentIndex].longitud,
-              }}
+            <Button
+              onPress={() => scrollTo("left")}
+              disabled={currentIndex === 0}
+              variant="outlined"
+              icon={<ArrowLeftCircle size={"$2"}></ArrowLeftCircle>}
+            ></Button>
+            <FlatList
+              ref={flatListRef}
+              data={entregasSeleccionadas}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({ item }) => (
+                <Card width={width} padding={16}>
+                  <Text>ID: {item.id}</Text>
+                </Card>
+              )}
+              horizontal
+              pagingEnabled
+              scrollEnabled={false}
+              showsHorizontalScrollIndicator={false}
             />
-
-            <MapViewDirections
-              origin={{
-                latitude: region.latitude,
-                longitude: region.latitude,
-              }}
-              destination={{
-                latitude: entregasSeleccionadas[currentIndex].latitud,
-                longitude: entregasSeleccionadas[currentIndex].longitud,
-              }}
-              apikey={"AIzaSyDnd8eb9Pq7Dnye_vGeo4MLT389Is_NjzI"}
-              strokeWidth={3}
-              strokeColor="hotpink"
-              optimizeWaypoints={true}
-            />
-          </MapView>
-        ) : (
-          <ActivityIndicator size="large" style={styles.loader} />
-        )}
-      </View>
-      <XStack
-        flex={0.1}
-        my={"$1"}
-        justify={"space-between"}
-        alignItems="center"
-        gap={"$4"}
-      >
-        <Button
-          onPress={() => scrollTo("left")}
-          disabled={currentIndex === 0}
-          variant="outlined"
-          icon={<ArrowLeftCircle size={"$2"}></ArrowLeftCircle>}
-        ></Button>
-        <FlatList
-          ref={flatListRef}
-          data={entregasSeleccionadas}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item }) => (
-            <Card width={width} padding={16}>
-              <Text>ID: {item.id}</Text>
-            </Card>
-          )}
-          horizontal
-          pagingEnabled
-          scrollEnabled={false}
-          showsHorizontalScrollIndicator={false}
-        />
-        <View>
-          <Text>
-            {currentIndex + 1} de {entregasSeleccionadas.length}
-          </Text>
-        </View>
-        <Button
-          onPress={() => scrollTo("right")}
-          disabled={currentIndex === entregasSeleccionadas.length - 1}
-          variant="outlined"
-          icon={<ArrowRightCircle size={"$2"}></ArrowRightCircle>}
-        ></Button>
-      </XStack>
+            <View>
+              <Text>
+                {currentIndex + 1} de {entregasSeleccionadas.length}
+              </Text>
+            </View>
+            <Button
+              onPress={() => scrollTo("right")}
+              disabled={currentIndex === entregasSeleccionadas.length - 1}
+              variant="outlined"
+              icon={<ArrowRightCircle size={"$2"}></ArrowRightCircle>}
+            ></Button>
+          </XStack>
+        </>
+      ) : (
+        <Card flex={0.1} my={"$1"} theme={"red"} padding={16}>
+          <H6>No tiene orden de entrega vinculada</H6>
+        </Card>
+      )}
     </SafeAreaView>
   );
 };
