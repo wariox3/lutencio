@@ -6,7 +6,7 @@ export default function Layout() {
   return (
     <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />}>
       <Drawer.Screen
-        name="index"
+        name="(tabs)"
         options={{
           headerTitle: "",
           headerStyle: {

@@ -12,7 +12,7 @@ import { H4, View } from "tamagui";
 import MapViewDirections from "react-native-maps-directions";
 import Titulo from "@/components/ui/comun/Titulo";
 
-const EntregaMapa = () => {
+const Index = () => {
   const navigation = useNavigation();
   const [region, setRegion] = useState<Region | null>(null);
   const entregasSeleccionadas = useSelector(obtenerEntregasMapa);
@@ -56,7 +56,6 @@ const EntregaMapa = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <Titulo texto="Mapa"></Titulo>
-
       <View style={styles.mapContainer}>
         {region ? (
           <MapView
@@ -103,7 +102,7 @@ const EntregaMapa = () => {
   );
 };
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   mapContainer: {
     flex: 1, // ocupa todo el espacio restante
     width: "100%",
@@ -118,4 +117,4 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default EntregaMapa;
+export default Index;

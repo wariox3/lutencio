@@ -11,6 +11,9 @@ import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import EntregaUbicacion from "@/components/ui/entrega/entregaUbicacion";
 import EntregaCardDespachoCargado from "@/components/ui/entrega/EntregaCardDespachoCargado";
+import { Text } from "tamagui";
+import { Redirect } from "expo-router";
+import { rutasApp } from "@/constants/rutas";
 
 export default function MainDreawerIndex() {
   const [permission, requestCamaraPermission] = useCameraPermissions();
@@ -40,14 +43,5 @@ export default function MainDreawerIndex() {
     }
   };
 
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <KeyboardAvoidingView>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <EntregaCardDespachoCargado></EntregaCardDespachoCargado>
-          <EntregaUbicacion></EntregaUbicacion>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
+  return <Redirect href={rutasApp.home} />;
 }

@@ -78,9 +78,7 @@ const error405 = (): void => {
   Alert.alert(`❌ Error 405`, "Servidor fuera de línea, intente más tarde.");
 };
 
-const error500 = (error: AxiosError): void => {  
-  console.log(error.request.url);
-  
+const error500 = (error: AxiosError): void => {    
   Alert.alert(
     `❌ Error 500`,
     "Error interno del servidor. Por favor, intente más tarde."
