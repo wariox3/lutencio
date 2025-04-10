@@ -306,32 +306,33 @@ const SheetContents = memo(({ setOpen }: any) => {
         />
       </XStack>
       <YGroup width={"auto"} flex={1} size="$4" gap="$4">
-        <H6>Despacho</H6>
+        <H6>Orden de entrega</H6>
 
         <YGroup.Item>
-          <ListItem
-            hoverTheme
-            icon={<ClipboardPlus size="$2" />}
-            title="Cargar"
-            subTitle="obtener información de un despacho"
-            onPress={() => navegarEntregaCargar()}
-          />
-          <ListItem
+          {/* <ListItem
             hoverTheme
             icon={<MapPinned size="$2" />}
             title="Mapa"
             subTitle="ubicación en mapa"
             onPress={() => navegarEntregaMapa()}
-          />
-          {entregas.length > 0 ? (
+          /> */}
+          {entregas.length === 0 ? (
+            <ListItem
+              hoverTheme
+              icon={<ClipboardPlus size="$2" />}
+              title="Vincular"
+              subTitle="Vincular una orden de entrega"
+              onPress={() => navegarEntregaCargar()}
+            />
+          ) : (
             <ListItem
               hoverTheme
               icon={<ClipboardX size="$2" />}
               title="Desvincular"
-              subTitle="Desvincular el despacho actual"
+              subTitle="Desvincular la orden de entrega actual"
               onPress={() => confirmarRetirarDespacho()}
             />
-          ) : null}
+          )}
 
           {entregasSeleccionadas.length > 0 ? (
             <>

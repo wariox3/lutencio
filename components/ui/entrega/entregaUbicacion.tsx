@@ -46,12 +46,11 @@ const EntregaUbicacion = () => {
   return (
     <Card p="$3" mx="$3">
       <YStack justify="space-between" px="$3" mb="$2">
-        <H4 mb="$2">Ubicación</H4>
         <Button
           theme={seguimientoUbicacion ? "red" : "green"}
           onPress={alternarSeguimientoUbicacion}
         >
-          {seguimientoUbicacion ? "Detener Seguimiento" : "Iniciar Seguimiento"}
+          {seguimientoUbicacion ? "Detener envio ubicación" : "Iniciar envio ubicación"}
         </Button>
       </YStack>
     </Card>

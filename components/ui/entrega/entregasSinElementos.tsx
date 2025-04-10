@@ -4,7 +4,7 @@ import { Text, View } from 'tamagui'
 const EntregasSinElementos = () => {
   return (
     <View mx="$3">
-      <Text>No se cuenta con un despacho cargado </Text>
+      <Text>Vincular una orden de entrega</Text>
     </View>
   )
 }

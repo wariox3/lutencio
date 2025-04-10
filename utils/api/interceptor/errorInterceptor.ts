@@ -79,6 +79,8 @@ const error405 = (): void => {
 };
 
 const error500 = (error: AxiosError): void => {  
+  console.log(error.request.url);
+  
   Alert.alert(
     `❌ Error 500`,
     "Error interno del servidor. Por favor, intente más tarde."

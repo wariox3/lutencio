@@ -77,7 +77,10 @@ const entregaCargar = () => {
           "despacho",
           `${respuestaApiVerticalEntrega.despacho_id}`
         );
-        console.log(respuestaApi);
+        await AsyncStorage.setItem(
+          "ordenEntrega",
+          `${data.codigo}`
+        );
         
         dispatch(setEntregas(respuestaApi.registros));
         await iniciarTareaSeguimientoUbicacion();
@@ -93,13 +96,14 @@ const entregaCargar = () => {
       <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View gap="$4" flex={1} paddingInline="$4">
-            <H4>Cargar</H4>
+            <H4>Vincular</H4>
             <BasicInput
               name="codigo"
               control={control}
-              label="Código"
+              label="Orden de entrega"
               isRequired={true}
-              placeholder="Código despacho"
+              placeholder="123"
+              keyboardType="numeric"
               rules={{
                 required: Validaciones.comunes.requerido,
               }}
@@ -109,7 +113,7 @@ const entregaCargar = () => {
               icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
               onPress={handleSubmit(onLoginPressed)}
             >
-              Cargar
+              Vincular
             </Button>
           </View>
         </ScrollView>
