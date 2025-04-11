@@ -8,8 +8,8 @@ import { useNavigation, useRouter } from "expo-router";
 import Volver from "@/components/ui/navegacion/volver";
 
 const EntregaPendientes = () => {
-    const navigation = useNavigation();
-    const router = useRouter();
+  const navigation = useNavigation();
+  const router = useRouter();
 
   const arrEntregas = useSelector(
     (state: RootState) =>
@@ -21,19 +21,19 @@ const EntregaPendientes = () => {
     shallowEqual
   );
 
-    useEffect(() => {
-      // Aquí puedes realizar lógica de inicialización si es necesario.
-      navigation.setOptions({
-        headerLeft: () => <Volver ruta="entrega" />,
-        headerTitle: "",
-      });
-    }, [navigation]);
+  useEffect(() => {
+    // Aquí puedes realizar lógica de inicialización si es necesario.
+    navigation.setOptions({
+      headerLeft: () => <Volver ruta="entrega" />,
+      headerTitle: "",
+    });
+  }, [navigation]);
 
   const navegarEntregaPendientes = (entregaId: number) => {
     router.navigate({
       pathname: rutasApp.entregaPendientesDetalle,
-      params:  {entregaId}
-    })
+      params: { entregaId },
+    });
   };
 
   return (
@@ -48,8 +48,15 @@ const EntregaPendientes = () => {
             </XStack>
           )}
           renderItem={({ item }) => (
-            <Card p="$3" mx="$3" onPress={() => navegarEntregaPendientes(item.id)}>
+            <Card
+              p="$3"
+              mx="$3"
+              onPress={() => navegarEntregaPendientes(item.id)}
+            >
               <Text>Id: {item.id}</Text>
+              {item.estado_error ? (
+                <Text>Error: {item.mensaje_error}</Text>
+              ) : null}
             </Card>
           )}
           ItemSeparatorComponent={() => <View my={"$2"}></View>}
