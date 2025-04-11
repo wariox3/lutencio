@@ -130,7 +130,7 @@ const Index = () => {
               onPress={() => scrollTo("left")}
               disabled={currentIndex === 0}
               variant="outlined"
-              icon={<ArrowLeftCircle size={"$2"}></ArrowLeftCircle>}
+              icon={<ArrowLeftCircle size={"$2"} color={currentIndex === 0 ? 'gray': '$black1'}></ArrowLeftCircle>}
             ></Button>
             <FlatList
               ref={flatListRef}
@@ -155,7 +155,7 @@ const Index = () => {
               onPress={() => scrollTo("right")}
               disabled={currentIndex === entregasSeleccionadas.length - 1}
               variant="outlined"
-              icon={<ArrowRightCircle size={"$2"}></ArrowRightCircle>}
+              icon={<ArrowRightCircle size={"$2"} color={currentIndex === entregasSeleccionadas.length - 1 ? 'gray': '$black1'}></ArrowRightCircle>}
             ></Button>
           </XStack>
         </>
