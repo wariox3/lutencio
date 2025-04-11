@@ -1,6 +1,6 @@
 export const rutasApp = {
   login: "/(app)/(login)",
-  home: "/(app)/(maindreawer)/(tabs)/",
+  home: "/(app)/(maindreawer)/(tabs)/(inicio)",
   entrega: "/(app)/(maindreawer)/entrega",
   entregaCargar: "/(app)/(maindreawer)/entregaCargar",
   entregaFormulario: "/(app)/(maindreawer)/entregaFormulario",
