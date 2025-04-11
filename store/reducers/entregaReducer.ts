@@ -19,7 +19,9 @@ const entregasSlice = createSlice({
       state.entregas = action.payload.map((entrega) => ({
         ...entrega,
         estado_entregado: false,  // Valor inicial por defecto
-        estado_sincronizado: false  // Valor inicial por defecto
+        estado_sincronizado: false,  // Valor inicial por defecto
+        estado_error: false,
+        mensaje_error: ''
       }));
     },
     quitarEntregas: (state) => {
@@ -87,9 +89,22 @@ const entregasSlice = createSlice({
       }
     },
     cambiarEstadoSinconizado: (state, action: PayloadAction<number>) => {
-      const entrega = state.entregas.find((e) => e.id === action.payload);
+      const entrega = state.entregas.find((e) => e.id === action.payload);      
       if (entrega) {
         entrega.estado_sincronizado = !entrega.estado_sincronizado;
+      }
+    },
+    cambiarEstadoError: (state, action: PayloadAction<number>) => {
+      const entrega = state.entregas.find((e) => e.id === action.payload);      
+      if (entrega) {
+        entrega.estado_error = !entrega.estado_error;
+      }
+    },
+    actualizarMensajeError: (state, action: PayloadAction<{entregaId: number; mensaje: string}>) => {
+      const { entregaId, mensaje } = action.payload;
+      const entrega = state.entregas.find((e) => e.id === entregaId);
+      if (entrega) {
+        entrega.mensaje_error = mensaje;
       }
     },
     limpiarEntregaSeleccionada: (state) => {
@@ -115,6 +130,8 @@ export const {
   quitarEntregas,
   agregarImagenEntrega,
   quitarImagenEntrega,
-  actualizarFirmaEntrega
+  actualizarFirmaEntrega,
+  cambiarEstadoError,
+  actualizarMensajeError
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

@@ -3,6 +3,8 @@ import { rutasApp } from "@/constants/rutas";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { RootState } from "@/store/reducers";
 import {
+  actualizarMensajeError,
+  cambiarEstadoError,
   cambiarEstadoSeleccionado,
   cambiarEstadoSinconizado,
   limpiarEntregaSeleccionada,
@@ -176,8 +178,8 @@ const SheetContents = memo(({ setOpen }: any) => {
         console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
         return;
       }
-
-      for (const entrega of arrEntregas) {
+      
+      for (const entrega of arrEntregasPendientes) {
         try {
           let imagenes: { base64: string }[] = [];
 
@@ -223,7 +225,7 @@ const SheetContents = memo(({ setOpen }: any) => {
             { id: entrega.id, imagenes },
             { requiereToken: true, subdominio }
           );
-
+          
           // 4️ Solo si la API responde OK, borrar archivos y marcar como sincronizado
           if (entrega.arrImagenes?.length > 0) {
             for (const img of entrega.arrImagenes) {
@@ -240,13 +242,16 @@ const SheetContents = memo(({ setOpen }: any) => {
               await deleteFileFromGallery(entrega.firmarBase64);
           }
 
-          dispatch(cambiarEstadoSinconizado(entrega.id)); // ✅ Sincronizado
-          setOpen(false);
+          dispatch(cambiarEstadoSinconizado(entrega.id)); 
         } catch (error) {
+          dispatch(cambiarEstadoError(entrega.id))
+          dispatch(actualizarMensajeError({entregaId: entrega.id, mensaje: 'error'}));
           console.error(`❌ Error en la entrega ${entrega.id}:`, error);
           continue;
         }
       }
+      setOpen(false);
+
     } catch (error) {
       console.error("Error general en gestionGuias:", error);
     }
