@@ -63,12 +63,17 @@ const entregaCargar = () => {
           APIS.general.funcionalidadLista,
           {
             modelo: "RutVisita",
-            filtro: [
+            filtros: [
               {
                 propiedad: "despacho_id",
                 valor1: respuestaApiVerticalEntrega.despacho_id,
                 operador: "exact",
               },
+              {
+                propiedad: "estado_entregado",
+                valor1: false,
+                operador: "exact",
+              }
             ],
           } as any,
           {
