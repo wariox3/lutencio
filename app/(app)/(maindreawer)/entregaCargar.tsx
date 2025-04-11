@@ -7,10 +7,10 @@ import { Entrega } from "@/interface/entrega/entrega";
 import { VerticalEntrega } from "@/interface/entrega/verticalEntrega";
 import { setEntregas } from "@/store/reducers/entregaReducer";
 import { consultarApi } from "@/utils/api";
-import { iniciarTareaSeguimientoUbicacion, registrarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
+import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect, useNavigation, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,6 +27,7 @@ const entregaCargar = () => {
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: valoresFormularioCargar,
   });
+
   const navigation = useNavigation();
 
   const router = useRouter();
@@ -39,10 +40,16 @@ const entregaCargar = () => {
     });
   }, [navigation]);
 
-  const onLoginPressed = async (data: { codigo: string }) => {
+  useFocusEffect(
+    useCallback(() => {
+      reset(valoresFormularioCargar);
+    }, [])
+  );
+  
+  const cargarOrden = async (data: FieldValues) => {
     setMostrarAnimacionCargando(true);
     reset({
-      codigo: ''
+      codigo: "",
     });
     try {
       const respuestaApiVerticalEntrega = await consultarApi<VerticalEntrega>(
@@ -77,11 +84,8 @@ const entregaCargar = () => {
           "despacho",
           `${respuestaApiVerticalEntrega.despacho_id}`
         );
-        await AsyncStorage.setItem(
-          "ordenEntrega",
-          `${data.codigo}`
-        );
-        
+        await AsyncStorage.setItem("ordenEntrega", `${data.codigo}`);
+
         dispatch(setEntregas(respuestaApi.registros));
         await iniciarTareaSeguimientoUbicacion();
         router.navigate("/(app)/(maindreawer)/entrega");
@@ -109,9 +113,10 @@ const entregaCargar = () => {
               }}
             />
             <Button
-              theme="blue"
+              theme={mostrarAnimacionCargando ? "accent" : "blue"}
               icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
-              onPress={handleSubmit(onLoginPressed)}
+              disabled={mostrarAnimacionCargando}
+              onPress={handleSubmit(cargarOrden)}
             >
               Vincular
             </Button>
