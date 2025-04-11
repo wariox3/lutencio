@@ -43,9 +43,10 @@ const entregaCargar = () => {
   useFocusEffect(
     useCallback(() => {
       reset(valoresFormularioCargar);
+      setMostrarAnimacionCargando(false);
     }, [])
   );
-  
+
   const cargarOrden = async (data: FieldValues) => {
     setMostrarAnimacionCargando(true);
     reset({
@@ -58,7 +59,6 @@ const entregaCargar = () => {
         { requiereToken: true, method: "get" }
       );
       if (respuestaApiVerticalEntrega) {
-        setMostrarAnimacionCargando(false);
         const respuestaApi = await consultarApi<ConsultarLista<Entrega>>(
           APIS.general.funcionalidadLista,
           {
@@ -71,9 +71,9 @@ const entregaCargar = () => {
               },
               {
                 propiedad: "estado_entregado",
-                valor1: false,
                 operador: "exact",
-              }
+                valor1: false,
+              },
             ],
           } as any,
           {
@@ -81,17 +81,18 @@ const entregaCargar = () => {
             subdominio: respuestaApiVerticalEntrega.schema_name,
           }
         );
-        await AsyncStorage.setItem(
-          "subdominio",
-          respuestaApiVerticalEntrega.schema_name
-        );
-        await AsyncStorage.setItem(
-          "despacho",
-          `${respuestaApiVerticalEntrega.despacho_id}`
-        );
-        await AsyncStorage.setItem("ordenEntrega", `${data.codigo}`);
 
-        if(respuestaApi.registros.length > 0){
+        if (respuestaApi.registros.length > 0) {
+          await AsyncStorage.setItem(
+            "subdominio",
+            respuestaApiVerticalEntrega.schema_name
+          );
+          await AsyncStorage.setItem(
+            "despacho",
+            `${respuestaApiVerticalEntrega.despacho_id}`
+          );
+          await AsyncStorage.setItem("ordenEntrega", `${data.codigo}`);
+
           dispatch(setEntregas(respuestaApi.registros));
           await iniciarTareaSeguimientoUbicacion();
         }

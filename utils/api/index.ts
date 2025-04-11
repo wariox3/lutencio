@@ -16,23 +16,24 @@ axios.interceptors.request.use(authInterceptor, (error) =>
   Promise.reject(error)
 );
 
-axios.interceptors.request.use((config) => {
-  const subdominio = config.headers["X-Schema-Name"]; // Obtener el schema_name del header
+axios.interceptors.request.use(
+  (config) => {
+    const subdominio = config.headers["X-Schema-Name"]; // Obtener el schema_name del header
 
-  if (config.url && subdominio) {
-    config.url = config.url.replace("subdominio", subdominio); // Reemplazo en la URL
-  }  
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
-
+    if (config.url && subdominio) {
+      config.url = config.url.replace("subdominio", subdominio); // Reemplazo en la URL
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Interceptor para manejar errores de respuesta
 axios.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
-
     handleErrorResponse(error);
     return Promise.reject(error);
   }
@@ -44,7 +45,7 @@ export const consultarApi = async <T>(
   configuracion: Configuracion = {
     requiereToken: true,
   }
-): Promise<T> => {  
+): Promise<T> => {
   try {
     const informacionConsulta: AxiosResponse<T> = await axios({
       method: configuracion.method ?? "post",
@@ -52,12 +53,12 @@ export const consultarApi = async <T>(
       data,
       headers: {
         requiereToken: configuracion.requiereToken, // Pasar `requiereToken` en headers para ser usado por el interceptor
-        "X-Schema-Name": configuracion.subdominio,  // Pasar el subdominio en los headers
+        "X-Schema-Name": configuracion.subdominio, // Pasar el subdominio en los headers
       },
     });
-    
+
     return informacionConsulta.data;
-  } catch (error: any) {    
+  } catch (error: any) {
     throw error; // Lanzar el error para que el controlador de llamadas pueda manejarlo
   }
 };
