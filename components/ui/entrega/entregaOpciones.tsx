@@ -257,6 +257,15 @@ const SheetContents = memo(({ setOpen }: any) => {
     if (status === "granted") {
       //eliminar gestiones
 
+      // deterner servicio de la ubicación
+      await detenerTareaSeguimientoUbicacion();
+
+      // Limpiar el despacho almacenado
+      await AsyncStorage.removeItem("despacho");
+
+      // Limpiar el subdominio almacenado
+      await AsyncStorage.removeItem("subdominio");
+
       for (const entrega of entregas) {
         if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
           for (const img of entrega.arrImagenes) {
@@ -279,15 +288,6 @@ const SheetContents = memo(({ setOpen }: any) => {
       //retirar las entregas
       dispatch(quitarEntregas());
 
-      // Limpiar el despacho almacenado
-      await AsyncStorage.removeItem("despacho");
-
-      // Limpiar el subdominio almacenado
-      await AsyncStorage.removeItem("subdominio");
-
-      // deterner servicio de la ubicación
-      await detenerTareaSeguimientoUbicacion();
-
       //cerrar el sheet
       setOpen(false);
     }
@@ -307,15 +307,7 @@ const SheetContents = memo(({ setOpen }: any) => {
       </XStack>
       <YGroup width={"auto"} flex={1} size="$4" gap="$4">
         <H6>Orden de entrega</H6>
-
         <YGroup.Item>
-          {/* <ListItem
-            hoverTheme
-            icon={<MapPinned size="$2" />}
-            title="Mapa"
-            subTitle="ubicación en mapa"
-            onPress={() => navegarEntregaMapa()}
-          /> */}
           {entregas.length === 0 ? (
             <ListItem
               hoverTheme
