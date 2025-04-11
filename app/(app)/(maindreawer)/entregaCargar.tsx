@@ -91,8 +91,10 @@ const entregaCargar = () => {
         );
         await AsyncStorage.setItem("ordenEntrega", `${data.codigo}`);
 
-        dispatch(setEntregas(respuestaApi.registros));
-        await iniciarTareaSeguimientoUbicacion();
+        if(respuestaApi.registros.length > 0){
+          dispatch(setEntregas(respuestaApi.registros));
+          await iniciarTareaSeguimientoUbicacion();
+        }
         router.navigate("/(app)/(maindreawer)/entrega");
       }
     } catch (error) {
