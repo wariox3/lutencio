@@ -102,7 +102,8 @@ const SheetContents = memo(({ setOpen }: any) => {
       state.entregas.entregas.filter(
         (entrega) =>
           entrega.estado_entregado === true &&
-          entrega.estado_sincronizado === false
+          entrega.estado_sincronizado === false &&
+          entrega.estado_error === false
       ) || [],
     shallowEqual
   );
@@ -111,11 +112,6 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   const navegarEntregaCargar = () => {
     router.navigate(rutasApp.entregaCargar);
-    setOpen(false);
-  };
-
-  const navegarEntregaMapa = () => {
-    router.navigate(rutasApp.entregaMapa);
     setOpen(false);
   };
 
@@ -242,15 +238,15 @@ const SheetContents = memo(({ setOpen }: any) => {
               await deleteFileFromGallery(entrega.firmarBase64);
           }
 
-          dispatch(cambiarEstadoSinconizado(entrega.id)); 
-        } catch (error) {
+          dispatch(cambiarEstadoSinconizado(entrega.id));
+          setOpen(false);
+        } catch (error: any) {
           dispatch(cambiarEstadoError(entrega.id))
-          dispatch(actualizarMensajeError({entregaId: entrega.id, mensaje: 'error'}));
+          dispatch(actualizarMensajeError({entregaId: entrega.id, mensaje: error.response?.data?.mensaje}));
           console.error(`❌ Error en la entrega ${entrega.id}:`, error);
           continue;
         }
       }
-      setOpen(false);
 
     } catch (error) {
       console.error("Error general en gestionGuias:", error);
