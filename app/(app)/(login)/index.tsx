@@ -28,7 +28,7 @@ export default function LoginForm() {
     const verificarToken = async () => {
       const token = await AsyncStorage.getItem("jwtToken");
       if (token) {
-        router.navigate("/(app)/(maindreawer)");
+        router.replace("/(app)/(maindreawer)/(tabs)/(inicio)");
       }
     };
     verificarToken();
@@ -47,7 +47,7 @@ export default function LoginForm() {
       setMostrarAnimacionCargando(false);
       dispatch(setUsuarioInformacion(respuestaApiLogin.user));
       await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
-      router.replace("/(app)/(maindreawer)");
+      router.replace("/(app)/(maindreawer)/(tabs)/(inicio)");
     } catch (error) {
       setMostrarAnimacionCargando(false);
     }

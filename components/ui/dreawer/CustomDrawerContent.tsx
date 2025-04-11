@@ -30,7 +30,7 @@ export default function CustomDrawerContent(props: any) {
             await AsyncStorage.removeItem("usuario_id");
             await detenerTareaSeguimientoUbicacion()
             dispatch(cerrarSesionUsuario());
-            router.navigate(rutasApp.login);
+            router.replace(rutasApp.login);
           },
         },
       ],
