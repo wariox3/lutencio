@@ -40,6 +40,9 @@ export const handleErrorResponse = (error: AxiosError): void => {
 const error400 = (error: AxiosError): void => {
   const urlFallida = error.config?.url || "URL desconocida";
 
+  console.log(error.response);
+  
+
   // Obtener la parte relevante de la URL (después de "online/")
   const rutaFallida = obtenerRuta(urlFallida);
 
@@ -78,7 +81,8 @@ const error405 = (): void => {
   Alert.alert(`❌ Error 405`, "Servidor fuera de línea, intente más tarde.");
 };
 
-const error500 = (error: AxiosError): void => {    
+const error500 = (error: AxiosError): void => {
+
   Alert.alert(
     `❌ Error 500`,
     "Error interno del servidor. Por favor, intente más tarde."

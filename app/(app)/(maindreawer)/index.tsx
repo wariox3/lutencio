@@ -43,5 +43,5 @@ export default function MainDreawerIndex() {
     }
   };
 
-  return <Redirect href={rutasApp.home} />;
+  return <Redirect href={"/(app)/(maindreawer)/(tabs)/(inicio)"} />;
 }
