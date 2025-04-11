@@ -289,6 +289,9 @@ const SheetContents = memo(({ setOpen }: any) => {
       //retirar las entregas
       dispatch(quitarEntregas());
 
+      //retirar entregas seleccionadas
+      retirarSeleccionadas()
+
       //cerrar el sheet
       setOpen(false);
     }
