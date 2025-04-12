@@ -1,15 +1,27 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, H4, H6, XStack, YStack } from "tamagui";
 
 const EntregaCardDespachoCargado = () => {
   const [despacho, setDespacho] = useState<string | null>(null);
   const [ordenEntrega, setOrdenEntrega] = useState<string | null>(null);
-  const valorOrdenEntrega = async () => await AsyncStorage.getItem("ordenEntrega");
-  const valorDespacho = async() => await AsyncStorage.getItem("despacho");
 
-  valorOrdenEntrega().then((ordenEntrega) => setOrdenEntrega(ordenEntrega));
-  valorDespacho().then((despacho) => setDespacho(despacho));
+
+  useFocusEffect(
+    useCallback(() => {
+      obtenerInformacion()
+    }, [])
+  );
+
+  const obtenerInformacion = async () => {
+    const valorOrdenEntrega =  await AsyncStorage.getItem("ordenEntrega");
+    const valorDespacho =  await AsyncStorage.getItem("despacho");
+    setOrdenEntrega(valorOrdenEntrega);
+    setDespacho(valorDespacho);
+  }
+
+
 
   if (despacho === null) return null;
 
