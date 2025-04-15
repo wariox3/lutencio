@@ -5,6 +5,7 @@ import {
   detenerTareaSeguimientoUbicacion,
   iniciarTareaSeguimientoUbicacion
 } from "@/utils/services/locationService";
+import { useFocusEffect } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Card, H4, YStack } from "tamagui";
@@ -13,8 +14,18 @@ const EntregaUbicacion = () => {
   const [seguimientoUbicacion, setSeguimientoUbicacion] = useState(true);
   const arrEntregas = useSelector(obtenerEntregasPendientesOrdenadas);
   
-  comprobarRegistroTareaGeolocalizacion().then((valor) => setSeguimientoUbicacion(valor));
+  useFocusEffect(
+    useCallback(() => {
+      obtenerInformacion()
+    }, [])
+  );
+
+  const obtenerInformacion = async () => {
+    const valorComprobarRegistroTareaGeolocalizacion =  await comprobarRegistroTareaGeolocalizacion();
+    setSeguimientoUbicacion(valorComprobarRegistroTareaGeolocalizacion)
+  }
   
+
   // Mover la lógica del intervalo aquí
   useIntervalActivo(
     seguimientoUbicacion,
