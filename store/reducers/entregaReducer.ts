@@ -107,8 +107,15 @@ const entregasSlice = createSlice({
         entrega.mensaje_error = mensaje;
       }
     },
-    limpiarEntregaSeleccionada: (state) => {
+    limpiarEntregaSeleccionada: (state, action: PayloadAction<{entregaId: number}>) => {
       state.entregasSeleccionadas = [];
+    },
+    quitarVisita: (state, action: PayloadAction<{entregaId: number}>) => {
+      const { entregaId } = action.payload;
+      console.log({ entregaId } );
+
+
+      state.entregas = state.entregas.filter((e) => e.id !== entregaId);
     },
     quitarEntregaSeleccionada: (state, action: PayloadAction<number>) => {
       if (!state.entregasSeleccionadas) return;
@@ -128,6 +135,7 @@ export const {
   quitarEntregaSeleccionada,
   cambiarEstadoSinconizado,
   quitarEntregas,
+  quitarVisita,
   agregarImagenEntrega,
   quitarImagenEntrega,
   actualizarFirmaEntrega,

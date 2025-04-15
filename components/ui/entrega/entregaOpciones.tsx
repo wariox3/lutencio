@@ -28,18 +28,18 @@ import { Sheet } from "@tamagui/sheet";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { useRouter } from "expo-router";
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { Button, H4, H6, ListItem, XStack, YGroup } from "tamagui";
+import { Button, H4, H6, ListItem, Spinner, XStack, YGroup } from "tamagui";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
 export const EntregaOpciones = () => {
-  const [position, setPosition] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
-  const [modal] = React.useState(true);
-  const [snapPointsMode] = React.useState<(typeof spModes)[number]>("mixed");
+  const [position, setPosition] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [modal] = useState(true);
+  const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
 
   return (
@@ -96,7 +96,6 @@ const SheetContents = memo(({ setOpen }: any) => {
       [],
     shallowEqual
   );
-
   const arrEntregasPendientes = useSelector(
     (state: RootState) =>
       state.entregas.entregas.filter(
@@ -108,7 +107,16 @@ const SheetContents = memo(({ setOpen }: any) => {
     shallowEqual
   );
 
+  const arrEntregasConErrores = useSelector(
+    (state: RootState) =>
+      state.entregas.entregas.filter(
+        (entrega) => entrega.estado_error === true
+      ) || [],
+    shallowEqual
+  );
+
   const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
+  const [loadSincronizando, setLoadSincronizando] = useState(false);
 
   const navegarEntregaCargar = () => {
     router.navigate(rutasApp.entregaCargar);
@@ -161,6 +169,7 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   const gestionGuias = async () => {
     try {
+      setLoadSincronizando(true);
       if (Platform.OS === "android") {
         const { status } = await MediaLibrary.requestPermissionsAsync();
         if (status !== "granted") {
@@ -174,7 +183,7 @@ const SheetContents = memo(({ setOpen }: any) => {
         console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
         return;
       }
-      
+
       for (const entrega of arrEntregasPendientes) {
         try {
           let imagenes: { base64: string }[] = [];
@@ -221,7 +230,7 @@ const SheetContents = memo(({ setOpen }: any) => {
             { id: entrega.id, imagenes },
             { requiereToken: true, subdominio }
           );
-          
+
           // 4️ Solo si la API responde OK, borrar archivos y marcar como sincronizado
           if (entrega.arrImagenes?.length > 0) {
             for (const img of entrega.arrImagenes) {
@@ -239,16 +248,23 @@ const SheetContents = memo(({ setOpen }: any) => {
           }
 
           dispatch(cambiarEstadoSinconizado(entrega.id));
-          setOpen(false);
+          setLoadSincronizando(false);
         } catch (error: any) {
-          dispatch(cambiarEstadoError(entrega.id))
-          dispatch(actualizarMensajeError({entregaId: entrega.id, mensaje: error.response?.data?.mensaje}));
+          setOpen(true);
+          setLoadSincronizando(false);
+          dispatch(cambiarEstadoError(entrega.id));
+          dispatch(
+            actualizarMensajeError({
+              entregaId: entrega.id,
+              mensaje: error.response?.data?.mensaje,
+            })
+          );
           console.error(`❌ Error en la entrega ${entrega.id}:`, error);
           continue;
         }
       }
-
     } catch (error) {
+      setLoadSincronizando(false);
       console.error("Error general en gestionGuias:", error);
     }
   };
@@ -290,7 +306,7 @@ const SheetContents = memo(({ setOpen }: any) => {
       dispatch(quitarEntregas());
 
       //retirar entregas seleccionadas
-      retirarSeleccionadas()
+      retirarSeleccionadas();
 
       //cerrar el sheet
       setOpen(false);
@@ -343,26 +359,54 @@ const SheetContents = memo(({ setOpen }: any) => {
             </>
           ) : null}
 
-          {arrEntregasPendientes.length > 0 ? (
+          {arrEntregasPendientes.length > 0 ||
+          arrEntregasConErrores.length > 0 ? (
             <>
               <H6 mb="$2">Sincronizar</H6>
-              <ListItem
-                hoverTheme
-                icon={<FileUp size="$2" />}
-                title="Sincronizar"
-                subTitle="Entregas pendientes por entregar"
-                onPress={() => confirmarSincornizarEntregas()}
-              />
-              <ListItem
-                hoverTheme
-                icon={<FileQuestion size="$2" />}
-                title="Pendientes"
-                subTitle={
-                  "Cantidad pendientes por sincronizar: " +
-                  arrEntregasPendientes.length
-                }
-                onPress={() => navegarEntregaPendietes()}
-              />
+              <>
+                {arrEntregasPendientes.length > 0 ? (
+                  <>
+                    <ListItem
+                      hoverTheme
+                      icon={<FileUp size="$2" />}
+                      iconAfter={
+                        <>
+                          {loadSincronizando ? (
+                            <Spinner size="small" color="$green10" />
+                          ) : null}
+                        </>
+                      }
+                      title="Sincronizar"
+                      subTitle="Entregas pendientes por entregar"
+                      onPress={() => confirmarSincornizarEntregas()}
+                    />
+
+                    <ListItem
+                      hoverTheme
+                      icon={<FileQuestion size="$2" />}
+                      title="Pendientes"
+                      subTitle={
+                        "Cantidad pendientes por sincronizar: " +
+                        arrEntregasPendientes.length
+                      }
+                      onPress={() => navegarEntregaPendietes()}
+                    />
+                  </>
+                ) : null}
+              </>
+              <>
+                {arrEntregasConErrores.length > 0 ? (
+                  <ListItem
+                    hoverTheme
+                    icon={<FileQuestion size="$2" />}
+                    title="Errores"
+                    subTitle={
+                      "Cantidad con errores: " + arrEntregasConErrores.length
+                    }
+                    onPress={() => navegarEntregaPendietes()}
+                  />
+                ) : null}
+              </>
             </>
           ) : null}
         </YGroup.Item>

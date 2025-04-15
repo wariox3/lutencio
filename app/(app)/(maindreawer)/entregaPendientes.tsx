@@ -1,15 +1,27 @@
-import { SafeAreaView, KeyboardAvoidingView, FlatList } from "react-native";
-import React, { useEffect } from "react";
-import { Card, H4, Text, View, XStack } from "tamagui";
-import { shallowEqual, useSelector } from "react-redux";
-import { RootState } from "@/store/reducers";
-import { rutasApp } from "@/constants/rutas";
-import { useNavigation, useRouter } from "expo-router";
 import Volver from "@/components/ui/navegacion/volver";
+import { rutasApp } from "@/constants/rutas";
+import { useMediaLibrary } from "@/hooks/useMediaLibrary";
+import { Entrega } from "@/interface/entrega/entrega";
+import { RootState } from "@/store/reducers";
+import { quitarVisita } from "@/store/reducers/entregaReducer";
+import { Trash2 } from "@tamagui/lucide-icons";
+import * as FileSystem from "expo-file-system";
+import { useNavigation, useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import {
+  Alert,
+  FlatList,
+  KeyboardAvoidingView,
+  SafeAreaView,
+} from "react-native";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { Button, Card, H4, Text, View, XStack } from "tamagui";
 
 const EntregaPendientes = () => {
   const navigation = useNavigation();
   const router = useRouter();
+  const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
+  const dispatch = useDispatch();
 
   const arrEntregas = useSelector(
     (state: RootState) =>
@@ -36,6 +48,41 @@ const EntregaPendientes = () => {
     });
   };
 
+  const confirmarRetirarVisita = async (visita: Entrega) => {
+    Alert.alert(
+      "⚠️ Advertencia",
+      "Esta acción no se puede deshacer una vez completa",
+      [
+        {
+          text: "Cancel",
+        },
+        {
+          text: "Confirmar",
+          onPress: () => retirarVisita(visita),
+        },
+      ]
+    );
+  };
+
+  const retirarVisita = async (visita: Entrega) => {
+    try {
+      if (visita.arrImagenes?.length > 0) {
+        for (const img of visita.arrImagenes) {
+          const fileInfo = await FileSystem.getInfoAsync(img.uri);
+          if (fileInfo.exists) await deleteFileFromGallery(img.uri);
+        }
+      }
+
+      if (visita.firmarBase64) {
+        const fileInfo = await FileSystem.getInfoAsync(visita.firmarBase64);
+        if (fileInfo.exists) await deleteFileFromGallery(visita.firmarBase64);
+      }
+      dispatch(quitarVisita({ entregaId: visita.id }));
+    } catch (error: any) {
+      console.error(`❌ Error en la entrega ${visita.id}:`, error);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
@@ -53,10 +100,23 @@ const EntregaPendientes = () => {
               mx="$3"
               onPress={() => navegarEntregaPendientes(item.id)}
             >
-              <Text>Id: {item.id}</Text>
-              {item.estado_error ? (
-                <Text>Error: {item.mensaje_error}</Text>
-              ) : null}
+              <XStack justify={"space-between"} gap={"$2"}>
+                <View>
+                  <Text>Id: {item.id}</Text>
+                  {item.estado_error ? (
+                    <Text color={"$red10"}>Error: {item.mensaje_error}</Text>
+                  ) : null}
+                </View>
+                {item.estado_error ? (
+                  <Button
+                    size="$3"
+                    circular
+                    icon={<Trash2 size="$1.5" color={"$red10"} />}
+                    onPress={() => confirmarRetirarVisita(item)}
+                    theme={"red"}
+                  />
+                ) : null}
+              </XStack>
             </Card>
           )}
           ItemSeparatorComponent={() => <View my={"$2"}></View>}
