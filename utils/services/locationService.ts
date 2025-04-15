@@ -58,9 +58,14 @@ export async function iniciarTareaSeguimientoUbicacion() {
 
     // 3. Iniciar la tarea
     const options = {
-      accuracy: Location.Accuracy.Balanced,
-      timeInterval: 30000,
-      distanceInterval: 0,
+      accuracy: Location.Accuracy.Balanced, //android
+      timeInterval: 30000, // 30 segundos
+      distanceInterval: 0, // Reportar siempre, sin importar distancia
+      deferredUpdatesInterval: 30000, // iOS
+      deferredUpdatesDistance: 0, // iOS
+      showsBackgroundLocationIndicator: true, // Mostrar indicador en Android
+      activityType: Location.LocationActivityType.Fitness,
+      pausesUpdatesAutomatically: false, // No pausar cuando el dispositivo no se mueve
       foregroundService: {
         notificationTitle: "Rastreo activo",
         notificationBody: "Tu ubicación se está registrando.",
