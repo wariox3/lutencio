@@ -71,7 +71,7 @@ export default function EntregaDreawer() {
           data={arrEntregas}
           keyExtractor={(_, index) => index.toString()}
           ListHeaderComponent={() => (
-            <XStack justify="space-between" px="$3" mb="$2">
+            <XStack justify="space-between" px="$3" my="$2">
               <H4 mb="$2">Visitas</H4>
               {entregasSeleccionadas.length > 0 ? (
                 <Button
