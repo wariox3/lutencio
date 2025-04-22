@@ -44,6 +44,7 @@ export const BasicInput: React.FC<BasicInputProps> = ({
               placeholder={placeholder}
               keyboardType={keyboardType}
               secureTextEntry={secureTextEntry}
+              autoCapitalize="none"
             />
             {error && <Text color="red">{error.message}</Text>}
           </>
