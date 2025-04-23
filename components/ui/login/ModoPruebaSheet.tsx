@@ -86,7 +86,7 @@ const SheetContents = memo(({ setOpen }: any) => {
                         </Checkbox>
 
                         <Label size={'$5'} htmlFor={'modoPrueba'}>
-                            modo de prueba
+                            Modo de prueba
                         </Label>
                     </XStack>
                 </YGroup.Item>

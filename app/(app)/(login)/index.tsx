@@ -19,9 +19,7 @@ import { Button, ScrollView, Spinner, View, XStack } from "tamagui";
 export default function LoginForm() {
   const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
     useState(false);
-    const modoPrueba = useSelector(obtenerConfiguracionModoPrueba);
-
-  const [visualizarMensajeModoPruebas, setVisualizarMensajeModoPruebas] = useState(false)
+  const modoPrueba = useSelector(obtenerConfiguracionModoPrueba);
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
       email: "",
