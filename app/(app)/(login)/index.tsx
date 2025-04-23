@@ -1,20 +1,27 @@
+import Titulo from "@/components/ui/comun/Titulo";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import { PasswordInput } from "@/components/ui/form/inputs/PasswordInput";
+import MensajeModoPrueba from "@/components/ui/login/MensajeModoPrueba";
+import ModoPruebaSheet from "@/components/ui/login/ModoPruebaSheet";
 import APIS from "@/constants/endpoint";
 import { Validaciones } from "@/constants/mensajes";
 import { setUsuarioInformacion } from "@/store/reducers/usuarioReducer";
+import { obtenerConfiguracionModoPrueba } from "@/store/selects/configuracion";
 import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
-import { Button, H4, ScrollView, Spinner, View } from "tamagui";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, ScrollView, Spinner, View, XStack } from "tamagui";
 
 export default function LoginForm() {
   const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
     useState(false);
+    const modoPrueba = useSelector(obtenerConfiguracionModoPrueba);
+
+  const [visualizarMensajeModoPruebas, setVisualizarMensajeModoPruebas] = useState(false)
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
       email: "",
@@ -56,12 +63,20 @@ export default function LoginForm() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
+        <XStack justify={'space-between'}>
+          <Titulo texto="Ingresar" />
+          <ModoPruebaSheet
+          ></ModoPruebaSheet>
+        </XStack>
         <View gap="$4" flex={1} paddingInline="$4">
-          <H4 mt="$6">Ingresar</H4>
+          {
+            modoPrueba ? (
+              <MensajeModoPrueba></MensajeModoPrueba>
+            ) : null
+          }
           <BasicInput
             name="email"
-            control={control}
-            label="Correo"
+            control={control} label="Correo"
             isRequired={true}
             placeholder="Introduce tu correo"
             rules={{

@@ -81,7 +81,7 @@ const Index = () => {
         <>
           <Titulo texto="Mapa"></Titulo>
           <View style={styles.mapContainer}>
-            {region ? (
+            {/* {region ? (
               <MapView
                 style={styles.map}
                 provider="google"
@@ -117,7 +117,7 @@ const Index = () => {
               </MapView>
             ) : (
               <ActivityIndicator size="large" style={styles.loader} />
-            )}
+            )} */}
           </View>
           <XStack
             flex={0.1}
