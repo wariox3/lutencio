@@ -107,7 +107,7 @@ const entregasSlice = createSlice({
         entrega.mensaje_error = mensaje;
       }
     },
-    limpiarEntregaSeleccionada: (state, action: PayloadAction<{entregaId: number}>) => {
+    limpiarEntregaSeleccionada: (state) => {
       state.entregasSeleccionadas = [];
     },
     quitarVisita: (state, action: PayloadAction<{entregaId: number}>) => {

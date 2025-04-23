@@ -6,6 +6,7 @@ import { rutasApp } from "@/constants/rutas";
 import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoSeleccionado,
+  limpiarEntregaSeleccionada,
   quitarEntregaSeleccionada,
   seleccionarEntrega,
 } from "@/store/reducers/entregaReducer";
@@ -16,8 +17,8 @@ import {
 import { obtenerUsuarioId } from "@/store/selects/usuario";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect, useNavigation, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, KeyboardAvoidingView, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
@@ -47,6 +48,16 @@ export default function EntregaDreawer() {
 
     getCurrentLocation();
   }, [navigation]);
+
+    useFocusEffect(
+      useCallback(() => {
+        gestionEntregas()
+      }, [])
+    );
+  
+    const gestionEntregas = () => {
+      dispatch(limpiarEntregaSeleccionada());
+    }
 
   const gestionEntrega = (id: number) => {
     if (entregasSeleccionadas.includes(id)) {

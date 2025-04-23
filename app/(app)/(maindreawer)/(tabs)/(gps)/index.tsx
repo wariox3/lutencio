@@ -1,10 +1,12 @@
+import BtnAcciones from "@/components/ui/comun/BtnAcciones";
 import Titulo from "@/components/ui/comun/Titulo";
 import Volver from "@/components/ui/navegacion/volver";
+import { cambiarEstadoSeleccionado, limpiarEntregaSeleccionada, seleccionarEntrega } from "@/store/reducers/entregaReducer";
 import { obtenerEntregasPendientesOrdenadas } from "@/store/selects/entrega";
 import { ArrowLeftCircle, ArrowRightCircle } from "@tamagui/lucide-icons";
 import * as Location from "expo-location";
-import { useNavigation } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import { useFocusEffect, useNavigation } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -14,7 +16,7 @@ import {
 import MapView, { Marker, Region } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 
 const { width } = Dimensions.get("window");
@@ -22,10 +24,23 @@ const { width } = Dimensions.get("window");
 const Index = () => {
   const navigation = useNavigation();
   const [region, setRegion] = useState<Region | null>(null);
-  const entregasSeleccionadas = useSelector(obtenerEntregasPendientesOrdenadas);
+  const entregasPendientesOrdenadas = useSelector(obtenerEntregasPendientesOrdenadas);
   const [coordinates, setCoordinates] = useState<any[]>([]);
   const flatListRef = useRef<any>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      gestionEntregas()
+    }, [])
+  );
+
+  const gestionEntregas = () => {
+    dispatch(limpiarEntregaSeleccionada());
+    dispatch(seleccionarEntrega(entregasPendientesOrdenadas[0].id));
+    dispatch(cambiarEstadoSeleccionado(entregasPendientesOrdenadas[0].id));
+  }
 
   useEffect(() => {
     navigation.setOptions({
@@ -52,34 +67,37 @@ const Index = () => {
   }, [navigation]);
 
   useEffect(() => {
-    if (entregasSeleccionadas.length > 0) {
+    if (entregasPendientesOrdenadas.length > 0) {
       // Crear array de coordenadas para la ruta
-      const coords = entregasSeleccionadas.map((entrega) => ({
+      const coords = entregasPendientesOrdenadas.map((entrega) => ({
         latitude: entrega.latitud,
         longitude: entrega.longitud,
       }));
       setCoordinates(coords);
     }
-  }, [entregasSeleccionadas]);
+  }, [entregasPendientesOrdenadas]);
 
   const scrollTo = (direction: "left" | "right") => {
+    dispatch(limpiarEntregaSeleccionada());
     let newIndex = currentIndex + (direction === "right" ? 1 : -1);
 
     // Evitar que se salga del rango
     newIndex = Math.max(
       0,
-      Math.min(newIndex, entregasSeleccionadas.length - 1)
+      Math.min(newIndex, entregasPendientesOrdenadas.length - 1)
     );
     setCurrentIndex(newIndex);
+    dispatch(seleccionarEntrega(entregasPendientesOrdenadas[newIndex].id));
+    dispatch(cambiarEstadoSeleccionado(entregasPendientesOrdenadas[newIndex].id));
 
     flatListRef.current?.scrollToIndex({ index: newIndex, animated: true });
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      {entregasSeleccionadas.length > 0 ? (
+      {entregasPendientesOrdenadas.length > 0 ? (
         <>
-          <Titulo texto="Mapa"></Titulo>
+          <BtnAcciones></BtnAcciones>
           <View style={styles.mapContainer}>
             {/* {region ? (
               <MapView
@@ -90,12 +108,12 @@ const Index = () => {
               >
                 <Marker coordinate={region} />
 
-                {entregasSeleccionadas[currentIndex] ? (
+                {entregasPendientesOrdenadas[currentIndex] ? (
                   <>
                     <Marker
                       coordinate={{
-                        latitude: entregasSeleccionadas[currentIndex].latitud,
-                        longitude: entregasSeleccionadas[currentIndex].longitud,
+                        latitude: entregasPendientesOrdenadas[currentIndex].latitud,
+                        longitude: entregasPendientesOrdenadas[currentIndex].longitud,
                       }}
                     />
                     <MapViewDirections
@@ -104,8 +122,8 @@ const Index = () => {
                         longitude: region.latitude,
                       }}
                       destination={{
-                        latitude: entregasSeleccionadas[currentIndex].latitud,
-                        longitude: entregasSeleccionadas[currentIndex].longitud,
+                        latitude: entregasPendientesOrdenadas[currentIndex].latitud,
+                        longitude: entregasPendientesOrdenadas[currentIndex].longitud,
                       }}
                       apikey={"AIzaSyDnd8eb9Pq7Dnye_vGeo4MLT389Is_NjzI"}
                       strokeWidth={3}
@@ -130,14 +148,14 @@ const Index = () => {
               onPress={() => scrollTo("left")}
               disabled={currentIndex === 0}
               variant="outlined"
-              icon={<ArrowLeftCircle size={"$2"} color={currentIndex === 0 ? 'gray': '$black1'}></ArrowLeftCircle>}
+              icon={<ArrowLeftCircle size={"$2"} color={currentIndex === 0 ? 'gray' : '$black1'}></ArrowLeftCircle>}
             ></Button>
             <FlatList
               ref={flatListRef}
-              data={entregasSeleccionadas}
+              data={entregasPendientesOrdenadas}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item }) => (
-                <Card width={width} padding={16}>
+                <Card width={width} padding={10}>
                   <Text>ID: {item.id}</Text>
                 </Card>
               )}
@@ -148,14 +166,14 @@ const Index = () => {
             />
             <View>
               <Text>
-                {currentIndex + 1} de {entregasSeleccionadas.length}
+                {currentIndex + 1} de {entregasPendientesOrdenadas.length}
               </Text>
             </View>
             <Button
               onPress={() => scrollTo("right")}
-              disabled={currentIndex === entregasSeleccionadas.length - 1}
+              disabled={currentIndex === entregasPendientesOrdenadas.length - 1}
               variant="outlined"
-              icon={<ArrowRightCircle size={"$2"} color={currentIndex === entregasSeleccionadas.length - 1 ? 'gray': '$black1'}></ArrowRightCircle>}
+              icon={<ArrowRightCircle size={"$2"} color={currentIndex === entregasPendientesOrdenadas.length - 1 ? 'gray' : '$black1'}></ArrowRightCircle>}
             ></Button>
           </XStack>
         </>
