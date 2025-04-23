@@ -15,6 +15,10 @@ const BtnAcciones = ({ visualizarCantidadSeleccionada = false, cantidadSeleccion
     const navegarFormulario = () => {
         router.push(rutasApp.entregaFormulario);
       };
+
+      const navegarNovedad = () => {
+        router.navigate(rutasApp.entregaNovedad);
+      };
     
 
     const renderCantidad = () =>
@@ -31,7 +35,7 @@ const BtnAcciones = ({ visualizarCantidadSeleccionada = false, cantidadSeleccion
                 {renderCantidad()}
 
             </Button>
-            <Button size="$4.5" theme={"yellow"} icon={<FileWarning size={"$2"}></FileWarning>}>
+            <Button onPress={navegarNovedad} size="$4.5" theme={"yellow"} icon={<FileWarning size={"$2"}></FileWarning>}>
                 Novedad
                 {renderCantidad()}
             </Button>

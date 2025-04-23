@@ -61,7 +61,7 @@ export default function Layout() {
         }}
       />
       <Drawer.Screen
-        name="entregaMapa"
+        name="entregaNovedad"
         options={{
           headerTitle: "",
           headerStyle: {
