@@ -2,11 +2,14 @@ import Axios, { AxiosError, AxiosResponse } from "axios";
 import { authInterceptor } from "./interceptor/authInterceptor";
 import { Alert } from "react-native";
 import { handleErrorResponse } from "./interceptor/errorInterceptor";
+import { subdominioInterceptor } from "./interceptor/subdominioInterceptor";
+import { dominioInterceptor } from "./interceptor/dominioInterceptor";
 
 interface Configuracion {
   method?: "post" | "get" | "put" | "delete";
   requiereToken?: boolean;
   subdominio?: string;
+  modoPrueba?: boolean;
 }
 
 const axios = Axios.create();
@@ -16,19 +19,10 @@ axios.interceptors.request.use(authInterceptor, (error) =>
   Promise.reject(error)
 );
 
-axios.interceptors.request.use(
-  (config) => {
-    const subdominio = config.headers["X-Schema-Name"]; // Obtener el schema_name del header
+axios.interceptors.request.use(subdominioInterceptor, (error) => Promise.reject(error));
 
-    if (config.url && subdominio) {
-      config.url = config.url.replace("subdominio", subdominio); // Reemplazo en la URL
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+axios.interceptors.request.use(dominioInterceptor, (error) => Promise.reject(error));
+
 
 // Interceptor para manejar errores de respuesta
 axios.interceptors.response.use(
@@ -46,7 +40,7 @@ export const consultarApi = async <T>(
     requiereToken: true,
   }
 ): Promise<T> => {
-  try {
+  try {    
     const informacionConsulta: AxiosResponse<T> = await axios({
       method: configuracion.method ?? "post",
       url,
