@@ -1,3 +1,4 @@
+import BtnAcciones from "@/components/ui/comun/BtnAcciones";
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
 import EntregaSinPermisoLocalizacion from "@/components/ui/entrega/entregaSinPermisoLocalizacion";
 import EntregasSinElementos from "@/components/ui/entrega/entregasSinElementos";
@@ -24,7 +25,6 @@ import { Button, Card, H4, Text, View, XStack } from "tamagui";
 export default function EntregaDreawer() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const router = useRouter();
   const arrEntregas = useSelector(obtenerEntregasPendientesOrdenadas);
   const usuario_id = useSelector(obtenerUsuarioId);
   const entregasSeleccionadas = useSelector(obtenerEntregasSeleccionadas);
@@ -57,10 +57,6 @@ export default function EntregaDreawer() {
     dispatch(cambiarEstadoSeleccionado(id));
   };
 
-  const navegarFormulario = () => {
-    router.push(rutasApp.entregaFormulario);
-  };
-
   if (permisoLocalizacion !== "granted")
     return <EntregaSinPermisoLocalizacion></EntregaSinPermisoLocalizacion>;
 
@@ -71,25 +67,19 @@ export default function EntregaDreawer() {
           data={arrEntregas}
           keyExtractor={(_, index) => index.toString()}
           ListHeaderComponent={() => (
-            <XStack justify="space-between" px="$3" my="$2">
-              <H4 mb="$2">Visitas</H4>
+            <>
               {entregasSeleccionadas.length > 0 ? (
-                <Button
-                  size="$3"
-                  variant="outlined"
-                  onPress={() => navegarFormulario()}
-                >
-                  seleccionadas <Text>{entregasSeleccionadas.length}</Text>
-                </Button>
+                <BtnAcciones visualizarCantidadSeleccionada={true} cantidadSeleccionada={entregasSeleccionadas.length}></BtnAcciones>
               ) : null}
-            </XStack>
+              </>
           )}
           renderItem={({ item }) => (
             <Card
               p="$3"
-              mx="$3"
+              mx="$2"
+              mt={"$2"}
               onPress={() => gestionEntrega(item.id)}
-              bg={item.seleccionado ? "#2ecc71" : null}
+              bg={item.seleccionado ? "#f89e6d" : null}
             >
               <Text>ID: {item.id}</Text>
               <Text>Destinatario: {item.destinatario}</Text>
@@ -98,7 +88,6 @@ export default function EntregaDreawer() {
               {item.estado_entregado ? <Text>Entregado</Text> : null}
             </Card>
           )}
-          ItemSeparatorComponent={() => <View my={"$2"}></View>}
           ListEmptyComponent={<EntregasSinElementos />}
         />
       </KeyboardAvoidingView>
