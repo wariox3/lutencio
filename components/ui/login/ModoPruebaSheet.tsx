@@ -1,8 +1,9 @@
 import { setModoPrueba } from '@/store/reducers/configuracionReducer';
+import { obtenerConfiguracionModoPrueba } from '@/store/selects/configuracion';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MoreVertical, XCircle, Check as CheckIcon } from '@tamagui/lucide-icons';
 import React, { memo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Checkbox, CheckedState, H4, H6, Label, Sheet, XStack, YGroup } from 'tamagui';
 
 
@@ -56,6 +57,7 @@ const ModoPruebaSheet = () => {
 // in general good to memoize the contents to avoid expensive renders during animations
 const SheetContents = memo(({ setOpen }: any) => {
     const dispatch = useDispatch();
+    const modoPruebaActivo = useSelector(obtenerConfiguracionModoPrueba);
 
     const gestionModoPruebas = async (checked: boolean) => {
         dispatch(setModoPrueba(checked));
@@ -77,7 +79,7 @@ const SheetContents = memo(({ setOpen }: any) => {
             <YGroup width={"auto"} flex={1} size="$4" gap="$4">
                 <YGroup.Item>
                     <XStack alignItems="center" gap="$4">
-                        <Checkbox id='modoPrueba' size={'$5'} onCheckedChange={(checked) => gestionModoPruebas(checked === true)}
+                        <Checkbox id='modoPrueba' size={'$5'} checked={modoPruebaActivo} onCheckedChange={(checked) => gestionModoPruebas(checked === true)}
 
                         >
                             <Checkbox.Indicator>
