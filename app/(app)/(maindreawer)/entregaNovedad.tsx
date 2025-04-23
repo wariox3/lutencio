@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView, Text, TextArea, View, XStack } from 'tamagui'
 import { EntregaCamara } from '@/components/ui/entrega/entregaCamara'
 import EntregaImagenesPreview from '@/components/ui/entrega/entregaImagenesPreview'
+import Titulo from '@/components/ui/comun/Titulo'
 
 const entregaNovedad = () => {
 
@@ -60,6 +61,7 @@ const entregaNovedad = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View gap="$4" flex={1} paddingInline="$4">
+          <Titulo texto='Novedad'></Titulo>
           <TextArea placeholder="Descripción"  size="$5"/>
           <XStack justify={"space-between"}>
             <Text>
