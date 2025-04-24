@@ -4,8 +4,16 @@ import { ScrollView, Text, TextArea, View, XStack } from 'tamagui'
 import { EntregaCamara } from '@/components/ui/entrega/entregaCamara'
 import EntregaImagenesPreview from '@/components/ui/entrega/entregaImagenesPreview'
 import Titulo from '@/components/ui/comun/Titulo'
+import { TextAreaInput } from '@/components/ui/form/inputs/TextAreaInput'
+import { FieldValues, useForm } from 'react-hook-form'
 
 const entregaNovedad = () => {
+
+  const { control, handleSubmit, reset } = useForm<FieldValues>({
+    defaultValues: {
+      descripcion: "",
+    },
+  });
 
   const estadoInicial: {
     arrImagenes: { uri: string }[];
@@ -62,7 +70,14 @@ const entregaNovedad = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View gap="$4" flex={1} paddingInline="$4">
           <Titulo texto='Novedad'></Titulo>
-          <TextArea placeholder="Descripción"  size="$5"/>
+          <TextAreaInput
+
+            name="descripcion"
+            control={control} label="Descripción"
+            isRequired={true}
+            placeholder="Descripción "
+
+          ></TextAreaInput>
           <XStack justify={"space-between"}>
             <Text>
               Fotografías disponibles {state.arrImagenes.length} de 1
