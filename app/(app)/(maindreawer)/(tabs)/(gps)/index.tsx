@@ -37,9 +37,11 @@ const Index = () => {
   );
 
   const gestionEntregas = () => {
-    dispatch(limpiarEntregaSeleccionada());
-    dispatch(seleccionarEntrega(entregasPendientesOrdenadas[0].id));
-    dispatch(cambiarEstadoSeleccionado(entregasPendientesOrdenadas[0].id));
+    if(entregasPendientesOrdenadas.length > 0){
+      dispatch(limpiarEntregaSeleccionada());
+      dispatch(seleccionarEntrega(entregasPendientesOrdenadas[0].id));
+      dispatch(cambiarEstadoSeleccionado(entregasPendientesOrdenadas[0].id));
+    }
   }
 
   useEffect(() => {
