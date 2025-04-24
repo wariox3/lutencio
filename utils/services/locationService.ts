@@ -92,9 +92,7 @@ export async function detenerTareaSeguimientoUbicacion() {
     // 1. Verificar si la tarea está registrada
     const tareaRegistrada = await TaskManager.isTaskRegisteredAsync(
       TAREA_SEGUIMIENTO_UBICACION
-    );
-    console.log(tareaRegistrada);
-    
+    );    
     if (tareaRegistrada) {
       // 2. Detener las actualizaciones de ubicación
       await Location.stopLocationUpdatesAsync(TAREA_SEGUIMIENTO_UBICACION);
