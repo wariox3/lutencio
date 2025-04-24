@@ -30,3 +30,10 @@ export const obtenerEntregasMapa = createSelector(
     ).sort((a, b) => a.orden - b.orden);
   }
 );
+
+
+export const selectEntregasConNovedad = createSelector(
+  [selectEntregas],
+  (entregas) =>
+    entregas.entregas.filter((entrega) => entrega.estado_novedad === true)
+);

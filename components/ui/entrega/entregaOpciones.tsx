@@ -10,6 +10,7 @@ import {
   limpiarEntregaSeleccionada,
   quitarEntregas,
 } from "@/store/reducers/entregaReducer";
+import { selectEntregasConNovedad } from "@/store/selects/entrega";
 import { consultarApi } from "@/utils/api";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,6 +20,7 @@ import {
   FileQuestion,
   FileStack,
   FileUp,
+  FileWarning,
   FileX,
   MapPinned,
   MoreVertical,
@@ -115,6 +117,8 @@ const SheetContents = memo(({ setOpen }: any) => {
       ) || [],
     shallowEqual
   );
+
+  const arrEntregasConNovedad = useSelector(selectEntregasConNovedad);
 
   const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
@@ -270,6 +274,69 @@ const SheetContents = memo(({ setOpen }: any) => {
     }
   };
 
+  const gestionGuiasNovedades = async () => {
+    setLoadSincronizando(true);
+  
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== "granted") {
+      alert("Se necesitan permisos para guardar en la galería");
+      return;
+    }
+  
+    const subdominio = await AsyncStorage.getItem("subdominio");
+    if (!subdominio) {
+      console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
+      return;
+    }
+  
+    const novedadesString = await AsyncStorage.getItem('novedades_offline');
+    const novedades = JSON.parse(novedadesString!);
+  
+    for (const novedad of novedades) {
+      try {
+        const uri = novedad.foto[0].uri;
+  
+        const fileInfo = await FileSystem.getInfoAsync(uri);
+        if (!fileInfo.exists) {
+          console.warn(`⚠️ Imagen no encontrada: ${uri}`);
+          continue;
+        }
+  
+        const base64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+  
+        const imagenes = [{ base64: `data:image/jpeg;base64,${base64}` }];
+  
+        const respuestaNovedad = await consultarApi<any>(
+          APIS.ruteo.novedad,
+          {
+            visita: novedad.visita,
+            novedad_tipo: novedad.novedad_tipo,
+            imagenes,
+          },
+          {
+            requiereToken: true,
+            subdominio,
+          }
+        );
+  
+        // ✅ Marca como sincronizado
+        dispatch(cambiarEstadoSinconizado(novedad.id));
+  
+        // ✅ Elimina la imagen del dispositivo
+        await FileSystem.deleteAsync(uri, { idempotent: true });
+        console.log(`🗑️ Imagen eliminada: ${uri}`);
+  
+      } catch (error) {
+        console.error("❌ Error procesando novedad:", error);
+      }
+    }
+  
+    setLoadSincronizando(false);
+  };
+  
+
   const retirarDespacho = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status === "granted") {
@@ -361,7 +428,8 @@ const SheetContents = memo(({ setOpen }: any) => {
           ) : null}
 
           {arrEntregasPendientes.length > 0 ||
-            arrEntregasConErrores.length > 0 ? (
+            arrEntregasConErrores.length > 0 ||
+            arrEntregasConNovedad.length > 0 ? (
             <>
               <H6 mb="$2">Sincronizar</H6>
               <>
@@ -405,6 +473,26 @@ const SheetContents = memo(({ setOpen }: any) => {
                       "Cantidad con errores: " + arrEntregasConErrores.length
                     }
                     onPress={() => navegarEntregaPendietes()}
+                  />
+                ) : null}
+              </>
+              <>
+                {arrEntregasConNovedad.length > 0 ? (
+                  <ListItem
+                    hoverTheme
+                    icon={<FileWarning size="$2" />}
+                    iconAfter={
+                      <>
+                        {loadSincronizando ? (
+                          <Spinner size="small" color="$green10" />
+                        ) : null}
+                      </>
+                    }
+                    title="Novedades"
+                    subTitle={
+                      "Cantidad con novedades: " + arrEntregasConNovedad.length
+                    }
+                    onPress={() => gestionGuiasNovedades()}
                   />
                 ) : null}
               </>
