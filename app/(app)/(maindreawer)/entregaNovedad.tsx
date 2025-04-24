@@ -138,6 +138,7 @@ const entregaNovedad = () => {
         await AsyncStorage.setItem('novedades_offline', JSON.stringify([...listaActual, ...nuevosRegistros]));
 
         Alert.alert('Guardado localmente por falta de red');
+        cambiarEntregaEstadoNovedad()
         return;
       }
 
@@ -159,9 +160,7 @@ const entregaNovedad = () => {
         })
       );
 
-      visitasSeleccionadas.map((visita: number) => {
-        dispatch(cambiarEstadoNovedad(visita));          
-      })
+      cambiarEntregaEstadoNovedad()
     } catch (error) {
       actualizarState({
         mostrarAnimacionCargando: false
@@ -171,6 +170,11 @@ const entregaNovedad = () => {
     }
   }
 
+  const cambiarEntregaEstadoNovedad = () => {
+    visitasSeleccionadas.map((visita: number) => {
+      dispatch(cambiarEstadoNovedad(visita));          
+    })
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
