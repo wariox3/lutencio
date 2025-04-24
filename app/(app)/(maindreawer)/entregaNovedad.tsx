@@ -104,9 +104,7 @@ const entregaNovedad = () => {
     }
   };
 
-  const guardarNovedadTipo = async (data: { novedad_tipo: any }) => {
-    console.log(data);
-    
+  const guardarNovedadTipo = async (data: { novedad_tipo: any }) => {    
     actualizarState({
       mostrarAnimacionCargando: true
     })
@@ -117,7 +115,7 @@ const entregaNovedad = () => {
         const respuestaApiNovedad = await consultarApi<any>(
           APIS.ruteo.novedad, {
           visita,
-          novedad_tipo: 2
+          novedad_tipo: data.novedad_tipo
         },
           { requiereToken: true, subdominio: subdominio! }
         );
