@@ -88,6 +88,12 @@ const entregasSlice = createSlice({
         entrega.estado_entregado = !entrega.estado_entregado;
       }
     },
+    cambiarEstadoNovedad: (state, action: PayloadAction<number>) => {
+      const entrega = state.entregas.find((e) => e.id === action.payload);
+      if (entrega) {
+        entrega.estado_novedad = !entrega.estado_novedad;
+      }
+    },
     cambiarEstadoSinconizado: (state, action: PayloadAction<number>) => {
       const entrega = state.entregas.find((e) => e.id === action.payload);      
       if (entrega) {
@@ -137,6 +143,7 @@ export const {
   quitarImagenEntrega,
   actualizarFirmaEntrega,
   cambiarEstadoError,
-  actualizarMensajeError
+  actualizarMensajeError,
+  cambiarEstadoNovedad
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

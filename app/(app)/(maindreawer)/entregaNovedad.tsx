@@ -15,11 +15,12 @@ import { useFocusEffect } from 'expo-router'
 import React, { useCallback, useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, ScrollView, Spinner, Text, View, XStack } from 'tamagui'
 import * as MediaLibrary from "expo-media-library";
 import * as Network from 'expo-network';
 import { Alert } from 'react-native'
+import { cambiarEstadoNovedad } from '@/store/reducers/entregaReducer'
 
 const entregaNovedad = () => {
 
@@ -31,6 +32,8 @@ const entregaNovedad = () => {
   });
   const visitasSeleccionadas = useSelector(obtenerEntregasSeleccionadas);
   const networkState = Network.useNetworkState();
+  const dispatch = useDispatch();
+
   const estadoInicial: {
     arrImagenes: { uri: string, id: any }[];
     arrNovedadesTipo: novedadTipo[];
@@ -118,7 +121,6 @@ const entregaNovedad = () => {
       actualizarState({
         mostrarAnimacionCargando: true
       })
-      console.log(hayConexion);
       
       if (!hayConexion) {
         // Guardar localmente si no hay red
@@ -156,6 +158,10 @@ const entregaNovedad = () => {
           );
         })
       );
+
+      visitasSeleccionadas.map((visita: number) => {
+        dispatch(cambiarEstadoNovedad(visita));          
+      })
     } catch (error) {
       actualizarState({
         mostrarAnimacionCargando: false

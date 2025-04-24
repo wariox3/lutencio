@@ -21,6 +21,7 @@ export interface Entrega {
   estado_despacho: boolean;
   estado_entregado: boolean;
   estado_sincronizado: boolean;
+  estado_novedad:boolean;
   estado_error: boolean;
   mensaje_error: string;
   latitud: number;

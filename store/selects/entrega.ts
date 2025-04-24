@@ -8,6 +8,7 @@ export const obtenerEntregasPendientesOrdenadas = createSelector(
   (entregas) =>
     entregas.entregas
       .filter((entrega) => !entrega.estado_entregado)
+      .filter((entrega) => entrega.estado_novedad === false)
       .sort((a, b) => a.orden - b.orden) || []
 );
 
