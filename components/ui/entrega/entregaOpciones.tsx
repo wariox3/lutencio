@@ -30,6 +30,7 @@ import * as MediaLibrary from "expo-media-library";
 import { useRouter } from "expo-router";
 import React, { memo, useState } from "react";
 import { Alert, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Button, H4, H6, ListItem, Spinner, XStack, YGroup } from "tamagui";
 
@@ -314,7 +315,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   };
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
       <XStack justify="space-between">
         <H4 mb="$2">Opciones</H4>
         <Button
@@ -360,7 +361,7 @@ const SheetContents = memo(({ setOpen }: any) => {
           ) : null}
 
           {arrEntregasPendientes.length > 0 ||
-          arrEntregasConErrores.length > 0 ? (
+            arrEntregasConErrores.length > 0 ? (
             <>
               <H6 mb="$2">Sincronizar</H6>
               <>
@@ -411,6 +412,6 @@ const SheetContents = memo(({ setOpen }: any) => {
           ) : null}
         </YGroup.Item>
       </YGroup>
-    </>
+    </SafeAreaView>
   );
 });
