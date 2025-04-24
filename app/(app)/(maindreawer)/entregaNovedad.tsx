@@ -18,6 +18,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { Button, ScrollView, Spinner, Text, View, XStack } from 'tamagui'
 import * as MediaLibrary from "expo-media-library";
+import * as Network from 'expo-network';
+import { Alert } from 'react-native'
 
 const entregaNovedad = () => {
 
@@ -28,7 +30,7 @@ const entregaNovedad = () => {
     },
   });
   const visitasSeleccionadas = useSelector(obtenerEntregasSeleccionadas);
-
+  const networkState = Network.useNetworkState();
   const estadoInicial: {
     arrImagenes: { uri: string, id: any }[];
     arrNovedadesTipo: novedadTipo[];
@@ -87,14 +89,11 @@ const entregaNovedad = () => {
   };
 
   const handleCapture = async (uri: string) => {
-    console.log(uri);
     // guardar la foto en el celular
     const asset = await MediaLibrary.createAssetAsync(uri);
-    console.log(asset);
-
-     actualizarState({
-       arrImagenes: [...state.arrImagenes, { uri, id: asset.id }],
-     });
+    actualizarState({
+      arrImagenes: [...state.arrImagenes, { uri, id: asset.id }],
+    });
   };
 
   const removerFoto = async (indexArrImagen: number) => {
@@ -112,23 +111,51 @@ const entregaNovedad = () => {
     }
   };
 
-  const guardarNovedadTipo = async (data: { novedad_tipo: any }) => {
-    actualizarState({
-      mostrarAnimacionCargando: true
-    })
-
+  const guardarNovedadTipo = async (data: { novedad_tipo: any, descripcion: string }) => {
     try {
-      visitasSeleccionadas.map(async (visita: number) => {
-        const subdominio = await AsyncStorage.getItem("subdominio");
-        const respuestaApiNovedad = await consultarApi<any>(
-          APIS.ruteo.novedad, {
-          visita,
-          novedad_tipo: data.novedad_tipo
-        },
-          { requiereToken: true, subdominio: subdominio! }
-        );
-
+      const networkState = await Network.getNetworkStateAsync();
+      const hayConexion = networkState.isConnected && networkState.isInternetReachable;
+      actualizarState({
+        mostrarAnimacionCargando: true
       })
+      console.log(hayConexion);
+      
+      if (!hayConexion) {
+        // Guardar localmente si no hay red
+        const registrosOffline = await AsyncStorage.getItem('novedades_offline');
+        const listaActual = registrosOffline ? JSON.parse(registrosOffline) : [];
+
+        const nuevosRegistros = visitasSeleccionadas.map((visita: number) => ({
+          visita,
+          novedad_tipo: data.novedad_tipo,
+          descripcion: data.descripcion,
+          foto: state.arrImagenes,
+          fecha: new Date().toISOString()
+        }));
+
+        await AsyncStorage.setItem('novedades_offline', JSON.stringify([...listaActual, ...nuevosRegistros]));
+
+        Alert.alert('Guardado localmente por falta de red');
+        return;
+      }
+
+      // Si hay red, se envían las novedades al backend
+      await Promise.all(
+        visitasSeleccionadas.map(async (visita: number) => {
+          const subdominio = await AsyncStorage.getItem("subdominio");
+          await consultarApi<any>(
+            APIS.ruteo.novedad,
+            {
+              visita,
+              novedad_tipo: data.novedad_tipo
+            },
+            {
+              requiereToken: true,
+              subdominio: subdominio!
+            }
+          );
+        })
+      );
     } catch (error) {
       actualizarState({
         mostrarAnimacionCargando: false
