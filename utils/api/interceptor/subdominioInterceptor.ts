@@ -6,6 +6,5 @@ export const subdominioInterceptor = (config: InternalAxiosRequestConfig) => {
   if (config.url && subdominio) {
     config.url = config.url.replace("subdominio", subdominio);
   }
-
   return config;
 };

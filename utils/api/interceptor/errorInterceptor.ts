@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { Alert } from "react-native";
 
 // TODO: url exentas de visualizar error http
-const urlExentas = [APIS.ruteo.visitaEntrega, APIS.ruteo.ubicacion];
+const urlExentas = [APIS.ruteo.visitaEntrega, APIS.ruteo.ubicacion, APIS.ruteo.novedad];
 
 const obtenerRuta = (url: string): string | null => {
   const match = url.match(/online\/(.+)/); // Busca lo que hay después de "online/"
