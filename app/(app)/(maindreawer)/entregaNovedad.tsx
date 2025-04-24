@@ -17,6 +17,7 @@ import { FieldValues, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector } from 'react-redux'
 import { Button, ScrollView, Spinner, Text, View, XStack } from 'tamagui'
+import * as MediaLibrary from "expo-media-library";
 
 const entregaNovedad = () => {
 
@@ -29,7 +30,7 @@ const entregaNovedad = () => {
   const visitasSeleccionadas = useSelector(obtenerEntregasSeleccionadas);
 
   const estadoInicial: {
-    arrImagenes: { uri: string }[];
+    arrImagenes: { uri: string, id: any }[];
     arrNovedadesTipo: novedadTipo[];
     mostrarAnimacionCargando: boolean;
     ubicacionHabilitada: boolean;
@@ -85,10 +86,15 @@ const entregaNovedad = () => {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
 
-  const handleCapture = (uri: string) => {
-    actualizarState({
-      arrImagenes: [...state.arrImagenes, { uri }],
-    });
+  const handleCapture = async (uri: string) => {
+    console.log(uri);
+    // guardar la foto en el celular
+    const asset = await MediaLibrary.createAssetAsync(uri);
+    console.log(asset);
+
+     actualizarState({
+       arrImagenes: [...state.arrImagenes, { uri, id: asset.id }],
+     });
   };
 
   const removerFoto = async (indexArrImagen: number) => {
@@ -99,12 +105,14 @@ const entregaNovedad = () => {
       newArrImagenes.splice(indexArrImagen, 1);
       // Suponiendo que tienes una función para actualizar el estado
       setState((prev) => ({ ...prev, arrImagenes: newArrImagenes }));
+      await MediaLibrary.deleteAssetsAsync([imagen.id]);
+
     } catch (error) {
       console.error("Error al eliminar el archivo:", error);
     }
   };
 
-  const guardarNovedadTipo = async (data: { novedad_tipo: any }) => {    
+  const guardarNovedadTipo = async (data: { novedad_tipo: any }) => {
     actualizarState({
       mostrarAnimacionCargando: true
     })
