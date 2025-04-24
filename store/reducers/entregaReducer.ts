@@ -112,9 +112,6 @@ const entregasSlice = createSlice({
     },
     quitarVisita: (state, action: PayloadAction<{entregaId: number}>) => {
       const { entregaId } = action.payload;
-      console.log({ entregaId } );
-
-
       state.entregas = state.entregas.filter((e) => e.id !== entregaId);
     },
     quitarEntregaSeleccionada: (state, action: PayloadAction<number>) => {
