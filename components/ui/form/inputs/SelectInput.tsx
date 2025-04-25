@@ -43,11 +43,11 @@ export const SelectInput: React.FC<SelectInputProps> = ({
                         <Picker
                             ref={pickerRef}
                             selectedValue={value}
-                            onValueChange={(itemValue, itemIndex) => {
-                                onChange(itemValue)
+                            onValueChange={(itemValue, itemIndex) => {                                
+                                onChange(parseInt(itemValue))
                             }
                             }>
-                            <Picker.Item label={placeholder} />
+                            <Picker.Item label={placeholder} value={0} />
                             {
                                 data.map((item: any, i: number) =>
                                     <Picker.Item key={item.id} label={item.nombre} value={item.id} />

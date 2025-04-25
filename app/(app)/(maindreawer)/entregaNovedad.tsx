@@ -45,10 +45,8 @@ const entregaNovedad = () => {
     activarCamara: boolean;
     abrirGaleria: boolean;
     exigeImagenEntrega: boolean;
-    exigeFirmaEntrega: boolean;
     inhabilitarBtnEntrega: boolean;
     camaraTipo: string;
-    firmarBase64: string | null;
     fotoSeleccionada: any[];
   } = {
     arrImagenes: [],
@@ -57,11 +55,9 @@ const entregaNovedad = () => {
     ubicacionHabilitada: false,
     activarCamara: false,
     abrirGaleria: false,
-    exigeImagenEntrega: false,
-    exigeFirmaEntrega: false,
+    exigeImagenEntrega: true,
     inhabilitarBtnEntrega: false,
     camaraTipo: "",
-    firmarBase64: null,
     fotoSeleccionada: [],
   };
   const [state, setState] = useState(estadoInicial);
@@ -121,59 +117,65 @@ const entregaNovedad = () => {
     }
   };
 
-  const guardarNovedadTipo = async (data: { novedad_tipo: any, descripcion: string }) => {
-    if (data.novedad_tipo !== 0) {
-      try {
-        const networkState = await Network.getNetworkStateAsync();
-        const hayConexion = networkState.isConnected && networkState.isInternetReachable;
-        actualizarState({
-          mostrarAnimacionCargando: true
-        })
-
-        if (!hayConexion) {
-          visitasSeleccionadas.forEach((entregaId) => {
-            dispatch(agregarImagenEntrega({ entregaId, imagen: { uri: state.arrImagenes[0].uri } }))
-            dispatch(actualizarNovedad({ entregaId, novedad_tipo: data.novedad_tipo, novedad_descripcion: data.descripcion }))
-          })
-          Alert.alert(`✅ Exito`, 'Guardado localmente por falta de red');
-          cambiarEntregaEstadoNovedad();
-          router.navigate("/(app)/(maindreawer)/entrega");
-          return;
-        }
-
-        // Si hay red, se envían las novedades al backend
-        await Promise.all(
-          visitasSeleccionadas.map(async (visita: number) => {
-            const subdominio = await AsyncStorage.getItem("subdominio");
-            await consultarApi<any>(
-              APIS.ruteo.novedad,
-              {
-                visita,
-                descripcion: data.descripcion,
-                novedad_tipo: data.novedad_tipo
-              },
-              {
-                requiereToken: true,
-                subdominio: subdominio!
-              }
-            );
-          })
-        );
-
-        cambiarEntregaEstadoNovedad()
-        router.navigate("/(app)/(maindreawer)/entrega");
-
-      } catch (error) {
-        actualizarState({
-          mostrarAnimacionCargando: false
-        })
-      } finally {
-        actualizarState({ mostrarAnimacionCargando: false });
-      }
-    } else {
-      Alert.alert(`❌ Error`, "la novedad tipo es requerida")
+  const guardarNovedadTipo = async (data: { novedad_tipo: any, descripcion: string }) => {    
+    if (data.novedad_tipo === 0) {
+      Alert.alert(`❌ Error`, "La novedad tipo es requerida")
+      return
     }
 
+    if (state.arrImagenes.length >= 0) {
+      Alert.alert(`❌ Error`, "La foto es requerida")
+      return
+    }
+
+
+    try {
+      const networkState = await Network.getNetworkStateAsync();
+      const hayConexion = networkState.isConnected && networkState.isInternetReachable;
+      actualizarState({
+        mostrarAnimacionCargando: true
+      })
+
+      if (!hayConexion) {
+        visitasSeleccionadas.forEach((entregaId) => {
+          dispatch(agregarImagenEntrega({ entregaId, imagen: { uri: state.arrImagenes[0].uri } }))
+          dispatch(actualizarNovedad({ entregaId, novedad_tipo: data.novedad_tipo, novedad_descripcion: data.descripcion }))
+        })
+        Alert.alert(`✅ Exito`, 'Guardado localmente por falta de red');
+        cambiarEntregaEstadoNovedad();
+        router.navigate("/(app)/(maindreawer)/entrega");
+        return;
+      }
+
+      // Si hay red, se envían las novedades al backend
+      await Promise.all(
+        visitasSeleccionadas.map(async (visita: number) => {
+          const subdominio = await AsyncStorage.getItem("subdominio");
+          await consultarApi<any>(
+            APIS.ruteo.novedad,
+            {
+              visita,
+              descripcion: data.descripcion,
+              novedad_tipo: data.novedad_tipo
+            },
+            {
+              requiereToken: true,
+              subdominio: subdominio!
+            }
+          );
+        })
+      );
+
+      cambiarEntregaEstadoNovedad()
+      router.navigate("/(app)/(maindreawer)/entrega");
+
+    } catch (error) {
+      actualizarState({
+        mostrarAnimacionCargando: false
+      })
+    } finally {
+      actualizarState({ mostrarAnimacionCargando: false });
+    }
   }
 
   const cambiarEntregaEstadoNovedad = () => {
@@ -206,7 +208,7 @@ const entregaNovedad = () => {
                   label='Novedad tipo'
                   isRequired={true} placeholder='Seleccionar un tipo de novedad' data={state.arrNovedadesTipo}
                   rules={{
-                    required: Validaciones.comunes.requerido,    
+                    required: Validaciones.comunes.requerido,
                   }}
                 ></SelectInput>
               </> : <Loader></Loader>
@@ -215,7 +217,13 @@ const entregaNovedad = () => {
           <XStack justify={"space-between"}>
             <Text>
               Fotografías disponibles {state.arrImagenes.length} de 1
-              {state.exigeImagenEntrega ? <Text> Requerido * </Text> : null}
+              {state.exigeImagenEntrega ? <Text
+                // can add theme values
+                color="red"
+                paddingStart="$2"
+              >
+                {' '}*
+              </Text> : null}
             </Text>
             {state.arrImagenes.length <= 1 ? (
               <EntregaCamara onCapture={handleCapture}></EntregaCamara>
