@@ -1,9 +1,8 @@
 import { SelectInputProps } from "@/interface/forms/SelectInputProps";
-import { Check, ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
-import { useMemo, useRef, useState } from "react";
-import { Controller } from "react-hook-form";
-import { Adapt, Label, Select, Sheet, Text, View, YStack } from "tamagui";
 import { Picker } from '@react-native-picker/picker';
+import { useRef } from "react";
+import { Controller } from "react-hook-form";
+import { Label, Text, View } from "tamagui";
 
 export const SelectInput: React.FC<SelectInputProps> = ({
     name,
@@ -15,7 +14,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
     data = [],
 }) => {
 
-    const pickerRef = useRef();
+    const pickerRef = useRef<any>();
 
     const open = () => {
         pickerRef.current.focus();
@@ -35,7 +34,6 @@ export const SelectInput: React.FC<SelectInputProps> = ({
                     </Text>
                 )}
             </Label>
-
             <Controller
                 name={name}
                 control={control}
@@ -46,22 +44,17 @@ export const SelectInput: React.FC<SelectInputProps> = ({
                             ref={pickerRef}
                             selectedValue={value}
                             onValueChange={(itemValue, itemIndex) => {
-                                console.log(itemValue);
-                                
                                 onChange(itemValue)
                             }
-                              
                             }>
-                                  <Picker.Item label={placeholder}  />
-
+                            <Picker.Item label={placeholder} />
                             {
-                                data.map((item: any, i: number) => 
+                                data.map((item: any, i: number) =>
                                     <Picker.Item key={item.id} label={item.nombre} value={item.id} />
-
                                 )
                             }
                         </Picker>
-                    {error && <Text color="red">{error.message}</Text>}
+                        {error && <Text color="red">{error.message}</Text>}
                     </>
                 )}
             />

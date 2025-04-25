@@ -21,6 +21,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as Network from 'expo-network';
 import { Alert } from 'react-native'
 import { actualizarNovedad, agregarImagenEntrega, cambiarEstadoNovedad } from '@/store/reducers/entregaReducer'
+import { Validaciones } from '@/constants/mensajes'
 
 const valoresFormulario = {
   descripcion: "",
@@ -70,7 +71,7 @@ const entregaNovedad = () => {
       reset(valoresFormulario);
       actualizarState({
         arrImagenes: []
-      }) 
+      })
       obtenerNovedadesTipo()
     }, [])
   );
@@ -188,14 +189,26 @@ const entregaNovedad = () => {
           <Titulo texto='Novedad'></Titulo>
           <TextAreaInput
             name="descripcion"
-            control={control} label="Descripción"
+            control={control}
+            label="Descripción"
             isRequired={true}
-            placeholder="Descripción "
+            placeholder="Descripción"
+            rules={{
+              required: Validaciones.comunes.requerido,
+            }}
           ></TextAreaInput>
           <>
             {
               state.arrNovedadesTipo.length > 0 ? <>
-                <SelectInput name='novedad_tipo' control={control} label='Novedad tipo' isRequired={true} placeholder='Seleccionar un tipo de novedad' data={state.arrNovedadesTipo}></SelectInput>
+                <SelectInput
+                  name='novedad_tipo'
+                  control={control}
+                  label='Novedad tipo'
+                  isRequired={true} placeholder='Seleccionar un tipo de novedad' data={state.arrNovedadesTipo}
+                  rules={{
+                    required: Validaciones.comunes.requerido,    
+                  }}
+                ></SelectInput>
               </> : <Loader></Loader>
             }
           </>
