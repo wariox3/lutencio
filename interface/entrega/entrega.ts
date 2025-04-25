@@ -24,6 +24,8 @@ export interface Entrega {
   estado_novedad:boolean;
   estado_error: boolean;
   mensaje_error: string;
+  novedad_tipo: number;
+  novedad_descripcion: string;
   latitud: number;
   longitud: number;
   orden: number;
