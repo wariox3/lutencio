@@ -22,18 +22,18 @@ import * as Network from 'expo-network';
 import { Alert } from 'react-native'
 import { actualizarNovedad, agregarImagenEntrega, cambiarEstadoNovedad } from '@/store/reducers/entregaReducer'
 
+const valoresFormulario = {
+  descripcion: "",
+  novedad_tipo: 0,
+};
 const entregaNovedad = () => {
-
   const { control, handleSubmit, reset } = useForm<FieldValues>({
-    defaultValues: {
-      descripcion: "",
-      novedad_tipo: 0,
-    },
+    defaultValues: valoresFormulario,
   });
   const visitasSeleccionadas = useSelector(obtenerEntregasSeleccionadas);
   const networkState = Network.useNetworkState();
   const router = useRouter();
-  
+
   const dispatch = useDispatch();
 
   const estadoInicial: {
@@ -67,6 +67,10 @@ const entregaNovedad = () => {
 
   useFocusEffect(
     useCallback(() => {
+      reset(valoresFormulario);
+      actualizarState({
+        arrImagenes: []
+      }) 
       obtenerNovedadesTipo()
     }, [])
   );
@@ -117,25 +121,25 @@ const entregaNovedad = () => {
   };
 
   const guardarNovedadTipo = async (data: { novedad_tipo: any, descripcion: string }) => {
-    if(data.novedad_tipo !== 0){
+    if (data.novedad_tipo !== 0) {
       try {
         const networkState = await Network.getNetworkStateAsync();
         const hayConexion = networkState.isConnected && networkState.isInternetReachable;
         actualizarState({
           mostrarAnimacionCargando: true
         })
-  
+
         if (!hayConexion) {
           visitasSeleccionadas.forEach((entregaId) => {
             dispatch(agregarImagenEntrega({ entregaId, imagen: { uri: state.arrImagenes[0].uri } }))
-            dispatch(actualizarNovedad({ entregaId, novedad_tipo: data.novedad_tipo, novedad_descripcion: data.descripcion}))
+            dispatch(actualizarNovedad({ entregaId, novedad_tipo: data.novedad_tipo, novedad_descripcion: data.descripcion }))
           })
           Alert.alert(`✅ Exito`, 'Guardado localmente por falta de red');
           cambiarEntregaEstadoNovedad();
           router.navigate("/(app)/(maindreawer)/entrega");
           return;
         }
-  
+
         // Si hay red, se envían las novedades al backend
         await Promise.all(
           visitasSeleccionadas.map(async (visita: number) => {
@@ -154,7 +158,7 @@ const entregaNovedad = () => {
             );
           })
         );
-  
+
         cambiarEntregaEstadoNovedad()
       } catch (error) {
         actualizarState({
