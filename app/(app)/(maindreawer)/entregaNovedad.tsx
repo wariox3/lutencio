@@ -217,7 +217,7 @@ const entregaNovedad = () => {
               Fotografías disponibles {state.arrImagenes.length} de 1
               {state.exigeImagenEntrega ? <Text> Requerido * </Text> : null}
             </Text>
-            {state.arrImagenes.length <= 4 ? (
+            {state.arrImagenes.length <= 1 ? (
               <EntregaCamara onCapture={handleCapture}></EntregaCamara>
             ) : null}
           </XStack>
