@@ -36,4 +36,5 @@ export const selectEntregasConNovedad = createSelector(
   [selectEntregas],
   (entregas) =>
     entregas.entregas.filter((entrega) => entrega.estado_novedad === true)
+    .filter((entrega) => entrega.estado_sincronizado === false)
 );

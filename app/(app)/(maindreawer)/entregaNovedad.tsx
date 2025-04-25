@@ -20,7 +20,7 @@ import { Button, ScrollView, Spinner, Text, View, XStack } from 'tamagui'
 import * as MediaLibrary from "expo-media-library";
 import * as Network from 'expo-network';
 import { Alert } from 'react-native'
-import { agregarImagenEntrega, cambiarEstadoNovedad } from '@/store/reducers/entregaReducer'
+import { actualizarNovedad, agregarImagenEntrega, cambiarEstadoNovedad } from '@/store/reducers/entregaReducer'
 
 const entregaNovedad = () => {
 
@@ -117,61 +117,56 @@ const entregaNovedad = () => {
   };
 
   const guardarNovedadTipo = async (data: { novedad_tipo: any, descripcion: string }) => {
-    try {
-      const networkState = await Network.getNetworkStateAsync();
-      const hayConexion = networkState.isConnected && networkState.isInternetReachable;
-      actualizarState({
-        mostrarAnimacionCargando: true
-      })
-
-      if (!hayConexion) {
-        // Guardar localmente si no hay red
-        const registrosOffline = await AsyncStorage.getItem('novedades_offline');
-        const listaActual = registrosOffline ? JSON.parse(registrosOffline) : [];
-
-        const nuevosRegistros = visitasSeleccionadas.map((visita: number) => ({
-          visita,
-          novedad_tipo: data.novedad_tipo,
-          descripcion: data.descripcion,
-          foto: state.arrImagenes,
-          fecha: new Date().toISOString()
-        }));
-
-        visitasSeleccionadas.forEach((entregaId) => dispatch(agregarImagenEntrega({ entregaId, imagen: { uri: state.arrImagenes[0].uri } })))
-        //await AsyncStorage.setItem('novedades_offline', JSON.stringify([...listaActual, ...nuevosRegistros]));
-
-        Alert.alert(`✅ Exito`, 'Guardado localmente por falta de red');
-        cambiarEntregaEstadoNovedad();
-        router.navigate("/(app)/(maindreawer)/entrega");
-        return;
-      }
-
-      // Si hay red, se envían las novedades al backend
-      await Promise.all(
-        visitasSeleccionadas.map(async (visita: number) => {
-          const subdominio = await AsyncStorage.getItem("subdominio");
-          await consultarApi<any>(
-            APIS.ruteo.novedad,
-            {
-              visita,
-              novedad_tipo: data.novedad_tipo
-            },
-            {
-              requiereToken: true,
-              subdominio: subdominio!
-            }
-          );
+    if(data.novedad_tipo !== 0){
+      try {
+        const networkState = await Network.getNetworkStateAsync();
+        const hayConexion = networkState.isConnected && networkState.isInternetReachable;
+        actualizarState({
+          mostrarAnimacionCargando: true
         })
-      );
-
-      cambiarEntregaEstadoNovedad()
-    } catch (error) {
-      actualizarState({
-        mostrarAnimacionCargando: false
-      })
-    } finally {
-      actualizarState({ mostrarAnimacionCargando: false });
+  
+        if (!hayConexion) {
+          visitasSeleccionadas.forEach((entregaId) => {
+            dispatch(agregarImagenEntrega({ entregaId, imagen: { uri: state.arrImagenes[0].uri } }))
+            dispatch(actualizarNovedad({ entregaId, novedad_tipo: data.novedad_tipo, novedad_descripcion: data.descripcion}))
+          })
+          Alert.alert(`✅ Exito`, 'Guardado localmente por falta de red');
+          cambiarEntregaEstadoNovedad();
+          router.navigate("/(app)/(maindreawer)/entrega");
+          return;
+        }
+  
+        // Si hay red, se envían las novedades al backend
+        await Promise.all(
+          visitasSeleccionadas.map(async (visita: number) => {
+            const subdominio = await AsyncStorage.getItem("subdominio");
+            await consultarApi<any>(
+              APIS.ruteo.novedad,
+              {
+                visita,
+                descripcion: data.descripcion,
+                novedad_tipo: data.novedad_tipo
+              },
+              {
+                requiereToken: true,
+                subdominio: subdominio!
+              }
+            );
+          })
+        );
+  
+        cambiarEntregaEstadoNovedad()
+      } catch (error) {
+        actualizarState({
+          mostrarAnimacionCargando: false
+        })
+      } finally {
+        actualizarState({ mostrarAnimacionCargando: false });
+      }
+    } else {
+      Alert.alert(`❌ Error`, "la novedad tipo es requerida")
     }
+
   }
 
   const cambiarEntregaEstadoNovedad = () => {

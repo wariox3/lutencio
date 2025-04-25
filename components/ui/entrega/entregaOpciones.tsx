@@ -289,12 +289,7 @@ const SheetContents = memo(({ setOpen }: any) => {
       return;
     }
 
-
-
-    // const novedadesString = await AsyncStorage.getItem('novedades_offline');
-    // const novedades = JSON.parse(novedadesString!);
-
-    for (const novedad of arrEntregasConNovedad) {
+    for (const novedad of arrEntregasConNovedad) {      
       try {
         let imagenes: { base64: string }[] = [];
         // 1️ Procesar imágenes (si existen)
@@ -317,7 +312,8 @@ const SheetContents = memo(({ setOpen }: any) => {
           APIS.ruteo.novedad,
           {
             visita: novedad.id,
-            novedad_tipo: 1,
+            descripcion: novedad.novedad_descripcion,
+            novedad_tipo: novedad.novedad_tipo,
             imagenes,
           },
           {
@@ -335,6 +331,7 @@ const SheetContents = memo(({ setOpen }: any) => {
         }
 
         setLoadSincronizando(false);
+        dispatch(cambiarEstadoSinconizado(novedad.id));
         setOpen(false)
       } catch (error) {
         console.error("❌ Error procesando novedad:", error);
