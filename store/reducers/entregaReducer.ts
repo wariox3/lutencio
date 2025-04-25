@@ -135,6 +135,12 @@ const entregasSlice = createSlice({
         (id) => id !== action.payload
       );
     },
+    cambiarEstadoSeleccionadoATodas: (state) => {
+      state.entregas = state.entregas.map(entrega => ({
+        ...entrega,
+        seleccionado: false
+      }));
+    }
   },
 });
 
@@ -154,6 +160,7 @@ export const {
   cambiarEstadoError,
   actualizarMensajeError,
   cambiarEstadoNovedad,
-  actualizarNovedad
+  actualizarNovedad,
+  cambiarEstadoSeleccionadoATodas
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

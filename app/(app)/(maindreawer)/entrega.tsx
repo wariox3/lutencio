@@ -6,6 +6,7 @@ import { rutasApp } from "@/constants/rutas";
 import { RootState } from "@/store/reducers";
 import {
   cambiarEstadoSeleccionado,
+  cambiarEstadoSeleccionadoATodas,
   limpiarEntregaSeleccionada,
   quitarEntregaSeleccionada,
   seleccionarEntrega,
@@ -56,16 +57,18 @@ export default function EntregaDreawer() {
     );
   
     const gestionEntregas = () => {
+      dispatch(cambiarEstadoSeleccionadoATodas())
       dispatch(limpiarEntregaSeleccionada());
     }
 
   const gestionEntrega = (id: number) => {
     if (entregasSeleccionadas.includes(id)) {
       dispatch(quitarEntregaSeleccionada(id));
+      dispatch(cambiarEstadoSeleccionado(id));
     } else {
       dispatch(seleccionarEntrega(id));
-    }
-    dispatch(cambiarEstadoSeleccionado(id));
+      dispatch(cambiarEstadoSeleccionado(id));
+    }   
   };
 
   if (permisoLocalizacion !== "granted")
@@ -74,16 +77,10 @@ export default function EntregaDreawer() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
+      <BtnAcciones visualizarCantidadSeleccionada={true} cantidadSeleccionada={entregasSeleccionadas.length}></BtnAcciones>
         <FlatList
           data={arrEntregas}
           keyExtractor={(_, index) => index.toString()}
-          ListHeaderComponent={() => (
-            <>
-              {entregasSeleccionadas.length > 0 ? (
-                <BtnAcciones visualizarCantidadSeleccionada={true} cantidadSeleccionada={entregasSeleccionadas.length}></BtnAcciones>
-              ) : null}
-              </>
-          )}
           renderItem={({ item }) => (
             <Card
               p="$3"
