@@ -11,7 +11,7 @@ import { obtenerEntregasSeleccionadas } from '@/store/selects/entrega'
 import { consultarApi } from '@/utils/api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Loader } from '@tamagui/lucide-icons'
-import { useFocusEffect } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
 import React, { useCallback, useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -20,7 +20,7 @@ import { Button, ScrollView, Spinner, Text, View, XStack } from 'tamagui'
 import * as MediaLibrary from "expo-media-library";
 import * as Network from 'expo-network';
 import { Alert } from 'react-native'
-import { cambiarEstadoNovedad } from '@/store/reducers/entregaReducer'
+import { agregarImagenEntrega, cambiarEstadoNovedad } from '@/store/reducers/entregaReducer'
 
 const entregaNovedad = () => {
 
@@ -32,6 +32,8 @@ const entregaNovedad = () => {
   });
   const visitasSeleccionadas = useSelector(obtenerEntregasSeleccionadas);
   const networkState = Network.useNetworkState();
+  const router = useRouter();
+  
   const dispatch = useDispatch();
 
   const estadoInicial: {
@@ -121,7 +123,7 @@ const entregaNovedad = () => {
       actualizarState({
         mostrarAnimacionCargando: true
       })
-      
+
       if (!hayConexion) {
         // Guardar localmente si no hay red
         const registrosOffline = await AsyncStorage.getItem('novedades_offline');
@@ -135,10 +137,12 @@ const entregaNovedad = () => {
           fecha: new Date().toISOString()
         }));
 
-        await AsyncStorage.setItem('novedades_offline', JSON.stringify([...listaActual, ...nuevosRegistros]));
+        visitasSeleccionadas.forEach((entregaId) => dispatch(agregarImagenEntrega({ entregaId, imagen: { uri: state.arrImagenes[0].uri } })))
+        //await AsyncStorage.setItem('novedades_offline', JSON.stringify([...listaActual, ...nuevosRegistros]));
 
-        Alert.alert('Guardado localmente por falta de red');
-        cambiarEntregaEstadoNovedad()
+        Alert.alert(`✅ Exito`, 'Guardado localmente por falta de red');
+        cambiarEntregaEstadoNovedad();
+        router.navigate("/(app)/(maindreawer)/entrega");
         return;
       }
 
@@ -172,7 +176,7 @@ const entregaNovedad = () => {
 
   const cambiarEntregaEstadoNovedad = () => {
     visitasSeleccionadas.map((visita: number) => {
-      dispatch(cambiarEstadoNovedad(visita));          
+      dispatch(cambiarEstadoNovedad(visita));
     })
   }
 
