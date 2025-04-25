@@ -160,6 +160,8 @@ const entregaNovedad = () => {
         );
 
         cambiarEntregaEstadoNovedad()
+        router.navigate("/(app)/(maindreawer)/entrega");
+
       } catch (error) {
         actualizarState({
           mostrarAnimacionCargando: false
