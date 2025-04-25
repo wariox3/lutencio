@@ -123,7 +123,7 @@ const entregaNovedad = () => {
       return
     }
 
-    if (state.arrImagenes.length >= 0) {
+    if (state.arrImagenes.length === 0) {
       Alert.alert(`❌ Error`, "La foto es requerida")
       return
     }
