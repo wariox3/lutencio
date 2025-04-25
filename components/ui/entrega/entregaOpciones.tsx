@@ -122,7 +122,8 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
-
+  const [loadSincronizandoNovedad, setLoadSincronizandoNovedad] = useState(false);
+  
   const navegarEntregaCargar = () => {
     router.navigate(rutasApp.entregaCargar);
     setOpen(false);
@@ -275,7 +276,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   };
 
   const gestionGuiasNovedades = async () => {
-    setLoadSincronizando(true);
+    setLoadSincronizandoNovedad(true);
 
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status !== "granted") {
@@ -338,7 +339,7 @@ const SheetContents = memo(({ setOpen }: any) => {
       }
     }
 
-    setLoadSincronizando(false);
+    setLoadSincronizandoNovedad(false);
   };
 
 
@@ -488,7 +489,7 @@ const SheetContents = memo(({ setOpen }: any) => {
                     icon={<FileWarning size="$2" />}
                     iconAfter={
                       <>
-                        {loadSincronizando ? (
+                        {loadSincronizandoNovedad ? (
                           <Spinner size="small" color="$green10" />
                         ) : null}
                       </>
