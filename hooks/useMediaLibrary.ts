@@ -42,7 +42,6 @@ export const useMediaLibrary = () => {
       return true;
     } catch (err: any) {
       setError(err.message);
-      Alert.alert("Error", err.message);
       return false;
     } finally {
       setIsDeleting(false);

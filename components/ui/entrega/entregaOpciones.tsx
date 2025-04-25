@@ -276,43 +276,48 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   const gestionGuiasNovedades = async () => {
     setLoadSincronizando(true);
-  
+
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status !== "granted") {
       alert("Se necesitan permisos para guardar en la galería");
       return;
     }
-  
+
     const subdominio = await AsyncStorage.getItem("subdominio");
     if (!subdominio) {
       console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
       return;
     }
-  
-    const novedadesString = await AsyncStorage.getItem('novedades_offline');
-    const novedades = JSON.parse(novedadesString!);
-  
-    for (const novedad of novedades) {
+
+
+
+    // const novedadesString = await AsyncStorage.getItem('novedades_offline');
+    // const novedades = JSON.parse(novedadesString!);
+
+    for (const novedad of arrEntregasConNovedad) {
       try {
-        const uri = novedad.foto[0].uri;
-  
-        const fileInfo = await FileSystem.getInfoAsync(uri);
-        if (!fileInfo.exists) {
-          console.warn(`⚠️ Imagen no encontrada: ${uri}`);
-          continue;
+        let imagenes: { base64: string }[] = [];
+        // 1️ Procesar imágenes (si existen)
+        if (novedad.arrImagenes?.length > 0) {
+          for (const imagen of novedad.arrImagenes) {
+            const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
+            if (!fileInfo.exists) {
+              console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
+              continue;
+            }
+            const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+            imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
+
+          }
         }
-  
-        const base64 = await FileSystem.readAsStringAsync(uri, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-  
-        const imagenes = [{ base64: `data:image/jpeg;base64,${base64}` }];
-  
+
         const respuestaNovedad = await consultarApi<any>(
           APIS.ruteo.novedad,
           {
-            visita: novedad.visita,
-            novedad_tipo: novedad.novedad_tipo,
+            visita: novedad.id,
+            novedad_tipo: 1,
             imagenes,
           },
           {
@@ -320,22 +325,25 @@ const SheetContents = memo(({ setOpen }: any) => {
             subdominio,
           }
         );
-  
-        // ✅ Marca como sincronizado
-        dispatch(cambiarEstadoSinconizado(novedad.id));
-  
-        // ✅ Elimina la imagen del dispositivo
-        await FileSystem.deleteAsync(uri, { idempotent: true });
-        console.log(`🗑️ Imagen eliminada: ${uri}`);
-  
+
+        // 4️ Solo si la API responde OK, borrar archivos y marcar como sincronizado
+        if (novedad.arrImagenes?.length > 0) {
+          for (const img of novedad.arrImagenes) {
+            const fileInfo = await FileSystem.getInfoAsync(img.uri);
+            if (fileInfo.exists) await deleteFileFromGallery(img.uri);
+          }
+        }
+
+        setLoadSincronizando(false);
+        setOpen(false)
       } catch (error) {
         console.error("❌ Error procesando novedad:", error);
       }
     }
-  
+
     setLoadSincronizando(false);
   };
-  
+
 
   const retirarDespacho = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
