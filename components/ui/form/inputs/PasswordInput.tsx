@@ -50,10 +50,12 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
                   borderBottomRightRadius: 0,
                   borderTopRightRadius: 0
                 }}
+                borderColor={error ? "$red10" : "$borderColor"} 
               />
               <Button
                 icon={mostrarClave ? <Eye size="$1.5" /> : <EyeOff size="$1.5" />}
                 onPress={() => setMostrarClave(!mostrarClave)}
+                borderColor={error ? "$red10" : "$borderColor"} 
                 style={{
                   borderBottomLeftRadius: 0,
                   borderTopLeftRadius: 0

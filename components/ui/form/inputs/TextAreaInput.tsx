@@ -42,6 +42,7 @@ export const TextAreaInput: React.FC<BasicInputProps> = ({
                             value={value}
                             placeholder={placeholder}
                             autoCapitalize="none"
+                            borderColor={error ? "$red10" : "$borderColor"} 
                         />
                         {error && <Text color="red">{error.message}</Text>}
                     </>

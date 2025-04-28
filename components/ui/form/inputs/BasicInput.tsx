@@ -45,6 +45,7 @@ export const BasicInput: React.FC<BasicInputProps> = ({
               keyboardType={keyboardType}
               secureTextEntry={secureTextEntry}
               autoCapitalize="none"
+              borderColor={error ? "$red10" : "$borderColor"} 
             />
             {error && <Text color="red">{error.message}</Text>}
           </>
