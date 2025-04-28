@@ -76,7 +76,6 @@ export default function EntregaDreawer() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <KeyboardAvoidingView>
       <BtnAcciones visualizarCantidadSeleccionada={true} cantidadSeleccionada={entregasSeleccionadas.length}></BtnAcciones>
         <FlatList
           data={arrEntregas}
@@ -98,7 +97,6 @@ export default function EntregaDreawer() {
           )}
           ListEmptyComponent={<EntregasSinElementos />}
         />
-      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
