@@ -1,6 +1,6 @@
 import APIS from "@/constants/endpoint";
 import { rutasApp } from "@/constants/rutas";
-import { useMediaLibrary } from "@/hooks/useMediaLibrary";
+import { useEliminarEnGaleria, useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { RootState } from "@/store/reducers";
 import {
   actualizarMensajeError,
@@ -120,7 +120,7 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   const arrEntregasConNovedad = useSelector(selectEntregasConNovedad);
 
-  const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
+  const { eliminarArchivo } = useEliminarEnGaleria();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
   const [loadSincronizandoNovedad, setLoadSincronizandoNovedad] = useState(false);
   
@@ -241,7 +241,7 @@ const SheetContents = memo(({ setOpen }: any) => {
           if (entrega.arrImagenes?.length > 0) {
             for (const img of entrega.arrImagenes) {
               const fileInfo = await FileSystem.getInfoAsync(img.uri);
-              if (fileInfo.exists) await deleteFileFromGallery(img.uri);
+              if (fileInfo.exists) await eliminarArchivo(img.uri);
             }
           }
 
@@ -250,7 +250,7 @@ const SheetContents = memo(({ setOpen }: any) => {
               entrega.firmarBase64
             );
             if (fileInfo.exists)
-              await deleteFileFromGallery(entrega.firmarBase64);
+              await eliminarArchivo(entrega.firmarBase64);
           }
 
           dispatch(cambiarEstadoSinconizado(entrega.id));
@@ -327,7 +327,7 @@ const SheetContents = memo(({ setOpen }: any) => {
         if (novedad.arrImagenes?.length > 0) {
           for (const img of novedad.arrImagenes) {
             const fileInfo = await FileSystem.getInfoAsync(img.uri);
-            if (fileInfo.exists) await deleteFileFromGallery(img.uri);
+            if (fileInfo.exists) await eliminarArchivo(img.uri);
           }
         }
 
@@ -362,7 +362,7 @@ const SheetContents = memo(({ setOpen }: any) => {
           for (const img of entrega.arrImagenes) {
             const fileInfo = await FileSystem.getInfoAsync(img.uri);
             if (fileInfo.exists) {
-              await deleteFileFromGallery(img.uri);
+              await eliminarArchivo(img.uri);
             }
           }
         }
@@ -371,7 +371,7 @@ const SheetContents = memo(({ setOpen }: any) => {
         if (entrega.firmarBase64) {
           const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
           if (fileInfo.exists) {
-            await deleteFileFromGallery(entrega.firmarBase64);
+            await eliminarArchivo(entrega.firmarBase64);
           }
         }
       }

@@ -4,7 +4,7 @@ import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import Volver from "@/components/ui/navegacion/volver";
-import { useMediaLibrary } from "@/hooks/useMediaLibrary";
+import { useGuardarEnGaleria, useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { RootState } from "@/store/reducers";
 import {
   actualizarFirmaEntrega,
@@ -29,6 +29,8 @@ const entregaFormulario = () => {
   const router = useRouter();
   const navigation = useNavigation();
   const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
+  const { guardarArchivo } = useGuardarEnGaleria()
+  
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
       recibe: "",
@@ -132,8 +134,12 @@ const entregaFormulario = () => {
       // Guardar fotos en el dispositivo
       const imagenesGuardadas = await Promise.all(
         state.arrImagenes.map(async (imagen) => {
-          const asset = await MediaLibrary.createAssetAsync(imagen.uri);
-          return asset.uri;
+
+          const nuevaUri = await guardarArchivo(imagen.uri);
+          if (!nuevaUri) {
+            throw new Error("Error al guardar la imagen");
+          }
+          return nuevaUri;
         })
       );
 
