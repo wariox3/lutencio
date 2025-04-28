@@ -76,7 +76,7 @@ export default function EntregaDreawer() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <BtnAcciones visualizarCantidadSeleccionada={true} cantidadSeleccionada={entregasSeleccionadas.length}></BtnAcciones>
+      <BtnAcciones visualizarCantidadSeleccionada={entregasSeleccionadas.length > 0} cantidadSeleccionada={entregasSeleccionadas.length}></BtnAcciones>
         <FlatList
           data={arrEntregas}
           keyExtractor={(_, index) => index.toString()}

@@ -14,12 +14,12 @@ const BtnAcciones = ({ visualizarCantidadSeleccionada = false, cantidadSeleccion
 
     const navegarFormulario = () => {
         router.push(rutasApp.entregaFormulario);
-      };
+    };
 
-      const navegarNovedad = () => {
+    const navegarNovedad = () => {
         router.navigate(rutasApp.entregaNovedad);
-      };
-    
+    };
+
 
     const renderCantidad = () =>
         visualizarCantidadSeleccionada && (
@@ -27,15 +27,26 @@ const BtnAcciones = ({ visualizarCantidadSeleccionada = false, cantidadSeleccion
                 ({cantidadSeleccionada})
             </Text>
         )
-    
+    console.log({ visualizarCantidadSeleccionada });
+
+
     return (
         <XStack gap="$2" justify="space-around" mt={'$2'}>
-            <Button onPress={navegarFormulario} size="$4.5" theme={"blue"} icon={<ArrowDownToLine size={"$2"}></ArrowDownToLine>}>
+            <Button 
+                onPress={navegarFormulario} 
+                size="$4.5"
+                theme={visualizarCantidadSeleccionada ? "blue" : "accent"}
+                icon={<ArrowDownToLine size={"$2"}></ArrowDownToLine>}
+                disabled={!visualizarCantidadSeleccionada}>
                 Entregar
                 {renderCantidad()}
-
             </Button>
-            <Button onPress={navegarNovedad} size="$4.5" theme={"yellow"} icon={<FileWarning size={"$2"}></FileWarning>}>
+            <Button 
+                onPress={navegarNovedad} 
+                size="$4.5" 
+                theme={visualizarCantidadSeleccionada ? "yellow" : "accent"}
+                icon={<FileWarning size={"$2"}></FileWarning>}
+                disabled={!visualizarCantidadSeleccionada}>
                 Novedad
                 {renderCantidad()}
             </Button>

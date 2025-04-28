@@ -37,7 +37,7 @@ const Index = () => {
   );
 
   const gestionEntregas = () => {
-    if(entregasPendientesOrdenadas.length > 0){
+    if (entregasPendientesOrdenadas.length > 0) {
       dispatch(limpiarEntregaSeleccionada());
       dispatch(seleccionarEntrega(entregasPendientesOrdenadas[0].id));
       dispatch(cambiarEstadoSeleccionado(entregasPendientesOrdenadas[0].id));
@@ -97,9 +97,9 @@ const Index = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <BtnAcciones visualizarCantidadSeleccionada={entregasPendientesOrdenadas.length > 0} cantidadSeleccionada={1}></BtnAcciones>
       {entregasPendientesOrdenadas.length > 0 ? (
         <>
-          <BtnAcciones></BtnAcciones>
           <View style={styles.mapContainer}>
             {/* {region ? (
               <MapView
