@@ -4,41 +4,41 @@ import EntregaImagenesPreview from '@/components/ui/entrega/entregaImagenesPrevi
 import { SelectInput } from '@/components/ui/form/inputs/SelectInput'
 import { TextAreaInput } from '@/components/ui/form/inputs/TextAreaInput'
 import APIS from '@/constants/endpoint'
-import { Entrega } from '@/interface/entrega/entrega'
+import { Validaciones } from '@/constants/mensajes'
+import { useEliminarEnGaleria, useGuardarEnGaleria } from '@/hooks/useMediaLibrary'
 import { novedadTipo } from '@/interface/entrega/novedadTipo'
-import { RootState } from '@/store/reducers'
+import { actualizarNovedad, agregarImagenEntrega, cambiarEstadoNovedad } from '@/store/reducers/entregaReducer'
 import { obtenerEntregasSeleccionadas } from '@/store/selects/entrega'
 import { consultarApi } from '@/utils/api'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Loader } from '@tamagui/lucide-icons'
+import * as Network from 'expo-network'
 import { useFocusEffect, useRouter } from 'expo-router'
 import React, { useCallback, useState } from 'react'
 import { FieldValues, useForm } from 'react-hook-form'
+import { Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, ScrollView, Spinner, Text, View, XStack } from 'tamagui'
-import * as MediaLibrary from "expo-media-library";
-import * as Network from 'expo-network';
-import { Alert } from 'react-native'
-import { actualizarNovedad, agregarImagenEntrega, cambiarEstadoNovedad } from '@/store/reducers/entregaReducer'
-import { Validaciones } from '@/constants/mensajes'
+import { Button, ScrollView, Spinner, Text, View, XStack, YStack } from 'tamagui'
 
 const valoresFormulario = {
   descripcion: "",
-  novedad_tipo: 0,
+  novedad_tipo: "",
 };
 const entregaNovedad = () => {
+
+  const { guardarArchivo } = useGuardarEnGaleria()
+  const { eliminarArchivo } = useEliminarEnGaleria();
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: valoresFormulario,
   });
   const visitasSeleccionadas = useSelector(obtenerEntregasSeleccionadas);
   const networkState = Network.useNetworkState();
   const router = useRouter();
-
   const dispatch = useDispatch();
 
   const estadoInicial: {
-    arrImagenes: { uri: string, id: any }[];
+    arrImagenes: { uri: string }[];
     arrNovedadesTipo: novedadTipo[];
     mostrarAnimacionCargando: boolean;
     ubicacionHabilitada: boolean;
@@ -95,10 +95,15 @@ const entregaNovedad = () => {
   };
 
   const handleCapture = async (uri: string) => {
-    // guardar la foto en el celular
-    const asset = await MediaLibrary.createAssetAsync(uri);
+    //1. guardar la foto en el celular
+    const nuevaUri = await guardarArchivo(uri);
+    if (!nuevaUri) {
+      throw new Error("Error al guardar la imagen");
+    }
+
+    // 2. Actualizar el estado con la nueva imagen
     actualizarState({
-      arrImagenes: [...state.arrImagenes, { uri, id: asset.id }],
+      arrImagenes: [...state.arrImagenes, { uri: nuevaUri }], // usamos la nueva URI como ID provisional
     });
   };
 
@@ -110,24 +115,13 @@ const entregaNovedad = () => {
       newArrImagenes.splice(indexArrImagen, 1);
       // Suponiendo que tienes una función para actualizar el estado
       setState((prev) => ({ ...prev, arrImagenes: newArrImagenes }));
-      await MediaLibrary.deleteAssetsAsync([imagen.id]);
-
+      await eliminarArchivo(imagen.uri);
     } catch (error) {
       console.error("Error al eliminar el archivo:", error);
     }
   };
 
-  const guardarNovedadTipo = async (data: { novedad_tipo: any, descripcion: string }) => {    
-    if (data.novedad_tipo === 0) {
-      Alert.alert(`❌ Error`, "La novedad tipo es requerida")
-      return
-    }
-
-    if (state.arrImagenes.length === 0) {
-      Alert.alert(`❌ Error`, "La foto es requerida")
-      return
-    }
-
+  const guardarNovedadTipo = async (data: { novedad_tipo: any, descripcion: string }) => {
 
     try {
       const networkState = await Network.getNetworkStateAsync();
@@ -205,27 +199,35 @@ const entregaNovedad = () => {
                 <SelectInput
                   name='novedad_tipo'
                   control={control}
-                  label='Novedad tipo'
-                  isRequired={true} placeholder='Seleccionar un tipo de novedad' data={state.arrNovedadesTipo}
+                  label='Tipo de novedad'
+                  isRequired={true}
+                  placeholder='Seleccionar un tipo de novedad'
+                  data={state.arrNovedadesTipo}
                   rules={{
                     required: Validaciones.comunes.requerido,
+                    validate: (value: string) => value !== "" || 'Selección obligatoria'
                   }}
-                ></SelectInput>
+                />
               </> : <Loader></Loader>
             }
           </>
           <XStack justify={"space-between"}>
-            <Text>
-              Fotografías disponibles {state.arrImagenes.length} de 1
-              {state.exigeImagenEntrega ? <Text
-                // can add theme values
-                color="red"
-                paddingStart="$2"
-              >
-                {' '}*
-              </Text> : null}
-            </Text>
-            {state.arrImagenes.length <= 1 ? (
+            <YStack>
+              <Text>
+                Fotografías disponibles {state.arrImagenes.length} de 1
+                {state.exigeImagenEntrega ? <Text
+                  // can add theme values
+                  color="red"
+                  paddingStart="$2"
+                >
+                  {' '}*
+                </Text> : null}
+              </Text>
+                  <Text color="$red10" fontSize="$3" mt="$1">
+                    {Validaciones.comunes.requerido}
+                  </Text>
+            </YStack>
+            {state.arrImagenes.length <= 0 ? (
               <EntregaCamara onCapture={handleCapture}></EntregaCamara>
             ) : null}
           </XStack>
