@@ -1,29 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { LoginFormType } from "../../domain/types/login.types";
-import { LoginUserUseCase } from "../user-cases/login.user-case";
-import { LoginResponse } from "../../domain/interfaces/login.interface";
-import storageService from "@/src/core/services/storage.service";
-import { STORAGE_KEYS } from "@/src/core/constants";
-
-interface AuthState {
-  auth: LoginResponse | null;
-  loading: boolean;
-  error: { codigo: number; error: string } | null;
-}
+import { createSlice } from "@reduxjs/toolkit";
+import { AuthState } from "../../domain/types/auth.type";
+import { loginThunk } from "./auth.thunk";
 
 const initialState: AuthState = { auth: null, loading: false, error: null };
-export const loginThunk = createAsyncThunk(
-  "auth/login",
-  async (payload: LoginFormType, { rejectWithValue }) => {
-    try {
-      const response = await new LoginUserUseCase().execute(payload);
-      await storageService.setItem(STORAGE_KEYS.jwtToken, response.token);
-      return response;
-    } catch (error: any) {
-      return rejectWithValue(error.data);
-    }
-  }
-);
 
 const authSlice = createSlice({
   name: "auth",
@@ -45,7 +24,7 @@ const authSlice = createSlice({
       })
       .addCase(loginThunk.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload as any
+        state.error = payload as any;
       }),
 });
 

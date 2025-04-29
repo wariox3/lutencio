@@ -5,3 +5,8 @@ export interface LoginResponse {
   token: string;
   user: Usuario
 }
+
+export type LoginFormType = {
+  username: string;
+  password: string;
+};
