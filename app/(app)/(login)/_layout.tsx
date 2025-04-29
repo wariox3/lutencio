@@ -19,13 +19,13 @@ export default function LoginLayout() {
     >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen
-        name="CrearCuenta"
+        name="crearCuenta"
         options={{
           title: "",
         }}
       />
       <Stack.Screen
-        name="OlvidoClave"
+        name="olvidoClave"
         options={{
           title: "",
         }}

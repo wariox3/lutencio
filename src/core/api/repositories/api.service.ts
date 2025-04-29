@@ -124,7 +124,7 @@ class ApiService {
     endpoint: string,
     data?: any,
     headers?: Record<string, string>
-  ): Promise<T> {
+  ): Promise<T> {    
     return this.request<T>(endpoint, {
       method: "POST",
       data,

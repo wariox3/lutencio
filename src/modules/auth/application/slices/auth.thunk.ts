@@ -3,6 +3,8 @@ import { LoginFormType } from "../../domain/types/login.types";
 import { LoginUserUseCase } from "../user-cases/login.user-case";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
+import { CrearCuentaFormType } from "../../domain/interfaces/crear-cuenta.interface";
+import { CrearCuentaUseCase } from "../user-cases/crear-cuenta.use-case";
 
 export const loginThunk = createAsyncThunk(
   "auth/login",
@@ -16,3 +18,15 @@ export const loginThunk = createAsyncThunk(
     }
   }
 );
+
+export const crearCuentaThunk = createAsyncThunk(
+  'auth/crearCuenta',
+  async (payload: CrearCuentaFormType, {rejectWithValue}) => {
+    try {
+      const response = await new CrearCuentaUseCase().execute(payload)
+      return response;
+    } catch (error: any) {      
+      return rejectWithValue(error.data);
+    }
+  }
+)
