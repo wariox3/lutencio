@@ -34,6 +34,7 @@ export default function LoginScreen() {
             control={control}
             label="Correo"
             isRequired={true}
+            keyboardType="email-address"
             placeholder="Introduce tu correo"
             rules={{
               required: Validaciones.comunes.requerido,
