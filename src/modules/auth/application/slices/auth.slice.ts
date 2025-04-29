@@ -8,7 +8,7 @@ import { STORAGE_KEYS } from "@/src/core/constants";
 interface AuthState {
   auth: LoginResponse | null;
   loading: boolean;
-  error: string | null;
+  error: { codigo: number; error: string } | null;
 }
 
 const initialState: AuthState = { auth: null, loading: false, error: null };
@@ -45,7 +45,7 @@ const authSlice = createSlice({
       })
       .addCase(loginThunk.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload as string;
+        state.error = payload as any
       }),
 });
 

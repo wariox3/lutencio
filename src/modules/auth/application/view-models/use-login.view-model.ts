@@ -30,7 +30,6 @@ export const useLoginViewModel = () => {
       ).unwrap();
       router.replace("/(app)/(maindreawer)");
     } catch (error) {
-      console.log(error);
     }
   };
 
