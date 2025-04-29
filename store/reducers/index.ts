@@ -1,12 +1,12 @@
-import usuarioInformacionReducer from '../reducers/usuarioReducer';
-import entregaInformacionReducer from '../reducers/entregaReducer';
-import configuracionInformacionReducer from '../reducers/configuracionReducer';
-import {combineReducers} from 'redux';
+import { combineReducers } from "redux";
+import configuracionInformacionReducer from "../reducers/configuracionReducer";
+import entregaInformacionReducer from "../reducers/entregaReducer";
+import usuarioInformacionReducer from "../reducers/usuarioReducer";
 
 const rootReducer = combineReducers({
   usuario: usuarioInformacionReducer,
   entregas: entregaInformacionReducer,
-  configuracion: configuracionInformacionReducer
+  configuracion: configuracionInformacionReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

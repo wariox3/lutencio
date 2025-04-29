@@ -15,18 +15,19 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
 
   return (
     <View mt="$4">
-      <Label>{label}
+      <Label>
+        {label}
 
-      {isRequired ? (
+        {isRequired ? (
           <Text
             // can add theme values
             color="red"
-            paddingStart ="$2"
+            paddingStart="$2"
           >
-            {' '}*
+            {" "}
+            *
           </Text>
         ) : null}
-
       </Label>
       <XStack alignItems="center">
         <Controller
@@ -48,19 +49,21 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
                 placeholder="Introduce tu contraseña"
                 style={{
                   borderBottomRightRadius: 0,
-                  borderTopRightRadius: 0
+                  borderTopRightRadius: 0,
                 }}
-                borderColor={error ? "$red10" : "$borderColor"} 
+                borderColor={error ? "$red10" : "$borderColor"}
               />
               <Button
-                icon={mostrarClave ? <Eye size="$1.5" /> : <EyeOff size="$1.5" />}
+                icon={
+                  mostrarClave ? <Eye size="$1.5" /> : <EyeOff size="$1.5" />
+                }
                 onPress={() => setMostrarClave(!mostrarClave)}
-                borderColor={error ? "$red10" : "$borderColor"} 
+                borderColor={error ? "$red10" : "$borderColor"}
                 style={{
                   borderBottomLeftRadius: 0,
-                  borderTopLeftRadius: 0
+                  borderTopLeftRadius: 0,
                 }}
-              /> 
+              />
             </>
           )}
         />
@@ -74,7 +77,9 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
             <Text color="red" marginTop="$2">
               {error.message}
             </Text>
-          ) : null
+          ) : (
+            <></>
+          )
         }
       />
     </View>
