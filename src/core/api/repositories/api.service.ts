@@ -98,19 +98,12 @@ class ApiService {
       params,
       data,
       timeout,
-    };
-
-    console.log(config);
-    
+    };    
 
     try {
       const response: AxiosResponse<T> = await this.instance.request(config);
-      console.log(response.data);
-      
       return response.data;
-    } catch (error) {
-      console.log(error);
-      
+    } catch (error) {      
       throw error as ApiError;
     }
   }

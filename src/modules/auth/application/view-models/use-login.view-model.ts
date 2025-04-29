@@ -1,13 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import { LoginFormType } from "../../domain/types/login.types";
 import { loginThunk } from "../slices/auth.slice";
-import { useState } from "react";
-import { useRouter } from "expo-router";
 
 export const useLoginViewModel = () => {
-  const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
-    useState(false);
   const modoPrueba = true;
   const router = useRouter();
 
@@ -27,12 +24,14 @@ export const useLoginViewModel = () => {
   });
 
   const submit = async (data: LoginFormType) => {
-    try { 
-      await dispatch(loginThunk({ username: data.username, password: data.password })).unwrap()
+    try {
+      await dispatch(
+        loginThunk({ username: data.username, password: data.password })
+      ).unwrap();
       router.replace("/(app)/(maindreawer)");
     } catch (error) {
-      
-    }  
+      console.log(error);
+    }
   };
 
   const handleNavegarRegistrarse = () => {
@@ -53,7 +52,6 @@ export const useLoginViewModel = () => {
     handleSubmit,
     errors,
     modoPrueba,
-    mostrarAnimacionCargando,
     handleNagevarOlvideClave,
     handleNavegarRegistrarse,
   };

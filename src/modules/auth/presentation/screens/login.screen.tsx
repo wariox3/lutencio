@@ -13,11 +13,11 @@ export default function LoginScreen() {
   const {
     control,
     modoPrueba,
-    mostrarAnimacionCargando,
+    loading,
     handleNagevarOlvideClave,
     handleNavegarRegistrarse,
     handleSubmit,
-    submit
+    submit,
   } = useLoginViewModel();
 
   return (
@@ -58,7 +58,7 @@ export default function LoginScreen() {
           />
           <Button
             theme="blue"
-            icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
+            icon={loading ? () => <Spinner /> : undefined}
             onPress={handleSubmit(submit)}
           >
             Ingresar

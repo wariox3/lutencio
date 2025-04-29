@@ -3,6 +3,7 @@ import { LoginFormType } from "../../domain/types/login.types";
 import { LoginUserUseCase } from "../user-cases/login.user-case";
 import { LoginResponse } from "../../domain/interfaces/login.interface";
 import storageService from "@/src/core/services/storage.service";
+import { STORAGE_KEYS } from "@/src/core/constants";
 
 interface AuthState {
   auth: LoginResponse | null;
@@ -16,10 +17,10 @@ export const loginThunk = createAsyncThunk(
   async (payload: LoginFormType, { rejectWithValue }) => {
     try {
       const response = await new LoginUserUseCase().execute(payload);
-      await storageService.setItem("jwtToken", response.token);
+      await storageService.setItem(STORAGE_KEYS.jwtToken, response.token);
       return response;
-    } catch {
-      return rejectWithValue("Login failed");
+    } catch (error: any) {
+      return rejectWithValue(error.data);
     }
   }
 );
@@ -42,9 +43,9 @@ const authSlice = createSlice({
         state.loading = false;
         state.auth = payload;
       })
-      .addCase(loginThunk.rejected, (s, a) => {
-        s.loading = false;
-        s.error = a.payload as string;
+      .addCase(loginThunk.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload as string;
       }),
 });
 
