@@ -16,6 +16,8 @@ import {
 import { dominioInterceptor } from "@/utils/api/interceptor/dominioInterceptor";
 import { handleErrorResponse } from "@/utils/api/interceptor/errorInterceptor";
 import { subdominioInterceptor } from "@/utils/api/interceptor/subdominioInterceptor";
+import storageService from "../../services/storage.service";
+import { STORAGE_KEYS } from "../../constants";
 
 class ApiService {
   private instance: AxiosInstance;
@@ -46,20 +48,24 @@ class ApiService {
 
     // Interceptor de solicitud
     this.instance.interceptors.request.use(
-      (config) => {
-        // Aquí puedes añadir lógica común antes de enviar la solicitud
-        // como añadir tokens de autenticación
+      async (config) => {
+        const token = await storageService.getItem(STORAGE_KEYS.jwtToken);
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
       },
       (error) => Promise.reject(error)
     );
 
-    this.instance.interceptors.request.use(subdominioInterceptor, (error) => Promise.reject(error));
+    this.instance.interceptors.request.use(subdominioInterceptor, (error) =>
+      Promise.reject(error)
+    );
 
     // Interceptor para manejar errores de respuesta
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => response,
-      (error: AxiosError) => {        
+      (error: AxiosError) => {
         handleErrorResponse(error);
         return Promise.reject(error);
       }
