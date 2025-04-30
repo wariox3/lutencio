@@ -29,12 +29,13 @@ import {
 import { Sheet } from "@tamagui/sheet";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
-import { useRouter } from "expo-router";
-import React, { memo, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Button, H4, H6, ListItem, Spinner, XStack, YGroup } from "tamagui";
+import * as Location from "expo-location";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -42,8 +43,25 @@ export const EntregaOpciones = () => {
   const [position, setPosition] = useState(0);
   const [open, setOpen] = useState(false);
   const [modal] = useState(true);
+  const [permiso, setPermiso] = useState('');
   const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
+
+    useFocusEffect(
+      useCallback(() => {
+        validacionPermisoLocalizacion();
+      }, [])
+    );
+  
+    const validacionPermisoLocalizacion = async() => {
+      let { status } = await Location.requestForegroundPermissionsAsync();      
+      setPermiso(status)
+    };
+
+
+    if (permiso !== "granted") {
+      return null
+    }
 
   return (
     <>

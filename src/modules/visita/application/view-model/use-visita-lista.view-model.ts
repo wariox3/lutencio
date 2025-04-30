@@ -15,6 +15,7 @@ import { obtenerUsuarioId } from "@/store/selects/usuario";
 import * as Location from "expo-location";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
+import { Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function useVisitaListaViewModel() {
@@ -29,19 +30,6 @@ export default function useVisitaListaViewModel() {
     null
   );
 
-  useEffect(() => {
-    async function getCurrentLocation() {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      setPermisoLocalizacion(status);
-      if (status === "granted") {
-        // navigation.setOptions({ TODO: preguntar que hace esto
-        //   headerRight: () => <EntregaOpciones />,
-        // });
-      }
-    }
-
-    getCurrentLocation();
-  }, [navigation]);
 
   useFocusEffect(
     useCallback(() => {

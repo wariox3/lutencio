@@ -1,6 +1,8 @@
 import "react-native-reanimated";
 import { Drawer } from "expo-router/drawer";
 import CustomDrawerContent from "@/components/ui/dreawer/CustomDrawerContent";
+import { Button } from "tamagui";
+import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
 
 export default function AppLayout() {
   return (
@@ -25,6 +27,7 @@ export default function AppLayout() {
             shadowOpacity: 0,
             borderBottomWidth: 0,
           },
+          headerRight: () => <EntregaOpciones />,
         }}
       />
     </Drawer>
