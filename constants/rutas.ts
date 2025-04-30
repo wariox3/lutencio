@@ -4,6 +4,8 @@ export const rutasApp = {
   olvidoClave: '/(auth)/olvidoClave',
   home: "/(app)/(tabs)/inicio",
   visitas: "/(app)/(visitas)/lista",
+  vistaCargar: "/(app)/(visitas)/cargar",
+  vistaPendiente: "/(app)/(visitas)/pendiente",
 
 
   //TODO: ELIMINAR ESTAS RUTAS Y CAMBIAR DONDE SE USEN
