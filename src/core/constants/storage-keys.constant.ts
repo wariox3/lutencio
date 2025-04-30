@@ -1,5 +1,5 @@
 export const STORAGE_KEYS = {
-    jwtToken: 'jwt-token',
+    jwtToken: 'jwtToken',
     usuarioId: 'usuario_id',
     subdominio: 'subdominio',
     despacho: 'despacho',
