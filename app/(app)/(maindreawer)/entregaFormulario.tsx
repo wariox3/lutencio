@@ -1,3 +1,3 @@
-import VisitaEntregaScreen from "@/src/modules/visita/presentation/screen/visita-entrega.screen";
+import VisitaFormularioScreen from "@/src/modules/visita/presentation/screen/visita-formulario.screen";
 
-export default VisitaEntregaScreen;
+export default VisitaFormularioScreen;

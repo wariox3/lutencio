@@ -10,8 +10,7 @@ import {
   actualizarFirmaEntrega,
   agregarImagenEntrega,
   cambiarEstadoEntrega,
-  quitarEntregaSeleccionada,
-  quitarImagenEntrega,
+  quitarEntregaSeleccionada
 } from "@/store/reducers/entregaReducer";
 import * as MediaLibrary from "expo-media-library";
 import { useNavigation, useRouter } from "expo-router";
@@ -21,7 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
 
-const VisitaEntregaScreen = () => {
+const VisitaFormularioScreen = () => {
   const dispatch = useDispatch();
   const entregasSeleccionadas = useSelector(
     (state: RootState) => state.entregas.entregasSeleccionadas || []
@@ -258,4 +257,4 @@ const VisitaEntregaScreen = () => {
   );
 };
 
-export default VisitaEntregaScreen;
+export default VisitaFormularioScreen;
