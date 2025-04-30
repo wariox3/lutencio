@@ -15,6 +15,7 @@ import {
 } from "../domain/interfaces/api.interface";
 import { dominioInterceptor } from "@/utils/api/interceptor/dominioInterceptor";
 import { handleErrorResponse } from "@/utils/api/interceptor/errorInterceptor";
+import { subdominioInterceptor } from "@/utils/api/interceptor/subdominioInterceptor";
 
 class ApiService {
   private instance: AxiosInstance;
@@ -52,6 +53,8 @@ class ApiService {
       },
       (error) => Promise.reject(error)
     );
+
+    this.instance.interceptors.request.use(subdominioInterceptor, (error) => Promise.reject(error));
 
     // Interceptor para manejar errores de respuesta
     this.instance.interceptors.response.use(
