@@ -3,7 +3,10 @@ import { Stack } from "expo-router";
 
 export default function VisitasLayout() {
   return (
-    <Stack>
+    <Stack screenOptions={{
+      headerShadowVisible: false,
+      title: "",
+    }}>
       <Stack.Screen
         name="lista"
         options={{
@@ -20,20 +23,17 @@ export default function VisitasLayout() {
           //)}
           ///>
           ,
-          headerShadowVisible: false,
+
         }}
       />
       <Stack.Screen
         name="cargar"
-        options={{ title: "", headerShadowVisible: false }}
       />
       <Stack.Screen
         name="novedad"
-        options={{ title: "", headerShadowVisible: false }}
       />
       <Stack.Screen
         name="pendiente"
-        options={{ title: "", headerShadowVisible: false }}
       />
       {/* <Stack.Screen name="[id]" options={{ title: 'About' }} /> */}
     </Stack>
