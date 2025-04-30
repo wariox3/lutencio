@@ -12,6 +12,7 @@ import APIS from "@/constants/endpoint";
 import { VerticalEntrega } from "@/interface/entrega/verticalEntrega";
 import { ConsultarLista } from "@/interface/comun/consultarLista";
 import { Entrega } from "@/interface/entrega/entrega";
+import { rutasApp } from "@/constants/rutas";
 
 export default function useVisitaCargarViewModel() {
   const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
@@ -96,7 +97,7 @@ export default function useVisitaCargarViewModel() {
           dispatch(setEntregas(respuestaApi.registros));
           await iniciarTareaSeguimientoUbicacion();
         }
-        router.navigate("/(app)/(maindreawer)/entrega");
+        router.navigate(rutasApp.visitas);
       }
     } catch (error) {
       setMostrarAnimacionCargando(false);
