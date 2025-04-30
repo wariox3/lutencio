@@ -10,8 +10,8 @@ const Index = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <EntregaCardDespachoCargado></EntregaCardDespachoCargado>
-          <EntregaUbicacion></EntregaUbicacion>
+          {/* <EntregaCardDespachoCargado></EntregaCardDespachoCargado> */}
+          {/* <EntregaUbicacion></EntregaUbicacion> */}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
