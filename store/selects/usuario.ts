@@ -1,10 +1,9 @@
-import { Usuario } from './../../interface/usuario/usuario';
-import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../reducers';
+import { RootState } from "@/src/application/store/root-reducer";
+import { createSelector } from "@reduxjs/toolkit";
 
-const selectUsuario = (state: RootState) => state.usuario;
+const selectUsuario = (state: RootState) => state.auth;
 
 export const obtenerUsuarioId = createSelector(
-    [selectUsuario],
-    (Usuario) => Usuario.id
-  );
+  [selectUsuario],
+  (usuario) => usuario.auth?.user.id
+);

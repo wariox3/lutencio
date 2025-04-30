@@ -1,5 +1,5 @@
+import { RootState } from "@/src/application/store/root-reducer";
 import { createSelector } from "@reduxjs/toolkit";
-import { RootState } from "../reducers";
 
 const selectEntregas = (state: RootState) => state.entregas;
 

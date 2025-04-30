@@ -3,7 +3,7 @@ export const rutasApp = {
   crearCuenta: "/(app)/(login)/crearCuenta",
   olvidoClave: '/(app)/(login)/olvidoClave',
   home: "/(app)/(maindreawer)/(tabs)/(inicio)",
-  entrega: "/(app)/(maindreawer)/entrega",
+  entrega: "/entrega",
   entregaCargar: "/(app)/(maindreawer)/entregaCargar",
   entregaFormulario: "/(app)/(maindreawer)/entregaFormulario",
   entregaNovedad: "/(app)/(maindreawer)/entregaNovedad",
