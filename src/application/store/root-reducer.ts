@@ -1,8 +1,10 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import authReducer from "@/src/modules/auth/application/slices/auth.slice";
+import entregaReducer from "@/src/modules/entrega/application/slices/entrega.slice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  entregas: entregaReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
