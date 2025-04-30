@@ -8,6 +8,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, ScrollView, Spinner, View, XStack } from "tamagui";
 import { useLoginViewModel } from "../../application/view-models/use-login.view-model";
+import ReusableSheet from "@/src/shared/components/modal-sheet";
 
 export default function LoginScreen() {
   const {
@@ -25,7 +26,18 @@ export default function LoginScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <XStack justify={"space-between"}>
           <Titulo texto="Ingresar" />
-          <ModoPruebaSheet></ModoPruebaSheet>
+          <ReusableSheet
+            triggerText="Configuración"
+            initialSnapMode="constant"
+            initialModalType={false}
+            customSnapPoints={[300, 200]}
+            onOpenChange={(open) => console.log('Sheet está:', open ? 'abierto' : 'cerrado')}
+            sheetContents={(props) => <ModoPruebaSheet {...props} />}
+            sheetProps={{
+              animation: 'quick',
+              overlayStyle: { backgroundColor: 'rgba(0,0,0,0.7)' }
+            }}
+          />          
         </XStack>
         <View gap="$4" flex={1} paddingInline="$4">
           {modoPrueba ? <MensajeModoPrueba></MensajeModoPrueba> : null}

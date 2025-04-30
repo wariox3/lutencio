@@ -3,9 +3,11 @@ import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import { LoginFormType } from "../../domain/types/login.types";
 import { loginThunk } from "../slices/auth.thunk";
+import { obtenerConfiguracionModoPrueba } from "@/store/selects/configuracion";
+import { useSelector } from "react-redux";
 
 export const useLoginViewModel = () => {
-  const modoPrueba = true;
+  const modoPrueba = useSelector(obtenerConfiguracionModoPrueba);
   const router = useRouter();
 
   const dispatch = useAppDispatch();

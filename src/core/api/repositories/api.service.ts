@@ -14,6 +14,7 @@ import {
   RequestOptions,
 } from "../domain/interfaces/api.interface";
 import { dominioInterceptor } from "@/utils/api/interceptor/dominioInterceptor";
+import { handleErrorResponse } from "@/utils/api/interceptor/errorInterceptor";
 
 class ApiService {
   private instance: AxiosInstance;
@@ -52,18 +53,12 @@ class ApiService {
       (error) => Promise.reject(error)
     );
 
-    // Interceptor de respuesta
+    // Interceptor para manejar errores de respuesta
     this.instance.interceptors.response.use(
-      (response) => response,
-      (error: AxiosError) => {
-        const apiError: ApiError = {
-          message: error.message,
-          status: error.response?.status,
-          data: error.response?.data,
-          isCanceled: axios.isCancel(error),
-          isTimeout: error.code === "ECONNABORTED",
-        };
-        return Promise.reject(apiError);
+      (response: AxiosResponse) => response,
+      (error: AxiosError) => {        
+        handleErrorResponse(error);
+        return Promise.reject(error);
       }
     );
   }
@@ -98,12 +93,12 @@ class ApiService {
       params,
       data,
       timeout,
-    };    
+    };
 
     try {
       const response: AxiosResponse<T> = await this.instance.request(config);
       return response.data;
-    } catch (error) {      
+    } catch (error) {
       throw error as ApiError;
     }
   }
@@ -124,7 +119,7 @@ class ApiService {
     endpoint: string,
     data?: any,
     headers?: Record<string, string>
-  ): Promise<T> {    
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       method: "POST",
       data,
