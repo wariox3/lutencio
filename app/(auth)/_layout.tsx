@@ -11,23 +11,20 @@ export default function LoginLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Stack
-      screenOptions={{
-        headerShadowVisible: false,
-        headerTransparent: true,
-      }}
-    >
+    <Stack>
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen
         name="crear-cuenta"
         options={{
           title: "",
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name="olvido-clave"
         options={{
           title: "",
+          headerShown: false,
         }}
       />
     </Stack>

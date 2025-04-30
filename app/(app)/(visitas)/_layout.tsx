@@ -7,7 +7,7 @@ export default function VisitasLayout() {
       <Stack.Screen name="cargar" options={{ title: 'About' }} />
       <Stack.Screen name="novedad" options={{ title: 'About' }} />
       <Stack.Screen name="pendiente" options={{ title: 'About' }} />
-      <Stack.Screen name="pendienteDetalle" options={{ title: 'About' }} />
+      {/* <Stack.Screen name="[id]" options={{ title: 'About' }} /> */}
     </Stack>
   );
 }
