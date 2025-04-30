@@ -52,7 +52,7 @@ export default function RootLayout() {
           <PortalProvider>
             <GestureHandlerRootView style={{ flex: 1 }}>
               <Stack>
-                <Stack.Screen name="(app)" options={{ headerShown: false }} />
+                <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
             </GestureHandlerRootView>

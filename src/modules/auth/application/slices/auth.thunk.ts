@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { LoginFormType } from "../../domain/types/login.types";
-import { LoginUserUseCase } from "../user-cases/login.user-case";
+import { LoginUserUseCase } from "../user-cases/login.use-case";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
 import { CrearCuentaFormType } from "../../domain/interfaces/crear-cuenta.interface";

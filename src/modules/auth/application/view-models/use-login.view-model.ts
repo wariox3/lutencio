@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import { LoginFormType } from "../../domain/types/login.types";
 import { loginThunk } from "../slices/auth.thunk";
-import { rutasApp } from "@/constants/rutas";
 
 export const useLoginViewModel = () => {
   const modoPrueba = true;
@@ -36,12 +35,12 @@ export const useLoginViewModel = () => {
 
   const handleNavegarRegistrarse = () => {
     reset();
-    router.navigate(rutasApp.crearCuenta);
+    router.navigate('/crear-cuenta');
   };
 
   const handleNagevarOlvideClave = () => {
     reset();
-    router.navigate(rutasApp.olvidoClave);
+    router.navigate('/olvido-clave');
   };
 
   return {
