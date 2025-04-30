@@ -3,7 +3,7 @@ import React from 'react'
 
 const PendientesDetalle = () => {
   return (
-    <View><Text>PendientesDetalle</Text></View>
+    <View><Text>PendientesDetalleasdasdas</Text></View>
   )
 }
 

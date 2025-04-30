@@ -30,7 +30,7 @@ export const useLoginViewModel = () => {
       await dispatch(
         loginThunk({ username: data.username, password: data.password })
       ).unwrap();
-      router.replace("/(app)/index");
+      router.replace("/(app)");
     } catch (error) {
     }
   };
