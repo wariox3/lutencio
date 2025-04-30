@@ -1,12 +1,3 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import VisitaCargarScreen from "@/src/modules/visita/presentation/screen/visita-cargar.screen";
 
-const Cargar = () => {
-  return (
-    <View>
-      <Text>Cargar</Text>
-    </View>
-  )
-}
-
-export default Cargar
+export default VisitaCargarScreen;

@@ -1,12 +1,3 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import VisitaNovedadScreen from "@/src/modules/visita/presentation/screen/visita-novedad.screen";
 
-const Novedad = () => {
-  return (
-    <View>
-      <Text>Novedad</Text>
-    </View>
-  )
-}
-
-export default Novedad
+export default VisitaNovedadScreen;

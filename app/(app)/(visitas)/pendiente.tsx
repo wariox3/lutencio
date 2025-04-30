@@ -1,12 +1,3 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import VisitaPendienteScreen from "@/src/modules/visita/presentation/screen/visita-pendiente.screen";
 
-const Pendiente = () => {
-  return (
-    <View>
-      <Text>Pendiente</Text>
-    </View>
-  )
-}
-
-export default Pendiente
+export default VisitaPendienteScreen;
