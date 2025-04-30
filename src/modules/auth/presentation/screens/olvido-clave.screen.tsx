@@ -45,35 +45,3 @@ export default function OlvidoClave() {
     </SafeAreaView>
   );
 }
-
-// const { control, handleSubmit} = useForm<FieldValues>({
-//   defaultValues: {
-//     email: "",
-//   },
-// });
-
-// const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
-//   useState(false);
-// const router = useRouter();
-
-// const crearCuentaPressed = async (data: { email: string }) => {
-//   setMostrarAnimacionCargando(true);
-//   Keyboard.dismiss();
-
-//   try {
-//     const respuestaApiLogin = await consultarApi<any>(
-//       APIS.seguridad.cambioClaveSolicitar,
-//       {
-//         username: data.email,
-//       }
-//     );
-
-//     setMostrarAnimacionCargando(false);
-
-//     if (respuestaApiLogin.user) {
-//       router.replace("/(app)/(auth)/login");
-//     }
-//   } catch (error: any) {
-//     setMostrarAnimacionCargando(false);
-//   }
-// };
