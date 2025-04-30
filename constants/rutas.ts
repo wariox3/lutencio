@@ -1,7 +1,7 @@
 export const rutasApp = {
-  login: "/(app)/(login)",
-  crearCuenta: "/(app)/(login)/crearCuenta",
-  olvidoClave: '/(app)/(login)/olvidoClave',
+  login: "/(auth)/login",
+  crearCuenta: "/(auth)/crearCuenta",
+  olvidoClave: '/(auth)/olvidoClave',
   home: "/(app)/(tabs)/inicio",
   visitas: "/(app)/(visitas)/lista",
 
