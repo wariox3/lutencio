@@ -142,13 +142,13 @@ const SheetContents = memo(({ setOpen }: any) => {
   const [loadSincronizando, setLoadSincronizando] = useState(false);
   const [loadSincronizandoNovedad, setLoadSincronizandoNovedad] = useState(false);
   
-  const navegarEntregaCargar = () => {
-    router.navigate(rutasApp.entregaCargar);
+  const navegarCargar = () => {
+    router.navigate(rutasApp.vistaCargar);
     setOpen(false);
   };
 
   const navegarEntregaPendietes = () => {
-    router.navigate(rutasApp.entregaPendientes);
+    router.navigate(rutasApp.vistaPendiente);
     setOpen(false);
   };
 
@@ -426,7 +426,7 @@ const SheetContents = memo(({ setOpen }: any) => {
               icon={<ClipboardPlus size="$2" />}
               title="Vincular"
               subTitle="Vincular una orden de entrega"
-              onPress={() => navegarEntregaCargar()}
+              onPress={() => navegarCargar()}
             />
           ) : (
             <ListItem

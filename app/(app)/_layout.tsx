@@ -1,8 +1,10 @@
 import "react-native-reanimated";
 import { Drawer } from "expo-router/drawer";
 import CustomDrawerContent from "@/components/ui/dreawer/CustomDrawerContent";
-import { Button } from "tamagui";
+import { Button, Text, View } from "tamagui";
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
+import ReusableSheet from "@/src/shared/components/modal-sheet";
+import { MoreVertical } from "@tamagui/lucide-icons";
 
 export default function AppLayout() {
   return (
@@ -21,13 +23,7 @@ export default function AppLayout() {
       <Drawer.Screen
         name="(visitas)"
         options={{
-          headerTitle: "",
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-          },
-          headerRight: () => <EntregaOpciones />,
+          headerShown: false,
         }}
       />
     </Drawer>
