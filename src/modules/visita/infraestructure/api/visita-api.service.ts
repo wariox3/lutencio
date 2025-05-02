@@ -1,6 +1,8 @@
 import { GeneralApiRepository } from "@/src/core/api/repositories/general-api.service";
+import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
+import { Entrega } from "@/interface/entrega/entrega";
 
-export class VisitaApiRepository {
+export class VisitaApiRepository implements VisitaRepository {
   constructor(private generalApiService = new GeneralApiRepository()) {}
 
   async getLista(
@@ -8,7 +10,7 @@ export class VisitaApiRepository {
     estadoEntregado: boolean,
     subdominio: string
   ) {
-    return this.generalApiService.consulta(
+    return this.generalApiService.consulta<Entrega[]>(
       {
         modelo: "RutVisita",
         filtros: [

@@ -1,19 +1,18 @@
-import { View, Text } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
-import { useFocusEffect, useNavigation, useRouter } from "expo-router";
-import { useDispatch } from "react-redux";
-import storageService from "@/src/core/services/storage.service";
-import { STORAGE_KEYS } from "@/src/core/constants";
-import { setEntregas } from "../slice/entrega.slice";
-import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
-import { consultarApi } from "@/utils/api";
 import APIS from "@/constants/endpoint";
-import { VerticalEntrega } from "@/interface/entrega/verticalEntrega";
+import { rutasApp } from "@/constants/rutas";
 import { ConsultarLista } from "@/interface/comun/consultarLista";
 import { Entrega } from "@/interface/entrega/entrega";
-import { rutasApp } from "@/constants/rutas";
+import { STORAGE_KEYS } from "@/src/core/constants";
+import storageService from "@/src/core/services/storage.service";
+import { consultarApi } from "@/utils/api";
+import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
+import { useFocusEffect, useNavigation, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import { FieldValues, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { VerticalApiRepository } from "../../infraestructure/api/vertical-api.service";
+import { setEntregas } from "../slice/entrega.slice";
+import { GetListaVisitaUseCase } from "../use-cases/get-lista-visita.use-case";
 
 export default function useVisitaCargarViewModel() {
   const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
@@ -54,30 +53,11 @@ export default function useVisitaCargarViewModel() {
       const respuestaApiVerticalEntrega =
         await new VerticalApiRepository().getEntregaPorCodigo(data.codigo);
 
-      console.log(respuestaApiVerticalEntrega);
-
       if (respuestaApiVerticalEntrega) {
-        const respuestaApi = await consultarApi<ConsultarLista<Entrega>>(
-          APIS.general.funcionalidadLista,
-          {
-            modelo: "RutVisita",
-            filtros: [
-              {
-                propiedad: "despacho_id",
-                valor1: respuestaApiVerticalEntrega.despacho_id,
-                operador: "exact",
-              },
-              {
-                propiedad: "estado_entregado",
-                operador: "exact",
-                valor1: false,
-              },
-            ],
-          } as any,
-          {
-            requiereToken: true,
-            subdominio: respuestaApiVerticalEntrega.schema_name,
-          }
+        const respuestaApi = await new GetListaVisitaUseCase().execute(
+          respuestaApiVerticalEntrega.despacho_id,
+          false,
+          respuestaApiVerticalEntrega.schema_name
         );
 
         if (respuestaApi.registros.length > 0) {
