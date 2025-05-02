@@ -1,36 +1,36 @@
 import { useIntervalActivo } from "@/hooks/useIntervalActivo";
-import { obtenerEntregasPendientesOrdenadas } from "@/store/selects/entrega";
+import { useAppSelector } from "@/src/application/store/hooks";
+import { obtenerEntregasPendientesOrdenadas } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   comprobarRegistroTareaGeolocalizacion,
   detenerTareaSeguimientoUbicacion,
-  iniciarTareaSeguimientoUbicacion
+  iniciarTareaSeguimientoUbicacion,
 } from "@/utils/services/locationService";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useState } from "react";
-import { useSelector } from "react-redux";
-import { Button, Card, H4, YStack } from "tamagui";
+import { Button, Card, YStack } from "tamagui";
 
 const EntregaUbicacion = () => {
   const [seguimientoUbicacion, setSeguimientoUbicacion] = useState(true);
-  const arrEntregas = useSelector(obtenerEntregasPendientesOrdenadas);
-  
+  const arrEntregas = useAppSelector(obtenerEntregasPendientesOrdenadas);
+
   useFocusEffect(
     useCallback(() => {
-      obtenerInformacion()
+      obtenerInformacion();
     }, [])
   );
 
   const obtenerInformacion = async () => {
-    const valorComprobarRegistroTareaGeolocalizacion =  await comprobarRegistroTareaGeolocalizacion();
-    setSeguimientoUbicacion(valorComprobarRegistroTareaGeolocalizacion)
-  }
-  
+    const valorComprobarRegistroTareaGeolocalizacion =
+      await comprobarRegistroTareaGeolocalizacion();
+    setSeguimientoUbicacion(valorComprobarRegistroTareaGeolocalizacion);
+  };
 
   // Mover la lógica del intervalo aquí
   useIntervalActivo(
     seguimientoUbicacion,
     useCallback(async () => {
-      let tareaUbicacion = await comprobarRegistroTareaGeolocalizacion()
+      let tareaUbicacion = await comprobarRegistroTareaGeolocalizacion();
       if (tareaUbicacion) {
         await iniciarTareaSeguimientoUbicacion();
       }
@@ -39,12 +39,12 @@ const EntregaUbicacion = () => {
 
   const alternarSeguimientoUbicacion = async () => {
     try {
-      let tareaUbicacion = await comprobarRegistroTareaGeolocalizacion()      
+      let tareaUbicacion = await comprobarRegistroTareaGeolocalizacion();
       if (tareaUbicacion) {
         await detenerTareaSeguimientoUbicacion();
         setSeguimientoUbicacion(false);
       } else {
-        await iniciarTareaSeguimientoUbicacion()
+        await iniciarTareaSeguimientoUbicacion();
         setSeguimientoUbicacion(true);
       }
     } catch (error) {
@@ -61,7 +61,9 @@ const EntregaUbicacion = () => {
           theme={seguimientoUbicacion ? "red" : "green"}
           onPress={alternarSeguimientoUbicacion}
         >
-          {seguimientoUbicacion ? "Detener envio ubicación" : "Iniciar envio ubicación"}
+          {seguimientoUbicacion
+            ? "Detener envio ubicación"
+            : "Iniciar envio ubicación"}
         </Button>
       </YStack>
     </Card>

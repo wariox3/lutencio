@@ -1,15 +1,14 @@
+import { obtenerConfiguracionModoPrueba } from "@/src/application/selectors/configuracion.selector";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import storageService from "@/src/core/services/storage.service";
 import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { LoginFormType } from "../../domain/types/login.types";
 import { loginThunk } from "../slices/auth.thunk";
-import { obtenerConfiguracionModoPrueba } from "@/store/selects/configuracion";
-import { useSelector } from "react-redux";
-import { useCallback } from "react";
-import storageService from "@/src/core/services/storage.service";
 
 export const useLoginViewModel = () => {
-  const modoPrueba = useSelector(obtenerConfiguracionModoPrueba);
+  const modoPrueba = useAppSelector(obtenerConfiguracionModoPrueba);
   const router = useRouter();
 
   const dispatch = useAppDispatch();
@@ -27,45 +26,40 @@ export const useLoginViewModel = () => {
     },
   });
 
-
-
   const submit = async (data: LoginFormType) => {
     try {
       await dispatch(
         loginThunk({ username: data.username, password: data.password })
       ).unwrap();
-      handleNavegarApp()
-    } catch (error) {
-    }
+      handleNavegarApp();
+    } catch (error) {}
   };
 
-
   useFocusEffect(
-    useCallback( () => {
-      validarToken()
+    useCallback(() => {
+      validarToken();
     }, [])
   );
-
 
   const validarToken = async () => {
     const token = await storageService.getAuthToken();
     if (token) {
-      handleNavegarApp()
+      handleNavegarApp();
     }
-  }
-  
+  };
+
   const handleNavegarApp = () => {
     router.replace("/(app)");
-  }
+  };
 
   const handleNavegarRegistrarse = () => {
     reset();
-    router.navigate('/crear-cuenta');
+    router.navigate("/crear-cuenta");
   };
 
   const handleNagevarOlvideClave = () => {
     reset();
-    router.navigate('/olvido-clave');
+    router.navigate("/olvido-clave");
   };
 
   return {

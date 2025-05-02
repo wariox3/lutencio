@@ -1,15 +1,14 @@
 import { rutasApp } from "@/constants/rutas";
-import { useAppSelector } from "@/src/application/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import * as MediaLibrary from "expo-media-library";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import {
-    actualizarFirmaEntrega,
-    agregarImagenEntrega,
-    cambiarEstadoEntrega,
-    quitarEntregaSeleccionada,
+  actualizarFirmaEntrega,
+  agregarImagenEntrega,
+  cambiarEstadoEntrega,
+  quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
 
 type VisitaFormType = {
@@ -20,7 +19,7 @@ type VisitaFormType = {
 };
 
 export default function useVisitaFormularioViewModel() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
   );

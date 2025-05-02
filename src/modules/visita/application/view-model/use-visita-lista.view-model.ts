@@ -1,28 +1,29 @@
+import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
+
+import { obtenerUsuarioId } from "@/src/modules/user/application/slice/usuario.selector";
+import * as Location from "expo-location";
+import { useFocusEffect, useNavigation } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import {
+  obtenerEntregasPendientesOrdenadas,
+  obtenerEntregasSeleccionadas,
+} from "../slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
   cambiarEstadoSeleccionadoATodas,
   limpiarEntregaSeleccionada,
   quitarEntregaSeleccionada,
   seleccionarEntrega,
-} from "@/store/reducers/entregaReducer";
-import {
-  obtenerEntregasPendientesOrdenadas,
-  obtenerEntregasSeleccionadas,
-} from "@/store/selects/entrega";
-import { obtenerUsuarioId } from "@/store/selects/usuario";
-import * as Location from "expo-location";
-import { useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+} from "../slice/entrega.slice";
 
 export default function useVisitaListaViewModel() {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const arrEntregas = useSelector(obtenerEntregasPendientesOrdenadas);
-  const usuarioId = useSelector(obtenerUsuarioId);
-  const entregasSeleccionadas = useSelector(obtenerEntregasSeleccionadas);
+  const dispatch = useAppDispatch();
+  const arrEntregas = useAppSelector(obtenerEntregasPendientesOrdenadas);
+  const usuarioId = useAppSelector(obtenerUsuarioId);
+  const entregasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
   storageService.setItem(STORAGE_KEYS.usuarioId, `${usuarioId}`);
 
   const [permisoLocalizacion, setPermisoLocalizacion] = useState<string | null>(

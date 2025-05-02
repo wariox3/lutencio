@@ -1,11 +1,10 @@
-import { KeyboardAvoidingView, FlatList } from "react-native";
-import React, { useEffect } from "react";
+import { useAppSelector } from "@/src/application/store/hooks";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import Volver from "@/components/ui/navegacion/volver";
+import React, { useEffect } from "react";
+import { FlatList, KeyboardAvoidingView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { shallowEqual, useSelector } from "react-redux";
-import { RootState } from "@/store/reducers";
-import { Card, H4, XStack, View, Text } from "tamagui";
+import { shallowEqual } from "react-redux";
+import { Card, H4, Text, View, XStack } from "tamagui";
 
 const VisitaPendienteDetalleScreen = () => {
   const navigation = useNavigation();
@@ -15,9 +14,9 @@ const VisitaPendienteDetalleScreen = () => {
     ? parseInt(entregaId[0])
     : parseInt(entregaId);
 
-  const arrEntregas = useSelector(
-    (state: RootState) =>
-      state.entregas.entregas.filter(
+  const arrEntregas = useAppSelector(
+    ({ entregas }) =>
+      entregas.entregas.filter(
         (entrega) =>
           entrega.estado_entregado === true &&
           entrega.estado_sincronizado === false &&
@@ -37,7 +36,7 @@ const VisitaPendienteDetalleScreen = () => {
       },
     });
   }, [navigation]);
-  
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <KeyboardAvoidingView>
@@ -54,9 +53,9 @@ const VisitaPendienteDetalleScreen = () => {
               <Text>Id: {item.id}</Text>
               <Text>Despacho: {item.despacho_id}</Text>
               <Text>Despacho: {item.despacho_id}</Text>
-                              <Text>Destinatario: {item.destinatario}</Text>
-                <Text>Dirección: {item.destinatario_direccion}</Text>
-                <Text>Fecha: {item.fecha}</Text>
+              <Text>Destinatario: {item.destinatario}</Text>
+              <Text>Dirección: {item.destinatario_direccion}</Text>
+              <Text>Fecha: {item.fecha}</Text>
             </Card>
           )}
           ItemSeparatorComponent={() => <View my={"$2"}></View>}

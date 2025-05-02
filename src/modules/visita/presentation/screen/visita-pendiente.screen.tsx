@@ -1,9 +1,7 @@
-import Volver from "@/components/ui/navegacion/volver";
 import { rutasApp } from "@/constants/rutas";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { Entrega } from "@/interface/entrega/entrega";
-import { RootState } from "@/store/reducers";
-import { quitarVisita } from "@/store/reducers/entregaReducer";
+import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { Trash2 } from "@tamagui/lucide-icons";
 import * as FileSystem from "expo-file-system";
 import { useNavigation, useRouter } from "expo-router";
@@ -14,18 +12,18 @@ import {
   KeyboardAvoidingView,
   SafeAreaView,
 } from "react-native";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
 
 const VisitaPendienteScreen = () => {
   const navigation = useNavigation();
   const router = useRouter();
   const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const arrEntregas = useSelector(
-    (state: RootState) =>
-      state.entregas.entregas.filter(
+  const arrEntregas = useAppSelector(
+    ({ entregas }) =>
+      entregas.entregas.filter(
         (entrega) =>
           entrega.estado_entregado === true &&
           entrega.estado_sincronizado === false

@@ -4,24 +4,9 @@ import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import { SelectInput } from "@/components/ui/form/inputs/SelectInput";
-import Volver from "@/components/ui/navegacion/volver";
-import { Validaciones } from "@/constants/mensajes";
-import { rutasApp } from "@/constants/rutas";
-import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { parentescos } from "@/src/core/constants/parentesco.const";
-import { RootState } from "@/store/reducers";
-import {
-  actualizarFirmaEntrega,
-  agregarImagenEntrega,
-  cambiarEstadoEntrega,
-  quitarEntregaSeleccionada,
-} from "@/store/reducers/entregaReducer";
-import * as MediaLibrary from "expo-media-library";
-import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch, useSelector } from "react-redux";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
 import useVisitaFormularioViewModel from "../../application/view-model/use-visita-formulario.view-model";
 

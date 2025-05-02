@@ -1,5 +1,3 @@
-import { store } from "@/src/application/store";
-import { obtenerConfiguracionModoPrueba } from "@/store/selects/configuracion";
 import { InternalAxiosRequestConfig } from "axios";
 
 export const dominioInterceptor = (config: InternalAxiosRequestConfig) => {

@@ -1,10 +1,11 @@
-import { setModoPrueba } from "@/store/reducers/configuracionReducer";
-import { obtenerConfiguracionModoPrueba } from "@/store/selects/configuracion";
+import { obtenerConfiguracionModoPrueba } from "@/src/application/selectors/configuracion.selector";
+import { setModoPrueba } from "@/src/application/slices/configuracion.slice";
+import { useAppDispatch } from "@/src/application/store/hooks";
 import { Check as CheckIcon, XCircle } from "@tamagui/lucide-icons";
 import React, { memo } from "react";
 import { SafeAreaView } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { Button, Checkbox, H4, Label, View, XStack, YGroup } from "tamagui";
+import { useSelector } from "react-redux";
+import { Button, Checkbox, H4, Label, View, XStack } from "tamagui";
 
 interface ModoPruebaSheetProps {
   close: () => void;
@@ -12,9 +13,9 @@ interface ModoPruebaSheetProps {
 }
 
 const ModoPruebaSheet = memo(({ close }: ModoPruebaSheetProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const modoPruebaActivo = useSelector(obtenerConfiguracionModoPrueba);
-  
+
   const gestionModoPruebas = async (checked: boolean) => {
     dispatch(setModoPrueba(checked));
     close(); // Esto cerrará el sheet
@@ -33,21 +34,21 @@ const ModoPruebaSheet = memo(({ close }: ModoPruebaSheetProps) => {
             theme={"red"}
           />
         </XStack>
-            <XStack alignItems="center" gap="$4">
-              <Checkbox
-                id="modoPrueba"
-                size={"$5"}
-                checked={modoPruebaActivo}
-                onCheckedChange={(checked) => gestionModoPruebas(checked === true)}
-              >
-                <Checkbox.Indicator>
-                  <CheckIcon />
-                </Checkbox.Indicator>
-              </Checkbox>
-              <Label size={"$5"} htmlFor={"modoPrueba"}>
-                Modo de prueba
-              </Label>
-            </XStack>
+        <XStack alignItems="center" gap="$4">
+          <Checkbox
+            id="modoPrueba"
+            size={"$5"}
+            checked={modoPruebaActivo}
+            onCheckedChange={(checked) => gestionModoPruebas(checked === true)}
+          >
+            <Checkbox.Indicator>
+              <CheckIcon />
+            </Checkbox.Indicator>
+          </Checkbox>
+          <Label size={"$5"} htmlFor={"modoPrueba"}>
+            Modo de prueba
+          </Label>
+        </XStack>
       </View>
     </SafeAreaView>
   );
