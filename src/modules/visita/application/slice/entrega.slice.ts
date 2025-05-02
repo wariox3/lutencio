@@ -18,16 +18,6 @@ const entregasSlice = createSlice({
   name: "entregas",
   initialState,
   reducers: {
-    setEntregas: (state, action: PayloadAction<Entrega[]>) => {
-      state.entregas = action.payload.map((entrega) => ({
-        ...entrega,
-        estado_entregado: false,
-        estado_sincronizado: false,
-        estado_novedad: false,
-        estado_error: false,
-        mensaje_error: "",
-      }));
-    },
     quitarEntregas: (state) => {
       state.entregas = [];
     },
@@ -171,7 +161,6 @@ const entregasSlice = createSlice({
 });
 
 export const {
-  setEntregas,
   seleccionarEntrega,
   cambiarEstadoEntrega,
   cambiarEstadoSeleccionado,

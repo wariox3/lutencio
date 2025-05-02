@@ -16,14 +16,14 @@ export class GetListaVisitaUseCase {
       estadoEntregado,
       subdominio
     );
-    const entregasConEstados = this._aggEstadoPropiedades(respuesta.registros);
+    const entregasConEstados = this._addEstadoPropiedades(respuesta.registros);
     return {
       cantidad_registros: respuesta.cantidad_registros,
       registros: entregasConEstados,
     };
   }
 
-  private _aggEstadoPropiedades(lista: Entrega[]) {
+  private _addEstadoPropiedades(lista: Entrega[]) {
     return lista.map((entrega) => ({
       ...entrega,
       estado_entregado: false,
