@@ -6,6 +6,7 @@ export const rutasApp = {
   visitas: "/(app)/(visitas)/lista",
   vistaCargar: "/(app)/(visitas)/cargar",
   vistaPendiente: "/(app)/(visitas)/pendiente",
+  vistaPendienteDetalle: "/(app)/(visitas)/[id]",
   visitaEntregar: "/(app)/(visitas)/entregar",
   visitaNovedad: "/(app)/(visitas)/novedad",
 } as const;
