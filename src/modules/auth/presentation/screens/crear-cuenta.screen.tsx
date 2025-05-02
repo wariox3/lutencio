@@ -17,7 +17,7 @@ const CrearCuentaScreen = () => {
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View gap="$4" flex={1} paddingInline="$4">
-            <H4 mt="$8">Crear cuenta</H4>
+            <H4>Crear cuenta</H4>
 
             {/* Campo de correo */}
             <BasicInput
@@ -90,73 +90,3 @@ const CrearCuentaScreen = () => {
 };
 
 export default CrearCuentaScreen;
-
-// const router = useRouter();
-// const dispatch = useDispatch();
-
-// const { control, handleSubmit } = useForm<FieldValues>({
-//   defaultValues: {
-//     email: "",
-//     password: "",
-//     confirmarPassword: "",
-//     aceptarTerminosCondiciones: false,
-//   },
-// });
-
-// const crearCuentaPressed = async (data: {
-//   email: string;
-//   password: string;
-//   confirmarPassword: string;
-//   aceptarTerminosCondiciones: boolean;
-// }) => {
-//   Keyboard.dismiss();
-//   setMostrarAnimacionCargando(true);
-
-//   if (!data.aceptarTerminosCondiciones) {
-//     Alert.alert("Error", "Debes aceptar los términos y condiciones.");
-//     setMostrarAnimacionCargando(false);
-//     return;
-//   }
-
-//   if (data.password !== data.confirmarPassword) {
-//     Alert.alert("Error", "Las contraseñas no coinciden.");
-//     setMostrarAnimacionCargando(false);
-//     return;
-//   }
-
-//   try {
-//     const respuestaApiCrearUsuario = await consultarApi<any>(
-//       APIS.seguridad.usuario,
-//       {
-//         username: data.email,
-//         password: data.password,
-//       },
-//       { requiereToken: false }
-//     );
-
-//     if (respuestaApiCrearUsuario.usuario) {
-//       await loginPostRegistro(data.email, data.password);
-//     } else {
-//       setMostrarAnimacionCargando(false);
-//     }
-//   } catch (error: any) {
-//     setMostrarAnimacionCargando(false);
-//   }
-// };
-
-// const loginPostRegistro = async (email: string, password: string) => {
-//   try {
-//     const respuestaApiLogin = await consultarApi<any>(
-//       APIS.seguridad.login,
-//       { username: email, password },
-//       { requiereToken: false }
-//     );
-
-//     setMostrarAnimacionCargando(false);
-//     dispatch(setUsuarioInformacion(respuestaApiLogin.user));
-//     await AsyncStorage.setItem("jwtToken", respuestaApiLogin.token);
-//     router.replace("/(app)/(maindreawer)");
-//   } catch (error: any) {
-//     setMostrarAnimacionCargando(false);
-//   }
-// };

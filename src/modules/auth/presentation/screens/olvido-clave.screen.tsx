@@ -15,7 +15,7 @@ export default function OlvidoClave() {
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View gap="$4" flex={1} paddingInline="$4">
-            <H4 mt="$8">Recordar contraseña</H4>
+            <H4>Recordar contraseña</H4>
             <BasicInput
               name="username"
               control={control}

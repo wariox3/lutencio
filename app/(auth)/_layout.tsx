@@ -17,12 +17,14 @@ export default function LoginLayout() {
         name="crear-cuenta"
         options={{
           title: "",
+          headerShadowVisible: false,
         }}
       />
       <Stack.Screen
         name="olvido-clave"
         options={{
           title: "",
+          headerShadowVisible: false,
         }}
       />
     </Stack>
