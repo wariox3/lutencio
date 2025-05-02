@@ -3,9 +3,12 @@ import { EntregaFirma } from "@/components/ui/entrega/entregaFirma";
 import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
+import { SelectInput } from "@/components/ui/form/inputs/SelectInput";
 import Volver from "@/components/ui/navegacion/volver";
+import { Validaciones } from "@/constants/mensajes";
 import { rutasApp } from "@/constants/rutas";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
+import { parentescos } from "@/src/core/constants/parentesco.const";
 import { RootState } from "@/store/reducers";
 import {
   actualizarFirmaEntrega,
@@ -165,7 +168,7 @@ const VisitaFormularioScreen = () => {
       });
 
       // Navegar a la pantalla de entrega
-      router.navigate("/(app)/(maindreawer)/entrega");
+      router.navigate(rutasApp.visitas);
     } catch (error) {
       console.error("Error en onLoginPressed:", error);
     } finally {
@@ -210,12 +213,13 @@ const VisitaFormularioScreen = () => {
             placeholder="000000"
             keyboardType="numeric"
           />
-          <BasicInput
-            name="parentesco"
+          <SelectInput
+            name='parentesco'
             control={control}
-            label="Parentesco"
+            label='Parentesco'
             isRequired={false}
-            placeholder="Padre, madre, hijo, ..."
+            placeholder='Seleccionar un parentesco'
+            data={parentescos}
           />
           <BasicInput
             name="celular"
