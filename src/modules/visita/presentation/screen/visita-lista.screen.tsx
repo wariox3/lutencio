@@ -1,10 +1,10 @@
-import BtnAcciones from "@/components/ui/comun/BtnAcciones";
 import EntregaSinPermisoLocalizacion from "@/components/ui/entrega/entregaSinPermisoLocalizacion";
 import EntregasSinElementos from "@/components/ui/entrega/entregasSinElementos";
 import React from "react";
 import { FlatList, SafeAreaView } from "react-native";
 import { Card, Text } from "tamagui";
 import useVisitaListaViewModel from "../../application/view-model/use-visita-lista.view-model";
+import BtnAcciones from "@/src/shared/components/btn-acciones";
 
 export default function VisitaListaScreen() {
   const {

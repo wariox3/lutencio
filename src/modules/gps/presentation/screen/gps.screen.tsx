@@ -1,4 +1,3 @@
-import BtnAcciones from "@/components/ui/comun/BtnAcciones";
 import Volver from "@/components/ui/navegacion/volver";
 import { cambiarEstadoSeleccionado, limpiarEntregaSeleccionada, seleccionarEntrega } from "@/store/reducers/entregaReducer";
 import { obtenerEntregasPendientesOrdenadas } from "@/store/selects/entrega";
@@ -17,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
+import BtnAcciones from "@/src/shared/components/btn-acciones";
 
 const { width } = Dimensions.get("window");
 

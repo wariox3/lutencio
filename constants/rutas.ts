@@ -6,6 +6,8 @@ export const rutasApp = {
   visitas: "/(app)/(visitas)/lista",
   vistaCargar: "/(app)/(visitas)/cargar",
   vistaPendiente: "/(app)/(visitas)/pendiente",
+  visitaEntregar: "/(app)/(visitas)/entregar",
+  visitaNovedad: "/(app)/(visitas)/novedad",
 
 
   //TODO: ELIMINAR ESTAS RUTAS Y CAMBIAR DONDE SE USEN

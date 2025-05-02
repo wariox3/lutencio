@@ -1,8 +1,8 @@
 import { rutasApp } from '@/constants/rutas';
-import { AlertTriangle, ArrowDownToLine, FileWarning, SendHorizontal } from '@tamagui/lucide-icons'
+import { ArrowDownToLine, FileWarning } from '@tamagui/lucide-icons';
 import { useRouter } from 'expo-router';
-import React from 'react'
-import { Button, Text, XStack } from 'tamagui'
+import React from 'react';
+import { Button, Text, XStack } from 'tamagui';
 
 interface BtnAccionesProps {
     visualizarCantidadSeleccionada?: boolean;
@@ -12,12 +12,12 @@ interface BtnAccionesProps {
 const BtnAcciones = ({ visualizarCantidadSeleccionada = false, cantidadSeleccionada }: BtnAccionesProps) => {
     const router = useRouter();
 
-    const navegarFormulario = () => {
-        router.push(rutasApp.entregaFormulario);
+    const navegarEntregar = () => {
+        router.push(rutasApp.visitaEntregar);
     };
 
     const navegarNovedad = () => {
-        router.navigate(rutasApp.entregaNovedad);
+        router.navigate(rutasApp.visitaNovedad);
     };
 
 
@@ -27,13 +27,12 @@ const BtnAcciones = ({ visualizarCantidadSeleccionada = false, cantidadSeleccion
                 ({cantidadSeleccionada})
             </Text>
         )
-    console.log({ visualizarCantidadSeleccionada });
 
 
     return (
         <XStack gap="$2" justify="space-around" mt={'$2'}>
-            <Button 
-                onPress={navegarFormulario} 
+            <Button
+                onPress={navegarEntregar}
                 size="$4.5"
                 theme={visualizarCantidadSeleccionada ? "blue" : "accent"}
                 icon={<ArrowDownToLine size={"$2"}></ArrowDownToLine>}
@@ -41,9 +40,9 @@ const BtnAcciones = ({ visualizarCantidadSeleccionada = false, cantidadSeleccion
                 Entregar
                 {renderCantidad()}
             </Button>
-            <Button 
-                onPress={navegarNovedad} 
-                size="$4.5" 
+            <Button
+                onPress={navegarNovedad}
+                size="$4.5"
                 theme={visualizarCantidadSeleccionada ? "yellow" : "accent"}
                 icon={<FileWarning size={"$2"}></FileWarning>}
                 disabled={!visualizarCantidadSeleccionada}>
