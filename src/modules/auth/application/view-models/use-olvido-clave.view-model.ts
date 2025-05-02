@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Keyboard } from "react-native";
 import { OlvidoClaveUseCase } from "../user-cases/olvido-clave.use-case";
+import { rutasApp } from "@/constants/rutas";
 
 export default function useOlvidoClaveViewModel() {
   const router = useRouter();
@@ -22,10 +23,9 @@ export default function useOlvidoClaveViewModel() {
       const respuestaApiLogin = await new OlvidoClaveUseCase().execute(data);
 
       if (respuestaApiLogin.verificacion) {
-        router.replace("/(app)/(auth)/login");
+        router.replace(rutasApp.login);
       }
     } catch (error: any) {
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
