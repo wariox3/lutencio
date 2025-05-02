@@ -1,7 +1,7 @@
 import { ApiResponse } from "./api.interface";
 
 export interface GeneralRepository {
-  consulta(paramtetros: any): Promise<ApiResponse<any>>;
+  consulta(paramtetros: any, subdominio: string): Promise<ApiResponse<any>>;
 }
 
 export interface GeneralApiInterface {}

@@ -4,7 +4,7 @@ import { VerticalRepository } from "../../domain/interfaces/vertical-repository.
 import { EntregaVertical } from "../../domain/interfaces/entrega.interface";
 
 export class VerticalApiRepository implements VerticalRepository {
-  async getEntregaPorCodigo(codigo: number): Promise<EntregaVertical> {
+  async getEntregaPorCodigo(codigo: string): Promise<EntregaVertical> {
     return apiService.get<EntregaVertical>(`${APIS.entrega.verticalEntrega}${codigo}/`);
   }
 }

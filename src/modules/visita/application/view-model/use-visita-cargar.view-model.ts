@@ -13,6 +13,7 @@ import { VerticalEntrega } from "@/interface/entrega/verticalEntrega";
 import { ConsultarLista } from "@/interface/comun/consultarLista";
 import { Entrega } from "@/interface/entrega/entrega";
 import { rutasApp } from "@/constants/rutas";
+import { VerticalApiRepository } from "../../infraestructure/api/vertical-api.service";
 
 export default function useVisitaCargarViewModel() {
   const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
@@ -30,12 +31,12 @@ export default function useVisitaCargarViewModel() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    // Aquí puedes realizar lógica de inicialización si es necesario.
-    // navigation.setOptions({ TODO: entender que se esta haciendo
-    //   headerLeft: () => <Volver ruta="entrega" />,
-    // });
-  }, [navigation]);
+  // useEffect(() => {
+  //   // Aquí puedes realizar lógica de inicialización si es necesario.
+  //   // navigation.setOptions({ TODO: entender que se esta haciendo
+  //   //   headerLeft: () => <Volver ruta="entrega" />,
+  //   // });
+  // }, [navigation]);
 
   useFocusEffect(
     useCallback(() => {
@@ -50,15 +51,10 @@ export default function useVisitaCargarViewModel() {
       codigo: "",
     });
     try {
-      // TODO: Conectar con el thunk y refactorizar
-      const respuestaApiVerticalEntrega = await consultarApi<VerticalEntrega>(
-        `${APIS.entrega.verticalEntrega}${data.codigo}/`,
-        null,
-        { requiereToken: true, method: "get" }
-      );
+      const respuestaApiVerticalEntrega =
+        await new VerticalApiRepository().getEntregaPorCodigo(data.codigo);
 
       console.log(respuestaApiVerticalEntrega);
-      
 
       if (respuestaApiVerticalEntrega) {
         const respuestaApi = await consultarApi<ConsultarLista<Entrega>>(
