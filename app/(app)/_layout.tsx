@@ -1,10 +1,7 @@
-import "react-native-reanimated";
-import { Drawer } from "expo-router/drawer";
 import CustomDrawerContent from "@/components/ui/dreawer/CustomDrawerContent";
-import { Button, Text, View } from "tamagui";
-import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
-import ReusableSheet from "@/src/shared/components/modal-sheet";
-import { MoreVertical } from "@tamagui/lucide-icons";
+import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
+import { Drawer } from "expo-router/drawer";
+import "react-native-reanimated";
 
 export default function AppLayout() {
   return (
@@ -18,6 +15,7 @@ export default function AppLayout() {
             shadowOpacity: 0,
             borderBottomWidth: 0,
           },
+          headerLeft: () => <BtnMenuDrewer />,
         }}
       />
       <Drawer.Screen

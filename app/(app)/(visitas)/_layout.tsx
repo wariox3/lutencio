@@ -1,4 +1,5 @@
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
+import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
 import { Stack } from "expo-router";
 
 export default function VisitasLayout() {
@@ -11,6 +12,7 @@ export default function VisitasLayout() {
         name="lista"
         options={{
           title: '',
+          headerLeft: () => <BtnMenuDrewer />,
           headerRight: () =>
             //   <ReusableSheet
             // triggerText=""
