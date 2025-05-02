@@ -4,6 +4,7 @@ import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import Volver from "@/components/ui/navegacion/volver";
+import { rutasApp } from "@/constants/rutas";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { RootState } from "@/store/reducers";
 import {
@@ -66,7 +67,6 @@ const VisitaFormularioScreen = () => {
   const [state, setState] = useState(estadoInicial);
 
   useEffect(() => {
-    navigation.setOptions({ headerLeft: () => <Volver ruta="entrega" /> });
     reiniciarEstadoCompleto();
   }, [entregasSeleccionadas]);
 
