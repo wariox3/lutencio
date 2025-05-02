@@ -38,17 +38,20 @@ export default function useVisitaListaViewModel() {
     getCurrentLocation();
   }, [navigation]);
 
+  // solo se ejecuta cuando salen y vuelven a la vista
   useFocusEffect(
     useCallback(() => {
       gestionEntregas();
     }, [])
   );
 
+  // limpiar las entregas seleccionadas
   const gestionEntregas = () => {
     dispatch(cambiarEstadoSeleccionadoATodas());
     dispatch(limpiarEntregaSeleccionada());
   };
 
+  // limpiar unicamente una entrega o agregar
   const gestionEntrega = (id: number) => {
     if (entregasSeleccionadas.includes(id)) {
       dispatch(quitarEntregaSeleccionada(id));

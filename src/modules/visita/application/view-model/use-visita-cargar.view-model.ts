@@ -56,6 +56,10 @@ export default function useVisitaCargarViewModel() {
         null,
         { requiereToken: true, method: "get" }
       );
+
+      console.log(respuestaApiVerticalEntrega);
+      
+
       if (respuestaApiVerticalEntrega) {
         const respuestaApi = await consultarApi<ConsultarLista<Entrega>>(
           APIS.general.funcionalidadLista,
