@@ -36,15 +36,14 @@ const VisitaPendienteScreen = () => {
   useEffect(() => {
     // Aquí puedes realizar lógica de inicialización si es necesario.
     navigation.setOptions({
-      headerLeft: () => <Volver ruta="entrega" />,
       headerTitle: "",
     });
   }, [navigation]);
 
   const navegarEntregaPendientes = (entregaId: number) => {
     router.navigate({
-      pathname: rutasApp.entregaPendientesDetalle,
-      params: { entregaId },
+      pathname: rutasApp.vistaPendienteDetalle,
+      params: { id: entregaId },
     });
   };
 

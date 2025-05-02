@@ -29,7 +29,6 @@ const VisitaPendienteDetalleScreen = () => {
   useEffect(() => {
     // Aquí puedes realizar lógica de inicialización si es necesario.
     navigation.setOptions({
-      headerLeft: () => <Volver ruta="entregaPendientes" />,
       headerTitle: "",
       headerStyle: {
         elevation: 0,
