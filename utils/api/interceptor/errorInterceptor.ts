@@ -49,9 +49,10 @@ const error400 = (error: AxiosError): AxiosError => {
   }
 
   // Obtener código de error y mensaje
-  const codigo = error.response?.data?.codigo || "Desconocido";
+  const codigo = error.response?.data?.codigo ||  "Desconocido";
+  
   let mensaje =
-    error.response?.data?.mensaje || "Ha ocurrido un error inesperado.";
+    error.response?.data?.mensaje ||   error.response?.data?.error  || "Ha ocurrido un error inesperado.";
   if (error.response?.data?.hasOwnProperty("validaciones")) {
     for (const key in error.response?.data?.validaciones) {
       if (error.response?.data?.validaciones.hasOwnProperty(key)) {
