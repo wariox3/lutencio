@@ -7,7 +7,7 @@ import { Button, H4, Spinner, View } from "tamagui";
 import useVisitaCargarViewModel from "../../application/view-model/use-visita-cargar.view-model";
 
 const VisitaCargarScreen = () => {
-  const { control, handleSubmit, cargarOrden, mostrarAnimacionCargando } =
+  const { control, handleSubmit, cargarOrden, loading } =
     useVisitaCargarViewModel();
   //   const [mostrarAnimacionCargando, setMostrarAnimacionCargando] =
   //     useState(false);
@@ -112,9 +112,9 @@ const VisitaCargarScreen = () => {
               }}
             />
             <Button
-              theme={mostrarAnimacionCargando ? "accent" : "blue"}
-              icon={mostrarAnimacionCargando ? () => <Spinner /> : undefined}
-              disabled={mostrarAnimacionCargando}
+              theme={loading ? "accent" : "blue"}
+              icon={loading ? () => <Spinner /> : undefined}
+              disabled={loading}
               onPress={handleSubmit(cargarOrden)}
             >
               Vincular
