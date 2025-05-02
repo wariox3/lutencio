@@ -1,6 +1,8 @@
 import { obtenerConfiguracionModoPrueba } from "@/src/application/selectors/configuracion.selector";
 import { setModoPrueba } from "@/src/application/slices/configuracion.slice";
 import { useAppDispatch } from "@/src/application/store/hooks";
+import { STORAGE_KEYS } from "@/src/core/constants";
+import storageService from "@/src/core/services/storage.service";
 import { Check as CheckIcon, XCircle } from "@tamagui/lucide-icons";
 import React, { memo } from "react";
 import { SafeAreaView } from "react-native";
@@ -18,6 +20,7 @@ const ModoPruebaSheet = memo(({ close }: ModoPruebaSheetProps) => {
 
   const gestionModoPruebas = async (checked: boolean) => {
     dispatch(setModoPrueba(checked));
+    storageService.setItem(STORAGE_KEYS.modoPrueba, checked)
     close(); // Esto cerrará el sheet
   };
 

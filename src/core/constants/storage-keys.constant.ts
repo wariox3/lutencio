@@ -3,5 +3,6 @@ export const STORAGE_KEYS = {
     usuarioId: 'usuario_id',
     subdominio: 'subdominio',
     despacho: 'despacho',
-    ordenEntrega: 'ordenEntrega'
+    ordenEntrega: 'ordenEntrega',
+    modoPrueba: 'modoPrueba'
 }
