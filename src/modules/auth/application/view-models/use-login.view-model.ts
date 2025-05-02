@@ -34,7 +34,7 @@ export const useLoginViewModel = () => {
       await dispatch(
         loginThunk({ username: data.username, password: data.password })
       ).unwrap();
-      handleNagevarApp()
+      handleNavegarApp()
     } catch (error) {
     }
   };
@@ -50,13 +50,12 @@ export const useLoginViewModel = () => {
   const validarToken = async () => {
     const token = await storageService.getAuthToken();
     if (token) {
-      handleNagevarApp()
+      handleNavegarApp()
     }
   }
   
-  const handleNagevarApp = () => {
+  const handleNavegarApp = () => {
     router.replace("/(app)");
-
   }
 
   const handleNavegarRegistrarse = () => {

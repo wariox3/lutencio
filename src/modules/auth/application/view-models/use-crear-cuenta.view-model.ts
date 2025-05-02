@@ -33,9 +33,13 @@ export const useCrearCuentaViewModel = () => {
           loginThunk({ username: data.username, password: data.password })
         ).unwrap();
       }
-      router.replace("/(app)/(maindreawer)");
+      handleNavegarApp();
     } catch (error) {}
   };
+
+  const handleNavegarApp = () => {
+    router.replace("/(app)");
+  }
 
   return {
     submit,
