@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, ScrollView, Spinner, View, XStack } from "tamagui";
 import { useLoginViewModel } from "../../application/view-models/use-login.view-model";
 import ReusableSheet from "@/src/shared/components/modal-sheet";
+import { authStyles } from "../styles/auth.style";
 
 export default function LoginScreen() {
   const {
@@ -22,8 +23,8 @@ export default function LoginScreen() {
   } = useLoginViewModel();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={authStyles.container}>
+      {/* <ScrollView showsVerticalScrollIndicator={false}> */}
         <XStack justify={"space-between"}>
           <Titulo texto="Ingresar" />
           <ReusableSheet
@@ -33,12 +34,12 @@ export default function LoginScreen() {
             customSnapPoints={[300, 200]}
             sheetContents={(props) => <ModoPruebaSheet {...props} />}
             sheetProps={{
-              animation: 'quick',
-              overlayStyle: { backgroundColor: 'rgba(0,0,0,0.7)' }
+              animation: "quick",
+              overlayStyle: { backgroundColor: "rgba(0,0,0,0.7)" },
             }}
           />
         </XStack>
-        <View gap="$4" flex={1} paddingInline="$4">
+        {/* <View gap="$4" flex={1} paddingInline="$4"> */}
           {modoPrueba ? <MensajeModoPrueba></MensajeModoPrueba> : null}
           <BasicInput
             name="username"
@@ -93,8 +94,8 @@ export default function LoginScreen() {
           >
             ¿Olvidaste la contraseña?
           </Button>
-        </View>
-      </ScrollView>
+        {/* </View> */}
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 }
