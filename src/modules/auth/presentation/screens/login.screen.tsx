@@ -23,10 +23,9 @@ export default function LoginScreen() {
   } = useLoginViewModel();
 
   return (
-    <SafeAreaView style={authStyles.container}>
+    <SafeAreaView style={{ flex: 1}}>
       {/* <ScrollView showsVerticalScrollIndicator={false}> */}
-        <XStack justify={"space-between"}>
-          <Titulo texto="Ingresar" />
+        <XStack style={{ display: 'flex', justifyContent: 'end'}}>
           <ReusableSheet
             triggerText="Configuración"
             initialSnapMode="constant"
@@ -39,7 +38,8 @@ export default function LoginScreen() {
             }}
           />
         </XStack>
-        {/* <View gap="$4" flex={1} paddingInline="$4"> */}
+        <View style={authStyles.container}>
+        <Titulo texto="Ingresar" />
           {modoPrueba ? <MensajeModoPrueba></MensajeModoPrueba> : null}
           <BasicInput
             name="username"
@@ -94,7 +94,7 @@ export default function LoginScreen() {
           >
             ¿Olvidaste la contraseña?
           </Button>
-        {/* </View> */}
+        </View>
       {/* </ScrollView> */}
     </SafeAreaView>
   );
