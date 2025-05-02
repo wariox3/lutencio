@@ -1,10 +1,36 @@
+import { Entrega } from "@/interface/entrega/entrega";
 import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
 import { VisitaApiRepository } from "../../infraestructure/api/visita-api.service";
+import { ApiResponse } from "@/src/core/api/domain/interfaces/api.interface";
 
 export class GetListaVisitaUseCase {
   constructor(private repo: VisitaRepository = new VisitaApiRepository()) {}
 
-  execute(despachoId: number, estadoEntregado: boolean, subdominio: string) {
-    return this.repo.getLista(despachoId, estadoEntregado, subdominio);
+  async execute(
+    despachoId: number,
+    estadoEntregado: boolean,
+    subdominio: string
+  ): Promise<ApiResponse<Entrega[]>> {
+    const respuesta = await this.repo.getLista(
+      despachoId,
+      estadoEntregado,
+      subdominio
+    );
+    const entregasConEstados = this._aggEstadoPropiedades(respuesta.registros);
+    return {
+      cantidad_registros: respuesta.cantidad_registros,
+      registros: entregasConEstados,
+    };
+  }
+
+  private _aggEstadoPropiedades(lista: Entrega[]) {
+    return lista.map((entrega) => ({
+      ...entrega,
+      estado_entregado: false,
+      estado_sincronizado: false,
+      estado_novedad: false,
+      estado_error: false,
+      mensaje_error: "",
+    }));
   }
 }
