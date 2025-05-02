@@ -7,17 +7,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Checkbox, H4, Label, View, XStack, YGroup } from "tamagui";
 
 interface ModoPruebaSheetProps {
-  setOpen: (open: boolean) => void;
+  close: () => void;
   // Agrega otras props que necesites
 }
 
-const ModoPruebaSheet = memo(({ setOpen }: ModoPruebaSheetProps) => {
+const ModoPruebaSheet = memo(({ close }: ModoPruebaSheetProps) => {
   const dispatch = useDispatch();
   const modoPruebaActivo = useSelector(obtenerConfiguracionModoPrueba);
   
   const gestionModoPruebas = async (checked: boolean) => {
     dispatch(setModoPrueba(checked));
-    setOpen(false); // Esto cerrará el sheet
+    close(); // Esto cerrará el sheet
   };
 
   return (
@@ -29,7 +29,7 @@ const ModoPruebaSheet = memo(({ setOpen }: ModoPruebaSheetProps) => {
             size="$4"
             circular
             icon={<XCircle size="$3" color={"$red10"} />}
-            onPress={() => setOpen(false)}
+            onPress={() => close()}
             theme={"red"}
           />
         </XStack>

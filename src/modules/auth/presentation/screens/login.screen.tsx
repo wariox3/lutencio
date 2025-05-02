@@ -31,13 +31,12 @@ export default function LoginScreen() {
             initialSnapMode="constant"
             initialModalType={false}
             customSnapPoints={[300, 200]}
-            onOpenChange={(open) => console.log('Sheet está:', open ? 'abierto' : 'cerrado')}
             sheetContents={(props) => <ModoPruebaSheet {...props} />}
             sheetProps={{
               animation: 'quick',
               overlayStyle: { backgroundColor: 'rgba(0,0,0,0.7)' }
             }}
-          />          
+          />
         </XStack>
         <View gap="$4" flex={1} paddingInline="$4">
           {modoPrueba ? <MensajeModoPrueba></MensajeModoPrueba> : null}
