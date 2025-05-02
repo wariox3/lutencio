@@ -6,17 +6,17 @@ import React from "react";
 import { KeyboardAvoidingView } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, H4, Spinner, View } from "tamagui";
+import { Button, H4, Spinner } from "tamagui";
 import { useCrearCuentaViewModel } from "../../application/view-models/use-crear-cuenta.view-model";
+import { authStyles } from "../styles/auth.style";
 
 const CrearCuentaScreen = () => {
   const { control, handleSubmit, submit, loading } = useCrearCuentaViewModel();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
+    <SafeAreaView style={authStyles.container}>
       <KeyboardAvoidingView>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View gap="$4" flex={1} paddingInline="$4">
             <H4>Crear cuenta</H4>
 
             {/* Campo de correo */}
@@ -82,7 +82,6 @@ const CrearCuentaScreen = () => {
             >
               Crear cuenta
             </Button>
-          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
