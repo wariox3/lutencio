@@ -1,13 +1,9 @@
 import { GeneralApiRepository } from "@/src/core/api/repositories/general-api.service";
-import { EntregaVertical } from "../../domain/interfaces/entrega.interface";
 
 export class VisitaApiRepository {
   constructor(private generalApiService = new GeneralApiRepository()) {}
 
-  async getLista(
-    despachoId: number,
-    estadoEntregado: boolean
-  ): Promise<EntregaVertical> {
+  async getLista(despachoId: number, estadoEntregado: boolean) {
     return this.generalApiService.consulta({
       modelo: "RutVisita",
       filtros: [
