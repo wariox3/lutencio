@@ -56,7 +56,7 @@ const VisitaNovedadScreen = () => {
                   data={state.arrNovedadesTipo}
                   rules={{
                     required: Validaciones.comunes.requerido,
-                    validate: (value: string) => value !== "0" || "Selección obligatoria",                      
+                    validate: (value: string) => value !== "0" || Validaciones.comunes.requerido,                      
                   }}
                 />
               </>
