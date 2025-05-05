@@ -1,7 +1,7 @@
-import { PencilLine } from "@tamagui/lucide-icons";
+import { PencilLine, XCircle } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
 import React, { memo, useEffect, useRef, useState } from "react";
-import { useWindowDimensions } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import SignatureScreen from "react-native-signature-canvas";
 import { Button, H4, Text, View } from "tamagui";
 import * as FileSystem from "expo-file-system";
@@ -17,8 +17,8 @@ export const EntregaFirma = ({
   const [position, setPosition] = useState(0);
   const [open, setOpen] = useState(false);
   const [modal] = useState(true);
-  const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
-  const snapPoints = ["50%", 256, 190];
+  const [snapPointsMode] = useState<(typeof spModes)[number]>("percent");
+  const snapPoints = [100];
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] =
     useState<boolean>(false);
 
@@ -58,16 +58,17 @@ export const EntregaFirma = ({
 
       <Sheet
         forceRemoveScrollEnabled={open}
-        modal={modal}
+        modal={true}
         open={open}
         onOpenChange={setOpen}
-        snapPoints={snapPoints}
-        snapPointsMode={snapPointsMode}
-        dismissOnSnapToBottom
-        position={position}
-        onPositionChange={setPosition}
+        snapPoints={[50]} // Solo un punto al 100%
+        snapPointsMode="percent"
+        dismissOnSnapToBottom={false}
         zIndex={100_000}
         animation="medium"
+        // Configuración para hacerlo fijo:
+        disableDrag // Deshabilita el arrastre
+        moveOnKeyboardChange={false}
       >
         <Sheet.Overlay
           animation="lazy"
@@ -75,8 +76,6 @@ export const EntregaFirma = ({
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
         />
-
-        <Sheet.Handle />
         <Sheet.Frame>
           <SheetContentsEntregaCamara setOpen={setOpen} onCapture={onCapture} />
         </Sheet.Frame>
@@ -94,14 +93,15 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
     try {
       const base64Code = signature.split(",")[1];
       const ahora = new Date();
-      const fechaHora = ahora.toISOString()
-        .replace(/T/, '_')
-        .replace(/\..+/, '')
-        .replace(/-/g, '')
-        .replace(/:/g, '');
-      
+      const fechaHora = ahora
+        .toISOString()
+        .replace(/T/, "_")
+        .replace(/\..+/, "")
+        .replace(/-/g, "")
+        .replace(/:/g, "");
+
       const fileUri = FileSystem.documentDirectory + `firma_${fechaHora}.png`;
-      
+
       await FileSystem.writeAsStringAsync(fileUri, base64Code, {
         encoding: FileSystem.EncodingType.Base64,
       });
@@ -119,11 +119,9 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
     }
   };
 
-  const handleEmpty = () => {
-  };
+  const handleEmpty = () => {};
 
-  const handleClear = () => {
-  };
+  const handleClear = () => {};
 
   // Called after end of stroke
   const handleEnd = () => {
@@ -131,11 +129,22 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
   };
 
   // Called after ref.current.getData()
-  const handleData = (data: any) => {
-  };
+  const handleData = (data: any) => {};
 
   return (
-    <SignatureScreen
+    <View style={styles.container}>
+      {/* Botón de cerrar */}
+
+      <Button
+        size="$4"
+        circular
+        icon={<XCircle size="$3" color={"red"} />}
+        style={styles.botonCerrar}
+        onPress={() => setOpen(false)}
+      />
+
+      <View style={styles.firmaContenedor}>
+      <SignatureScreen
       ref={ref}
       onEnd={handleEnd}
       onOK={handleOK}
@@ -146,7 +155,33 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
       descriptionText={"Ingresa firma"}
       clearText="Limpiar"
       confirmText="Acceptar"
-      style={{ height: height - 20 }}
+      style={{ height: height }}
     />
+      </View>
+    </View>
   );
+});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    position: "relative",
+    width: "100%",
+    height: "100%",
+  },
+  botonCerrar: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    zIndex: 100,
+  },
+  firmaContenedor: {
+    flex: 1,
+    backgroundColor: "red", // Cámbialo según necesites
+  },
+  signature: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
 });
