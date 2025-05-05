@@ -114,7 +114,7 @@ const entregasSlice = createSlice({
       state,
       action: PayloadAction<{
         entregaId: number;
-        novedad_tipo: number;
+        novedad_tipo: string;
         novedad_descripcion: string;
       }>
     ) => {
