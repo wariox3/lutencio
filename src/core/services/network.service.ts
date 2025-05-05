@@ -16,8 +16,12 @@ class NetworkService {
   public async validarEstadoRed() {
     try {
       const networkState = await Network.getNetworkStateAsync();
-      const hayConexion =
-        networkState.isConnected && networkState.isInternetReachable;
+      const hayConexion = 
+      networkState && 
+      typeof networkState.isConnected === 'boolean' && 
+      typeof networkState.isInternetReachable === 'boolean'
+        ? networkState.isConnected && networkState.isInternetReachable
+        : false;
 
       return hayConexion;
     } catch (error) {
