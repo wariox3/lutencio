@@ -117,14 +117,14 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
                 onPress={tomarFoto}
                 size="$4"
                 circular
+                color={"$red10"}
+                theme={"red"}
                 icon={
                   <Circle
                     size="$4"
-                    backgroundColor={"#ffff"}
-                    style={{ borderRadius: 999 }} // Añade un borderRadius alto para formar un círculo
+                    color={'$red10'}
                   />
                 }
-                variant="outlined"
               />
             </TouchableOpacity>
           </View>
