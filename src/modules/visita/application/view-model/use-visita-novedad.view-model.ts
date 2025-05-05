@@ -18,18 +18,19 @@ import {
   actualizarNovedad,
   agregarImagenEntrega,
   cambiarEstadoNovedad,
+  cambiarEstadoSinconizado,
 } from "../slice/entrega.slice";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
   novedad_tipo: "",
-  foto: ""
+  foto: "",
 };
 
 type NovedadFormType = {
   descripcion: string;
   novedad_tipo: string;
-  foto: string
+  foto: string;
 };
 
 export default function useVisitaNovedadViewModel() {
@@ -110,7 +111,7 @@ export default function useVisitaNovedadViewModel() {
     });
 
     // 3. Actualizar el valor del campo 'foto' en el formulario
-    setValue('foto', nuevaUri, { shouldValidate: true });
+    setValue("foto", nuevaUri, { shouldValidate: true });
   };
 
   const removerFoto = async (indexArrImagen: number) => {
@@ -121,7 +122,7 @@ export default function useVisitaNovedadViewModel() {
       newArrImagenes.splice(indexArrImagen, 1);
       // Suponiendo que tienes una función para actualizar el estado
       setState((prev) => ({ ...prev, arrImagenes: newArrImagenes }));
-      setValue('foto', '', { shouldValidate: true });
+      setValue("foto", "", { shouldValidate: true });
 
       await eliminarArchivo(imagen.uri);
     } catch (error) {
@@ -129,61 +130,96 @@ export default function useVisitaNovedadViewModel() {
     }
   };
 
+  const entregarNovedadOffline = async (
+    data: NovedadFormType,
+    visitasSeleccionadas: number[],
+    state: any,
+    dispatch: any,
+    cambiarEntregaEstadoNovedad: () => void,
+    router: any,
+    rutasApp: any
+  ) => {
+    visitasSeleccionadas.forEach((entregaId) => {
+      dispatch(
+        agregarImagenEntrega({
+          entregaId,
+          imagen: { uri: state.arrImagenes[0].uri },
+        })
+      );
+      dispatch(
+        actualizarNovedad({
+          entregaId,
+          novedad_tipo: data.novedad_tipo,
+          novedad_descripcion: data.descripcion,
+        })
+      );
+    });
+
+    Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
+    cambiarEntregaEstadoNovedad();
+    router.navigate(rutasApp.visitas);
+  };
+
+  const entregarNovedadOnline = async (
+    data: NovedadFormType,
+    visitasSeleccionadas: number[],
+    cambiarEntregaEstadoNovedad: () => void,
+    router: any,
+    rutasApp: any
+  ) => {
+    await Promise.all(
+      visitasSeleccionadas.map(async (visita: number) => {
+        const subdominio = await AsyncStorage.getItem("subdominio");
+        await consultarApi<any>(
+          APIS.ruteo.novedad,
+          {
+            visita,
+            descripcion: data.descripcion,
+            novedad_tipo: data.novedad_tipo,
+          },
+          {
+            requiereToken: true,
+            subdominio: subdominio!,
+          }
+        );
+      })
+    );
+
+    cambiarEntregaEstadoNovedad();
+    cambiarEntregaEstadoSinconizado();
+    router.navigate(rutasApp.visitas);
+  };
+
   const guardarNovedadTipo = async (data: NovedadFormType) => {
     try {
       const networkState = await Network.getNetworkStateAsync();
       const hayConexion =
         networkState.isConnected && networkState.isInternetReachable;
-      actualizarState({
-        mostrarAnimacionCargando: true,
-      });
+
+      actualizarState({ mostrarAnimacionCargando: true });
 
       if (!hayConexion) {
-        visitasSeleccionadas.forEach((entregaId) => {
-          dispatch(
-            agregarImagenEntrega({
-              entregaId,
-              imagen: { uri: state.arrImagenes[0].uri },
-            })
-          );
-          dispatch(
-            actualizarNovedad({
-              entregaId,
-              novedad_tipo: data.novedad_tipo,
-              novedad_descripcion: data.descripcion,
-            })
-          );
-        });
-        Alert.alert(`✅ Exito`, "Guardado localmente por falta de red");
-        cambiarEntregaEstadoNovedad();
-        router.navigate(rutasApp.visitas);
+        await entregarNovedadOffline(
+          data,
+          visitasSeleccionadas,
+          state,
+          dispatch,
+          cambiarEntregaEstadoNovedad,
+          router,
+          rutasApp
+        );
         return;
       }
 
-      // Si hay red, se envían las novedades al backend
-      await Promise.all(
-        visitasSeleccionadas.map(async (visita: number) => {
-          const subdominio = await AsyncStorage.getItem("subdominio");
-          await consultarApi<any>(
-            APIS.ruteo.novedad,
-            {
-              visita,
-              descripcion: data.descripcion,
-              novedad_tipo: data.novedad_tipo,
-            },
-            {
-              requiereToken: true,
-              subdominio: subdominio!,
-            }
-          );
-        })
+      await entregarNovedadOnline(
+        data,
+        visitasSeleccionadas,
+        cambiarEntregaEstadoNovedad,
+        router,
+        rutasApp
       );
-      cambiarEntregaEstadoNovedad();
-      router.navigate(rutasApp.visitas);
     } catch (error) {
-      actualizarState({
-        mostrarAnimacionCargando: false,
-      });
+      actualizarState({ mostrarAnimacionCargando: false });
     } finally {
       actualizarState({ mostrarAnimacionCargando: false });
     }
@@ -192,6 +228,12 @@ export default function useVisitaNovedadViewModel() {
   const cambiarEntregaEstadoNovedad = () => {
     visitasSeleccionadas.map((visita: number) => {
       dispatch(cambiarEstadoNovedad(visita));
+    });
+  };
+
+  const cambiarEntregaEstadoSinconizado = () => {
+    visitasSeleccionadas.map((visita: number) => {
+      dispatch(cambiarEstadoSinconizado(visita));
     });
   };
 
