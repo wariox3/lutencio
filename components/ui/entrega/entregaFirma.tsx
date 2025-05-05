@@ -113,7 +113,7 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
       // }
       //const asset = await MediaLibrary.createAssetAsync(fileUri);
       onCapture(fileUri);
-      setOpen(false);
+      //setOpen(false);
     } catch (error) {
       console.error("❌ Error al guardar la firma:", error);
     }
@@ -146,11 +146,10 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
       <View style={styles.firmaContenedor}>
       <SignatureScreen
       ref={ref}
-      onEnd={handleEnd}
+      onEnd={() => handleEnd}
       onOK={handleOK}
       onEmpty={handleEmpty}
       onClear={handleClear}
-      onGetData={handleData}
       autoClear={true}
       descriptionText={"Ingresa firma"}
       clearText="Limpiar"
