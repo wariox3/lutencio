@@ -178,6 +178,7 @@ export default function useVisitaNovedadViewModel() {
           );
         })
       );
+      cambiarEntregaEstadoNovedad();
       router.navigate(rutasApp.visitas);
     } catch (error) {
       actualizarState({
