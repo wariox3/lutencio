@@ -23,17 +23,19 @@ import {
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
   novedad_tipo: "",
+  foto: ""
 };
 
 type NovedadFormType = {
   descripcion: string;
   novedad_tipo: string;
+  foto: string
 };
 
 export default function useVisitaNovedadViewModel() {
   const { guardarArchivo } = useGuardarEnGaleria();
   const { eliminarArchivo } = useEliminarEnGaleria();
-  const { control, handleSubmit, reset } = useForm<NovedadFormType>({
+  const { control, handleSubmit, reset, setValue } = useForm<NovedadFormType>({
     defaultValues: valoresFormulario,
   });
   const visitasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
@@ -106,6 +108,9 @@ export default function useVisitaNovedadViewModel() {
     actualizarState({
       arrImagenes: [...state.arrImagenes, { uri: nuevaUri }], // usamos la nueva URI como ID provisional
     });
+
+    // 3. Actualizar el valor del campo 'foto' en el formulario
+    setValue('foto', nuevaUri, { shouldValidate: true });
   };
 
   const removerFoto = async (indexArrImagen: number) => {
@@ -116,6 +121,8 @@ export default function useVisitaNovedadViewModel() {
       newArrImagenes.splice(indexArrImagen, 1);
       // Suponiendo que tienes una función para actualizar el estado
       setState((prev) => ({ ...prev, arrImagenes: newArrImagenes }));
+      setValue('foto', '', { shouldValidate: true });
+
       await eliminarArchivo(imagen.uri);
     } catch (error) {
       console.error("Error al eliminar el archivo:", error);
