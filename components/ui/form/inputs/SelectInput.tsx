@@ -66,7 +66,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
             </View>
             
             {error && (
-              <Text color="$red10" fontSize="$3" marginTop="$1">
+              <Text color="$red10" fontSize="$3" mt="$1">
                 {error.message}
               </Text>
             )}

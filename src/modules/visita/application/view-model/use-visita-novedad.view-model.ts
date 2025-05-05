@@ -22,12 +22,12 @@ import {
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
-  novedad_tipo: 0,
+  novedad_tipo: "",
 };
 
 type NovedadFormType = {
   descripcion: string;
-  novedad_tipo: number;
+  novedad_tipo: string;
 };
 
 export default function useVisitaNovedadViewModel() {
