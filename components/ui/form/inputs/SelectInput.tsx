@@ -28,8 +28,8 @@ export const SelectInput: React.FC<SelectInputProps> = ({
   data = [],
 }) => {
   return (
-    <View marginBottom="$3">
-      <Label fontSize="$4" marginBottom="$2">
+    <View mb="$3">
+      <Label fontSize="$4" mb="$2">
         {label}
         {isRequired && (
           <Text color="$red10" paddingStart="$2">
@@ -54,7 +54,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
                 onValueChange={(itemValue) => onChange(itemValue)}
                 style={styles.picker}
               >
-                <Picker.Item label={placeholder} value="" />
+                <Picker.Item label={placeholder} value="0" />
                 {data.map((item) => (
                   <Picker.Item 
                     key={item.id.toString()} 
