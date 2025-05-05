@@ -7,3 +7,8 @@ export const obtenerConfiguracionModoPrueba = createSelector(
   [selectConfiguracion],
   (Configuracion) => Configuracion.modoPrueba
 );
+
+export const obtenerConfiguracionSelectorNovedadTipo = createSelector(
+  [selectConfiguracion],
+  (Configuracion) => Configuracion.selectores.novedadTipo
+);

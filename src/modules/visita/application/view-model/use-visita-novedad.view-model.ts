@@ -20,6 +20,7 @@ import {
   cambiarEstadoNovedad,
   cambiarEstadoSinconizado,
 } from "../slice/entrega.slice";
+import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -40,6 +41,8 @@ export default function useVisitaNovedadViewModel() {
     defaultValues: valoresFormulario,
   });
   const visitasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
+  const novedadesTipo = useAppSelector(obtenerConfiguracionSelectorNovedadTipo);
+
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -67,32 +70,6 @@ export default function useVisitaNovedadViewModel() {
     fotoSeleccionada: [],
   };
   const [state, setState] = useState(estadoInicial);
-
-  useFocusEffect(
-    useCallback(() => {
-      reset(valoresFormulario);
-      actualizarState({
-        arrImagenes: [],
-      });
-      obtenerNovedadesTipo();
-    }, [])
-  );
-
-  const obtenerNovedadesTipo = async () => {
-    try {
-      const subdominio = await AsyncStorage.getItem("subdominio");
-
-      const respuestaApiNovedadTipo = await consultarApi<any>(
-        APIS.ruteo.novedadTipo,
-        null,
-        { requiereToken: true, method: "get", subdominio: subdominio! }
-      );
-
-      actualizarState({
-        arrNovedadesTipo: respuestaApiNovedadTipo,
-      });
-    } catch (error) {}
-  };
 
   const actualizarState = (newState: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...newState }));
@@ -244,5 +221,6 @@ export default function useVisitaNovedadViewModel() {
     removerFoto,
     guardarNovedadTipo,
     handleSubmit,
+    novedadesTipo
   };
 }

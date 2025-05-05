@@ -27,6 +27,7 @@ const VisitaNovedadScreen = () => {
     removerFoto,
     state,
     handleSubmit,
+    novedadesTipo
   } = useVisitaNovedadViewModel();
 
   return (
@@ -44,26 +45,19 @@ const VisitaNovedadScreen = () => {
               required: Validaciones.comunes.requerido,
             }}
           ></TextAreaInput>
-          <>
-            {state.arrNovedadesTipo.length > 0 ? (
-              <>
-                <SelectInput
-                  name="novedad_tipo"
-                  control={control}
-                  label="Tipo de novedad"
-                  isRequired={true}
-                  placeholder="Seleccionar un tipo de novedad"
-                  data={state.arrNovedadesTipo}
-                  rules={{
-                    required: Validaciones.comunes.requerido,
-                    validate: (value: string) => value !== "0" || Validaciones.comunes.requerido,                      
-                  }}
-                />
-              </>
-            ) : (
-              <Loader></Loader>
-            )}
-          </>
+          <SelectInput
+            name="novedad_tipo"
+            control={control}
+            label="Tipo de novedad"
+            isRequired={true}
+            placeholder="Seleccionar un tipo de novedad"
+            data={novedadesTipo}
+            rules={{
+              required: Validaciones.comunes.requerido,
+              validate: (value: string) =>
+                value !== "0" || Validaciones.comunes.requerido,
+            }}
+          />
           <XStack justify={"space-between"}>
             <Controller
               name="foto"

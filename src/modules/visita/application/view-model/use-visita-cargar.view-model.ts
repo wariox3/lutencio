@@ -4,6 +4,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { cargarOrdenThunk } from "../slice/visita.thunk";
+import { configuracionThunk } from "@/src/application/slices/configuracion.thunk";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
@@ -32,6 +33,9 @@ export default function useVisitaCargarViewModel() {
         cargarOrdenThunk({ codigo: data.codigo })
       ).unwrap();
 
+      await dispatch(
+        configuracionThunk()
+      ).unwrap()
       if (respuesta) {
         router.navigate(rutasApp.visitas);
       }
@@ -39,6 +43,8 @@ export default function useVisitaCargarViewModel() {
       console.error(error);
     }
   };
+
+  
 
   return { control, handleSubmit, loading, cargarOrden };
 }
