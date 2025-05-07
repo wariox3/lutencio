@@ -150,20 +150,6 @@ export default function useVisitaFormularioViewModel() {
     } finally {
       actualizarState({ mostrarAnimacionCargando: false });
     }
-    if (state.firmarBase64 !== null) {
-      const firmaGuardada = await MediaLibrary.createAssetAsync(
-        state.firmarBase64
-      );
-      //guardar firma
-      entregasSeleccionadas.map((entregaId) => {
-        dispatch(
-          actualizarFirmaEntrega({
-            entregaId,
-            firmarBase64: firmaGuardada.uri,
-          })
-        );
-      });
-    }
   };
 
   const entregaVisitaOffline = async (
@@ -172,42 +158,25 @@ export default function useVisitaFormularioViewModel() {
     router: any,
     rutasApp: any
   ) => {
-    // Guardar fotos en el dispositivo
-    const imagenesGuardadas = await Promise.all(
-      state.arrImagenes.map(async (imagen) => {
-        const asset = await MediaLibrary.createAssetAsync(imagen.uri);
-        return asset.uri;
-      })
-    );
-
-    if (state.firmarBase64 !== null) {
-      const firmaGuardada = await MediaLibrary.createAssetAsync(
-        state.firmarBase64
-      );
-      //guardar firma
-      entregasSeleccionadas.map((entregaId) => {
-        dispatch(
-          actualizarFirmaEntrega({
-            entregaId,
-            firmarBase64: firmaGuardada.uri,
-          })
-        );
-      });
-    }
-
     // Agregar imágenes a entregas seleccionadas
     entregasSeleccionadas.forEach((entregaId) => {
-      imagenesGuardadas.forEach((uri) => {
-        dispatch(agregarImagenEntrega({ entregaId, imagen: { uri } }));
+      state.arrImagenes.forEach((imagen) => {
+        dispatch(
+          agregarImagenEntrega({ entregaId, imagen: { uri: imagen.uri } })
+        );
+
+        if (state.firmarBase64 !== null) {
+          dispatch(
+            actualizarFirmaEntrega({
+              entregaId,
+              firmarBase64: state.firmarBase64,
+            })
+          );
+        }
+      dispatch(cambiarEstadoEntrega(entregaId));
+      dispatch(quitarEntregaSeleccionada(entregaId));
       });
     });
-
-    // Actualizar el estado de las entregas seleccionadas
-    entregasSeleccionadas.forEach((entrega) => {
-      dispatch(cambiarEstadoEntrega(entrega));
-      dispatch(quitarEntregaSeleccionada(entrega));
-    });
-
     Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
     router.navigate(rutasApp.visitas);
   };
