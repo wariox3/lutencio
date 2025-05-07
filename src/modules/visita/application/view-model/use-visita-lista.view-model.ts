@@ -17,6 +17,9 @@ import {
   quitarEntregaSeleccionada,
   seleccionarEntrega,
 } from "../slice/entrega.slice";
+import { cargarOrdenThunk } from "../slice/visita.thunk";
+import { configuracionThunk } from "@/src/application/slices/configuracion.thunk";
+import { useTheme } from "tamagui";
 
 export default function useVisitaListaViewModel() {
   const navigation = useNavigation();
@@ -25,10 +28,12 @@ export default function useVisitaListaViewModel() {
   const usuarioId = useAppSelector(obtenerUsuarioId);
   const entregasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
   storageService.setItem(STORAGE_KEYS.usuarioId, `${usuarioId}`);
-
+  const [refreshing, setRefreshing] = useState(false);
   const [permisoLocalizacion, setPermisoLocalizacion] = useState<string | null>(
     null
   );
+  const theme = useTheme();
+
 
   useEffect(() => {
     async function getCurrentLocation() {
@@ -63,10 +68,31 @@ export default function useVisitaListaViewModel() {
     }
   };
 
+  const recargarOrdenEntrega = async () => {
+    try {
+      const codigoOrdenEntrega = await storageService.getItem(
+        STORAGE_KEYS.ordenEntrega
+      );
+      if(codigoOrdenEntrega){
+        const respuesta = await dispatch(
+          cargarOrdenThunk({ codigo: codigoOrdenEntrega as string })
+        ).unwrap();
+  
+        await dispatch(configuracionThunk()).unwrap();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return {
     gestionEntrega,
     arrEntregas,
     permisoLocalizacion,
     entregasSeleccionadas,
+    refreshing,
+    setRefreshing,
+    recargarOrdenEntrega,
+    theme
   };
 }
