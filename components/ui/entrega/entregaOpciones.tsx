@@ -44,6 +44,7 @@ export const EntregaOpciones = () => {
   const [permiso, setPermiso] = useState("");
   const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
+  const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
 
   useFocusEffect(
     useCallback(() => {
@@ -58,6 +59,10 @@ export const EntregaOpciones = () => {
 
   if (permiso !== "granted") {
     return null;
+  }
+
+  if(entregas.length === 0) {
+    return null
   }
 
   return (
@@ -136,10 +141,6 @@ const SheetContents = memo(({ setOpen }: any) => {
   const [loadSincronizandoNovedad, setLoadSincronizandoNovedad] =
     useState(false);
 
-  const navegarCargar = () => {
-    router.navigate(rutasApp.vistaCargar);
-    setOpen(false);
-  };
 
   const navegarEntregaPendietes = () => {
     router.navigate(rutasApp.vistaPendiente);
@@ -412,15 +413,7 @@ const SheetContents = memo(({ setOpen }: any) => {
       <YGroup width={"auto"} flex={1} size="$4" gap="$4">
         <H6>Orden de entrega</H6>
         <YGroup.Item>
-          {entregas.length === 0 ? (
-            <ListItem
-              hoverTheme
-              icon={<ClipboardPlus size="$2" />}
-              title="Vincular"
-              subTitle="Vincular una orden de entrega"
-              onPress={() => navegarCargar()}
-            />
-          ) : (
+          {entregas.length > 0 ? (
             <ListItem
               hoverTheme
               icon={<ClipboardX size="$2" />}
@@ -428,7 +421,7 @@ const SheetContents = memo(({ setOpen }: any) => {
               subTitle="Desvincular la orden de entrega actual"
               onPress={() => confirmarRetirarDespacho()}
             />
-          )}
+          ) : null}
 
           {entregasSeleccionadas.length > 0 ? (
             <>
