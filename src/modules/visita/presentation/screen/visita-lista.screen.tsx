@@ -5,6 +5,7 @@ import { FlatList, SafeAreaView } from "react-native";
 import { Card, Text } from "tamagui";
 import useVisitaListaViewModel from "../../application/view-model/use-visita-lista.view-model";
 import BtnAcciones from "@/src/shared/components/btn-acciones";
+import { rutasApp } from "@/constants/rutas";
 
 export default function VisitaListaScreen() {
   const {
@@ -13,51 +14,6 @@ export default function VisitaListaScreen() {
     permisoLocalizacion,
     entregasSeleccionadas,
   } = useVisitaListaViewModel();
-  //   const navigation = useNavigation();
-  //   const dispatch = useDispatch();
-  //   const arrEntregas = useSelector(obtenerEntregasPendientesOrdenadas);
-  //   const usuario_id = useSelector(obtenerUsuarioId);
-  //   const entregasSeleccionadas = useSelector(obtenerEntregasSeleccionadas);
-  //   AsyncStorage.setItem("usuario_id", `${usuario_id}`);
-
-  //   const [permisoLocalizacion, setPermisoLocalizacion] = useState<string | null>(
-  //     null
-  //   );
-
-  //   useEffect(() => {
-  //     async function getCurrentLocation() {
-  //       let { status } = await Location.requestForegroundPermissionsAsync();
-  //       setPermisoLocalizacion(status);
-  //       if (status === "granted") {
-  //         navigation.setOptions({
-  //           headerRight: () => <EntregaOpciones />,
-  //         });
-  //       }
-  //     }
-
-  //     getCurrentLocation();
-  //   }, [navigation]);
-
-  //     useFocusEffect(
-  //       useCallback(() => {
-  //         gestionEntregas()
-  //       }, [])
-  //     );
-
-  //     const gestionEntregas = () => {
-  //       dispatch(cambiarEstadoSeleccionadoATodas())
-  //       dispatch(limpiarEntregaSeleccionada());
-  //     }
-
-  //   const gestionEntrega = (id: number) => {
-  //     if (entregasSeleccionadas.includes(id)) {
-  //       dispatch(quitarEntregaSeleccionada(id));
-  //       dispatch(cambiarEstadoSeleccionado(id));
-  //     } else {
-  //       dispatch(seleccionarEntrega(id));
-  //       dispatch(cambiarEstadoSeleccionado(id));
-  //     }
-  //   };
 
   if (permisoLocalizacion !== "granted")
     return <EntregaSinPermisoLocalizacion></EntregaSinPermisoLocalizacion>;
@@ -67,6 +23,8 @@ export default function VisitaListaScreen() {
       <BtnAcciones
         visualizarCantidadSeleccionada={entregasSeleccionadas.length > 0}
         cantidadSeleccionada={entregasSeleccionadas.length}
+        rutaEntregar={rutasApp.visitaEntregar} 
+        rutaNovedad={rutasApp.visitaNovedad} 
       ></BtnAcciones>
       <FlatList
         data={arrEntregas}

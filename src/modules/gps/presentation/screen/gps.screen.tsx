@@ -17,6 +17,7 @@ import MapViewDirections from "react-native-maps-directions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
+import { rutasApp } from "@/constants/rutas";
 
 const { width } = Dimensions.get("window");
 
@@ -46,10 +47,6 @@ const GpsScreen = () => {
   };
 
   useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => <Volver ruta="entrega" />,
-    });
-
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
@@ -103,6 +100,8 @@ const GpsScreen = () => {
       <BtnAcciones
         visualizarCantidadSeleccionada={entregasPendientesOrdenadas.length > 0}
         cantidadSeleccionada={1}
+        rutaEntregar={rutasApp.gpsEntregar} 
+        rutaNovedad={rutasApp.gpsNovedad} 
       ></BtnAcciones>
       {entregasPendientesOrdenadas.length > 0 ? (
         <>

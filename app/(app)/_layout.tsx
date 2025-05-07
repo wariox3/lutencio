@@ -1,5 +1,4 @@
 import CustomDrawerContent from "@/components/ui/dreawer/CustomDrawerContent";
-import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
 import { Drawer } from "expo-router/drawer";
 import "react-native-reanimated";
 
@@ -9,13 +8,13 @@ export default function AppLayout() {
       <Drawer.Screen
         name="(tabs)"
         options={{
+          headerShown: false,
           headerTitle: "",
           headerStyle: {
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: 0,
           },
-          headerLeft: () => <BtnMenuDrewer />,
         }}
       />
       <Drawer.Screen

@@ -141,22 +141,21 @@ export default function useVisitaFormularioViewModel() {
 
       actualizarState({ mostrarAnimacionCargando: true });
       if (!hayConexion) {
-        await entregaVisitaOffline(data, dispatch, router, rutasApp);
+        await entregaVisitaOffline(data, dispatch);
         return;
       }
-      await entregaVisitaOnline(data, dispatch, router, rutasApp);
+      await entregaVisitaOnline(data, dispatch);
     } catch (error) {
       actualizarState({ mostrarAnimacionCargando: false });
     } finally {
       actualizarState({ mostrarAnimacionCargando: false });
+      router.back()
     }
   };
 
   const entregaVisitaOffline = async (
     data: VisitaFormType,
     dispatch: any,
-    router: any,
-    rutasApp: any
   ) => {
     // Agregar imágenes a entregas seleccionadas
     entregasSeleccionadas.forEach((entregaId) => {
@@ -178,14 +177,11 @@ export default function useVisitaFormularioViewModel() {
       });
     });
     Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
-    router.navigate(rutasApp.visitas);
   };
 
   const entregaVisitaOnline = async (
     data: VisitaFormType,
-    dispatch: any,
-    router: any,
-    rutasApp: any
+    dispatch: any
   ) => {
     await Promise.all(
       entregasSeleccionadas.map(async (visita: number) => {
@@ -222,7 +218,6 @@ export default function useVisitaFormularioViewModel() {
       dispatch(cambiarEstadoEntrega(entrega));
       dispatch(quitarEntregaSeleccionada(entrega));
     });
-    router.navigate(rutasApp.visitas);
   };
 
   return {

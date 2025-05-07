@@ -113,8 +113,6 @@ export default function useVisitaNovedadViewModel() {
     state: any,
     dispatch: any,
     cambiarEntregaEstadoNovedad: () => void,
-    router: any,
-    rutasApp: any
   ) => {
     visitasSeleccionadas.forEach((entregaId) => {
       dispatch(
@@ -132,17 +130,14 @@ export default function useVisitaNovedadViewModel() {
       );
     });
 
-    Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
     cambiarEntregaEstadoNovedad();
-    router.navigate(rutasApp.visitas);
+    Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
   };
 
   const entregarNovedadOnline = async (
     data: NovedadFormType,
     visitasSeleccionadas: number[],
     cambiarEntregaEstadoNovedad: () => void,
-    router: any,
-    rutasApp: any
   ) => {
     await Promise.all(
       visitasSeleccionadas.map(async (visita: number) => {
@@ -164,10 +159,9 @@ export default function useVisitaNovedadViewModel() {
 
     cambiarEntregaEstadoNovedad();
     cambiarEntregaEstadoSinconizado();
-    router.navigate(rutasApp.visitas);
   };
 
-  const guardarNovedadTipo = async (data: NovedadFormType) => {
+  const guardarNovedadTipo = async (data: NovedadFormType, ) => {
     try {
       const networkState = await Network.getNetworkStateAsync();
       const hayConexion =
@@ -182,8 +176,6 @@ export default function useVisitaNovedadViewModel() {
           state,
           dispatch,
           cambiarEntregaEstadoNovedad,
-          router,
-          rutasApp
         );
         return;
       }
@@ -192,13 +184,12 @@ export default function useVisitaNovedadViewModel() {
         data,
         visitasSeleccionadas,
         cambiarEntregaEstadoNovedad,
-        router,
-        rutasApp
       );
     } catch (error) {
       actualizarState({ mostrarAnimacionCargando: false });
     } finally {
       actualizarState({ mostrarAnimacionCargando: false });
+      router.back()
     }
   };
 

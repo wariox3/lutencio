@@ -13,19 +13,7 @@ export default function VisitasLayout() {
         options={{
           title: '',
           headerLeft: () => <BtnMenuDrewer />,
-          headerRight: () =>
-            //   <ReusableSheet
-            // triggerText=""
-            // triggerProps={{
-            //   icon: <MoreVertical size="$1.5" />,
-            //   variant: "outlined"
-            // }}
-            // sheetContents={({ close }) => (
-            <EntregaOpciones />
-          //)}
-          ///>
-          ,
-
+          headerRight: () => <EntregaOpciones />,
         }}
       />
       <Stack.Screen
