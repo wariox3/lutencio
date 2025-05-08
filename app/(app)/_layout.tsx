@@ -1,12 +1,22 @@
-import { Stack } from "expo-router";
+import CustomDrawerContent from "@/components/ui/dreawer/CustomDrawerContent";
+import { Drawer } from "expo-router/drawer";
 import "react-native-reanimated";
 
 export default function AppLayout() {
-
   return (
-    <Stack>
-      <Stack.Screen name="(login)" options={{ headerShown: false }} />
-      <Stack.Screen name="(maindreawer)" options={{ headerShown: false }} />
-    </Stack>
+    <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen
+        name="(tabs)"
+        options={{
+          headerShown: false,
+          headerTitle: "",
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+        }}
+      />
+    </Drawer>
   );
 }

@@ -1,0 +1,21 @@
+export interface Usuario {
+  id: number;
+  username: string;
+  imagen: string;
+  nombre_corto: string;
+  nombre: string | null;
+  apellido: string | null;
+  telefono: string | null;
+  correo: string;
+  idioma: string | null;
+  dominio: string;
+  fecha_limite_pago: string;
+  fecha_creacion: string;
+  vr_saldo: number;
+  verificado: boolean;
+  es_socio: boolean;
+  socio_id: string;
+  is_active: boolean;
+  numero_identificacion: string;
+  cargo: string;
+}

@@ -3,7 +3,7 @@ import { Control, FieldValues } from "react-hook-form";
 export interface CheckInputProps {
   name: string;
   isRequired: boolean;
-  control: Control<FieldValues, any>;
+  control: Control<any>;
   rules?: {
     required?: string | boolean;
     pattern?: { value: RegExp; message: string };

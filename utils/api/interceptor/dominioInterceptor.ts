@@ -1,13 +1,19 @@
-import { store } from '@/store';
-import { obtenerConfiguracionModoPrueba } from '@/store/selects/configuracion';
-import { InternalAxiosRequestConfig } from 'axios';
+import { obtenerConfiguracionModoPrueba } from "@/src/application/selectors/configuracion.selector";
+import { store } from "@/src/application/store";
+import { STORAGE_KEYS } from "@/src/core/constants";
+import storageService from "@/src/core/services/storage.service";
+import { InternalAxiosRequestConfig } from "axios";
 
-export const dominioInterceptor = (config: InternalAxiosRequestConfig) => {
-  const modoPrueba = obtenerConfiguracionModoPrueba(store.getState());
-  if (config.url && modoPrueba) {
-    config.url = config.url.replace("reddocapi.co", 'reddocapi.online');
-  }  
-  return config;
+export const dominioInterceptor = async (config: InternalAxiosRequestConfig) => {
+  try {
+    const modoPruebaStorage = await storageService.getItem(STORAGE_KEYS.modoPrueba);
+    
+    if (config.url && modoPruebaStorage) {
+      config.url = config.url.replace("reddocapi.co", "reddocapi.online");
+    }    
+    return config;
+  } catch (error) {
+    console.error("Error en el interceptor:", error);
+    return config;
+  }
 };
-
-

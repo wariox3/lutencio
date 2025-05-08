@@ -118,12 +118,8 @@ export const useGuardarEnGaleria = () => {
       await FileSystem.copyAsync({
         from: uri,
         to: nuevaRuta,
-      });
-
-      console.log();
-      
+      });      
       return nuevaRuta; // Devuelve la nueva ruta por si la necesitas
-
     } catch (error: any) {
       setError(error.message);
       return false;

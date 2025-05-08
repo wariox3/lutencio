@@ -1,12 +1,12 @@
 import React from "react";
-import { H4, Text, View } from "tamagui";
+import { Card, H4, H6, Text, View } from "tamagui";
 
 const EntregaSinPermisoLocalizacion = () => {
   return (
-    <View px="$4">
-      <H4 mb="$2">Información</H4>
+    <Card flex={0.1} my={"$1"} theme={"red"} padding={16}>
+      <H6 mb="$2">Información</H6>
       <Text mb="$4">No se cuenta con el permiso de la localización</Text>
-    </View>
+    </Card>
   );
 };
 

@@ -1,17 +1,19 @@
 import { menuItems } from "@/constants/menuItems";
 import { rutasApp } from "@/constants/rutas";
-import { cerrarSesionUsuario } from "@/store/reducers/usuarioReducer";
+import { useAppDispatch } from "@/src/application/store/hooks";
+import { cerrarSesion } from "@/src/modules/auth/application/slices/auth.slice";
+import { limpiarEntregaSeleccionada, quitarEntregas } from "@/src/modules/visita/application/slice/entrega.slice";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { LogOut } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
+import React from "react";
 import { Alert } from "react-native";
-import { useDispatch } from "react-redux";
 import { ListItem, XStack, YGroup } from "tamagui";
 
 export default function CustomDrawerContent(props: any) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const cerrarSession = () => {
@@ -28,8 +30,12 @@ export default function CustomDrawerContent(props: any) {
           onPress: async () => {
             await AsyncStorage.removeItem("jwtToken");
             await AsyncStorage.removeItem("usuario_id");
-            await detenerTareaSeguimientoUbicacion()
-            dispatch(cerrarSesionUsuario());
+            await AsyncStorage.removeItem("despacho");
+            await AsyncStorage.removeItem("subdominio");
+            await detenerTareaSeguimientoUbicacion();
+            dispatch(limpiarEntregaSeleccionada());
+            dispatch(quitarEntregas());
+            dispatch(cerrarSesion());
             router.replace(rutasApp.login);
           },
         },

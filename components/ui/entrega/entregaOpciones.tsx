@@ -1,7 +1,8 @@
 import APIS from "@/constants/endpoint";
 import { rutasApp } from "@/constants/rutas";
-import { useEliminarEnGaleria, useMediaLibrary } from "@/hooks/useMediaLibrary";
-import { RootState } from "@/store/reducers";
+import { useMediaLibrary } from "@/hooks/useMediaLibrary";
+import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { selectEntregasConNovedad } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   actualizarMensajeError,
   cambiarEstadoError,
@@ -9,8 +10,7 @@ import {
   cambiarEstadoSinconizado,
   limpiarEntregaSeleccionada,
   quitarEntregas,
-} from "@/store/reducers/entregaReducer";
-import { selectEntregasConNovedad } from "@/store/selects/entrega";
+} from "@/src/modules/visita/application/slice/entrega.slice";
 import { consultarApi } from "@/utils/api";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,22 +18,21 @@ import {
   ClipboardPlus,
   ClipboardX,
   FileQuestion,
-  FileStack,
   FileUp,
   FileWarning,
   FileX,
-  MapPinned,
   MoreVertical,
   XCircle,
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
 import * as FileSystem from "expo-file-system";
+import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
-import { useRouter } from "expo-router";
-import React, { memo, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { memo, useCallback, useState } from "react";
 import { Alert, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual } from "react-redux";
 import { Button, H4, H6, ListItem, Spinner, XStack, YGroup } from "tamagui";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
@@ -42,8 +41,29 @@ export const EntregaOpciones = () => {
   const [position, setPosition] = useState(0);
   const [open, setOpen] = useState(false);
   const [modal] = useState(true);
+  const [permiso, setPermiso] = useState("");
   const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
+  const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
+
+  useFocusEffect(
+    useCallback(() => {
+      validacionPermisoLocalizacion();
+    }, [])
+  );
+
+  const validacionPermisoLocalizacion = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    setPermiso(status);
+  };
+
+  if (permiso !== "granted") {
+    return null;
+  }
+
+  if(entregas.length === 0) {
+    return null
+  }
 
   return (
     <>
@@ -86,22 +106,19 @@ export const EntregaOpciones = () => {
 // in general good to memoize the contents to avoid expensive renders during animations
 const SheetContents = memo(({ setOpen }: any) => {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const entregasSeleccionadas = useSelector(
-    (state: RootState) => state.entregas.entregasSeleccionadas || []
+  const dispatch = useAppDispatch();
+  const entregasSeleccionadas = useAppSelector(
+    ({ entregas }) => entregas.entregasSeleccionadas || []
   );
-  const entregas = useSelector(
-    (state: RootState) => state.entregas.entregas || []
-  );
-  const arrEntregas = useSelector(
-    (state: RootState) =>
-      state.entregas.entregas.filter((entrega) => !entrega.estado_entregado) ||
-      [],
+  const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
+  const arrEntregas = useAppSelector(
+    ({ entregas }) =>
+      entregas.entregas.filter((entrega) => !entrega.estado_entregado) || [],
     shallowEqual
   );
-  const arrEntregasPendientes = useSelector(
-    (state: RootState) =>
-      state.entregas.entregas.filter(
+  const arrEntregasPendientes = useAppSelector(
+    ({ entregas }) =>
+      entregas.entregas.filter(
         (entrega) =>
           entrega.estado_entregado === true &&
           entrega.estado_sincronizado === false &&
@@ -110,27 +127,23 @@ const SheetContents = memo(({ setOpen }: any) => {
     shallowEqual
   );
 
-  const arrEntregasConErrores = useSelector(
-    (state: RootState) =>
-      state.entregas.entregas.filter(
-        (entrega) => entrega.estado_error === true
-      ) || [],
+  const arrEntregasConErrores = useAppSelector(
+    ({ entregas }) =>
+      entregas.entregas.filter((entrega) => entrega.estado_error === true) ||
+      [],
     shallowEqual
   );
 
-  const arrEntregasConNovedad = useSelector(selectEntregasConNovedad);
+  const arrEntregasConNovedad = useAppSelector(selectEntregasConNovedad);
 
   const { eliminarArchivo } = useEliminarEnGaleria();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
-  const [loadSincronizandoNovedad, setLoadSincronizandoNovedad] = useState(false);
-  
-  const navegarEntregaCargar = () => {
-    router.navigate(rutasApp.entregaCargar);
-    setOpen(false);
-  };
+  const [loadSincronizandoNovedad, setLoadSincronizandoNovedad] =
+    useState(false);
+
 
   const navegarEntregaPendietes = () => {
-    router.navigate(rutasApp.entregaPendientes);
+    router.navigate(rutasApp.vistaPendiente);
     setOpen(false);
   };
 
@@ -290,7 +303,7 @@ const SheetContents = memo(({ setOpen }: any) => {
       return;
     }
 
-    for (const novedad of arrEntregasConNovedad) {      
+    for (const novedad of arrEntregasConNovedad) {
       try {
         let imagenes: { base64: string }[] = [];
         // 1️ Procesar imágenes (si existen)
@@ -305,7 +318,6 @@ const SheetContents = memo(({ setOpen }: any) => {
               encoding: FileSystem.EncodingType.Base64,
             });
             imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
-
           }
         }
 
@@ -333,7 +345,7 @@ const SheetContents = memo(({ setOpen }: any) => {
 
         setLoadSincronizando(false);
         dispatch(cambiarEstadoSinconizado(novedad.id));
-        setOpen(false)
+        setOpen(false);
       } catch (error) {
         console.error("❌ Error procesando novedad:", error);
       }
@@ -341,7 +353,6 @@ const SheetContents = memo(({ setOpen }: any) => {
 
     setLoadSincronizandoNovedad(false);
   };
-
 
   const retirarDespacho = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -402,15 +413,7 @@ const SheetContents = memo(({ setOpen }: any) => {
       <YGroup width={"auto"} flex={1} size="$4" gap="$4">
         <H6>Orden de entrega</H6>
         <YGroup.Item>
-          {entregas.length === 0 ? (
-            <ListItem
-              hoverTheme
-              icon={<ClipboardPlus size="$2" />}
-              title="Vincular"
-              subTitle="Vincular una orden de entrega"
-              onPress={() => navegarEntregaCargar()}
-            />
-          ) : (
+          {entregas.length > 0 ? (
             <ListItem
               hoverTheme
               icon={<ClipboardX size="$2" />}
@@ -418,7 +421,7 @@ const SheetContents = memo(({ setOpen }: any) => {
               subTitle="Desvincular la orden de entrega actual"
               onPress={() => confirmarRetirarDespacho()}
             />
-          )}
+          ) : null}
 
           {entregasSeleccionadas.length > 0 ? (
             <>
@@ -434,8 +437,8 @@ const SheetContents = memo(({ setOpen }: any) => {
           ) : null}
 
           {arrEntregasPendientes.length > 0 ||
-            arrEntregasConErrores.length > 0 ||
-            arrEntregasConNovedad.length > 0 ? (
+          arrEntregasConErrores.length > 0 ||
+          arrEntregasConNovedad.length > 0 ? (
             <>
               <H6 mb="$2">Sincronizar</H6>
               <>

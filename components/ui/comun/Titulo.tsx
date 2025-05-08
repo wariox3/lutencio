@@ -7,7 +7,7 @@ interface TituloProps {
 
 const Titulo = ({ texto }: TituloProps) => {
   return (
-    <View paddingInline={"$4"} mb={"$2"}>
+    <View paddingInline={"$2"} mb={"$2"}>
       <H4>{texto}</H4>
     </View>
   );

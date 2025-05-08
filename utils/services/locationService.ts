@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { consultarApi } from "../api";
 import APIS from "@/constants/endpoint";
+import networkService from "@/src/core/services/network.service";
 
 export const TAREA_SEGUIMIENTO_UBICACION = "tarea-seguimiento-ubicacion";
 
@@ -23,19 +24,22 @@ const enviarUbicacion = async (locations: any) => {
   const subdominio = await AsyncStorage.getItem("subdominio");
   const usuario_id = await AsyncStorage.getItem("usuario_id");
   const despacho = await AsyncStorage.getItem("despacho");
-  const respuestaApiUbicacion = await consultarApi<any>(
-    APIS.ruteo.ubicacion,
-    {
-      usuario_id,
-      despacho: despacho!,
-      latitud: locations.coords.latitude,
-      longitud: locations.coords.longitude,
-    },
-    {
-      requiereToken: true,
-      subdominio: subdominio!,
-    }
-  );
+  const estadoRed = await networkService.validarEstadoRed()
+  if(estadoRed){
+    const respuestaApiUbicacion = await consultarApi<any>(
+      APIS.ruteo.ubicacion,
+      {
+        usuario_id,
+        despacho: despacho!,
+        latitud: locations.coords.latitude,
+        longitud: locations.coords.longitude,
+      },
+      {
+        requiereToken: true,
+        subdominio: subdominio!,
+      }
+    );
+  }
 };
 
 export async function iniciarTareaSeguimientoUbicacion() {
