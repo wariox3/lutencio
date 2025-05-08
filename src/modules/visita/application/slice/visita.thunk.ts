@@ -36,7 +36,7 @@ export const cargarOrdenThunk = createAsyncThunk(
 
       return [];
     } catch (error: any) {
-      return rejectWithValue(error.data);
+      return rejectWithValue(error);
     }
   }
 );

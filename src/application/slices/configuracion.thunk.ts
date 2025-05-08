@@ -11,7 +11,7 @@ export const configuracionThunk = createAsyncThunk(
         const respuestaApiNovedadTipo = await new RuteoApiRepository().getNovedadTipoLista(subdominio)
         return respuestaApiNovedadTipo
      } catch (error: any) {
-        return rejectWithValue(error.data);
+        return rejectWithValue(error);
      }   
     }
 )
