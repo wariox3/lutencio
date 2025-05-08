@@ -17,12 +17,6 @@ export default function AppLayout() {
           },
         }}
       />
-      <Drawer.Screen
-        name="(visitas)"
-        options={{
-          headerShown: false,
-        }}
-      />
     </Drawer>
   );
 }
