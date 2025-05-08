@@ -4,6 +4,7 @@ export const gpsStyles = StyleSheet.create({
     mapContainer: {
       flex: 0.9,
       width: "100%",
+      marginTop: 10
     },
     map: {
       ...StyleSheet.absoluteFillObject,
