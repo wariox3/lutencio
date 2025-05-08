@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { cargarOrdenThunk } from "../slice/visita.thunk";
 import { configuracionThunk } from "@/src/application/slices/configuracion.thunk";
+import { Keyboard } from "react-native";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
@@ -25,6 +26,7 @@ export default function useVisitaCargarViewModel() {
   );
 
   const cargarOrden = async (data: FieldValues) => {
+    Keyboard.dismiss()
     reset({
       codigo: "",
     });
