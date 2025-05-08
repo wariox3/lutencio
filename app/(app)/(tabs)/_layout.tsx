@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Home, MapPinned } from "@tamagui/lucide-icons";
+import { FileText, Home, MapPinned } from "@tamagui/lucide-icons";
 import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
 
 export default function TabLayout() {
@@ -22,17 +22,24 @@ export default function TabLayout() {
               ) : (
                 <Home size={size} />
               );
-            case "(gps)":
+            case "(visitas)":
               return focused ? (
-                <MapPinned size={size} color={"$blue10"} />
+                <FileText size={size} color={"$blue10"} />
               ) : (
-                <MapPinned size={size} />
+                <FileText size={size} />
               );
+              case "(gps)":
+                return focused ? (
+                  <MapPinned size={size} color={"$blue10"} />
+                ) : (
+                  <MapPinned size={size} />
+                );
           }
         },
       })}
     >
       <Tabs.Screen name="inicio" />
+      <Tabs.Screen name="(visitas)" options={{ title: "", headerShown: false }} />
       <Tabs.Screen name="(gps)" options={{ title: "", headerShown: false }} />
     </Tabs>
   );
