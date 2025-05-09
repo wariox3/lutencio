@@ -7,6 +7,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { StatusBar } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import { Provider } from "react-redux";
@@ -50,7 +51,8 @@ export default function RootLayout() {
       <PersistGate loading={null} persistor={persistor}>
         <TamaguiProvider config={config}>
           <PortalProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar barStyle="light-content" backgroundColor="#caeef9" />
+          <GestureHandlerRootView style={{ flex: 1 }}>
               <Stack>
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />

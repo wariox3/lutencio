@@ -5,8 +5,11 @@ export default function GpsLayout() {
   return (
     <Stack
       screenOptions={{
-        headerTitle: "",
         headerShadowVisible: false,
+        title: "",
+        headerStyle: {
+          backgroundColor: "#c7eef8", // Azul con 70% de opacidad
+        },
       }}
     >
       <Stack.Screen

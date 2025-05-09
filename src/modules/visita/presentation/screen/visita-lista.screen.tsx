@@ -7,6 +7,7 @@ import useVisitaListaViewModel from "../../application/view-model/use-visita-lis
 import BtnAcciones from "@/src/shared/components/btn-acciones";
 import { rutasApp } from "@/constants/rutas";
 import { RefreshControl } from "react-native-gesture-handler";
+import ContenedorImagenBackground from "@/src/shared/components/contendor-imagen-brackground";
 
 export default function VisitaListaScreen() {
   const {
@@ -17,49 +18,51 @@ export default function VisitaListaScreen() {
     refreshing,
     setRefreshing,
     recargarOrdenEntrega,
-    theme
+    theme,
   } = useVisitaListaViewModel();
 
   if (permisoLocalizacion !== "granted")
     return <EntregaSinPermisoLocalizacion></EntregaSinPermisoLocalizacion>;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ContenedorImagenBackground source={require("../../../../../assets/images/fondo-app-sin-logo.png")}>
       <BtnAcciones
-        visualizarCantidadSeleccionada={entregasSeleccionadas.length > 0}
-        cantidadSeleccionada={entregasSeleccionadas.length}
-        rutaEntregar={rutasApp.visitaEntregar}
-        rutaNovedad={rutasApp.visitaNovedad}
-      ></BtnAcciones>
-      <FlatList
-        data={arrEntregas}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => (
-          <Card
-            p="$3"
-            mx="$2"
-            mt={"$2"}
-            onPress={() => gestionEntrega(item.id)}
-            bg={item.seleccionado ? "#f89e6d" : null}
-          >
-            <Text>ID: {item.id}</Text>
-            <Text>Destinatario: {item.destinatario}</Text>
-            <Text>Dirección: {item.destinatario_direccion}</Text>
-            <Text>Fecha: {item.fecha}</Text>
-            {item.estado_entregado ? <Text>Entregado</Text> : null}
-          </Card>
-        )}
-        ListEmptyComponent={<EntregasSinElementos />}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={recargarOrdenEntrega}
-            colors={[theme.blue10.val]} // Accede al valor HEX/RGB del color
-            progressBackgroundColor={theme.blue5.val} // Opcional
-            tintColor={theme.blue10.val} // Opcional (iOS)
-          />
-        }
-      />
+          visualizarCantidadSeleccionada={entregasSeleccionadas.length > 0}
+          cantidadSeleccionada={entregasSeleccionadas.length}
+          rutaEntregar={rutasApp.visitaEntregar}
+          rutaNovedad={rutasApp.visitaNovedad}
+        ></BtnAcciones>
+        <FlatList
+          data={arrEntregas}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item }) => (
+            <Card
+              p="$3"
+              mx="$2"
+              mt={"$2"}
+              onPress={() => gestionEntrega(item.id)}
+              bg={item.seleccionado ? "#f89e6d" : "rgba(255, 255, 255, 0.30)"}
+            >
+              <Text>ID: {item.id}</Text>
+              <Text>Destinatario: {item.destinatario}</Text>
+              <Text>Dirección: {item.destinatario_direccion}</Text>
+              <Text>Fecha: {item.fecha}</Text>
+              {item.estado_entregado ? <Text>Entregado</Text> : null}
+            </Card>
+          )}
+          ListEmptyComponent={<EntregasSinElementos />}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={recargarOrdenEntrega}
+              colors={[theme.blue10.val]} // Accede al valor HEX/RGB del color
+              progressBackgroundColor={theme.blue5.val} // Opcional
+              tintColor={theme.blue10.val} // Opcional (iOS)
+            />
+          }
+        />
+      </ContenedorImagenBackground>
     </SafeAreaView>
   );
 }
