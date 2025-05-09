@@ -115,7 +115,7 @@ const GpsScreen = () => {
                 initialRegion={region}
                 showsUserLocation={true}
               >
-                <Marker coordinate={region} />
+                <Marker coordinate={region}   image={require('../../../../../assets/images/marca-mapa.png')} />
 
                 {entregasPendientesOrdenadas[currentIndex] ? (
                   <>
@@ -130,6 +130,7 @@ const GpsScreen = () => {
                       description={`${entregasPendientesOrdenadas[
                         currentIndex
                       ].destinatario.slice(0, 14)}`}
+                      image={require('../../../../../assets/images/marca-mapa.png')}
                     />
                   </>
                 ) : null}
