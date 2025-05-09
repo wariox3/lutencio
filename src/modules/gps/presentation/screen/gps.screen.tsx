@@ -13,7 +13,6 @@ import { useFocusEffect, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Dimensions, FlatList } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
-import MapViewDirections from "react-native-maps-directions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
@@ -95,6 +94,8 @@ const GpsScreen = () => {
     flatListRef.current?.scrollToIndex({ index: newIndex, animated: true });
   };
 
+  console.log(entregasPendientesOrdenadas[currentIndex])
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <BtnAcciones
@@ -104,6 +105,7 @@ const GpsScreen = () => {
         rutaNovedad={rutasApp.gpsNovedad} 
       ></BtnAcciones>
       {entregasPendientesOrdenadas.length > 0 ? (
+        
         <>
           <View style={gpsStyles.mapContainer}>
             {region ? (
@@ -113,33 +115,19 @@ const GpsScreen = () => {
                 initialRegion={region}
                 showsUserLocation={true}
               >
-                <Marker coordinate={region} />
+                <Marker coordinate={region}  />
 
                 {entregasPendientesOrdenadas[currentIndex] ? (
                   <>
-                    <Marker
+                  <Marker
                       coordinate={{
                         latitude:
                           entregasPendientesOrdenadas[currentIndex].latitud,
                         longitude:
                           entregasPendientesOrdenadas[currentIndex].longitud,
                       }}
-                    />
-                    <MapViewDirections
-                      origin={{
-                        latitude: region.latitude,
-                        longitude: region.latitude,
-                      }}
-                      destination={{
-                        latitude:
-                          entregasPendientesOrdenadas[currentIndex].latitud,
-                        longitude:
-                          entregasPendientesOrdenadas[currentIndex].longitud,
-                      }}
-                      apikey={"AIzaSyDnd8eb9Pq7Dnye_vGeo4MLT389Is_NjzI"}
-                      strokeWidth={3}
-                      strokeColor="hotpink"
-                      optimizeWaypoints={true}
+                      title={`${entregasPendientesOrdenadas[currentIndex].numero}`}
+                      description={`${entregasPendientesOrdenadas[currentIndex].destinatario.slice(0,14)}`}
                     />
                   </>
                 ) : null}
