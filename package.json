@@ -67,7 +67,8 @@
     "redux-persist": "^6.0.0",
     "tamagui": "^1.123.4",
     "@react-native-picker/picker": "2.9.0",
-    "expo-network": "~7.0.5"
+    "expo-network": "~7.0.5",
+    "expo-image": "~2.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

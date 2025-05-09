@@ -12,11 +12,12 @@ import * as Location from "expo-location";
 import { useFocusEffect, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Dimensions, FlatList } from "react-native";
-import MapView, { Marker, Region } from "react-native-maps";
+import MapView, { Callout, Marker, Region } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
 import { rutasApp } from "@/constants/rutas";
+import { Image } from "expo-image";
 
 const { width } = Dimensions.get("window");
 
@@ -93,17 +94,18 @@ const GpsScreen = () => {
 
     flatListRef.current?.scrollToIndex({ index: newIndex, animated: true });
   };
+  const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <BtnAcciones
         visualizarCantidadSeleccionada={entregasPendientesOrdenadas.length > 0}
         cantidadSeleccionada={1}
-        rutaEntregar={rutasApp.gpsEntregar} 
-        rutaNovedad={rutasApp.gpsNovedad} 
+        rutaEntregar={rutasApp.gpsEntregar}
+        rutaNovedad={rutasApp.gpsNovedad}
       ></BtnAcciones>
       {entregasPendientesOrdenadas.length > 0 ? (
-        
         <>
           <View style={gpsStyles.mapContainer}>
             {region ? (
@@ -113,11 +115,11 @@ const GpsScreen = () => {
                 initialRegion={region}
                 showsUserLocation={true}
               >
-                <Marker coordinate={region}  />
+                <Marker coordinate={region} />
 
                 {entregasPendientesOrdenadas[currentIndex] ? (
                   <>
-                  <Marker
+                    <Marker
                       coordinate={{
                         latitude:
                           entregasPendientesOrdenadas[currentIndex].latitud,
@@ -125,13 +127,27 @@ const GpsScreen = () => {
                           entregasPendientesOrdenadas[currentIndex].longitud,
                       }}
                       title={`${entregasPendientesOrdenadas[currentIndex].numero}`}
-                      description={`${entregasPendientesOrdenadas[currentIndex].destinatario.slice(0,14)}`}
+                      description={`${entregasPendientesOrdenadas[
+                        currentIndex
+                      ].destinatario.slice(0, 14)}`}
                     />
                   </>
                 ) : null}
               </MapView>
             ) : (
-              <ActivityIndicator size="large" style={gpsStyles.loader} />
+              <View style={gpsStyles.loader}>
+                <Image
+                  source={require("../../../../../assets/images/mapa.gif")}
+                  placeholder={{ blurhash }}
+                  contentFit="cover"
+                  transition={1000}
+                  style={{
+                    width: 66,
+                    height: 58,
+                  }}
+                />
+                <Text>Procesando mapa</Text>
+              </View>
             )}
           </View>
           <XStack
