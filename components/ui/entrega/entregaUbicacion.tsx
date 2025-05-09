@@ -55,7 +55,13 @@ const EntregaUbicacion = () => {
   if (arrEntregas.length === 0) return null;
 
   return (
-    <Card p="$3" mx="$3">
+    <Card
+      p="$3"
+      mx="$3"
+      style={{
+        backgroundColor: "rgba(255, 255, 255, 0.30)",
+      }}
+    >
       <YStack justify="space-between" px="$3" mb="$2">
         <Button
           theme={seguimientoUbicacion ? "red" : "green"}

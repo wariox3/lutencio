@@ -6,13 +6,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        headerLeft: () => <BtnMenuDrewer />,
-        headerTitle: "",
-        headerStyle: {
-          elevation: 0,
-          shadowOpacity: 0,
-          borderBottomWidth: 0,
-        },
+        headerShown: false,
         tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {
           switch (route.name) {

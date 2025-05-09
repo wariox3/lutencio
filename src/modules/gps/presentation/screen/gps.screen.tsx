@@ -94,8 +94,6 @@ const GpsScreen = () => {
     flatListRef.current?.scrollToIndex({ index: newIndex, animated: true });
   };
 
-  console.log(entregasPendientesOrdenadas[currentIndex])
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <BtnAcciones
