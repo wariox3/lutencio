@@ -38,3 +38,8 @@ export const selectEntregasConNovedad = createSelector(
     entregas.entregas.filter((entrega) => entrega.estado_novedad === true)
     .filter((entrega) => entrega.estado_sincronizado === false)
 );
+
+export const obtenerVisita = ( visitaId: number) => createSelector(
+  [selectEntregas],
+  (entregas) => entregas.entregas.filter(visita => visita.id === visitaId) || [] 
+)

@@ -25,6 +25,7 @@ export default function VisitasLayout() {
       <Stack.Screen name="cargar" />
       <Stack.Screen name="novedad" />
       <Stack.Screen name="pendiente" />
+      <Stack.Screen name="[id]" />
     </Stack>
   );
 }
