@@ -14,16 +14,12 @@ export default function VisitasLayout() {
       }}
     >
       <Stack.Screen
-        name="lista"
+        name="inicio"
         options={{
           title: "",
           headerLeft: () => <BtnMenuDrewer />,
-          headerRight: () => <EntregaOpciones />,
         }}
       />
-      <Stack.Screen name="cargar" />
-      <Stack.Screen name="novedad" />
-      <Stack.Screen name="pendiente" />
     </Stack>
   );
 }

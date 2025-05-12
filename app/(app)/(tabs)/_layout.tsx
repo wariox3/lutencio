@@ -10,7 +10,7 @@ export default function TabLayout() {
         tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {
           switch (route.name) {
-            case "inicio":
+            case "(inicio)":
               return focused ? (
                 <Home size={size} color={"$blue10"} />
               ) : (
@@ -32,9 +32,9 @@ export default function TabLayout() {
         },
       })}
     >
-      <Tabs.Screen name="inicio" />
-      <Tabs.Screen name="(visitas)" options={{ title: "", headerShown: false }} />
-      <Tabs.Screen name="(gps)" options={{ title: "", headerShown: false }} />
+      <Tabs.Screen name="(inicio)" />
+      <Tabs.Screen name="(visitas)"/>
+      <Tabs.Screen name="(gps)"/>
     </Tabs>
   );
 }
