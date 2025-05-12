@@ -147,8 +147,7 @@ const GpsScreen = () => {
 
     flatListRef.current?.scrollToIndex({ index: newIndex, animated: true });
   };
-  const blurhash =
-    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+  const blurhash = "=IQcr5bI^*-:_NM|?bof%M";
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -187,7 +186,7 @@ const GpsScreen = () => {
                       description={`${entregasPendientesOrdenadas[
                         currentIndex
                       ].destinatario.slice(0, 14)}`}
-                      image={require("../../../../../assets/images/marca-mapa.png")}
+                      //image={require("../../../../../assets/images/marca-mapa-azul.png")}
                     />
                   </>
                 ) : null}
