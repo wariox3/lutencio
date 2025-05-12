@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
+import COLORES from "@/src/core/constants/colores";
 
 export default function GpsLayout() {
   return (
@@ -8,7 +9,7 @@ export default function GpsLayout() {
         headerShadowVisible: false,
         title: "",
         headerStyle: {
-          backgroundColor: "#c7eef8", // Azul con 70% de opacidad
+          backgroundColor: COLORES.HEADER_BACKGROUND_COLOR
         },
       }}
     >

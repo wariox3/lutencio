@@ -1,4 +1,5 @@
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
+import COLORES from "@/src/core/constants/colores";
 import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
 import { Stack } from "expo-router";
 
@@ -9,7 +10,7 @@ export default function VisitasLayout() {
         headerShadowVisible: false,
         title: "",
         headerStyle: {
-          backgroundColor: "#c5ecf8", // Azul con 70% de opacidad
+          backgroundColor: COLORES.HEADER_BACKGROUND_COLOR
         },
       }}
     >
