@@ -36,5 +36,5 @@ export default function MainDreawerIndex() {
     }
   };
 
-  return <Redirect href={"/(tabs)/inicio"} />;
+  return <Redirect href={"/(tabs)/(inicio)/inicio"} />;
 }

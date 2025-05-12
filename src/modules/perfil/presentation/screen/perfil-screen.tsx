@@ -1,0 +1,55 @@
+import { View, Text, ScrollView } from "react-native";
+import React from "react";
+import { Button } from "tamagui";
+import { useRouter } from "expo-router";
+import { rutasApp } from "@/constants/rutas";
+import { perfilStyles } from "../../stylesheet/perfil.stylesheet";
+
+
+const perfilScreen = () => {
+
+    const router = useRouter();
+
+  return (
+    <ScrollView style={perfilStyles.container}>
+      <View style={perfilStyles.wrapper}>
+        <View style={perfilStyles.profileSection}>
+          <Text style={perfilStyles.title}>Perfil de Usuario</Text>
+          
+          {/* Aquí puedes añadir la información del perfil del usuario */}
+          <View style={perfilStyles.profileInfo}>
+            <Text style={perfilStyles.label}>Nombre:</Text>
+            <Text style={perfilStyles.value}>Usuario</Text>
+          </View>
+          
+          <View style={perfilStyles.profileInfo}>
+            <Text style={perfilStyles.label}>Email:</Text>
+            <Text style={perfilStyles.value}>usuario@ejemplo.com</Text>
+          </View>
+        </View>
+
+        <View style={perfilStyles.linksSection}>
+          <Text style={perfilStyles.sectionTitle}>Enlaces importantes</Text>
+          
+          <Button
+            theme="blue"
+            onPress={() => router.push(rutasApp.terminos)}
+            style={perfilStyles.button}
+          >
+            Términos de Uso
+          </Button>
+          
+          <Button
+            theme="blue"
+            onPress={() => router.push(rutasApp.privacidad)}
+            style={perfilStyles.button}
+          >
+            Políticas de Privacidad
+          </Button>
+        </View>
+      </View>
+    </ScrollView>
+  )
+}
+
+export default perfilScreen
