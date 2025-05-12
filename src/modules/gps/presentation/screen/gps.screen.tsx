@@ -1,4 +1,4 @@
-import Volver from "@/components/ui/navegacion/volver";
+import { rutasApp } from "@/constants/rutas";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { obtenerEntregasPendientesOrdenadas } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
@@ -8,16 +8,15 @@ import {
 } from "@/src/modules/visita/application/slice/entrega.slice";
 import BtnAcciones from "@/src/shared/components/btn-acciones";
 import { ArrowLeftCircle, ArrowRightCircle } from "@tamagui/lucide-icons";
+import { Image } from "expo-image";
 import * as Location from "expo-location";
 import { useFocusEffect, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Dimensions, FlatList } from "react-native";
-import MapView, { Callout, Marker, Region } from "react-native-maps";
+import { Dimensions, FlatList } from "react-native";
+import MapView, { Marker, Region } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
-import { rutasApp } from "@/constants/rutas";
-import { Image } from "expo-image";
 
 const { width } = Dimensions.get("window");
 
@@ -31,12 +30,66 @@ const GpsScreen = () => {
   const flatListRef = useRef<any>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const dispatch = useAppDispatch();
+  const mapRef = useRef<MapView>(null);
 
   useFocusEffect(
     useCallback(() => {
       gestionEntregas();
     }, [])
   );
+
+  // Modifica tu useEffect para usar esta función
+  useEffect(() => {
+    if (entregasPendientesOrdenadas[currentIndex] && mapRef.current && region) {
+      const delivery = entregasPendientesOrdenadas[currentIndex];
+
+      // Crear array con ambas coordenadas (tu ubicación y el destino)
+      const points = [
+        { latitude: region.latitude, longitude: region.longitude },
+        { latitude: delivery.latitud, longitude: delivery.longitud },
+      ];
+
+      // Calcular la región que contiene ambos puntos
+      const newRegion = getRegionForCoordinates(points);
+
+      if (newRegion) {
+        mapRef.current.animateToRegion(newRegion, 1000);
+      }
+    }
+  }, [entregasPendientesOrdenadas, currentIndex, region]);
+
+  // Agrega esta función utilitaria al inicio de tu componente
+  const getRegionForCoordinates = (
+    points: { latitude: number; longitude: number }[]
+  ) => {
+    if (points.length === 0) {
+      return null;
+    }
+
+    let minX = points[0].latitude;
+    let maxX = points[0].latitude;
+    let minY = points[0].longitude;
+    let maxY = points[0].longitude;
+
+    points.forEach((point) => {
+      minX = Math.min(minX, point.latitude);
+      maxX = Math.max(maxX, point.latitude);
+      minY = Math.min(minY, point.longitude);
+      maxY = Math.max(maxY, point.longitude);
+    });
+
+    const midX = (minX + maxX) / 2;
+    const midY = (minY + maxY) / 2;
+    const deltaX = (maxX - minX) * 1.2; // Añade un 20% de padding
+    const deltaY = (maxY - minY) * 1.2;
+
+    return {
+      latitude: midX,
+      longitude: midY,
+      latitudeDelta: deltaX,
+      longitudeDelta: deltaY,
+    };
+  };
 
   const gestionEntregas = () => {
     if (entregasPendientesOrdenadas.length > 0) {
@@ -114,8 +167,12 @@ const GpsScreen = () => {
                 provider="google"
                 initialRegion={region}
                 showsUserLocation={true}
+                ref={mapRef}
               >
-                <Marker coordinate={region}   image={require('../../../../../assets/images/marca-mapa.png')} />
+                <Marker
+                  coordinate={region}
+                  image={require("../../../../../assets/images/marca-mapa.png")}
+                />
 
                 {entregasPendientesOrdenadas[currentIndex] ? (
                   <>
@@ -130,7 +187,7 @@ const GpsScreen = () => {
                       description={`${entregasPendientesOrdenadas[
                         currentIndex
                       ].destinatario.slice(0, 14)}`}
-                      image={require('../../../../../assets/images/marca-mapa.png')}
+                      image={require("../../../../../assets/images/marca-mapa.png")}
                     />
                   </>
                 ) : null}
