@@ -2,18 +2,19 @@ import { rutasApp } from "@/constants/rutas";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { Entrega } from "@/interface/entrega/entrega";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { Trash2 } from "@tamagui/lucide-icons";
+import { AlertCircle, Trash2 } from "@tamagui/lucide-icons";
 import * as FileSystem from "expo-file-system";
 import { useNavigation, useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Alert,
   FlatList,
   KeyboardAvoidingView,
   SafeAreaView,
 } from "react-native";
-import { shallowEqual } from "react-redux";
 import { Button, Card, H4, Text, View, XStack } from "tamagui";
+import { obtenerEntregasPendientes } from "../../application/slice/entrega.selector";
+import { quitarVisita } from "../../application/slice/entrega.slice";
 
 const VisitaPendienteScreen = () => {
   const navigation = useNavigation();
@@ -21,22 +22,7 @@ const VisitaPendienteScreen = () => {
   const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
   const dispatch = useAppDispatch();
 
-  const arrEntregas = useAppSelector(
-    ({ entregas }) =>
-      entregas.entregas.filter(
-        (entrega) =>
-          entrega.estado_entregado === true &&
-          entrega.estado_sincronizado === false
-      ) || [],
-    shallowEqual
-  );
-
-  useEffect(() => {
-    // Aquí puedes realizar lógica de inicialización si es necesario.
-    navigation.setOptions({
-      headerTitle: "",
-    });
-  }, [navigation]);
+  const arrEntregas = useAppSelector(obtenerEntregasPendientes);
 
   const navegarEntregaPendientes = (entregaId: number) => {
     router.navigate({
@@ -44,6 +30,13 @@ const VisitaPendienteScreen = () => {
       params: { id: entregaId },
     });
   };
+
+  const navegarSolucionNovedad = (visitaId: number) => {
+    router.push({
+      pathname: '/modal-novedad-solucion',
+      params: { id: visitaId },
+    })
+  }
 
   const confirmarRetirarVisita = async (visita: Entrega) => {
     Alert.alert(
@@ -103,6 +96,9 @@ const VisitaPendienteScreen = () => {
                   {item.estado_error ? (
                     <Text color={"$red10"}>Error: {item.mensaje_error}</Text>
                   ) : null}
+                  {item.estado_novedad ? (
+                    <Text color={"$yellow10"}>Presenta novedad</Text>
+                  ) : null}
                 </View>
                 {item.estado_error ? (
                   <Button
@@ -113,6 +109,16 @@ const VisitaPendienteScreen = () => {
                     theme={"red"}
                   />
                 ) : null}
+                {item.estado_novedad ? (
+                  <Button
+                    size="$3"
+                    circular
+                    icon={<AlertCircle size="$1.5" color={"$yellow10"} />}
+                    onPress={() => navegarSolucionNovedad(item.id)}
+                    theme={"yellow"}
+                  />
+                ) : 
+                null}
               </XStack>
             </Card>
           )}

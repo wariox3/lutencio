@@ -26,6 +26,7 @@ export interface Entrega {
   mensaje_error: string;
   novedad_tipo: string;
   novedad_descripcion: string;
+  solucion_novedad: string;
   latitud: number;
   longitud: number;
   orden: number;

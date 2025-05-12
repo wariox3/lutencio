@@ -26,6 +26,14 @@ export default function VisitasLayout() {
       <Stack.Screen name="novedad" />
       <Stack.Screen name="pendiente" />
       <Stack.Screen name="[id]" />
+      <Stack.Screen
+        name="modal-novedad-solucion"
+        options={{
+          presentation: 'transparentModal',
+          animation: 'fade',
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

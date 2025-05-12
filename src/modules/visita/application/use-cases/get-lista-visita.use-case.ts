@@ -31,6 +31,7 @@ export class GetListaVisitaUseCase {
       estado_novedad: false,
       estado_error: false,
       mensaje_error: "",
+      solucion_novedad: ""
     }));
   }
 }

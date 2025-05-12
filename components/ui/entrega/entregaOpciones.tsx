@@ -501,7 +501,7 @@ const SheetContents = memo(({ setOpen }: any) => {
                     subTitle={
                       "Cantidad con novedades: " + arrEntregasConNovedad.length
                     }
-                    onPress={() => gestionGuiasNovedades()}
+                    onPress={() => navegarEntregaPendietes()}
                   />
                 ) : null}
               </>

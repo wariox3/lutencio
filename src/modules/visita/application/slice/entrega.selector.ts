@@ -36,10 +36,19 @@ export const selectEntregasConNovedad = createSelector(
   [selectEntregas],
   (entregas) =>
     entregas.entregas.filter((entrega) => entrega.estado_novedad === true)
-    .filter((entrega) => entrega.estado_sincronizado === false)
 );
 
 export const obtenerVisita = ( visitaId: number) => createSelector(
   [selectEntregas],
   (entregas) => entregas.entregas.filter(visita => visita.id === visitaId) || [] 
+)
+
+export const obtenerEntregasPendientes = createSelector(
+  [selectEntregas],
+  (entregas) => entregas.entregas.filter(
+    (entrega) =>
+      entrega.estado_entregado === true &&
+      entrega.estado_sincronizado === false ||
+      entrega.estado_novedad === true
+  ) 
 )

@@ -1,16 +1,16 @@
 import APIS from "@/constants/endpoint";
-import { rutasApp } from "@/constants/rutas";
 import {
   useEliminarEnGaleria,
   useGuardarEnGaleria,
 } from "@/hooks/useMediaLibrary";
 import { novedadTipo } from "@/interface/entrega/novedadTipo";
+import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Network from "expo-network";
-import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
 import { obtenerEntregasSeleccionadas } from "../slice/entrega.selector";
@@ -20,7 +20,6 @@ import {
   cambiarEstadoNovedad,
   cambiarEstadoSinconizado,
 } from "../slice/entrega.slice";
-import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -37,7 +36,7 @@ type NovedadFormType = {
 export default function useVisitaNovedadViewModel() {
   const { guardarArchivo } = useGuardarEnGaleria();
   const { eliminarArchivo } = useEliminarEnGaleria();
-  const { control, handleSubmit, reset, setValue } = useForm<NovedadFormType>({
+  const { control, handleSubmit, setValue } = useForm<NovedadFormType>({
     defaultValues: valoresFormulario,
   });
   const visitasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);

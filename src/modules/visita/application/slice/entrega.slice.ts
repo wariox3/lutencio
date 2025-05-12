@@ -125,6 +125,19 @@ const entregasSlice = createSlice({
         entrega.novedad_descripcion = novedad_descripcion;
       }
     },
+    actualizarSolucionNovedad: (
+      state,
+      action: PayloadAction<{
+        entregaId: number;
+        solucion_novedad: string;
+      }>
+    ) => {
+      const { entregaId, solucion_novedad } = action.payload;
+      const entrega = state.entregas.find((e) => e.id === entregaId);
+      if (entrega) {
+        entrega.solucion_novedad = solucion_novedad;
+      }
+    },
     limpiarEntregaSeleccionada: (state) => {
       state.entregasSeleccionadas = [];
     },
