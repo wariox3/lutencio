@@ -153,7 +153,7 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
       autoClear={true}
       descriptionText={"Ingresa firma"}
       clearText="Limpiar"
-      confirmText="Acceptar"
+      confirmText="Aceptar"
       style={{ height: height }}
     />
       </View>
