@@ -20,10 +20,11 @@ export default function useVisitaNovedadSolucionViewModel() {
   const { control, handleSubmit, setValue } = useForm<NovedadSolucionFormType>({
     defaultValues: valoresFormulario,
   });
-  const { id } = useLocalSearchParams();
+  const { id, visita_id } = useLocalSearchParams();
   const dispatch = useAppDispatch();
 
   const novedad_id = Array.isArray(id) ? id[0] : id;
+  const vistaId = Array.isArray(visita_id) ? visita_id[0] : visita_id;
 
   const estadoInicial: {
     mostrarAnimacionCargando: boolean;
@@ -50,7 +51,13 @@ export default function useVisitaNovedadSolucionViewModel() {
   const NovedadSolucionOnline = async (data: NovedadSolucionFormType) => {
     const subdominio = await AsyncStorage.getItem("subdominio");
     if (subdominio) {
-      dispatch(visitaNovedadSolucionThunk({id: parseInt(novedad_id), solucion: data.solucion}))
+      dispatch(
+        visitaNovedadSolucionThunk({
+          id: parseInt(novedad_id),
+          solucion: data.solucion,
+          visita: parseInt(vistaId),
+        })
+      );
     }
   };
 

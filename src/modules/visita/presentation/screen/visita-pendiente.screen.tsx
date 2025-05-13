@@ -31,10 +31,10 @@ const VisitaPendienteScreen = () => {
     });
   };
 
-  const navegarSolucionNovedad = (novedad_id: number) => {
+  const navegarNovedadSolucion = (visita: Entrega) => {
     router.push({
       pathname: '/modal-novedad-solucion',
-      params: { id: novedad_id },
+      params: { id: visita.novedad_id, visita_id: visita.id },
     })
   }
 
@@ -115,7 +115,7 @@ const VisitaPendienteScreen = () => {
                     size="$3"
                     circular
                     icon={<AlertCircle size="$1.5" color={"$yellow10"} />}
-                    onPress={() => navegarSolucionNovedad(item.novedad_id)}
+                    onPress={() => navegarNovedadSolucion(item)}
                     theme={"yellow"}
                   />
                 ) : 

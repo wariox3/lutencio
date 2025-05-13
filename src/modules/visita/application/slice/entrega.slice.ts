@@ -190,14 +190,10 @@ const entregasSlice = createSlice({
       cambiarEstadoSinconizado(payload.visita);
     });
     builder.addCase(visitaNovedadSolucionThunk.fulfilled, (state, { payload }) => {
-      console.log(payload);
-      
-      // const entrega = state.entregas.find((e) => e.id === payload.visita);
-      // if (entrega) {
-      //   entrega.novedad_id = payload.id;
-      // }
-      // cambiarEstadoNovedad(payload.visita);
-      // cambiarEstadoSinconizado(payload.visita);
+      const entrega = state.entregas.find((e) => e.id === payload.visita);
+       if (entrega) {
+         entrega.estado_novedad_solucion = !entrega.estado_novedad_solucion;
+      }
     });
   },
 });

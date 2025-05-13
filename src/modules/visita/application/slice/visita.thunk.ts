@@ -63,14 +63,14 @@ export const visitaNovedadThunk = createAsyncThunk(
 
 export const visitaNovedadSolucionThunk = createAsyncThunk(
   "visita/guardar-novedad-solucion",
-  async (payload: { id: number; solucion: string }, { rejectWithValue }) => {
+  async (payload: { id: number; solucion: string, visita: number }, { rejectWithValue }) => {
     try {
       const respuestaVisitaSolucionNovedad =
         await new SetNovedadSolucionVisitaUseCase().setNovedadSolucion(
           payload.id,
           payload.solucion
         );
-      return { ...respuestaVisitaSolucionNovedad };
+      return { ...respuestaVisitaSolucionNovedad, visita: payload.visita };
     } catch (error: any) {
       return rejectWithValue(error);
     }

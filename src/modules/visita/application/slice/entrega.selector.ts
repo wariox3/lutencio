@@ -49,6 +49,7 @@ export const obtenerEntregasPendientes = createSelector(
     (entrega) =>
       entrega.estado_entregado === true &&
       entrega.estado_sincronizado === false ||
-      entrega.estado_novedad === true
+      entrega.estado_novedad === true &&
+      entrega.estado_novedad_solucion == false
   ) 
 )
