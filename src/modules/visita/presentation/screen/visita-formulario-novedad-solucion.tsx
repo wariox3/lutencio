@@ -1,13 +1,13 @@
 import { TextAreaInput } from "@/components/ui/form/inputs/TextAreaInput";
 import ModalAlert from "@/src/shared/components/modal-alert";
-import useVisitaSolucionNovedadViewModel from "../../application/view-model/use-visita-solucion-novedad.view-model";
 import { Button, Spinner, View } from "tamagui";
 import React from "react";
 import { Validaciones } from "@/constants/mensajes";
+import useVisitaNovedadSolucionViewModel from "../../application/view-model/use-visita-novedad-solucion.view-model";
 
-export default function visitaFormularioSolucionNovedad() {
+export default function visitaFormularionNovedadSolucion() {
   const { control, state, handleSubmit, guardarSolucion } =
-    useVisitaSolucionNovedadViewModel();
+  useVisitaNovedadSolucionViewModel();
 
   return (
     <ModalAlert titulo="Solucionar novedad">

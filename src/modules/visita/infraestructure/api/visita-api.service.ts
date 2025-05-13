@@ -48,7 +48,22 @@ export class VisitaApiRepository implements VisitaRepository {
       visita,
       descripcion,
       novedad_tipo,
-      subdominio,
+      subdominio
     );
   }
+
+  async setNovedadSolucion(
+    id: number,
+    solucion: string,
+  ): Promise<any> {
+    const subdominio = (await storageService.getItem(
+      STORAGE_KEYS.subdominio
+    )) as string;
+    return this.ruteoApiRepository.postNovedadSolucion(
+      id,
+      solucion,
+      subdominio
+    );
+  }
+
 }

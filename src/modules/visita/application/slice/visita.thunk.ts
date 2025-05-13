@@ -3,7 +3,7 @@ import { VerticalApiRepository } from "../../infraestructure/api/vertical-api.se
 import storageService from "@/src/core/services/storage.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
-import { GetListaVisitaUseCase, SetNovedadVisitaUseCase } from "../use-cases";
+import { GetListaVisitaUseCase, SetNovedadSolucionVisitaUseCase, SetNovedadVisitaUseCase } from "../use-cases";
 
 export const cargarOrdenThunk = createAsyncThunk(
   "visita/cargar-orden",
@@ -47,14 +47,31 @@ export const visitaNovedadThunk = createAsyncThunk(
     payload: { visita: number; descripcion: string; novedad_tipo: string },
     { rejectWithValue }
   ) => {
-    try {      
-      const respuestaVistaNovedad = await new SetNovedadVisitaUseCase().setNovedad(
-        payload.visita,
-        payload.descripcion,
-        payload.novedad_tipo
-      );      
-      return {...respuestaVistaNovedad, visita: payload.visita}
-    } catch (error: any) {      
+    try {
+      const respuestaVistaNovedad =
+        await new SetNovedadVisitaUseCase().setNovedad(
+          payload.visita,
+          payload.descripcion,
+          payload.novedad_tipo
+        );
+      return { ...respuestaVistaNovedad, visita: payload.visita };
+    } catch (error: any) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const visitaNovedadSolucionThunk = createAsyncThunk(
+  "visita/guardar-novedad-solucion",
+  async (payload: { id: number; solucion: string }, { rejectWithValue }) => {
+    try {
+      const respuestaVisitaSolucionNovedad =
+        await new SetNovedadSolucionVisitaUseCase().setNovedadSolucion(
+          payload.id,
+          payload.solucion
+        );
+      return { ...respuestaVisitaSolucionNovedad };
+    } catch (error: any) {
       return rejectWithValue(error);
     }
   }

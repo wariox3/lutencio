@@ -1,6 +1,6 @@
 import { Entrega } from "@/interface/entrega/entrega";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { cargarOrdenThunk, visitaNovedadThunk } from "./visita.thunk";
+import { cargarOrdenThunk, visitaNovedadSolucionThunk, visitaNovedadThunk } from "./visita.thunk";
 
 interface EntregasState {
   entregas: Entrega[];
@@ -188,6 +188,16 @@ const entregasSlice = createSlice({
       }
       cambiarEstadoNovedad(payload.visita);
       cambiarEstadoSinconizado(payload.visita);
+    });
+    builder.addCase(visitaNovedadSolucionThunk.fulfilled, (state, { payload }) => {
+      console.log(payload);
+      
+      // const entrega = state.entregas.find((e) => e.id === payload.visita);
+      // if (entrega) {
+      //   entrega.novedad_id = payload.id;
+      // }
+      // cambiarEstadoNovedad(payload.visita);
+      // cambiarEstadoSinconizado(payload.visita);
     });
   },
 });

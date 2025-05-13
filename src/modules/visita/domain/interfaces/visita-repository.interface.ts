@@ -12,4 +12,8 @@ export interface VisitaRepository {
     visita: number, descripcion: string, novedad_tipo: string
   ):Promise<any>
 
+  setNovedadSolucion(
+    id:number, solucion:string
+  ): Promise<any>
+
 }

@@ -26,4 +26,15 @@ export class RuteoApiRepository implements RuteoRepository {
       }
     )
   }
+
+  async postNovedadSolucion(id: number, solucion: string, subdominio: string) {
+    return apiService.post<any>(
+      APIS.ruteo.novedadSolucionar, {
+        id,
+        solucion,
+      }, {
+        "X-Schema-Name": subdominio,
+      }
+    )
+  }
 }

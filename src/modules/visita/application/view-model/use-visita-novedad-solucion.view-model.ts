@@ -1,30 +1,29 @@
 import APIS from "@/constants/endpoint";
 import { useAppDispatch } from "@/src/application/store/hooks";
-import { STORAGE_KEYS } from "@/src/core/constants";
 import networkService from "@/src/core/services/network.service";
-import storageService from "@/src/core/services/storage.service";
 import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Alert } from "react-native";
-import { visitaNovedadThunk } from "../slice/visita.thunk";
+import { visitaNovedadSolucionThunk } from "../slice/visita.thunk";
 
-const valoresFormulario: SolucionNovedadFormType = {
+const valoresFormulario: NovedadSolucionFormType = {
   solucion: "",
 };
 
-type SolucionNovedadFormType = {
+type NovedadSolucionFormType = {
   solucion: string;
 };
 
-export default function useVisitaSolucionNovedadViewModel() {
-  const { control, handleSubmit, setValue } = useForm<SolucionNovedadFormType>({
+export default function useVisitaNovedadSolucionViewModel() {
+  const { control, handleSubmit, setValue } = useForm<NovedadSolucionFormType>({
     defaultValues: valoresFormulario,
   });
   const { id } = useLocalSearchParams();
   const dispatch = useAppDispatch();
+
+  const novedad_id = Array.isArray(id) ? id[0] : id;
 
   const estadoInicial: {
     mostrarAnimacionCargando: boolean;
@@ -38,9 +37,9 @@ export default function useVisitaSolucionNovedadViewModel() {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
 
-  const solucionNovedadOffline = async (data: SolucionNovedadFormType) => {
+  const NovedadSolucionOffline = async (data: NovedadSolucionFormType) => {
     // dispatch(
-    //   actualizarSolucionNovedad({
+    //   actualizarNovedadSolucion({
     //     visitaId: id,
     //     solucion_novedad: data.solucion,
     //   })
@@ -48,33 +47,23 @@ export default function useVisitaSolucionNovedadViewModel() {
     // Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
   };
 
-  const solucionNovedadOnline = async (data: SolucionNovedadFormType) => {
+  const NovedadSolucionOnline = async (data: NovedadSolucionFormType) => {
     const subdominio = await AsyncStorage.getItem("subdominio");
     if (subdominio) {
-      await consultarApi<any>(
-        APIS.ruteo.novedadSolucionar,
-        {
-          id,
-          solucion: data.solucion,
-        },
-        {
-          requiereToken: true,
-          subdominio: subdominio as string,
-        }
-      );
+      dispatch(visitaNovedadSolucionThunk({id: parseInt(novedad_id), solucion: data.solucion}))
     }
   };
 
-  const guardarSolucion = async (data: SolucionNovedadFormType) => {
+  const guardarSolucion = async (data: NovedadSolucionFormType) => {
     try {
       const hayConexion = await networkService.validarEstadoRed();
       actualizarState({ mostrarAnimacionCargando: true });
       if (!hayConexion) {
-        await solucionNovedadOffline(data);
+        await NovedadSolucionOffline(data);
         return;
       }
 
-      await solucionNovedadOnline(data);
+      await NovedadSolucionOnline(data);
     } catch (error) {
       actualizarState({ mostrarAnimacionCargando: false });
     } finally {
