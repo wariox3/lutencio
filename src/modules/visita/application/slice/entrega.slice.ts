@@ -100,6 +100,12 @@ const entregasSlice = createSlice({
         entrega.estado_error = !entrega.estado_error;
       }
     },
+    cambiarEstadoNovedadSolucion: (state, action: PayloadAction<number>) => {
+      const entrega = state.entregas.find((e) => e.id === action.payload);
+      if (entrega) {
+        entrega.estado_novedad_solucion = !entrega.estado_novedad_solucion;
+      }
+    },
     actualizarNovedadId: (
       state,
       action: PayloadAction<{ visita: number; novedad_id: number }>
@@ -136,16 +142,18 @@ const entregasSlice = createSlice({
         entrega.novedad_descripcion = novedad_descripcion;
       }
     },
-    actualizarSolucionNovedad: (
+    actualizarNovedadSolucion: (
       state,
       action: PayloadAction<{
-        entregaId: number;
+        entrega_id: number;
+        novedad_id: number;
         solucion_novedad: string;
       }>
     ) => {
-      const { entregaId, solucion_novedad } = action.payload;
-      const entrega = state.entregas.find((e) => e.id === entregaId);
+      const { entrega_id, novedad_id, solucion_novedad } = action.payload;
+      const entrega = state.entregas.find((e) => e.id === entrega_id);
       if (entrega) {
+        entrega.novedad_id = novedad_id;
         entrega.solucion_novedad = solucion_novedad;
       }
     },
@@ -216,5 +224,7 @@ export const {
   actualizarNovedad,
   actualizarNovedadId,
   cambiarEstadoSeleccionadoATodas,
+  actualizarNovedadSolucion,
+  cambiarEstadoNovedadSolucion
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

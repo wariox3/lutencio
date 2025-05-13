@@ -7,6 +7,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { visitaNovedadSolucionThunk } from "../slice/visita.thunk";
+import { Alert } from "react-native";
+import { actualizarNovedadSolucion, cambiarEstadoNovedadSolucion } from "../slice/entrega.slice";
 
 const valoresFormulario: NovedadSolucionFormType = {
   solucion: "",
@@ -39,13 +41,16 @@ export default function useVisitaNovedadSolucionViewModel() {
   };
 
   const NovedadSolucionOffline = async (data: NovedadSolucionFormType) => {
-    // dispatch(
-    //   actualizarNovedadSolucion({
-    //     visitaId: id,
-    //     solucion_novedad: data.solucion,
-    //   })
-    // );
-    // Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
+    dispatch(
+      actualizarNovedadSolucion(
+        ({
+          novedad_id: parseInt(novedad_id),
+          entrega_id:parseInt(vistaId),
+         solucion_novedad: data.solucion,
+       })
+    ));
+    dispatch(cambiarEstadoNovedadSolucion(parseInt(vistaId)))
+    Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
   };
 
   const NovedadSolucionOnline = async (data: NovedadSolucionFormType) => {
