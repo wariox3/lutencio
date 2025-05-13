@@ -25,6 +25,7 @@ export interface Entrega {
   estado_error: boolean;
   mensaje_error: string;
   novedad_tipo: string;
+  novedad_id: number;
   novedad_descripcion: string;
   solucion_novedad: string;
   latitud: number;
