@@ -7,4 +7,9 @@ export interface VisitaRepository {
     estadoEntregado: boolean,
     subdominio: string
   ): Promise<ApiResponse<Entrega[]>>;
+
+  setNovedad(
+    visita: number, descripcion: string, novedad_tipo: string
+  ):Promise<any>
+
 }

@@ -1,9 +1,15 @@
 import { GeneralApiRepository } from "@/src/core/api/repositories/general-api.service";
 import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
 import { Entrega } from "@/interface/entrega/entrega";
+import { RuteoApiRepository } from "@/src/core/api/repositories/ruteo-api.service";
+import storageService from "@/src/core/services/storage.service";
+import { STORAGE_KEYS } from "@/src/core/constants";
 
 export class VisitaApiRepository implements VisitaRepository {
-  constructor(private generalApiService = new GeneralApiRepository()) {}
+  constructor(
+    private generalApiService = new GeneralApiRepository(),
+    private ruteoApiRepository = new RuteoApiRepository()
+  ) {}
 
   async getLista(
     despachoId: number,
@@ -27,6 +33,22 @@ export class VisitaApiRepository implements VisitaRepository {
         ],
       },
       subdominio
+    );
+  }
+
+  async setNovedad(
+    visita: number,
+    descripcion: string,
+    novedad_tipo: string
+  ): Promise<any> {
+    const subdominio = (await storageService.getItem(
+      STORAGE_KEYS.subdominio
+    )) as string;
+    return this.ruteoApiRepository.postNovedadTipo(
+      visita,
+      descripcion,
+      novedad_tipo,
+      subdominio,
     );
   }
 }

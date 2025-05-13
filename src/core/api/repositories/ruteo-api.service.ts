@@ -14,4 +14,16 @@ export class RuteoApiRepository implements RuteoRepository {
       }
     );
   }
+
+  async postNovedadTipo(visita: number, descripcion: string, novedad_tipo: string, subdominio: string) {
+    return apiService.post<any>(
+      APIS.ruteo.novedad, {
+        visita,
+        descripcion,
+        novedad_tipo,
+      }, {
+        "X-Schema-Name": subdominio,
+      }
+    )
+  }
 }

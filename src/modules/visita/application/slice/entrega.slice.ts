@@ -1,6 +1,6 @@
 import { Entrega } from "@/interface/entrega/entrega";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { cargarOrdenThunk } from "./visita.thunk";
+import { cargarOrdenThunk, visitaNovedadThunk } from "./visita.thunk";
 
 interface EntregasState {
   entregas: Entrega[];
@@ -100,6 +100,12 @@ const entregasSlice = createSlice({
         entrega.estado_error = !entrega.estado_error;
       }
     },
+    actualizarNovedadId: (state, action: PayloadAction<{visita: number, novedad_id: number}>) => {
+      const entrega = state.entregas.find((e) => e.id === action.payload.visita);
+      if (entrega) {
+        entrega.novedad_id = action.payload.novedad_id;
+      }
+    },
     actualizarMensajeError: (
       state,
       action: PayloadAction<{ entregaId: number; mensaje: string }>
@@ -170,6 +176,15 @@ const entregasSlice = createSlice({
     builder.addCase(cargarOrdenThunk.rejected, (state) => {
       state.loading = false;
     });
+    builder.addCase(visitaNovedadThunk.fulfilled, (state, { payload }) => {      
+
+      const entrega = state.entregas.find((e) => e.id === payload.visita);
+      if(entrega){
+        entrega.novedad_id = payload.id
+      }
+      cambiarEstadoNovedad(payload.visita)
+      cambiarEstadoSinconizado(payload.visita)
+    });
   },
 });
 
@@ -189,6 +204,7 @@ export const {
   actualizarMensajeError,
   cambiarEstadoNovedad,
   actualizarNovedad,
+  actualizarNovedadId,
   cambiarEstadoSeleccionadoATodas,
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

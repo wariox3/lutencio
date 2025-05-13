@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { VerticalApiRepository } from "../../infraestructure/api/vertical-api.service";
-import { GetListaVisitaUseCase } from "../use-cases/get-lista-visita.use-case";
 import storageService from "@/src/core/services/storage.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
+import { GetListaVisitaUseCase, SetNovedadVisitaUseCase } from "../use-cases";
 
 export const cargarOrdenThunk = createAsyncThunk(
   "visita/cargar-orden",
@@ -36,6 +36,25 @@ export const cargarOrdenThunk = createAsyncThunk(
 
       return [];
     } catch (error: any) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const visitaNovedadThunk = createAsyncThunk(
+  "visita/guardar-novedad",
+  async (
+    payload: { visita: number; descripcion: string; novedad_tipo: string },
+    { rejectWithValue }
+  ) => {
+    try {      
+      const respuestaVistaNovedad = await new SetNovedadVisitaUseCase().setNovedad(
+        payload.visita,
+        payload.descripcion,
+        payload.novedad_tipo
+      );
+      return {...respuestaVistaNovedad, visita: payload.visita}
+    } catch (error: any) {      
       return rejectWithValue(error);
     }
   }

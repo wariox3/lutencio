@@ -20,6 +20,7 @@ import {
   cambiarEstadoNovedad,
   cambiarEstadoSinconizado,
 } from "../slice/entrega.slice";
+import { visitaNovedadThunk } from "../slice/visita.thunk";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -139,20 +140,10 @@ export default function useVisitaNovedadViewModel() {
     cambiarEntregaEstadoNovedad: () => void,
   ) => {
     await Promise.all(
-      visitasSeleccionadas.map(async (visita: number) => {
-        const subdominio = await AsyncStorage.getItem("subdominio");
-        await consultarApi<any>(
-          APIS.ruteo.novedad,
-          {
-            visita,
-            descripcion: data.descripcion,
-            novedad_tipo: data.novedad_tipo,
-          },
-          {
-            requiereToken: true,
-            subdominio: subdominio!,
-          }
-        );
+      visitasSeleccionadas.map(async (visita: number) => {        
+        dispatch(visitaNovedadThunk({
+          visita, descripcion: data.descripcion, novedad_tipo: data.novedad_tipo
+        }))
       })
     );
 

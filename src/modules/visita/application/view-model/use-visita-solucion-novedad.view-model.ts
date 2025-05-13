@@ -9,6 +9,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
+import { visitaNovedadThunk } from "../slice/visita.thunk";
 
 const valoresFormulario: SolucionNovedadFormType = {
   solucion: "",
@@ -38,14 +39,13 @@ export default function useVisitaSolucionNovedadViewModel() {
   };
 
   const solucionNovedadOffline = async (data: SolucionNovedadFormType) => {
-    dispatch(
-      actualizarSolucionNovedad({
-        visitaId: id,
-        solucion_novedad: data.solucion,
-      })
-    );
-
-    Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
+    // dispatch(
+    //   actualizarSolucionNovedad({
+    //     visitaId: id,
+    //     solucion_novedad: data.solucion,
+    //   })
+    // );
+    // Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
   };
 
   const solucionNovedadOnline = async (data: SolucionNovedadFormType) => {

@@ -23,7 +23,7 @@ const VisitaPendienteScreen = () => {
   const dispatch = useAppDispatch();
 
   const arrEntregas = useAppSelector(obtenerEntregasPendientes);
-
+  
   const navegarEntregaPendientes = (entregaId: number) => {
     router.navigate({
       pathname: rutasApp.vistaPendienteDetalle,
