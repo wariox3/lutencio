@@ -100,8 +100,13 @@ const entregasSlice = createSlice({
         entrega.estado_error = !entrega.estado_error;
       }
     },
-    actualizarNovedadId: (state, action: PayloadAction<{visita: number, novedad_id: number}>) => {
-      const entrega = state.entregas.find((e) => e.id === action.payload.visita);
+    actualizarNovedadId: (
+      state,
+      action: PayloadAction<{ visita: number; novedad_id: number }>
+    ) => {
+      const entrega = state.entregas.find(
+        (e) => e.id === action.payload.visita
+      );
       if (entrega) {
         entrega.novedad_id = action.payload.novedad_id;
       }
@@ -176,14 +181,13 @@ const entregasSlice = createSlice({
     builder.addCase(cargarOrdenThunk.rejected, (state) => {
       state.loading = false;
     });
-    builder.addCase(visitaNovedadThunk.fulfilled, (state, { payload }) => {      
-
+    builder.addCase(visitaNovedadThunk.fulfilled, (state, { payload }) => {
       const entrega = state.entregas.find((e) => e.id === payload.visita);
-      if(entrega){
-        entrega.novedad_id = payload.id
+      if (entrega) {
+        entrega.novedad_id = payload.id;
       }
-      cambiarEstadoNovedad(payload.visita)
-      cambiarEstadoSinconizado(payload.visita)
+      cambiarEstadoNovedad(payload.visita);
+      cambiarEstadoSinconizado(payload.visita);
     });
   },
 });

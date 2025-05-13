@@ -55,7 +55,7 @@ export default function useVisitaSolucionNovedadViewModel() {
         APIS.ruteo.novedadSolucionar,
         {
           id,
-          solicion: data.solucion,
+          solucion: data.solucion,
         },
         {
           requiereToken: true,

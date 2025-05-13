@@ -52,7 +52,7 @@ export const visitaNovedadThunk = createAsyncThunk(
         payload.visita,
         payload.descripcion,
         payload.novedad_tipo
-      );
+      );      
       return {...respuestaVistaNovedad, visita: payload.visita}
     } catch (error: any) {      
       return rejectWithValue(error);

@@ -31,10 +31,10 @@ const VisitaPendienteScreen = () => {
     });
   };
 
-  const navegarSolucionNovedad = (visitaId: number) => {
+  const navegarSolucionNovedad = (novedad_id: number) => {
     router.push({
       pathname: '/modal-novedad-solucion',
-      params: { id: visitaId },
+      params: { id: novedad_id },
     })
   }
 
@@ -92,8 +92,9 @@ const VisitaPendienteScreen = () => {
             >
               <XStack justify={"space-between"} gap={"$2"}>
                 <View>
-                  <Text>Id: {item.id}</Text>
-                  {item.estado_error ? (
+                <Text>Id: {item.id}</Text>
+                <Text>novedad_id: {item.novedad_id}</Text>
+                {item.estado_error ? (
                     <Text color={"$red10"}>Error: {item.mensaje_error}</Text>
                   ) : null}
                   {item.estado_novedad ? (
@@ -114,7 +115,7 @@ const VisitaPendienteScreen = () => {
                     size="$3"
                     circular
                     icon={<AlertCircle size="$1.5" color={"$yellow10"} />}
-                    onPress={() => navegarSolucionNovedad(item.id)}
+                    onPress={() => navegarSolucionNovedad(item.novedad_id)}
                     theme={"yellow"}
                   />
                 ) : 
