@@ -25,9 +25,8 @@ export default function VisitaListaScreen() {
     return <EntregaSinPermisoLocalizacion></EntregaSinPermisoLocalizacion>;
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ContenedorImagenBackground source={require("../../../../../assets/images/fondo-app-sin-logo.png")}>
-      <BtnAcciones
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        <BtnAcciones
           visualizarCantidadSeleccionada={entregasSeleccionadas.length > 0}
           cantidadSeleccionada={entregasSeleccionadas.length}
           rutaEntregar={rutasApp.visitaEntregar}
@@ -42,7 +41,7 @@ export default function VisitaListaScreen() {
               mx="$2"
               mt={"$2"}
               onPress={() => gestionEntrega(item.id)}
-              bg={item.seleccionado ? "#f89e6d" : "rgba(255, 255, 255, 0.30)"}
+              bg={item.seleccionado ? "rgba(248,158,109, 0.30)" : "rgba(255, 255, 255, 0.30)"}
             >
               <Text>ID: {item.id}</Text>
               <Text>Destinatario: {item.destinatario}</Text>
@@ -62,7 +61,6 @@ export default function VisitaListaScreen() {
             />
           }
         />
-      </ContenedorImagenBackground>
     </SafeAreaView>
   );
 }
