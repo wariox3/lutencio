@@ -41,7 +41,7 @@ export default function VisitaListaScreen() {
               mx="$2"
               mt={"$2"}
               onPress={() => gestionEntrega(item.id)}
-              bg={item.seleccionado ? "rgba(248,158,109, 0.30)" : "rgba(255, 255, 255, 0.30)"}
+              bg={item.seleccionado ? "rgba(248,158,109, 0.30)" : "rgba(200, 195, 195, 0.30)"}
             >
               <Text>ID: {item.id}</Text>
               <Text>Destinatario: {item.destinatario}</Text>
