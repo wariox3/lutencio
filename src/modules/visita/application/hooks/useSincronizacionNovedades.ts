@@ -16,15 +16,7 @@ export const useSincronizacionNovedades = () => {
     const subdominio = await AsyncStorage.getItem("subdominio");
     if (!subdominio) return;
 
-    if (entregasConNovedad.length > 0) {
-      Alert.alert(
-        'Sincronizando novedades',
-        `Se encontraron ${entregasConNovedad.length} novedades para sincronizar`
-      );
-    }
-
     for (const novedad of entregasConNovedad) {
-      console.log('Procesando novedad:', { novedad });
       await NovedadService.sincronizarNovedad(novedad, subdominio);
     }
   }, [entregasConNovedad, estaEnLinea]);

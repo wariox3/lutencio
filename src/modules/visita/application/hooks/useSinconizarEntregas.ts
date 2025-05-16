@@ -15,22 +15,13 @@ export const useSincronizacionEntregas = () => {
 
     const subdominio = await AsyncStorage.getItem("subdominio");
     if (!subdominio) return;
+    console.log(entregasPendientes);
+    
 
-    if(entregasPendientes.length > 0){
-      Alert.alert(
-        'Sincronizando novedades',
-        `Se encontraron ${entregasPendientes.length} entregas  para sincronizar`
-      );
+    for (const entrega of entregasPendientes) {
+      await PenditesService.sincronizarPenditentes(entrega, subdominio);
     }
-
-        for (const entrega of entregasPendientes) {
-          await PenditesService.sincronizarPenditentes(entrega, subdominio);
-        }
-
-  }, [
-    entregasPendientes,
-    estaEnLinea,
-  ]);
+  }, [entregasPendientes, estaEnLinea]);
 
   useEffect(() => {
     const inicializar = async () => {
