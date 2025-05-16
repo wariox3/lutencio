@@ -21,6 +21,7 @@ import {
   seleccionarEntrega,
 } from "../slice/entrega.slice";
 import { cargarOrdenThunk } from "../slice/visita.thunk";
+import { useSincronizacionEntregas } from "../hooks/useSinconizarEntregas";
 
 export default function useVisitaListaViewModel() {
   const navigation = useNavigation();
@@ -35,6 +36,7 @@ export default function useVisitaListaViewModel() {
   );
   const theme = useTheme();
   useSincronizacionNovedades();
+  useSincronizacionEntregas();
 
   useEffect(() => {
     async function getCurrentLocation() {
