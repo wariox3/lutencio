@@ -42,10 +42,6 @@ class ApiService {
   }
 
   private setupInterceptors() {
-    this.instance.interceptors.request.use(dominioInterceptor, (error) =>
-      Promise.reject(error)
-    );
-
     // Interceptor de solicitud
     this.instance.interceptors.request.use(
       async (config) => {
@@ -58,11 +54,15 @@ class ApiService {
       (error) => Promise.reject(error)
     );
 
+    this.instance.interceptors.request.use(dominioInterceptor, (error) =>
+      Promise.reject(error)
+    );
+
     this.instance.interceptors.request.use(subdominioInterceptor, (error) =>
       Promise.reject(error)
     );
 
-    // Interceptor para manejar errores de respuesta
+    //Interceptor para manejar errores de respuesta
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => response,
       (error: AxiosError) => {

@@ -1,10 +1,23 @@
-import { InternalAxiosRequestConfig } from 'axios';
+import { STORAGE_KEYS } from "@/src/core/constants";
+import storageService from "@/src/core/services/storage.service";
+import { InternalAxiosRequestConfig } from "axios";
 
-export const subdominioInterceptor = (config: InternalAxiosRequestConfig) => {
+export const subdominioInterceptor = async (
+  config: InternalAxiosRequestConfig
+) => {
   const subdominio = config.headers?.["X-Schema-Name"];
+  const modoPruebaStorage = await storageService.getItem(
+    STORAGE_KEYS.modoPrueba
+  );
 
-  if (config.url && subdominio) {
+  if (config.url && subdominio && modoPruebaStorage) {
     config.url = config.url.replace("subdominio", subdominio);
+    if (modoPruebaStorage) {
+      config.url = config.url
+        .replace("https", "http")
+        .replace(".reddocapi.co", ".reddocapi.online");
+    }
   }
+
   return config;
 };
