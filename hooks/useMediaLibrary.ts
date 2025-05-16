@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as MediaLibrary from "expo-media-library";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useMediaLibrary = () => {
@@ -52,7 +52,6 @@ export const useMediaLibrary = () => {
   return { deleteFileFromGallery, isDeleting, error };
 };
 
-
 export const useEliminarEnGaleria = () => {
   const [eliminando, setEliminando] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +85,6 @@ export const useEliminarEnGaleria = () => {
   };
 };
 
-
 export const useGuardarEnGaleria = () => {
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -107,7 +105,9 @@ export const useGuardarEnGaleria = () => {
 
       const carpetaInfo = await FileSystem.getInfoAsync(rutaCarpeta);
       if (!carpetaInfo.exists) {
-        await FileSystem.makeDirectoryAsync(rutaCarpeta, { intermediates: true });
+        await FileSystem.makeDirectoryAsync(rutaCarpeta, {
+          intermediates: true,
+        });
       }
 
       // 3. Definir el nombre del nuevo archivo
@@ -118,7 +118,7 @@ export const useGuardarEnGaleria = () => {
       await FileSystem.copyAsync({
         from: uri,
         to: nuevaRuta,
-      });      
+      });
       return nuevaRuta; // Devuelve la nueva ruta por si la necesitas
     } catch (error: any) {
       setError(error.message);
@@ -126,7 +126,7 @@ export const useGuardarEnGaleria = () => {
     } finally {
       setGuardando(false);
     }
-  }
+  };
 
   return {
     guardarArchivo,
@@ -134,3 +134,19 @@ export const useGuardarEnGaleria = () => {
     error,
   };
 };
+
+export const useProcesarImagenes = async (imagenes: Array<{ uri: string }>) => {
+  const imagenesProcesadas: any[] = [];
+  for (const imagen of imagenes) {
+      const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
+        if (!fileInfo.exists) {
+          console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
+            continue;
+        }
+        const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+          imagenesProcesadas.push({ base64: `data:image/jpeg;base64,${base64}` });
+    }
+    return imagenesProcesadas;
+}

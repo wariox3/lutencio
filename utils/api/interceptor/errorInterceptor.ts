@@ -34,6 +34,7 @@ export const handleErrorResponse = (error: AxiosError): void => {
 };
 
 const error400 = (error: AxiosError): AxiosError => {
+  
   const urlFallida = error.config?.url || "URL desconocida";
 
   // Obtener la parte relevante de la URL (después de "online/")
