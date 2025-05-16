@@ -51,9 +51,7 @@ export default function useVisitaListaViewModel() {
       if (isOnline && subdominio) {
         // Verifica si hay red antes de pedir ubicación
         alert(arrEntregasConNovedad.length)
-        for (const novedad of arrEntregasConNovedad) {
-          console.log({novedad});
-          
+        for (const novedad of arrEntregasConNovedad) {          
           let imagenes: { base64: string }[] = [];
           // 1️ Procesar imágenes (si existen)
           if (novedad.arrImagenes?.length > 0) {

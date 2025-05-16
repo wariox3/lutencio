@@ -106,6 +106,7 @@ class ApiService {
 
     try {
       const response: AxiosResponse<T> = await this.instance.request(config);
+      
       return response.data;
     } catch (error) {
       throw error as ApiError;
