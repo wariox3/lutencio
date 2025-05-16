@@ -14,7 +14,7 @@ import {
 
 export class AuthApiRepository implements AuthRepository {
   async login(payload: LoginFormType): Promise<LoginResponse> {
-    return apiService.post<LoginResponse>(APIS.seguridad.login, payload);
+    return apiService.post<LoginResponse>(APIS.seguridad.login, {...payload, proyecto:"RUTEOAPP"});
   }
 
   async crearCuenta(
