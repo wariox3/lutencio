@@ -149,14 +149,11 @@ export default function useVisitaFormularioViewModel() {
       actualizarState({ mostrarAnimacionCargando: false });
     } finally {
       actualizarState({ mostrarAnimacionCargando: false });
-      router.back()
+      router.back();
     }
   };
 
-  const entregaVisitaOffline = async (
-    data: VisitaFormType,
-    dispatch: any,
-  ) => {
+  const entregaVisitaOffline = async (data: VisitaFormType, dispatch: any) => {
     // Agregar imágenes a entregas seleccionadas
     entregasSeleccionadas.forEach((entregaId) => {
       state.arrImagenes.forEach((imagen) => {
@@ -172,17 +169,14 @@ export default function useVisitaFormularioViewModel() {
             })
           );
         }
+      });
       dispatch(cambiarEstadoEntrega(entregaId));
       dispatch(quitarEntregaSeleccionada(entregaId));
-      });
     });
     Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
   };
 
-  const entregaVisitaOnline = async (
-    data: VisitaFormType,
-    dispatch: any
-  ) => {
+  const entregaVisitaOnline = async (data: VisitaFormType, dispatch: any) => {
     await Promise.all(
       entregasSeleccionadas.map(async (visita: number) => {
         const subdominio = await AsyncStorage.getItem("subdominio");
