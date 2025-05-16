@@ -3,7 +3,7 @@ import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
 
 import APIS from "@/constants/endpoint";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
+import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import { configuracionThunk } from "@/src/application/slices/configuracion.thunk";
 import { obtenerUsuarioId } from "@/src/modules/user/application/slice/usuario.selector";
 import { consultarApi } from "@/utils/api";
