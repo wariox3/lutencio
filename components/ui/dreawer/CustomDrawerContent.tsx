@@ -2,7 +2,10 @@ import { menuItems } from "@/constants/menuItems";
 import { rutasApp } from "@/constants/rutas";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import { cerrarSesion } from "@/src/modules/auth/application/slices/auth.slice";
-import { limpiarEntregaSeleccionada, quitarEntregas } from "@/src/modules/visita/application/slice/entrega.slice";
+import {
+  limpiarEntregaSeleccionada,
+  quitarEntregas,
+} from "@/src/modules/visita/application/slice/entrega.slice";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
@@ -10,7 +13,7 @@ import { LogOut } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Alert } from "react-native";
-import { ListItem, XStack, YGroup } from "tamagui";
+import { Avatar, ListItem, XStack, YGroup } from "tamagui";
 
 export default function CustomDrawerContent(props: any) {
   const dispatch = useAppDispatch();
@@ -48,8 +51,17 @@ export default function CustomDrawerContent(props: any) {
     router.push(ruta);
   };
 
+  const miAvatar = require('../../../assets/images/usuario.jpeg');
+  
   return (
     <DrawerContentScrollView {...props}>
+      <XStack justify={"center"}>
+        <Avatar circular size="$8">
+          <Avatar.Image src={miAvatar} />
+          <Avatar.Fallback bg="red" />
+        </Avatar>
+      </XStack>
+
       <XStack $sm={{ flexDirection: "column" }}>
         <YGroup width={300} size="$4">
           {Object.keys(menuItems).map((name: any, index: number) =>
