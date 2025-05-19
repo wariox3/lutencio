@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
 import useVisitaFormularioViewModel from "../../application/view-model/use-visita-formulario.view-model";
 
-const VisitaFormularioScreen = () => {
+const VisitaFormularioEntregaScreen = () => {
   const {
     control,
     entregasSeleccionadas,
@@ -108,4 +108,4 @@ const VisitaFormularioScreen = () => {
   );
 };
 
-export default VisitaFormularioScreen;
+export default VisitaFormularioEntregaScreen;

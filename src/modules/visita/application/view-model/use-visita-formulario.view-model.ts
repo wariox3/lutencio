@@ -198,9 +198,25 @@ export default function useVisitaFormularioViewModel() {
           firmaBase64 = `data:image/jpeg;base64,${firmaBase64}`;
         }
 
+        const formDataToSend = new FormData()
+        formDataToSend.append('id', `${visita}`);
+        state.arrImagenes.forEach((archivo, index) => {
+          // Crear un objeto File-like compatible con FormData
+          const file = {
+            uri: archivo.uri,
+            name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
+            type: 'image/jpeg' // Tipo MIME por defecto
+          };
+        
+          // La forma correcta de adjuntar archivos en React Native
+          formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
+        });
+        console.log({ ...formDataToSend });
+        
+        
         await consultarApi<any>(
           APIS.ruteo.visitaEntrega,
-          { ...data, id: visita, imagenes, firma: firmaBase64 },
+          formDataToSend,
           {
             requiereToken: true,
             subdominio: subdominio!,

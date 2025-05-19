@@ -35,8 +35,8 @@ export default function useVisitaListaViewModel() {
     null
   );
   const theme = useTheme();
-  useSincronizacionNovedades();
-  useSincronizacionEntregas();
+  // useSincronizacionNovedades();
+  // useSincronizacionEntregas();
 
   useEffect(() => {
     async function getCurrentLocation() {
