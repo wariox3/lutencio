@@ -10,15 +10,14 @@ export const useSincronizacionEntregas = () => {
   const entregasPendientes = useAppSelector(obtenerEntregasPendientes);
   const estaEnLinea = useNetworkStatus();
 
-  const sinconizarTodasLasPendientes = useCallback(async () => {
+  const sinconizarTodasLasPendientes = useCallback(async () => {    
+    
     if (!estaEnLinea) return;
-
     const subdominio = await AsyncStorage.getItem("subdominio");
     if (!subdominio) return;
-    console.log(entregasPendientes);
-    
 
     for (const entrega of entregasPendientes) {
+           
       await PenditesService.sincronizarPenditentes(entrega, subdominio);
     }
   }, [entregasPendientes, estaEnLinea]);

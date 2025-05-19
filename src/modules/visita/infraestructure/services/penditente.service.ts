@@ -24,14 +24,17 @@ export class PenditesService {
         firmaBase64 = await useProcesarImagenes([
           { uri: entrega.firmarBase64 },
         ]);
-      }      
-      await consultarApi<any>(
+      }
+      const respuesta = await consultarApi<any>(
         APIS.ruteo.visitaEntrega,
         { id: entrega.id, imagenes },
         { requiereToken: true, subdominio }
       );
       dispatch(cambiarEstadoSinconizado(entrega.id));
+      return respuesta.success;
     } catch (error) {
+      console.log(error);
+
       return false;
     }
   }
