@@ -1,6 +1,6 @@
 import { rutasApp } from "@/constants/rutas";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { obtenerEntregasPendientesOrdenadas } from "@/src/modules/visita/application/slice/entrega.selector";
+import { obtenerEntregasPendientesOrdenadas, obtenerEntregasSeleccionadas } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
   limpiarEntregaSeleccionada,
@@ -17,6 +17,7 @@ import MapView, { Marker, Region } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
+import { Entrega } from "@/interface/entrega/entrega";
 
 const { width } = Dimensions.get("window");
 
@@ -25,6 +26,9 @@ const GpsScreen = () => {
   const [region, setRegion] = useState<Region | null>(null);
   const entregasPendientesOrdenadas = useAppSelector(
     obtenerEntregasPendientesOrdenadas
+  );
+  const entregasSeleccionadas = useAppSelector(
+    obtenerEntregasSeleccionadas
   );
   const [coordinates, setCoordinates] = useState<any[]>([]);
   const flatListRef = useRef<any>(null);
@@ -182,11 +186,11 @@ const GpsScreen = () => {
                         longitude:
                           entregasPendientesOrdenadas[currentIndex].longitud,
                       }}
+                      image={require("../../../../../assets/images/marca-mapa-azul.png")}
                       title={`${entregasPendientesOrdenadas[currentIndex].numero}`}
                       description={`${entregasPendientesOrdenadas[
                         currentIndex
                       ].destinatario.slice(0, 14)}`}
-                      //image={require("../../../../../assets/images/marca-mapa-azul.png")}
                     />
                   </>
                 ) : null}
@@ -221,7 +225,11 @@ const GpsScreen = () => {
               icon={
                 <ArrowLeftCircle
                   size={"$2"}
-                  color={currentIndex === 0 ? "gray" : "$black1"}
+                  color={
+                    currentIndex === 0
+                      ? "rgba(131, 181, 143, 1)"
+                      : "rgba(74, 177, 104, 1)"
+                  }
                 ></ArrowLeftCircle>
               }
             ></Button>
@@ -231,7 +239,8 @@ const GpsScreen = () => {
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item }) => (
                 <Card width={width} padding={10}>
-                  <Text>ID: {item.id}</Text>
+                  <Text>Número: {item.numero}</Text>
+                  <Text>{item.destinatario.slice(0, 17)}</Text>
                 </Card>
               )}
               horizontal
@@ -253,8 +262,8 @@ const GpsScreen = () => {
                   size={"$2"}
                   color={
                     currentIndex === entregasPendientesOrdenadas.length - 1
-                      ? "gray"
-                      : "$black1"
+                      ? "rgba(131, 181, 143, 1)"
+                      : "rgba(74, 177, 104, 1)"
                   }
                 ></ArrowRightCircle>
               }
