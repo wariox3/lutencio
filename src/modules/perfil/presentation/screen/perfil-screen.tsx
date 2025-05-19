@@ -9,7 +9,7 @@ import usePerfilViewModel from "../../application/view-model/use-perfil.view-mod
 
 const perfilScreen = () => {
 
-  const { navegarPoliticas, navegarTerminos, auth } = usePerfilViewModel()
+  const { navegarPoliticas, navegarTerminos, navegarEliminarCuenta, auth } = usePerfilViewModel()
 
   return (
     <ScrollView style={perfilStyles.container}>
@@ -44,6 +44,13 @@ const perfilScreen = () => {
             style={perfilStyles.button}
           >
             Políticas de Privacidad
+          </Button>
+          <Button
+            theme="red"
+            onPress={() => navegarEliminarCuenta()}
+            style={perfilStyles.button}
+          >
+            Eliminar cuenta
           </Button>
         </View>
       </View>

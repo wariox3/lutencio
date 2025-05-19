@@ -16,9 +16,14 @@ export default function usePerfilViewModel() {
     router.push(rutasApp.privacidad);
   }
 
+  function navegarEliminarCuenta() {
+    router.push(rutasApp.eliminarCuenta);
+  }
+
   return {
     navegarPoliticas,
     navegarTerminos,
+    navegarEliminarCuenta,
     auth
   };
 }

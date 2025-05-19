@@ -32,6 +32,12 @@ export default function ProfileLayout() {
           headerShown: true,
         }}
       />
+      <Stack.Screen
+        name="eliminar-cuenta"
+        options={{
+          headerShown: true,
+        }}
+      />
     </Stack>
   );
 }
