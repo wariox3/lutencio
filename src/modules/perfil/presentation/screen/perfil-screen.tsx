@@ -4,11 +4,12 @@ import { Button } from "tamagui";
 import { useRouter } from "expo-router";
 import { rutasApp } from "@/constants/rutas";
 import { perfilStyles } from "../../stylesheet/perfil.stylesheet";
+import usePerfilViewModel from "../../application/view-model/use-perfil.view-model";
 
 
 const perfilScreen = () => {
 
-    const router = useRouter();
+  const { navegarPoliticas, navegarTerminos, auth } = usePerfilViewModel()
 
   return (
     <ScrollView style={perfilStyles.container}>
@@ -18,13 +19,11 @@ const perfilScreen = () => {
           
           {/* Aquí puedes añadir la información del perfil del usuario */}
           <View style={perfilStyles.profileInfo}>
-            <Text style={perfilStyles.label}>Nombre:</Text>
             <Text style={perfilStyles.value}>Usuario</Text>
           </View>
           
           <View style={perfilStyles.profileInfo}>
-            <Text style={perfilStyles.label}>Email:</Text>
-            <Text style={perfilStyles.value}>usuario@ejemplo.com</Text>
+            <Text style={perfilStyles.value}>{auth?.user.correo}</Text>
           </View>
         </View>
 
@@ -33,7 +32,7 @@ const perfilScreen = () => {
           
           <Button
             theme="blue"
-            onPress={() => router.push(rutasApp.terminos)}
+            onPress={() => navegarTerminos()}
             style={perfilStyles.button}
           >
             Términos de Uso
@@ -41,7 +40,7 @@ const perfilScreen = () => {
           
           <Button
             theme="blue"
-            onPress={() => router.push(rutasApp.privacidad)}
+            onPress={() => navegarPoliticas()}
             style={perfilStyles.button}
           >
             Políticas de Privacidad
