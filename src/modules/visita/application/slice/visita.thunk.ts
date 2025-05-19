@@ -44,7 +44,7 @@ export const cargarOrdenThunk = createAsyncThunk(
 export const visitaNovedadThunk = createAsyncThunk(
   "visita/guardar-novedad",
   async (
-    payload: { visita: number; descripcion: string; novedad_tipo: string },
+    payload: { visita: number; descripcion: string; novedad_tipo: string, imagenes: any },
     { rejectWithValue }
   ) => {
     try {
@@ -52,7 +52,8 @@ export const visitaNovedadThunk = createAsyncThunk(
         await new SetNovedadVisitaUseCase().setNovedad(
           payload.visita,
           payload.descripcion,
-          payload.novedad_tipo
+          payload.novedad_tipo,
+          payload.imagenes
         );
       return { ...respuestaVistaNovedad, visita: payload.visita };
     } catch (error: any) {

@@ -39,15 +39,31 @@ export class VisitaApiRepository implements VisitaRepository {
   async setNovedad(
     visita: number,
     descripcion: string,
-    novedad_tipo: string
+    novedad_tipo: string,
+    imagenes: any
   ): Promise<any> {
     const subdominio = (await storageService.getItem(
       STORAGE_KEYS.subdominio
     )) as string;
-    return this.ruteoApiRepository.postNovedadTipo(
-      visita,
-      descripcion,
-      novedad_tipo,
+    const formData = new FormData()
+    formData.append('visita', `${visita}`);
+    formData.append('descripcion', descripcion);
+    formData.append('novedad_tipo', novedad_tipo);
+    imagenes.forEach((archivo: any, index: number) => {
+      // Crear un objeto File-like compatible con FormData
+      const file = {
+        uri: archivo.uri,
+        name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
+        type: 'image/jpeg' // Tipo MIME por defecto
+      };
+    
+      // La forma correcta de adjuntar archivos en React Native
+      formData.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
+    });
+
+
+    return this.ruteoApiRepository.postNovedad(
+      formData,
       subdominio
     );
   }

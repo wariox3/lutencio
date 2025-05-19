@@ -112,7 +112,7 @@ export default function useVisitaNovedadViewModel() {
     visitasSeleccionadas: number[],
     state: any,
     dispatch: any,
-    cambiarEntregaEstadoNovedad: () => void,
+    cambiarEntregaEstadoNovedad: () => void
   ) => {
     visitasSeleccionadas.forEach((entregaId) => {
       dispatch(
@@ -137,13 +137,18 @@ export default function useVisitaNovedadViewModel() {
   const entregarNovedadOnline = async (
     data: NovedadFormType,
     visitasSeleccionadas: number[],
-    cambiarEntregaEstadoNovedad: () => void,
+    cambiarEntregaEstadoNovedad: () => void
   ) => {
     await Promise.all(
-      visitasSeleccionadas.map(async (visita: number) => {        
-        dispatch(visitaNovedadThunk({
-          visita, descripcion: data.descripcion, novedad_tipo: data.novedad_tipo
-        }))
+      visitasSeleccionadas.map(async (visita: number) => {
+        dispatch(
+          visitaNovedadThunk({
+            visita,
+            descripcion: data.descripcion,
+            novedad_tipo: data.novedad_tipo,
+            imagenes: state.arrImagenes,
+          })
+        );
       })
     );
 
@@ -151,7 +156,7 @@ export default function useVisitaNovedadViewModel() {
     cambiarEntregaEstadoSinconizado();
   };
 
-  const guardarNovedadTipo = async (data: NovedadFormType, ) => {
+  const guardarNovedadTipo = async (data: NovedadFormType) => {
     try {
       const networkState = await Network.getNetworkStateAsync();
       const hayConexion =
@@ -165,7 +170,7 @@ export default function useVisitaNovedadViewModel() {
           visitasSeleccionadas,
           state,
           dispatch,
-          cambiarEntregaEstadoNovedad,
+          cambiarEntregaEstadoNovedad
         );
         return;
       }
@@ -173,13 +178,13 @@ export default function useVisitaNovedadViewModel() {
       await entregarNovedadOnline(
         data,
         visitasSeleccionadas,
-        cambiarEntregaEstadoNovedad,
+        cambiarEntregaEstadoNovedad
       );
     } catch (error) {
       actualizarState({ mostrarAnimacionCargando: false });
     } finally {
       actualizarState({ mostrarAnimacionCargando: false });
-      router.back()
+      router.back();
     }
   };
 
@@ -202,6 +207,6 @@ export default function useVisitaNovedadViewModel() {
     removerFoto,
     guardarNovedadTipo,
     handleSubmit,
-    novedadesTipo
+    novedadesTipo,
   };
 }

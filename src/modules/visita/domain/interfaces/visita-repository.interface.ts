@@ -9,7 +9,7 @@ export interface VisitaRepository {
   ): Promise<ApiResponse<Entrega[]>>;
 
   setNovedad(
-    visita: number, descripcion: string, novedad_tipo: string
+    visita: number, descripcion: string, novedad_tipo: string, imagenes: any
   ):Promise<any>
 
   setNovedadSolucion(
