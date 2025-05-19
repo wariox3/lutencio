@@ -211,8 +211,6 @@ export default function useVisitaFormularioViewModel() {
           // La forma correcta de adjuntar archivos en React Native
           formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
         });
-        console.log({ ...formDataToSend });
-        
         
         await consultarApi<any>(
           APIS.ruteo.visitaEntrega,

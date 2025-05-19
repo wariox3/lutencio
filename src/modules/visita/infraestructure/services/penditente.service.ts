@@ -33,8 +33,6 @@ export class PenditesService {
       dispatch(cambiarEstadoSinconizado(entrega.id));
       return respuesta.success;
     } catch (error) {
-      console.log(error);
-
       return false;
     }
   }
