@@ -156,7 +156,7 @@ export default function useVisitaNovedadViewModel() {
     cambiarEntregaEstadoSinconizado();
   };
 
-  const guardarNovedadTipo = async (data: NovedadFormType) => {
+  const guardarNovedad = async (data: NovedadFormType) => {
     try {
       const networkState = await Network.getNetworkStateAsync();
       const hayConexion =
@@ -205,7 +205,7 @@ export default function useVisitaNovedadViewModel() {
     state,
     handleCapture,
     removerFoto,
-    guardarNovedadTipo,
+    guardarNovedad,
     handleSubmit,
     novedadesTipo,
   };

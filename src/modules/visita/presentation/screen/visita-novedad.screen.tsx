@@ -22,7 +22,7 @@ import { Controller } from "react-hook-form";
 const VisitaNovedadScreen = () => {
   const {
     control,
-    guardarNovedadTipo,
+    guardarNovedad,
     handleCapture,
     removerFoto,
     state,
@@ -106,7 +106,7 @@ const VisitaNovedadScreen = () => {
             icon={
               state.mostrarAnimacionCargando ? () => <Spinner /> : undefined
             }
-            onPress={handleSubmit(guardarNovedadTipo)}
+            onPress={handleSubmit(guardarNovedad)}
           >
             Guardar
           </Button>
