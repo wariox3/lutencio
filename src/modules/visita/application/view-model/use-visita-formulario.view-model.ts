@@ -76,7 +76,6 @@ export default function useVisitaFormularioViewModel() {
   const [state, setState] = useState(estadoInicial);
 
   useEffect(() => {
-    console.log(getValues());
     reiniciarEstadoCompleto();
   }, [entregasSeleccionadas]);
 

@@ -33,7 +33,8 @@ export class GetListaVisitaUseCase {
       mensaje_error: "",
       solucion_novedad: "",
       novedad_id: 0,
-      estado_novedad_solucion: false
+      estado_novedad_solucion: false,
+      fecha_entrega: "",
     }));
   }
 }
