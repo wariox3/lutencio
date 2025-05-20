@@ -12,9 +12,12 @@ export const subdominioInterceptor = async (
 
   if (config.url && subdominio) {
     config.url = config.url.replace("subdominio", subdominio);
+    if(modoPruebaStorage){
       config.url = config.url
         .replace("https", "http")
         .replace(".reddocapi.co", ".reddocapi.online");
+    }
+
   }
 
   return config;
