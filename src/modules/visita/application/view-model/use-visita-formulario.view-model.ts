@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
+  actualizarFechaEntrega,
   actualizarFirmaEntrega,
   agregarImagenEntrega,
   cambiarEstadoEntrega,
@@ -164,7 +165,9 @@ export default function useVisitaFormularioViewModel() {
         dispatch(
           agregarImagenEntrega({ entregaId, imagen: { uri: imagen.uri } })
         );
-
+        dispatch(
+          actualizarFechaEntrega({entregaId, fecha_entrega: obtenerFechaActualFormateada()})
+        )
         if (state.firmarBase64 !== null) {
           dispatch(
             actualizarFirmaEntrega({

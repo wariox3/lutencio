@@ -70,6 +70,16 @@ const entregasSlice = createSlice({
         entrega.firmarBase64 = firmarBase64;
       }
     },
+    actualizarFechaEntrega: (
+      state,
+      action: PayloadAction<{ entregaId: number; fecha_entrega: string }>
+    ) => {
+      const { entregaId, fecha_entrega } = action.payload;
+      const entrega = state.entregas.find((e) => e.id === entregaId);
+      if (entrega) {
+        entrega.fecha_entrega = fecha_entrega
+      }
+    },
     cambiarEstadoSeleccionado: (state, action: PayloadAction<number>) => {
       const entrega = state.entregas.find((e) => e.id === action.payload);
       if (entrega) {
@@ -225,6 +235,7 @@ export const {
   actualizarNovedadId,
   cambiarEstadoSeleccionadoATodas,
   actualizarNovedadSolucion,
-  cambiarEstadoNovedadSolucion
+  cambiarEstadoNovedadSolucion,
+  actualizarFechaEntrega
 } = entregasSlice.actions;
 export default entregasSlice.reducer;
