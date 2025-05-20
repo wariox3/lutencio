@@ -7,13 +7,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
       <ContenedorImagenBackground source={require("../../../../../assets/images/fondo-app-con-logo.png")}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <EntregaCardDespachoCargado></EntregaCardDespachoCargado>
           <EntregaUbicacion></EntregaUbicacion>
         </ScrollView>
       </ContenedorImagenBackground>
-    </SafeAreaView>
   );
 }
