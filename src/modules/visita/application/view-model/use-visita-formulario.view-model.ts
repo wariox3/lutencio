@@ -17,29 +17,33 @@ import { consultarApi } from "@/utils/api";
 import APIS from "@/constants/endpoint";
 import { useGuardarEnGaleria } from "@/hooks/useMediaLibrary";
 import * as FileSystem from "expo-file-system";
+import useFecha from "@/src/shared/hooks/useFecha";
 
 type VisitaFormType = {
   recibe: string;
   parentesco: string;
   numeroIdentificacion: string;
   celular: string;
+  fecha: string;
 };
 
 export default function useVisitaFormularioViewModel() {
   const dispatch = useAppDispatch();
   const { guardarArchivo } = useGuardarEnGaleria();
-
+  const { obtenerFechaActualFormateada } = useFecha()
+  const fecha = new Date()
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
   );
 
   const router = useRouter();
-  const { control, handleSubmit, reset } = useForm<VisitaFormType>({
+  const { control, handleSubmit, reset, getValues } = useForm<VisitaFormType>({
     defaultValues: {
       recibe: "",
       parentesco: "",
       numeroIdentificacion: "",
       celular: "",
+      fecha: obtenerFechaActualFormateada()
     },
   });
 
@@ -72,6 +76,7 @@ export default function useVisitaFormularioViewModel() {
   const [state, setState] = useState(estadoInicial);
 
   useEffect(() => {
+    console.log(getValues());
     reiniciarEstadoCompleto();
   }, [entregasSeleccionadas]);
 
