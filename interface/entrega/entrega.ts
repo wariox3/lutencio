@@ -29,6 +29,7 @@ export interface Entrega {
   novedad_id: number;
   novedad_descripcion: string;
   solucion_novedad: string;
+  fecha_entrega: string;
   latitud: number;
   longitud: number;
   orden: number;
