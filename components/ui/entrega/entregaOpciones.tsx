@@ -206,65 +206,37 @@ const SheetContents = memo(({ setOpen }: any) => {
       for (const entrega of arrEntregasPendientes) {
         try {
           let imagenes: { base64: string }[] = [];
+          console.log(entrega);
+          
 
-          // 1️ Procesar imágenes (si existen)
-          if (entrega.arrImagenes?.length > 0) {
-            for (const imagen of entrega.arrImagenes) {
-              if (imagen.uri.startsWith("file://")) {
-                const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
-                if (!fileInfo.exists) {
-                  console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
-                  continue;
-                }
-                const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
-                  encoding: FileSystem.EncodingType.Base64,
-                });
-                imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
-              }
-            }
-          }
+          const formDataToSend = new FormData();
+          formDataToSend.append("id", `${entrega.id}`);
+          formDataToSend.append("fecha_entrega", entrega.fecha_entrega);
+          if(entrega.arrImagenes){
+            entrega.arrImagenes.forEach((archivo, index) => {
+              // Crear un objeto File-like compatible con FormData
+              const file = {
+                uri: archivo.uri,
+                name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
+                type: "image/jpeg", // Tipo MIME por defecto
+              };
+    
+              // La forma correcta de adjuntar archivos en React Native
+              formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
+            });
+          } else {
+            formDataToSend.append(`imagenes`, [].toString()); // Usamos 'as any' para evitar el error de tipo
 
-          // 2️ Procesar firma (si existe)
-          let firmaBase64 = null;
-          if (entrega.firmarBase64?.startsWith("file://")) {
-            const fileInfo = await FileSystem.getInfoAsync(
-              entrega.firmarBase64
-            );
-            if (fileInfo.exists) {
-              firmaBase64 = await FileSystem.readAsStringAsync(
-                entrega.firmarBase64,
-                {
-                  encoding: FileSystem.EncodingType.Base64,
-                }
-              );
-              firmaBase64 = `data:image/png;base64,${firmaBase64}`;
-            } else {
-              console.warn(`⚠️ Firma no encontrada: ${entrega.firmarBase64}`);
-            }
           }
+          console.log(formDataToSend);
+          
 
           // 3️ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
           await consultarApi<any>(
             APIS.ruteo.visitaEntrega,
-            { id: entrega.id, imagenes },
+            formDataToSend,
             { requiereToken: true, subdominio }
           );
-
-          // 4️ Solo si la API responde OK, borrar archivos y marcar como sincronizado
-          if (entrega.arrImagenes?.length > 0) {
-            for (const img of entrega.arrImagenes) {
-              const fileInfo = await FileSystem.getInfoAsync(img.uri);
-              if (fileInfo.exists) await eliminarArchivo(img.uri);
-            }
-          }
-
-          if (entrega.firmarBase64) {
-            const fileInfo = await FileSystem.getInfoAsync(
-              entrega.firmarBase64
-            );
-            if (fileInfo.exists)
-              await eliminarArchivo(entrega.firmarBase64);
-          }
 
           dispatch(cambiarEstadoSinconizado(entrega.id));
           setLoadSincronizando(false);

@@ -74,7 +74,7 @@ const entregasSlice = createSlice({
       state,
       action: PayloadAction<{ entregaId: number; fecha_entrega: string }>
     ) => {
-      const { entregaId, fecha_entrega } = action.payload;
+      const { entregaId, fecha_entrega } = action.payload;      
       const entrega = state.entregas.find((e) => e.id === entregaId);
       if (entrega) {
         entrega.fecha_entrega = fecha_entrega

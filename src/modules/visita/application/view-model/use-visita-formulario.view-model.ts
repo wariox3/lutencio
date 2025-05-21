@@ -25,14 +25,13 @@ type VisitaFormType = {
   parentesco: string;
   numeroIdentificacion: string;
   celular: string;
-  fecha: string;
+  fecha_entrega: string;
 };
 
 export default function useVisitaFormularioViewModel() {
   const dispatch = useAppDispatch();
   const { guardarArchivo } = useGuardarEnGaleria();
-  const { obtenerFechaActualFormateada } = useFecha()
-  const fecha = new Date()
+  const { obtenerFechaYHoraActualFormateada } = useFecha();
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
   );
@@ -44,7 +43,7 @@ export default function useVisitaFormularioViewModel() {
       parentesco: "",
       numeroIdentificacion: "",
       celular: "",
-      fecha: obtenerFechaActualFormateada()
+      fecha_entrega: obtenerFechaYHoraActualFormateada(),
     },
   });
 
@@ -91,12 +90,15 @@ export default function useVisitaFormularioViewModel() {
       parentesco: "",
       numeroIdentificacion: "",
       celular: "",
+      fecha_entrega: obtenerFechaYHoraActualFormateada()
     });
   };
 
   const actualizarState = (newState: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
+
+  
 
   const handleCapture = async (uri: string) => {
     //1. guardar la foto en el celular
@@ -159,15 +161,13 @@ export default function useVisitaFormularioViewModel() {
   };
 
   const entregaVisitaOffline = async (data: VisitaFormType, dispatch: any) => {
+    
     // Agregar imágenes a entregas seleccionadas
     entregasSeleccionadas.forEach((entregaId) => {
       state.arrImagenes.forEach((imagen) => {
         dispatch(
           agregarImagenEntrega({ entregaId, imagen: { uri: imagen.uri } })
         );
-        dispatch(
-          actualizarFechaEntrega({entregaId, fecha_entrega: obtenerFechaActualFormateada()})
-        )
         if (state.firmarBase64 !== null) {
           dispatch(
             actualizarFirmaEntrega({
@@ -177,13 +177,19 @@ export default function useVisitaFormularioViewModel() {
           );
         }
       });
+      dispatch(
+        actualizarFechaEntrega({
+          entregaId,
+          fecha_entrega: obtenerFechaYHoraActualFormateada(),
+        })
+      );
       dispatch(cambiarEstadoEntrega(entregaId));
       dispatch(quitarEntregaSeleccionada(entregaId));
     });
     Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
   };
 
-  const entregaVisitaOnline = async (data: VisitaFormType, dispatch: any) => {
+  const entregaVisitaOnline = async (data: VisitaFormType, dispatch: any) => {    
     await Promise.all(
       entregasSeleccionadas.map(async (visita: number) => {
         const subdominio = await AsyncStorage.getItem("subdominio");
@@ -205,28 +211,25 @@ export default function useVisitaFormularioViewModel() {
           firmaBase64 = `data:image/jpeg;base64,${firmaBase64}`;
         }
 
-        const formDataToSend = new FormData()
-        formDataToSend.append('id', `${visita}`);
+        const formDataToSend = new FormData();
+        formDataToSend.append("id", `${visita}`);
+        formDataToSend.append("fecha_entrega", data.fecha_entrega);
         state.arrImagenes.forEach((archivo, index) => {
           // Crear un objeto File-like compatible con FormData
           const file = {
             uri: archivo.uri,
             name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
-            type: 'image/jpeg' // Tipo MIME por defecto
+            type: "image/jpeg", // Tipo MIME por defecto
           };
-        
+
           // La forma correcta de adjuntar archivos en React Native
           formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
         });
-        
-        await consultarApi<any>(
-          APIS.ruteo.visitaEntrega,
-          formDataToSend,
-          {
-            requiereToken: true,
-            subdominio: subdominio!,
-          }
-        );
+
+        await consultarApi<any>(APIS.ruteo.visitaEntrega, formDataToSend, {
+          requiereToken: true,
+          subdominio: subdominio!,
+        });
       })
     );
     entregasSeleccionadas.forEach((entrega) => {
