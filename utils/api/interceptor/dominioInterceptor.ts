@@ -10,11 +10,10 @@ export const dominioInterceptor = async (
       STORAGE_KEYS.modoPrueba
     );
     if (config.url && modoPruebaStorage) {
-      config.url = config.url.replace(
-        "https://reddocapi.co",
-        "http://reddocapi.online"
-      );
-    }
+      config.url = config.url
+        .replace("https", "http")
+        .replace("reddocapi.co", "reddocapi.online");
+    }    
         
     return config;
   } catch (error) {

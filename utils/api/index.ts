@@ -19,15 +19,15 @@ axios.interceptors.request.use(authInterceptor, (error) =>
   Promise.reject(error)
 );
 
-axios.interceptors.request.use(subdominioInterceptor, (error) => Promise.reject(error));
-
 axios.interceptors.request.use(dominioInterceptor, (error) => Promise.reject(error));
+
+axios.interceptors.request.use(subdominioInterceptor, (error) => Promise.reject(error));
 
 
 // Interceptor para manejar errores de respuesta
 axios.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: AxiosError) => {
+  (error: AxiosError) => {    
     handleErrorResponse(error);
     return Promise.reject(error);
   }
@@ -48,10 +48,9 @@ export const consultarApi = async <T>(
       headers: {
         requiereToken: configuracion.requiereToken, // Pasar `requiereToken` en headers para ser usado por el interceptor
         "X-Schema-Name": configuracion.subdominio, // Pasar el subdominio en los headers
-        'Content-Type': 'multipart/form-data',
+        //'Content-Type': 'multipart/form-data',
       },
     });
-
     return informacionConsulta.data;
   } catch (error: any) {
     throw error; // Lanzar el error para que el controlador de llamadas pueda manejarlo

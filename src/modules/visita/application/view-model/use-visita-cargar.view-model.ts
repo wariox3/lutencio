@@ -6,6 +6,14 @@ import { FieldValues, useForm } from "react-hook-form";
 import { cargarOrdenThunk } from "../slice/visita.thunk";
 import { configuracionThunk } from "@/src/application/slices/configuracion.thunk";
 import { Keyboard } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { consultarApi } from "@/utils/api";
+import APIS from "@/constants/endpoint";
+import axios from "axios";
+import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
+import { STORAGE_KEYS } from "@/src/core/constants";
+import storageService from "@/src/core/services/storage.service";
+import { respuestaCargar } from "../../domain/interfaces/cargar.interfase";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
@@ -45,8 +53,6 @@ export default function useVisitaCargarViewModel() {
       console.error(error);
     }
   };
-
-  
 
   return { control, handleSubmit, loading, cargarOrden };
 }
