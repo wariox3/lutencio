@@ -1,5 +1,6 @@
 import { EntregaOpciones } from "@/components/ui/entrega/entregaOpciones";
 import COLORES from "@/src/core/constants/colores";
+import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
 import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
 import { Stack } from "expo-router";
 
@@ -7,30 +8,51 @@ export default function VisitasLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShadowVisible: false,
-        title: "",
         headerStyle: {
-          backgroundColor: COLORES.HEADER_BACKGROUND_COLOR
+          backgroundColor: COLORES.HEADER_BACKGROUND_COLOR,
         },
+        headerLargeTitle: true,
+        headerBackButtonDisplayMode: "minimal",
       }}
     >
       <Stack.Screen
         name="lista"
         options={{
-          title: "",
+          title: "Visitas",
           headerLeft: () => <BtnMenuDrewer />,
           headerRight: () => <EntregaOpciones />,
         }}
       />
-      <Stack.Screen name="cargar" />
-      <Stack.Screen name="novedad" />
-      <Stack.Screen name="pendiente" />
+      <Stack.Screen
+        name="cargar"
+        options={{
+          title: tituloScreen.visita.cargar,
+        }}
+      />
+      <Stack.Screen
+        name="entregar"
+        options={{
+          title: tituloScreen.visita.entregar,
+        }}
+      />
+      <Stack.Screen
+        name="novedad"
+        options={{
+          title: tituloScreen.visita.novedad,
+        }}
+      />
+      <Stack.Screen
+        name="pendiente"
+        options={{
+          title: tituloScreen.visita.pendiente,
+        }}
+      />
       <Stack.Screen name="[id]" />
       <Stack.Screen
         name="modal-novedad-solucion"
         options={{
-          presentation: 'transparentModal',
-          animation: 'fade',
+          presentation: "transparentModal",
+          animation: "fade",
           headerShown: false,
         }}
       />

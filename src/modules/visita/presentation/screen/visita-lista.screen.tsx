@@ -3,11 +3,9 @@ import EntregasSinElementos from "@/components/ui/entrega/entregasSinElementos";
 import { rutasApp } from "@/constants/rutas";
 import BtnAcciones from "@/src/shared/components/btn-acciones";
 import React from "react";
-import { FlatList, SafeAreaView } from "react-native";
-import { RefreshControl } from "react-native-gesture-handler";
-import { Card, Text } from "tamagui";
 import useVisitaListaViewModel from "../../application/view-model/use-visita-lista.view-model";
 import ItemLista from "../components/visita-lista/item-lista";
+import { FlatList, RefreshControl } from "react-native";
 
 export default function VisitaListaScreen() {
   const {
@@ -25,19 +23,23 @@ export default function VisitaListaScreen() {
     return <EntregaSinPermisoLocalizacion></EntregaSinPermisoLocalizacion>;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <BtnAcciones
-        visualizarCantidadSeleccionada={entregasSeleccionadas.length > 0}
-        cantidadSeleccionada={entregasSeleccionadas.length}
-        rutaEntregar={rutasApp.visitaEntregar}
-        rutaNovedad={rutasApp.visitaNovedad}
-      ></BtnAcciones>
+    <>
       <FlatList
         data={arrEntregas}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => (
           <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
         )}
+        style={{backgroundColor:"#ffff"}}
+        ListHeaderComponent={
+          <BtnAcciones
+            visualizarCantidadSeleccionada={entregasSeleccionadas.length > 0}
+            cantidadSeleccionada={entregasSeleccionadas.length}
+            rutaEntregar={rutasApp.visitaEntregar}
+            rutaNovedad={rutasApp.visitaNovedad}
+          ></BtnAcciones>
+        }
+        contentInsetAdjustmentBehavior="automatic"
         ListEmptyComponent={<EntregasSinElementos />}
         refreshControl={
           <RefreshControl
@@ -49,6 +51,6 @@ export default function VisitaListaScreen() {
           />
         }
       />
-    </SafeAreaView>
+    </>
   );
 }
