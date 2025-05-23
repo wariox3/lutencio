@@ -13,6 +13,7 @@ export default function VisitasLayout() {
         },
         headerLargeTitle: true,
         headerBackButtonDisplayMode: "minimal",
+        headerTintColor: 'black'
       }}
     >
       <Stack.Screen
