@@ -14,10 +14,8 @@ import { useFocusEffect, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
-import { Entrega } from "@/interface/entrega/entrega";
 
 const { width } = Dimensions.get("window");
 
@@ -154,7 +152,7 @@ const GpsScreen = () => {
   const blurhash = "=IQcr5bI^*-:_NM|?bof%M";
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <BtnAcciones
         visualizarCantidadSeleccionada={entregasPendientesOrdenadas.length > 0}
         cantidadSeleccionada={1}
@@ -274,7 +272,7 @@ const GpsScreen = () => {
           <H6>No tiene orden de entrega vinculada</H6>
         </Card>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
