@@ -167,7 +167,6 @@ const GpsScreen = () => {
             {region ? (
               <MapView
                 style={gpsStyles.map}
-                provider="google"
                 initialRegion={region}
                 showsUserLocation={true}
                 ref={mapRef}
