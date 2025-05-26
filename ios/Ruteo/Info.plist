@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-    <!-- Configuración Básica de la App -->
+  <dict>
+    <key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+      <string>com.expo.modules.backgroundtask.processing</string>
+    </array>
+    <key>CADisableMinimumFrameDurationOnPhone</key>
+    <true/>
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
@@ -21,115 +26,77 @@
     <string>1.0.0</string>
     <key>CFBundleSignature</key>
     <string>????</string>
-    <key>CFBundleVersion</key>
-    <string>1</string>
-
-    <!-- Permisos de Ubicación -->
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Necesitamos acceso a tu ubicación en todo momento para proporcionarte navegación continua y alertas de seguridad.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Necesitamos acceso a tu ubicación para mostrarte rutas y puntos de interés relevantes.</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Necesitamos acceso a tu ubicación incluso cuando la app está en segundo plano para funcionalidades completas.</string>
-
-    <!-- Permisos de Cámara y Medios -->
-    <key>NSCameraUsageDescription</key>
-    <string>Necesitamos acceso a tu cámara para escanear códigos QR y tomar fotos.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Necesitamos acceso a tu micrófono para grabar audio cuando captures videos.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Necesitamos acceso a tu biblioteca de fotos para guardar y seleccionar imágenes.</string>
-    <key>NSPhotoLibraryAddUsageDescription</key>
-    <string>Necesitamos guardar fotos en tu biblioteca.</string>
-    <key>NSMotionUsageDescription</key>
-    <string>Necesitamos acceso al sensor de movimiento para mejorar la experiencia de navegación.</string>
-
-    <!-- Notificaciones -->
-    <key>NSUserNotificationsUsageDescription</key>
-    <string>Queremos enviarte notificaciones para mantenerte informado sobre actualizaciones importantes.</string>
-
-    <!-- Configuración de Red -->
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSAllowsArbitraryLoads</key>
-        <false/>
-        <key>NSAllowsLocalNetworking</key>
-        <true/>
-    </dict>
-
-    <!-- Funcionalidades en Segundo Plano -->
-    <key>UIBackgroundModes</key>
-    <array>
-        <string>fetch</string>
-        <string>location</string>
-        <string>processing</string>
-        <string>remote-notification</string>
-    </array>
-
-    <!-- URL Schemes -->
     <key>CFBundleURLTypes</key>
     <array>
-        <dict>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>myapp</string>
-                <string>com.anonymous.lutencio</string>
-            </array>
-        </dict>
-        <dict>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>exp+ruteo</string>
-            </array>
-        </dict>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>myapp</string>
+          <string>com.anonymous.lutencio</string>
+        </array>
+      </dict>
     </array>
-
-    <!-- Configuración de UI -->
-    <key>UILaunchStoryboardName</key>
-    <string>SplashScreen</string>
-    <key>UIStatusBarStyle</key>
-    <string>UIStatusBarStyleLightContent</string>
-    <key>UIUserInterfaceStyle</key>
-    <string>Automatic</string>
-    <key>UIViewControllerBasedStatusBarAppearance</key>
-    <false/>
-
-    <!-- Orientación -->
-    <key>UISupportedInterfaceOrientations</key>
-    <array>
-        <string>UIInterfaceOrientationPortrait</string>
-        <string>UIInterfaceOrientationPortraitUpsideDown</string>
-    </array>
-    <key>UISupportedInterfaceOrientations~ipad</key>
-    <array>
-        <string>UIInterfaceOrientationPortrait</string>
-        <string>UIInterfaceOrientationPortraitUpsideDown</string>
-        <string>UIInterfaceOrientationLandscapeLeft</string>
-        <string>UIInterfaceOrientationLandscapeRight</string>
-    </array>
-
-    <!-- Otras Configuraciones -->
-    <key>BGTaskSchedulerPermittedIdentifiers</key>
-    <array>
-        <string>com.expo.modules.backgroundtask.processing</string>
-    </array>
-    <key>CADisableMinimumFrameDurationOnPhone</key>
-    <true/>
-    <key>LSApplicationCategoryType</key>
-    <string></string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
     <key>LSMinimumSystemVersion</key>
     <string>12.0</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <false/>
+      <key>NSAllowsLocalNetworking</key>
+      <true/>
+    </dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your camera</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to use your location always and when in use.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your location even when the app is closed.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to use your location while using the app.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your microphone</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to save photos.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your photos.</string>
     <key>NSUserActivityTypes</key>
     <array>
-        <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
+      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
     </array>
+    <key>UIBackgroundModes</key>
+    <array>
+      <string>fetch</string>
+      <string>processing</string>
+    </array>
+    <key>UILaunchStoryboardName</key>
+    <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>
     <array>
-        <string>arm64</string>
+      <string>arm64</string>
     </array>
     <key>UIRequiresFullScreen</key>
     <false/>
-</dict>
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleDefault</string>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+      <string>UIInterfaceOrientationPortraitUpsideDown</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+      <string>UIInterfaceOrientationPortraitUpsideDown</string>
+      <string>UIInterfaceOrientationLandscapeLeft</string>
+      <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UIUserInterfaceStyle</key>
+    <string>Automatic</string>
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
+  </dict>
 </plist>

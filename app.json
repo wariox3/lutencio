@@ -73,7 +73,8 @@
           "isAccessMediaLocationEnabled": true
         }
       ],
-      "expo-background-task"
+      "expo-background-task",
+      "expo-file-system"
     ],
     "experiments": {
       "typedRoutes": true
