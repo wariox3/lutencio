@@ -12,7 +12,6 @@ const obtenerRuta = (url: string): string | null => {
 
 export const handleErrorResponse = (error: AxiosError): void => {
   let _errores = new Map<number, () => void>();
-
   _errores.set(400, () => error400(error));
   _errores.set(401, () => error401(error));
   _errores.set(404, () => error404(error));

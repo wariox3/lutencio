@@ -4,7 +4,7 @@ import storageService from "@/src/core/services/storage.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import { GetListaVisitaUseCase, SetNovedadSolucionVisitaUseCase, SetNovedadVisitaUseCase } from "../use-cases";
-import { consultarApi } from "@/utils/api";
+import { consultarApiFormData } from "@/utils/api";
 import { respuestaCargar } from "../../domain/interfaces/cargar.interfase";
 import APIS from "@/constants/endpoint";
 
@@ -12,7 +12,7 @@ export const cargarOrdenThunk = createAsyncThunk(
   "visita/cargar-orden",
   async (payload: { codigo: string }, { rejectWithValue }) => {
     try {
-      const respuestaEntregaVertical = await consultarApi<respuestaCargar>(
+      const respuestaEntregaVertical = await consultarApiFormData<respuestaCargar>(
           `${APIS.entrega.verticalEntrega}${payload.codigo}/`,
           null,
           { requiereToken: true, method: "get" }
