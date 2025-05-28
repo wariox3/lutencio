@@ -1,5 +1,5 @@
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
-import { Validaciones } from "@/constants/mensajes";
+import { Validaciones } from "@/src/core/constants";
 import React from "react";
 import { Button, Spinner, View, ScrollView } from "tamagui";
 import useOlvidoClaveViewModel from "../../application/view-models/use-olvido-clave.view-model";

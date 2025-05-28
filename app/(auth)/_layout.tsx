@@ -3,7 +3,7 @@ import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import COLORES from "@/src/core/constants/colores";
+import COLORES from "@/src/core/constants/colores.constant";
 import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

@@ -1,6 +1,6 @@
 import apiService from "@/src/core/api/repositories";
 import { ApiResponse } from "../domain/interfaces/api.interface";
-import APIS from "@/constants/endpoint";
+import APIS from "@/src/core/constants/endpoint.constant";
 import { RuteoRepository } from "../domain/interfaces/ruteo.interface";
 
 export class RuteoApiRepository implements RuteoRepository {

@@ -1,4 +1,4 @@
-import { rutasApp } from "@/constants/rutas";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { ArrowDownToLine, FileWarning } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
 import React from "react";

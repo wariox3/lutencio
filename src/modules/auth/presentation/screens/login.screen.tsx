@@ -3,7 +3,7 @@ import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import { PasswordInput } from "@/components/ui/form/inputs/PasswordInput";
 import MensajeModoPrueba from "@/components/ui/login/MensajeModoPrueba";
 import ModoPruebaSheet from "@/components/ui/login/ModoPruebaSheet";
-import { Validaciones } from "@/constants/mensajes";
+import { Validaciones } from "@/src/core/constants";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, ScrollView, Spinner, View, XStack } from "tamagui";

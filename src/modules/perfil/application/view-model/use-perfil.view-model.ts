@@ -1,4 +1,4 @@
-import { rutasApp } from "@/constants/rutas";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { obtenerAuth } from "@/src/application/selectors/usuario.selector";
 import { useAppSelector } from "@/src/application/store/hooks";
 import { useNavigation, useRouter } from "expo-router";

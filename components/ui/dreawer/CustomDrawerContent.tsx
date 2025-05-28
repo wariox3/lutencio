@@ -1,5 +1,5 @@
-import { menuItems } from "@/constants/menuItems";
-import { rutasApp } from "@/constants/rutas";
+import { menuItems } from "@/src/core/constants/menuItems.constant";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import { cerrarSesion } from "@/src/modules/auth/application/slices/auth.slice";
 import {

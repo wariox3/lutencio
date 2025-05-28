@@ -1,4 +1,4 @@
-import { rutasApp } from "@/constants/rutas";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useMediaLibrary } from "@/hooks/useMediaLibrary";
 import { Entrega } from "@/interface/entrega/entrega";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";

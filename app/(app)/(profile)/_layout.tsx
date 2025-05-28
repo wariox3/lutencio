@@ -1,4 +1,4 @@
-import COLORES from "@/src/core/constants/colores";
+import COLORES from "@/src/core/constants/colores.constant";
 import { Stack } from "expo-router";
 import React from "react";
 import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";

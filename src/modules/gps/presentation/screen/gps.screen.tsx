@@ -1,4 +1,4 @@
-import { rutasApp } from "@/constants/rutas";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { obtenerEntregasPendientesOrdenadas, obtenerEntregasSeleccionadas } from "@/src/modules/visita/application/slice/entrega.selector";
 import {

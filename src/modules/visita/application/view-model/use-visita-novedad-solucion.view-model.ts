@@ -1,4 +1,4 @@
-import APIS from "@/constants/endpoint";
+import APIS from "@/src/core/constants/endpoint.constant";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import networkService from "@/src/core/services/network.service";
 import { consultarApi } from "@/utils/api";

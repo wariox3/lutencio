@@ -4,7 +4,7 @@ import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
 import { SelectInput } from "@/components/ui/form/inputs/SelectInput";
-import { parentescos } from "@/src/core/constants/parentesco.const";
+import { parentescos } from "@/src/core/constants/parentesco.constant";
 import React from "react";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
 import useVisitaFormularioViewModel from "../../application/view-model/use-visita-formulario.view-model";

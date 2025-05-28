@@ -1,4 +1,4 @@
-import APIS from "@/constants/endpoint";
+import APIS from "@/src/core/constants/endpoint.constant";
 import { RuteoApiRepository } from "@/src/core/api/repositories/ruteo-api.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";

@@ -2,7 +2,7 @@ import { View, Text, ScrollView } from "react-native";
 import React from "react";
 import { Button } from "tamagui";
 import { useRouter } from "expo-router";
-import { rutasApp } from "@/constants/rutas";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { perfilStyles } from "../../stylesheet/perfil.stylesheet";
 import usePerfilViewModel from "../../application/view-model/use-perfil.view-model";
 

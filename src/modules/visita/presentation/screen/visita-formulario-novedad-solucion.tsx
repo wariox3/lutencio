@@ -2,7 +2,7 @@ import { TextAreaInput } from "@/components/ui/form/inputs/TextAreaInput";
 import ModalAlert from "@/src/shared/components/modal-alert";
 import { Button, Spinner, View } from "tamagui";
 import React from "react";
-import { Validaciones } from "@/constants/mensajes";
+import { Validaciones } from "@/src/core/constants";
 import useVisitaNovedadSolucionViewModel from "../../application/view-model/use-visita-novedad-solucion.view-model";
 
 export default function visitaFormularionNovedadSolucion() {

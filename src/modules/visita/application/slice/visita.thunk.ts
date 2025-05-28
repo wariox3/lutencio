@@ -6,7 +6,7 @@ import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationServi
 import { GetListaVisitaUseCase, SetNovedadSolucionVisitaUseCase, SetNovedadVisitaUseCase } from "../use-cases";
 import { consultarApiFormData } from "@/utils/api";
 import { respuestaCargar } from "../../domain/interfaces/cargar.interfase";
-import APIS from "@/constants/endpoint";
+import APIS from "@/src/core/constants/endpoint.constant";
 
 export const cargarOrdenThunk = createAsyncThunk(
   "visita/cargar-orden",

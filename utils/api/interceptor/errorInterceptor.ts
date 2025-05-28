@@ -1,4 +1,4 @@
-import APIS from "@/constants/endpoint";
+import APIS from "@/src/core/constants/endpoint.constant";
 import { AxiosError } from "axios";
 import { Alert } from "react-native";
 

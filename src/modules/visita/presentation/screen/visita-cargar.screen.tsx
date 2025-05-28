@@ -1,5 +1,5 @@
 import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
-import { Validaciones } from "@/constants/mensajes";
+import { Validaciones } from "@/src/core/constants";
 import React from "react";
 import { Button, H4, ScrollView, Spinner, View } from "tamagui";
 import useVisitaCargarViewModel from "../../application/view-model/use-visita-cargar.view-model";

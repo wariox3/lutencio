@@ -1,4 +1,4 @@
-import { rutasApp } from "@/constants/rutas";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { Car, ClipboardPlus } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
 import React from "react";

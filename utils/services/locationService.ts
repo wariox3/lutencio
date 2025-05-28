@@ -3,8 +3,8 @@ import * as TaskManager from "expo-task-manager";
 import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { consultarApi } from "../api";
-import APIS from "@/constants/endpoint";
 import networkService from "@/src/core/services/network.service";
+import APIS from "@/src/core/constants/endpoint.constant";
 
 export const TAREA_SEGUIMIENTO_UBICACION = "tarea-seguimiento-ubicacion";
 

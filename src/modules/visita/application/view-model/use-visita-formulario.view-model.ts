@@ -1,4 +1,4 @@
-import { rutasApp } from "@/constants/rutas";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ import * as Network from "expo-network";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { consultarApi } from "@/utils/api";
-import APIS from "@/constants/endpoint";
+import APIS from "@/src/core/constants/endpoint.constant";
 import { useGuardarEnGaleria } from "@/hooks/useMediaLibrary";
 import * as FileSystem from "expo-file-system";
 import useFecha from "@/src/shared/hooks/useFecha";

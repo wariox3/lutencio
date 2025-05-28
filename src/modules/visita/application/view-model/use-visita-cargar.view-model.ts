@@ -1,4 +1,4 @@
-import { rutasApp } from "@/constants/rutas";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback } from "react";
@@ -8,7 +8,7 @@ import { configuracionThunk } from "@/src/application/slices/configuracion.thunk
 import { Keyboard } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { consultarApi } from "@/utils/api";
-import APIS from "@/constants/endpoint";
+import APIS from "@/src/core/constants/endpoint.constant";
 import axios from "axios";
 import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import { STORAGE_KEYS } from "@/src/core/constants";
