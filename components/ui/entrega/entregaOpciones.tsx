@@ -1,6 +1,6 @@
 import APIS from "@/src/core/constants/endpoint.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
-import { useEliminarEnGaleria } from "@/hooks/useMediaLibrary";
+import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { selectEntregasConNovedad } from "@/src/modules/visita/application/slice/entrega.selector";
 import {

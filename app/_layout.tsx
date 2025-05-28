@@ -1,5 +1,4 @@
 import { themes } from "@/assets/theme/themes";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { persistor, store } from "@/src/application/store";
 import { defaultConfig } from "@tamagui/config/v4";
 import { TamaguiProvider, createTamagui } from "@tamagui/core";
@@ -31,7 +30,6 @@ declare module "@tamagui/core" {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });

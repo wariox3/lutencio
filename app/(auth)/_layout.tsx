@@ -1,8 +1,6 @@
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
-
-import { useColorScheme } from "@/hooks/useColorScheme";
 import COLORES from "@/src/core/constants/colores.constant";
 import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
 
@@ -10,8 +8,6 @@ import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
 SplashScreen.preventAutoHideAsync();
 
 export default function LoginLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Stack
       screenOptions={{

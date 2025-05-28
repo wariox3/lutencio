@@ -16,7 +16,7 @@ import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { consultarApi } from "@/utils/api";
 import APIS from "@/src/core/constants/endpoint.constant";
-import { useGuardarEnGaleria } from "@/hooks/useMediaLibrary";
+import { useGuardarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import * as FileSystem from "expo-file-system";
 import useFecha from "@/src/shared/hooks/useFecha";
 

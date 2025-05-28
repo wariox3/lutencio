@@ -1,4 +1,4 @@
-import { useIntervalActivo } from "@/hooks/useIntervalActivo";
+import { useIntervalActivo } from "@/src/shared/hooks/useIntervalActivo";
 import { useAppSelector } from "@/src/application/store/hooks";
 import { obtenerEntregasPendientesOrdenadas } from "@/src/modules/visita/application/slice/entrega.selector";
 import {

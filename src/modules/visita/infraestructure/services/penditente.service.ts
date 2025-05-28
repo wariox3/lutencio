@@ -1,5 +1,5 @@
 import APIS from "@/src/core/constants/endpoint.constant";
-import { useProcesarImagenes } from "@/hooks/useMediaLibrary";
+import { useProcesarImagenes } from "@/src/shared/hooks/useMediaLibrary";
 import { Entrega } from "@/interface/entrega/entrega";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import { consultarApi } from "@/utils/api";

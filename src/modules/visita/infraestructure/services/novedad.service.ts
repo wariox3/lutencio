@@ -2,7 +2,7 @@ import { consultarApi } from "@/utils/api";
 import { Novedad } from "../../domain/interfaces/novedad.interface";
 import APIS from "@/src/core/constants/endpoint.constant";
 import { Entrega } from "@/interface/entrega/entrega";
-import { useProcesarImagenes } from "@/hooks/useMediaLibrary";
+import { useProcesarImagenes } from "@/src/shared/hooks/useMediaLibrary";
 
 
 export class NovedadService {

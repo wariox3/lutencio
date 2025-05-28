@@ -1,5 +1,5 @@
 import { rutasApp } from "@/src/core/constants/rutas.constant";
-import { useMediaLibrary } from "@/hooks/useMediaLibrary";
+import { useMediaLibrary } from "@/src/shared/hooks/useMediaLibrary";
 import { Entrega } from "@/interface/entrega/entrega";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { AlertCircle, Trash2 } from "@tamagui/lucide-icons";

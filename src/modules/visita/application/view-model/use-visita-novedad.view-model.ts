@@ -2,7 +2,7 @@ import APIS from "@/src/core/constants/endpoint.constant";
 import {
   useEliminarEnGaleria,
   useGuardarEnGaleria,
-} from "@/hooks/useMediaLibrary";
+} from "@/src/shared/hooks/useMediaLibrary";
 import { novedadTipo } from "@/interface/entrega/novedadTipo";
 import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
