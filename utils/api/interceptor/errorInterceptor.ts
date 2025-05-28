@@ -6,7 +6,7 @@ import { Alert } from "react-native";
 const urlExentas = [APIS.ruteo.visitaEntrega, APIS.ruteo.ubicacion, APIS.ruteo.novedad];
 
 const obtenerRuta = (url: string): string | null => {
-  const match = url.match(/online\/(.+)/); // Busca lo que hay después de "online/"
+  const match = url.match(/(?:reddocapi\.online|reddocapi\.co)\/(.+)/); // Busca lo que hay después de "reddocapi.online/" o "reddocapi.co/   
   return match ? match[1] : null; // Devuelve solo la parte de la ruta
 };
 
@@ -35,14 +35,19 @@ export const handleErrorResponse = (error: AxiosError): void => {
 const error400 = (error: AxiosError): AxiosError => {
   
   const urlFallida = error.config?.url || "URL desconocida";
+  console.log({urlFallida});
+  
 
   // Obtener la parte relevante de la URL (después de "online/")
   const rutaFallida = obtenerRuta(urlFallida);
+  console.log({rutaFallida});
 
   // Verificar si la URL fallida coincide con alguna en urlExentas
   const esExenta = urlExentas.some(
     (exenta) => obtenerRuta(exenta) === rutaFallida
   );
+  console.log({esExenta});
+
 
   if (esExenta) {
     return error;
