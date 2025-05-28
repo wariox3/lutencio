@@ -206,8 +206,6 @@ const SheetContents = memo(({ setOpen }: any) => {
       for (const entrega of arrEntregasPendientes) {
         try {
           let imagenes: { base64: string }[] = [];
-          console.log(entrega);
-          
 
           const formDataToSend = new FormData();
           formDataToSend.append("id", `${entrega.id}`);
@@ -226,10 +224,7 @@ const SheetContents = memo(({ setOpen }: any) => {
             });
           } else {
             formDataToSend.append(`imagenes`, [].toString()); // Usamos 'as any' para evitar el error de tipo
-
-          }
-          console.log(formDataToSend);
-          
+          }          
 
           // 3️ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
           await consultarApi<any>(
