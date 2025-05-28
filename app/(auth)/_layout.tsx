@@ -20,6 +20,7 @@ export default function LoginLayout() {
         },
         headerLargeTitle: true,
         headerBackButtonDisplayMode: "minimal",
+        headerTintColor: 'black',
         headerShadowVisible: false,
       }}
     >
