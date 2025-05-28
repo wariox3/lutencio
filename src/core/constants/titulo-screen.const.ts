@@ -8,6 +8,11 @@ export const tituloScreen = {
     entregar: "Entregas",
     novedad: "Novedad",
     pendiente: "Pendientes",
-
+  },
+  perfil:{
+    perfil: "Perfil de usuario",
+    terminos: "Términos de uso",
+    privacidad: "Politica de privacidad",
+    eliminar: "Eliminar de uso"
   }
 };

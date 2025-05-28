@@ -2,40 +2,43 @@ import COLORES from "@/src/core/constants/colores";
 import { Stack } from "expo-router";
 import React from "react";
 import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
+import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
 
 export default function ProfileLayout() {
   return (
     <Stack
     screenOptions={{
-      headerShadowVisible: false,
-      title: "",
       headerStyle: {
-        backgroundColor: COLORES.HEADER_BACKGROUND_COLOR
+        backgroundColor: COLORES.HEADER_BACKGROUND_COLOR,
       },
+      headerLargeTitle: true,
+      headerBackButtonDisplayMode: "minimal",
+      headerTintColor: 'black'
     }}
   >
       <Stack.Screen
         name="index"
         options={{
-          headerLeft: () => <BtnMenuDrewer />
+          headerLeft: () => <BtnMenuDrewer />,
+          title: tituloScreen.perfil.perfil,
         }}
       />
       <Stack.Screen
         name="terminos"
         options={{
-          headerShown: true,
+          title: tituloScreen.perfil.terminos,
         }}
       />
       <Stack.Screen
         name="privacidad"
         options={{
-          headerShown: true,
+          title: tituloScreen.perfil.privacidad,
         }}
       />
       <Stack.Screen
         name="eliminar-cuenta"
         options={{
-          headerShown: true,
+          title: tituloScreen.perfil.eliminar,
         }}
       />
     </Stack>
