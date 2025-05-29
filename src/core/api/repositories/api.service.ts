@@ -115,14 +115,9 @@ class ApiService {
 
   public async get<T = any>(
     endpoint: string,
-    params?: Record<string, any>,
-    headers?: Record<string, string>
-  ): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: "GET",
-      params,
-      headers,
-    });
+    headers?: Record<string, any>
+  ): Promise<AxiosResponse<T, any>> {
+    return this.instance.get<T>(endpoint, {headers});
   }
 
   public async post<T = any>(

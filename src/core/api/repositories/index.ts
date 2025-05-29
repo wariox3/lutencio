@@ -4,9 +4,6 @@ import ApiService from "./api.service";
 // Configuración inicial (puede venir de variables de entorno)
 const apiConfig: ApiConfig = {
   baseUrl: process.env.API_BASE_URL || "https://api.example.com/v1",
-  headers: {
-    // Headers comunes
-  },
   timeout: 30000,
 };
 
