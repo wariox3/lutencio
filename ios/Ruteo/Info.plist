@@ -50,19 +50,19 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your camera</string>
+	<string>$(PRODUCT_NAME) necesita acceder a tu cámara para tomar fotos o escanear documentos.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to use your location always and when in use.</string>
+	<string>Permite que $(PRODUCT_NAME) utilice tu ubicación incluso cuando no estás usando la app, para ofrecerte servicios basados en la ubicación.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your location even when the app is closed.</string>
+	<string>$(PRODUCT_NAME) usa tu ubicación en segundo plano para mejorar la precisión de sus servicios.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to use your location while using the app.</string>
+	<string>$(PRODUCT_NAME) necesita tu ubicación mientras usas la app para mostrarte contenido relevante cercano.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your microphone</string>
+	<string>$(PRODUCT_NAME) requiere acceso al micrófono para grabar audio como parte de sus funciones.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to save photos.</string>
+	<string>Permite que $(PRODUCT_NAME) guarde imágenes o archivos en tu galería.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow $(PRODUCT_NAME) to access your photos.</string>
+	<string>$(PRODUCT_NAME) necesita acceder a tu galería para que puedas seleccionar y subir fotos desde tu dispositivo.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
