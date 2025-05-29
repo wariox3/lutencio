@@ -1,5 +1,5 @@
-import { EntregaCamara } from "@/components/ui/entrega/entregaCamara";
-import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
+import { EntregaCamara } from "@/src/modules/visita/presentation/components/form/camara";
+import EntregaImagenesPreview from "@/src/modules/visita/presentation/components/form/imagenes-preview";
 import { SelectInput } from "@/src/shared/components/form/inputs/SelectInput";
 import { TextAreaInput } from "@/src/shared/components/form/inputs/TextAreaInput";
 import { Validaciones } from "@/src/core/constants";

@@ -1,10 +1,10 @@
 import { rutasApp } from "@/src/core/constants/rutas.constant";
-import { Car, ClipboardPlus } from "@tamagui/lucide-icons";
+import { ClipboardPlus } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Card, H6, ListItem, Text, View, YGroup } from "tamagui";
+import { Card, H6, ListItem, Text, YGroup } from "tamagui";
 
-const EntregasSinElementos = () => {
+const SinElementos = () => {
   const router = useRouter();
 
   const navegarCargar = () => {
@@ -35,4 +35,4 @@ const EntregasSinElementos = () => {
   );
 };
 
-export default EntregasSinElementos;
+export default SinElementos;

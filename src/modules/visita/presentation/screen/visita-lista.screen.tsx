@@ -1,5 +1,5 @@
-import EntregaSinPermisoLocalizacion from "@/components/ui/entrega/entregaSinPermisoLocalizacion";
-import EntregasSinElementos from "@/components/ui/entrega/entregasSinElementos";
+import EntregaSinPermisoLocalizacion from "@/src/modules/visita/presentation/components/visita-lista/sin-permiso-localizacion";
+import EntregasSinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import BtnAcciones from "@/src/shared/components/btn-acciones";
 import React from "react";

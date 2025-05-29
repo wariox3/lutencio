@@ -10,7 +10,7 @@ import { useFocusEffect } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { Button, Card, YStack } from "tamagui";
 
-const EntregaUbicacion = () => {
+const ControlUbicacion = () => {
   const [seguimientoUbicacion, setSeguimientoUbicacion] = useState(true);
   const arrEntregas = useAppSelector(obtenerEntregasPendientesOrdenadas);
 
@@ -76,4 +76,4 @@ const EntregaUbicacion = () => {
   );
 };
 
-export default EntregaUbicacion;
+export default ControlUbicacion;

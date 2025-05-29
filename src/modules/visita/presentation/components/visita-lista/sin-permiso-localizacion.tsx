@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, H4, H6, Text, View } from "tamagui";
 
-const EntregaSinPermisoLocalizacion = () => {
+const SinPermisoLocalizacion = () => {
   return (
     <Card flex={0.1} my={"$1"} theme={"red"} padding={16}>
       <H6 mb="$2">Información</H6>
@@ -10,4 +10,4 @@ const EntregaSinPermisoLocalizacion = () => {
   );
 };
 
-export default EntregaSinPermisoLocalizacion;
+export default SinPermisoLocalizacion;

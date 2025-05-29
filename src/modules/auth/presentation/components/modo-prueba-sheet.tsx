@@ -20,7 +20,7 @@ const ModoPruebaSheet = memo(({ close }: ModoPruebaSheetProps) => {
 
   const gestionModoPruebas = async (checked: boolean) => {
     dispatch(setModoPrueba(checked));
-    storageService.setItem(STORAGE_KEYS.modoPrueba, checked)
+    storageService.setItem(STORAGE_KEYS.modoPrueba, checked);
     close(); // Esto cerrará el sheet
   };
 

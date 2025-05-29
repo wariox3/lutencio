@@ -1,7 +1,7 @@
-import { EntregaCamara } from "@/components/ui/entrega/entregaCamara";
-import { EntregaFirma } from "@/components/ui/entrega/entregaFirma";
-import EntregaFirmaPreview from "@/components/ui/entrega/entregaFirmaPreview";
-import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
+import { EntregaCamara } from "@/src/modules/visita/presentation/components/form/camara";
+import { EntregaFirma } from "@/src/modules/visita/presentation/components/form/firma";
+import EntregaFirmaPreview from "@/src/modules/visita/presentation/components/form/firma-preview";
+import EntregaImagenesPreview from "@/src/modules/visita/presentation/components/form/imagenes-preview";
 import { BasicInput } from "@/src/shared/components/form/inputs/BasicInput";
 import { SelectInput } from "@/src/shared/components/form/inputs/SelectInput";
 import { parentescos } from "@/src/core/constants/parentesco.constant";

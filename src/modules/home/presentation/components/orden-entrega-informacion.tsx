@@ -3,7 +3,7 @@ import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { Card, H4, H6, XStack, YStack } from "tamagui";
 
-const EntregaCardDespachoCargado = () => {
+const OrdenEntregaInformacion = () => {
   const [despacho, setDespacho] = useState<string | null>(null);
   const [ordenEntrega, setOrdenEntrega] = useState<string | null>(null);
 
@@ -43,4 +43,4 @@ const EntregaCardDespachoCargado = () => {
   );
 };
 
-export default EntregaCardDespachoCargado;
+export default OrdenEntregaInformacion;
