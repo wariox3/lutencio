@@ -1,13 +1,10 @@
-import APIS from "@/src/core/constants/endpoint.constant";
+import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
+import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { novedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
 import {
   useEliminarEnGaleria,
   useGuardarEnGaleria,
 } from "@/src/shared/hooks/useMediaLibrary";
-import { novedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
-import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
-import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { consultarApi } from "@/utils/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Network from "expo-network";
 import { useRouter } from "expo-router";
 import { useState } from "react";
