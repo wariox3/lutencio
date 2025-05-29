@@ -1,21 +1,29 @@
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { obtenerEntregasPendientesOrdenadas, obtenerEntregasSeleccionadas } from "@/src/modules/visita/application/slice/entrega.selector";
+import {
+  obtenerEntregasPendientesOrdenadas,
+  obtenerEntregasSeleccionadas,
+} from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
   limpiarEntregaSeleccionada,
   seleccionarEntrega,
 } from "@/src/modules/visita/application/slice/entrega.slice";
-import BtnAcciones from "@/src/shared/components/btn-acciones";
-import { ArrowLeftCircle, ArrowRightCircle } from "@tamagui/lucide-icons";
+import {
+  ArrowDownToLine,
+  ArrowLeftCircle,
+  ArrowRightCircle,
+  FileWarning,
+} from "@tamagui/lucide-icons";
 import { Image } from "expo-image";
 import * as Location from "expo-location";
-import { useFocusEffect, useNavigation } from "expo-router";
+import { router, useFocusEffect, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
+import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
 
 const { width } = Dimensions.get("window");
 
@@ -25,9 +33,7 @@ const GpsScreen = () => {
   const entregasPendientesOrdenadas = useAppSelector(
     obtenerEntregasPendientesOrdenadas
   );
-  const entregasSeleccionadas = useAppSelector(
-    obtenerEntregasSeleccionadas
-  );
+  const entregasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
   const [coordinates, setCoordinates] = useState<any[]>([]);
   const flatListRef = useRef<any>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -153,12 +159,24 @@ const GpsScreen = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      <BtnAcciones
-        visualizarCantidadSeleccionada={entregasPendientesOrdenadas.length > 0}
-        cantidadSeleccionada={1}
-        rutaEntregar={rutasApp.gpsEntregar}
-        rutaNovedad={rutasApp.gpsNovedad}
-      ></BtnAcciones>
+      <XStack justify={"space-around"} mx="$2" mt={"$2"}>
+        <BotonAccion
+          onPress={() => router.navigate(rutasApp.visitaEntregar)}
+          icon={<ArrowDownToLine size="$2" />}
+          texto="Entregar"
+          themeColor="blue"
+          mostrarCantidad={entregasSeleccionadas.length > 0}
+          cantidad={entregasSeleccionadas.length}
+        />
+        <BotonAccion
+          onPress={() => router.navigate(rutasApp.visitaNovedad)}
+          icon={<FileWarning size="$2" />}
+          texto="Novedad"
+          themeColor="yellow"
+          mostrarCantidad={entregasSeleccionadas.length > 0}
+          cantidad={entregasSeleccionadas.length}
+        />
+      </XStack>
       {entregasPendientesOrdenadas.length > 0 ? (
         <>
           <View style={gpsStyles.mapContainer}>

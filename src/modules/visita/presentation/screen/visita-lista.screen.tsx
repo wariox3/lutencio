@@ -1,11 +1,14 @@
-import EntregaSinPermisoLocalizacion from "@/src/modules/visita/presentation/components/visita-lista/sin-permiso-localizacion";
-import EntregasSinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
+import SinPermisoLocalizacion from "@/src/modules/visita/presentation/components/visita-lista/sin-permiso-localizacion";
+import SinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
-import BtnAcciones from "@/src/shared/components/btn-acciones";
 import React from "react";
 import useVisitaListaViewModel from "../../application/view-model/use-visita-lista.view-model";
 import ItemLista from "../components/visita-lista/item-lista";
 import { FlatList, RefreshControl } from "react-native";
+import { router } from "expo-router";
+import { ArrowDownToLine, FileWarning } from "@tamagui/lucide-icons";
+import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
+import { XStack } from "tamagui";
 
 export default function VisitaListaScreen() {
   const {
@@ -19,8 +22,7 @@ export default function VisitaListaScreen() {
     theme,
   } = useVisitaListaViewModel();
 
-  if (permisoLocalizacion !== "granted")
-    return <EntregaSinPermisoLocalizacion></EntregaSinPermisoLocalizacion>;
+  if (permisoLocalizacion !== "granted") return <SinPermisoLocalizacion />;
 
   return (
     <>
@@ -30,17 +32,29 @@ export default function VisitaListaScreen() {
         renderItem={({ item }) => (
           <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
         )}
-        style={{backgroundColor:"#ffff"}}
+        style={{ backgroundColor: "#ffff" }}
         ListHeaderComponent={
-          <BtnAcciones
-            visualizarCantidadSeleccionada={entregasSeleccionadas.length > 0}
-            cantidadSeleccionada={entregasSeleccionadas.length}
-            rutaEntregar={rutasApp.visitaEntregar}
-            rutaNovedad={rutasApp.visitaNovedad}
-          ></BtnAcciones>
+          <XStack justify={"space-around"} mx="$2" mt={"$2"}>
+            <BotonAccion
+              onPress={() => router.navigate(rutasApp.visitaEntregar)}
+              icon={<ArrowDownToLine size="$2" />}
+              texto="Entregar"
+              themeColor="blue"
+              mostrarCantidad={entregasSeleccionadas.length > 0}
+              cantidad={entregasSeleccionadas.length}
+            />
+            <BotonAccion
+              onPress={() => router.navigate(rutasApp.visitaNovedad)}
+              icon={<FileWarning size="$2" />}
+              texto="Novedad"
+              themeColor="yellow"
+              mostrarCantidad={entregasSeleccionadas.length > 0}
+              cantidad={entregasSeleccionadas.length}
+            />
+          </XStack>
         }
         contentInsetAdjustmentBehavior="automatic"
-        ListEmptyComponent={<EntregasSinElementos />}
+        ListEmptyComponent={<SinElementos />}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
