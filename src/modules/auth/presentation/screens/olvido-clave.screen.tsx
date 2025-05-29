@@ -1,4 +1,4 @@
-import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
+import { BasicInput } from "@/src/shared/components/form/inputs/BasicInput";
 import { Validaciones } from "@/src/core/constants";
 import React from "react";
 import { Button, Spinner, View, ScrollView } from "tamagui";

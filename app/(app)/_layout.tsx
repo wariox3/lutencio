@@ -1,4 +1,4 @@
-import CustomDrawerContent from "@/components/ui/dreawer/CustomDrawerContent";
+import CustomDrawerContent from "@/src/shared/components/navegacion/custom-drawer-content";
 import { Drawer } from "expo-router/drawer";
 import "react-native-reanimated";
 

@@ -1,7 +1,7 @@
 import { EntregaCamara } from "@/components/ui/entrega/entregaCamara";
 import EntregaImagenesPreview from "@/components/ui/entrega/entregaImagenesPreview";
-import { SelectInput } from "@/components/ui/form/inputs/SelectInput";
-import { TextAreaInput } from "@/components/ui/form/inputs/TextAreaInput";
+import { SelectInput } from "@/src/shared/components/form/inputs/SelectInput";
+import { TextAreaInput } from "@/src/shared/components/form/inputs/TextAreaInput";
 import { Validaciones } from "@/src/core/constants";
 import React from "react";
 import { Controller } from "react-hook-form";

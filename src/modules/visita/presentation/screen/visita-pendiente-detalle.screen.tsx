@@ -5,7 +5,7 @@ import { KeyboardAvoidingView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { obtenerVisita } from "../../application/slice/entrega.selector";
 import useVisitaEntregaIdViewModel from "../../application/view-model/use-visita-entrega-id.view-model";
-import Titulo from "@/components/ui/comun/Titulo";
+import Titulo from "@/src/shared/components/comun/Titulo";
 import { Card, Text } from "tamagui";
 
 const VisitaPendienteDetalleScreen = () => {

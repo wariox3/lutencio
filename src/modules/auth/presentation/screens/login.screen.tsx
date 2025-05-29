@@ -1,6 +1,6 @@
-import Titulo from "@/components/ui/comun/Titulo";
-import { BasicInput } from "@/components/ui/form/inputs/BasicInput";
-import { PasswordInput } from "@/components/ui/form/inputs/PasswordInput";
+import Titulo from "@/src/shared/components/comun/Titulo";
+import { BasicInput } from "@/src/shared/components/form/inputs/BasicInput";
+import { PasswordInput } from "@/src/shared/components/form/inputs/PasswordInput";
 import MensajeModoPrueba from "@/components/ui/login/MensajeModoPrueba";
 import ModoPruebaSheet from "@/components/ui/login/ModoPruebaSheet";
 import { Validaciones } from "@/src/core/constants";

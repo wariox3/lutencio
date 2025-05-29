@@ -1,4 +1,4 @@
-import { TextAreaInput } from "@/components/ui/form/inputs/TextAreaInput";
+import { TextAreaInput } from "@/src/shared/components/form/inputs/TextAreaInput";
 import ModalAlert from "@/src/shared/components/modal-alert";
 import { Button, Spinner, View } from "tamagui";
 import React from "react";

@@ -51,7 +51,7 @@ export default function CustomDrawerContent(props: any) {
     router.push(ruta);
   };
 
-  const miAvatar = require('../../../assets/images/usuario.jpeg');
+  const miAvatar = require('@/assets/images/usuario.jpeg');
   
   return (
     <DrawerContentScrollView {...props}>
