@@ -1,6 +1,6 @@
 import APIS from "@/src/core/constants/endpoint.constant";
 import { useProcesarImagenes } from "@/src/shared/hooks/useMediaLibrary";
-import { Entrega } from "@/interface/entrega/entrega";
+import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import { consultarApi } from "@/utils/api";
 import { cambiarEstadoSinconizado } from "../../application/slice/entrega.slice";

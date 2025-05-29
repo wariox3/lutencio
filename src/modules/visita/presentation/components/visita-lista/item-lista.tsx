@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Text } from "tamagui";
-import { Entrega } from "@/interface/entrega/entrega";
+import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista";
 
 const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {

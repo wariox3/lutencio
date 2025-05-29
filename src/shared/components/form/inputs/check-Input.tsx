@@ -1,4 +1,4 @@
-import { CheckInputProps } from "@/interface/forms/CheckInputProps";
+import { CheckInputProps } from "@/src/shared/interface/forms";
 import { Check as CheckIcon } from "@tamagui/lucide-icons";
 import React from "react";
 import { Controller } from "react-hook-form";

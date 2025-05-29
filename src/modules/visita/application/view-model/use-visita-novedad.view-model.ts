@@ -3,7 +3,7 @@ import {
   useEliminarEnGaleria,
   useGuardarEnGaleria,
 } from "@/src/shared/hooks/useMediaLibrary";
-import { novedadTipo } from "@/interface/entrega/novedadTipo";
+import { novedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
 import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { consultarApi } from "@/utils/api";

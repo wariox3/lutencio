@@ -1,4 +1,4 @@
-import { BasicInputProps } from "@/interface/forms/BasicInputProps";
+import { BasicInputProps } from "@/src/shared/interface/forms";
 import { Controller } from "react-hook-form";
 import { Input, Label, Text, View } from "tamagui";
 

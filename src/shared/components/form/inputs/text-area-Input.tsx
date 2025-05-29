@@ -1,5 +1,5 @@
 import React from 'react'
-import { BasicInputProps } from '@/interface/forms/BasicInputProps'
+import { BasicInputProps } from '@/src/shared/interface/forms/input-props.interface'
 import { Label, Text, TextArea, View } from 'tamagui'
 import { Controller } from 'react-hook-form'
 

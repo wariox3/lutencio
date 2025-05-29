@@ -1,7 +1,7 @@
 import COLORES from "@/src/core/constants/colores.constant";
 import { Stack } from "expo-router";
 import React from "react";
-import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
+import BtnMenuDrewer from "@/src/shared/components/navegacion/btn-menu-drewer";
 import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
 
 export default function ProfileLayout() {

@@ -1,18 +1,8 @@
 import React from 'react';
-import { Button, ButtonProps, Paragraph, Sheet, XStack, YStack, SheetProps } from 'tamagui';
+import { Button, Sheet } from 'tamagui';
+import { ReusableSheetProps } from '../../interface/comun';
 
 type SnapPointsMode = 'percent' | 'constant' | 'fit' | 'mixed';
-
-interface ReusableSheetProps {
-  triggerText?: string;
-  triggerProps?: ButtonProps;
-  sheetContents?: React.ReactNode | ((props: { close: () => void }) => React.ReactNode);
-  initialSnapMode?: SnapPointsMode;
-  initialModalType?: boolean;
-  customSnapPoints?: (number | string)[];
-  onOpenChange?: (open: boolean) => void;
-  sheetProps?: Partial<SheetProps>;
-}
 
 const spModes: SnapPointsMode[] = ['percent', 'constant', 'fit', 'mixed'];
 

@@ -1,6 +1,6 @@
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useMediaLibrary } from "@/src/shared/hooks/useMediaLibrary";
-import { Entrega } from "@/interface/entrega/entrega";
+import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { AlertCircle, Trash2 } from "@tamagui/lucide-icons";
 import * as FileSystem from "expo-file-system";

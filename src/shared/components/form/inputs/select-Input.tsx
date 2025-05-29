@@ -1,21 +1,8 @@
+import { SelectInputProps } from '@/src/shared/interface/forms';
 import { Picker } from '@react-native-picker/picker';
 import { Controller } from "react-hook-form";
 import { Label, Text, View } from "tamagui";
 
-type SelectItem = {
-  id: number | string;
-  nombre: string;
-};
-
-interface SelectInputProps {
-  name: string;
-  control: any;
-  rules?: any;
-  placeholder?: string;
-  label: string;
-  isRequired?: boolean;
-  data?: SelectItem[];
-}
 
 export const SelectInput: React.FC<SelectInputProps> = ({
   name,

@@ -1,6 +1,6 @@
-import Titulo from "@/src/shared/components/comun/Titulo";
-import { BasicInput } from "@/src/shared/components/form/inputs/BasicInput";
-import { PasswordInput } from "@/src/shared/components/form/inputs/PasswordInput";
+import Titulo from "@/src/shared/components/comun/titulo";
+import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
+import { PasswordInput } from "@/src/shared/components/form/inputs/password-Input";
 import MensajeModoPrueba from "@/src/modules/auth/presentation/components/mensaje-modo-prueba";
 import ModoPruebaSheet from "@/src/modules/auth/presentation/components/modo-prueba-sheet";
 import { Validaciones } from "@/src/core/constants";
@@ -8,7 +8,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, ScrollView, Spinner, View, XStack } from "tamagui";
 import { useLoginViewModel } from "../../application/view-models/use-login.view-model";
-import ReusableSheet from "@/src/shared/components/modal-sheet";
+import ReusableSheet from "@/src/shared/components/comun/modal-sheet";
 
 export default function LoginScreen() {
   const {

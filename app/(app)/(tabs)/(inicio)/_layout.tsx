@@ -1,5 +1,5 @@
 import COLORES from "@/src/core/constants/colores.constant";
-import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
+import BtnMenuDrewer from "@/src/shared/components/navegacion/btn-menu-drewer";
 import { Stack } from "expo-router";
 
 export default function VisitasLayout() {

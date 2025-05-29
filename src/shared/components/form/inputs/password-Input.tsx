@@ -1,4 +1,4 @@
-import { PasswordInputProps } from "@/interface/forms/PasswordInputProps";
+import { PasswordInputProps } from "@/src/shared/interface/forms";
 import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";

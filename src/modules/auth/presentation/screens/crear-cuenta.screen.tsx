@@ -1,6 +1,6 @@
-import { BasicInput } from "@/src/shared/components/form/inputs/BasicInput";
-import CheckInput from "@/src/shared/components/form/inputs/CheckInput";
-import { PasswordInput } from "@/src/shared/components/form/inputs/PasswordInput";
+import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
+import CheckInput from "@/src/shared/components/form/inputs/check-Input";
+import { PasswordInput } from "@/src/shared/components/form/inputs/password-Input";
 import React from "react";
 import { KeyboardAvoidingView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

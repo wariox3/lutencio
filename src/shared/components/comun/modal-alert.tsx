@@ -1,14 +1,9 @@
 import { XCircle } from "@tamagui/lucide-icons";
 import { Link } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { View } from "react-native";
 import Animated, { FadeIn, SlideInDown } from "react-native-reanimated";
 import { Button, H4, XStack } from "tamagui";
-
-interface ModalAlertProps {
-  children: React.ReactNode;
-  showBackButton?: boolean;
-  titulo?: string;
-}
+import { ModalAlertProps } from "../../interface/comun";
 
 export default function ModalAlert({
   children,

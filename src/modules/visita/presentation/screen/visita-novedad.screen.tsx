@@ -1,7 +1,7 @@
 import { EntregaCamara } from "@/src/modules/visita/presentation/components/form/camara";
 import EntregaImagenesPreview from "@/src/modules/visita/presentation/components/form/imagenes-preview";
-import { SelectInput } from "@/src/shared/components/form/inputs/SelectInput";
-import { TextAreaInput } from "@/src/shared/components/form/inputs/TextAreaInput";
+import { SelectInput } from "@/src/shared/components/form/inputs/select-Input";
+import { TextAreaInput } from "@/src/shared/components/form/inputs/text-area-Input";
 import { Validaciones } from "@/src/core/constants";
 import React from "react";
 import { Controller } from "react-hook-form";

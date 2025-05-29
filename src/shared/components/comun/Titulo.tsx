@@ -1,9 +1,6 @@
 import React from "react";
 import { H4, View } from "tamagui";
-
-interface TituloProps {
-  texto: string; // Propiedad opcional para definir una ruta específica
-}
+import { TituloProps } from "../../interface/comun";
 
 const Titulo = ({ texto }: TituloProps) => {
   return (

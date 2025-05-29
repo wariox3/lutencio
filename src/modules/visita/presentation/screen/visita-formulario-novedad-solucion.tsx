@@ -1,5 +1,5 @@
-import { TextAreaInput } from "@/src/shared/components/form/inputs/TextAreaInput";
-import ModalAlert from "@/src/shared/components/modal-alert";
+import { TextAreaInput } from "@/src/shared/components/form/inputs/text-area-Input";
+import ModalAlert from "@/src/shared/components/comun/modal-alert";
 import { Button, Spinner, View } from "tamagui";
 import React from "react";
 import { Validaciones } from "@/src/core/constants";

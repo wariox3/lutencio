@@ -2,8 +2,8 @@ import { EntregaCamara } from "@/src/modules/visita/presentation/components/form
 import { EntregaFirma } from "@/src/modules/visita/presentation/components/form/firma";
 import EntregaFirmaPreview from "@/src/modules/visita/presentation/components/form/firma-preview";
 import EntregaImagenesPreview from "@/src/modules/visita/presentation/components/form/imagenes-preview";
-import { BasicInput } from "@/src/shared/components/form/inputs/BasicInput";
-import { SelectInput } from "@/src/shared/components/form/inputs/SelectInput";
+import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
+import { SelectInput } from "@/src/shared/components/form/inputs/select-Input";
 import { parentescos } from "@/src/core/constants/parentesco.constant";
 import React from "react";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";

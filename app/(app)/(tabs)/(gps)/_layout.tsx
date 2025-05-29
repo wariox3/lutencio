@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
+import BtnMenuDrewer from "@/src/shared/components/navegacion/btn-menu-drewer";
 import COLORES from "@/src/core/constants/colores.constant";
 import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
 

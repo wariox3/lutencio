@@ -1,4 +1,4 @@
-import { Entrega } from "@/interface/entrega/entrega";
+import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { ApiResponse } from "@/src/core/api/domain/interfaces/api.interface";
 
 export interface VisitaRepository {

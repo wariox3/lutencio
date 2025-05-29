@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { FileText, Home, MapPinned } from "@tamagui/lucide-icons";
-import BtnMenuDrewer from "@/src/shared/components/btn-menu-drewer";
+import BtnMenuDrewer from "@/src/shared/components/navegacion/btn-menu-drewer";
 
 export default function TabLayout() {
   return (

@@ -1,6 +1,6 @@
 import { GeneralApiRepository } from "@/src/core/api/repositories/general-api.service";
 import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
-import { Entrega } from "@/interface/entrega/entrega";
+import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { RuteoApiRepository } from "@/src/core/api/repositories/ruteo-api.service";
 import storageService from "@/src/core/services/storage.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
