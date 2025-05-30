@@ -1,4 +1,4 @@
-import Titulo from "@/src/shared/components/comun/titulo";
+import Titulo from "@/src/shared/components/comun/Titulo";
 import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
 import { PasswordInput } from "@/src/shared/components/form/inputs/password-Input";
 import MensajeModoPrueba from "@/src/modules/auth/presentation/components/mensaje-modo-prueba";
