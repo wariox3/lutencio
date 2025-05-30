@@ -3,7 +3,11 @@ import { VerticalApiRepository } from "../../infraestructure/api/vertical-api.se
 import storageService from "@/src/core/services/storage.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
-import { GetListaVisitaUseCase, SetNovedadSolucionVisitaUseCase, SetNovedadVisitaUseCase } from "../use-cases";
+import {
+  GetListaVisitaUseCase,
+  SetNovedadSolucionVisitaUseCase,
+  SetNovedadVisitaUseCase,
+} from "../use-cases";
 import { consultarApiFormData } from "@/utils/api";
 import { respuestaCargar } from "../../domain/interfaces/cargar.interfase";
 import APIS from "@/src/core/constants/endpoint.constant";
@@ -12,13 +16,8 @@ export const cargarOrdenThunk = createAsyncThunk(
   "visita/cargar-orden",
   async (payload: { codigo: string }, { rejectWithValue }) => {
     try {
-      const respuestaEntregaVertical = await consultarApiFormData<respuestaCargar>(
-          `${APIS.entrega.verticalEntrega}${payload.codigo}/`,
-          null,
-          { requiereToken: true, method: "get" }
-        );
-
-
+      const respuestaEntregaVertical =
+        await new VerticalApiRepository().getEntregaPorCodigo(payload.codigo);
       if (respuestaEntregaVertical) {
         const { despacho_id, schema_name } = respuestaEntregaVertical;
         const visitas = await new GetListaVisitaUseCase().execute(
@@ -51,7 +50,12 @@ export const cargarOrdenThunk = createAsyncThunk(
 export const visitaNovedadThunk = createAsyncThunk(
   "visita/guardar-novedad",
   async (
-    payload: { visita: number; descripcion: string; novedad_tipo: string, imagenes: any },
+    payload: {
+      visita: number;
+      descripcion: string;
+      novedad_tipo: string;
+      imagenes: any;
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -71,7 +75,10 @@ export const visitaNovedadThunk = createAsyncThunk(
 
 export const visitaNovedadSolucionThunk = createAsyncThunk(
   "visita/guardar-novedad-solucion",
-  async (payload: { id: number; solucion: string, visita: number }, { rejectWithValue }) => {
+  async (
+    payload: { id: number; solucion: string; visita: number },
+    { rejectWithValue }
+  ) => {
     try {
       const respuestaVisitaSolucionNovedad =
         await new SetNovedadSolucionVisitaUseCase().setNovedadSolucion(

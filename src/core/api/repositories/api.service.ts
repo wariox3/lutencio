@@ -113,12 +113,17 @@ class ApiService {
     }
   }
 
-  public async get<T = any>(
-    endpoint: string,
-    headers?: Record<string, any>
-  ): Promise<AxiosResponse<T, any>> {
-    return this.instance.get<T>(endpoint, {headers});
+public async get<T>(
+  endpoint: string,
+  headers?: Record<string, any>
+): Promise<T> {
+  try {
+    const response: AxiosResponse<T> = await this.instance.get(endpoint, { headers });
+    return response.data;
+  } catch (error) {
+    throw error as ApiError;
   }
+}
 
   public async post<T = any>(
     endpoint: string,
