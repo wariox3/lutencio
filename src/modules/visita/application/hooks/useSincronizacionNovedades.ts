@@ -9,9 +9,10 @@ import { NovedadService } from '../../infraestructure/services/novedad.service';
 export const useSincronizacionNovedades = () => {
   const entregasConNovedad = useAppSelector(selectEntregasConNovedad);
   const estaEnLinea = useNetworkStatus(); // <- Estado de red (boolean)
-
+  console.log(estaEnLinea);
+  console.log(entregasConNovedad.length);
+  
   const sincronizarTodasLasNovedades = useCallback(async () => {
-    if (!estaEnLinea) return;
 
     const subdominio = await AsyncStorage.getItem("subdominio");
     if (!subdominio) return;

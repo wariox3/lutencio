@@ -1,3 +1,4 @@
+import { useSincronizacionNovedades } from "@/src/modules/visita/application/hooks/useSincronizacionNovedades";
 import { useCameraPermissions } from "expo-camera";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
@@ -16,6 +17,9 @@ export default function MainDreawerIndex() {
   useEffect(() => {
     solicitarPermiso();
   }, []);
+
+  useSincronizacionNovedades();
+
 
   const solicitarPermiso = async () => {
     //permiso camara
