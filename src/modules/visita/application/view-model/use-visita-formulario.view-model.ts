@@ -14,7 +14,7 @@ import {
 import * as Network from "expo-network";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { consultarApi } from "@/utils/api";
+import { consultarApi, consultarApiFormData } from "@/utils/api";
 import APIS from "@/src/core/constants/endpoint.constant";
 import { useGuardarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import * as FileSystem from "expo-file-system";
@@ -193,7 +193,7 @@ export default function useVisitaFormularioViewModel() {
     await Promise.all(
       entregasSeleccionadas.map(async (visita: number) => {
         const subdominio = await AsyncStorage.getItem("subdominio");
-        // Usamos Promise.all para esperar a que todas las imágenes se lean
+        //Usamos Promise.all para esperar a que todas las imágenes se lean
         const imagenes = await Promise.all(
           state.arrImagenes.map(async (imagen) => {
             const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
@@ -226,7 +226,7 @@ export default function useVisitaFormularioViewModel() {
           formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
         });
 
-        await consultarApi<any>(APIS.ruteo.visitaEntrega, formDataToSend, {
+        const respuesta = await consultarApiFormData<any>(APIS.ruteo.visitaEntrega, formDataToSend, {
           requiereToken: true,
           subdominio: subdominio!,
         });

@@ -1,14 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
-
 import { configuracionThunk } from "@/src/application/slices/configuracion.thunk";
 import { obtenerUsuarioId } from "@/src/modules/user/application/slice/usuario.selector";
 import * as Location from "expo-location";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "tamagui";
-import { useSincronizacionNovedades } from "../hooks/useSincronizacionNovedades";
 import {
   obtenerEntregasPendientesOrdenadas,
   obtenerEntregasSeleccionadas
@@ -21,7 +19,6 @@ import {
   seleccionarEntrega,
 } from "../slice/entrega.slice";
 import { cargarOrdenThunk } from "../slice/visita.thunk";
-import { useSincronizacionEntregas } from "../hooks/useSinconizarEntregas";
 
 export default function useVisitaListaViewModel() {
   const navigation = useNavigation();
@@ -35,7 +32,6 @@ export default function useVisitaListaViewModel() {
     null
   );
   const theme = useTheme();
-  // useSincronizacionEntregas();
 
   useEffect(() => {
     async function getCurrentLocation() {
