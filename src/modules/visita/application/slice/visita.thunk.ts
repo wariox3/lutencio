@@ -1,16 +1,13 @@
+import { STORAGE_KEYS } from "@/src/core/constants";
+import storageService from "@/src/core/services/storage.service";
+import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { VerticalApiRepository } from "../../infraestructure/api/vertical-api.service";
-import storageService from "@/src/core/services/storage.service";
-import { STORAGE_KEYS } from "@/src/core/constants";
-import { iniciarTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import {
   GetListaVisitaUseCase,
   SetNovedadSolucionVisitaUseCase,
-  SetNovedadVisitaUseCase,
+  SetNovedadVisitaUseCase
 } from "../use-cases";
-import { consultarApiFormData } from "@/utils/api";
-import { respuestaCargar } from "../../domain/interfaces/cargar.interfase";
-import APIS from "@/src/core/constants/endpoint.constant";
 
 export const cargarOrdenThunk = createAsyncThunk(
   "visita/cargar-orden",
