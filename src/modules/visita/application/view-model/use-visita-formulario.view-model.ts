@@ -1,24 +1,22 @@
-import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import APIS from "@/src/core/constants/endpoint.constant";
+import useFecha from "@/src/shared/hooks/useFecha";
+import { useGuardarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
+import { consultarApiFormData } from "@/utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from "expo-file-system";
+import * as Network from "expo-network";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Alert } from "react-native";
 import {
   actualizarFechaEntrega,
   actualizarFirmaEntrega,
   agregarImagenEntrega,
   cambiarEstadoEntrega,
-  cambiarEstadoSinconizado,
-  quitarEntregaSeleccionada,
+  quitarEntregaSeleccionada
 } from "../slice/entrega.slice";
-import * as Network from "expo-network";
-import { Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { consultarApi, consultarApiFormData } from "@/utils/api";
-import APIS from "@/src/core/constants/endpoint.constant";
-import { useGuardarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
-import * as FileSystem from "expo-file-system";
-import useFecha from "@/src/shared/hooks/useFecha";
 
 type VisitaFormType = {
   recibe: string;
@@ -37,7 +35,7 @@ export default function useVisitaFormularioViewModel() {
   );
 
   const router = useRouter();
-  const { control, handleSubmit, reset, getValues } = useForm<VisitaFormType>({
+  const { control, handleSubmit, reset } = useForm<VisitaFormType>({
     defaultValues: {
       recibe: "",
       parentesco: "",

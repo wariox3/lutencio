@@ -1,14 +1,12 @@
-import APIS from "@/src/core/constants/endpoint.constant";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import networkService from "@/src/core/services/network.service";
-import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { visitaNovedadSolucionThunk } from "../slice/visita.thunk";
 import { Alert } from "react-native";
 import { actualizarNovedadSolucion, cambiarEstadoNovedadSolucion } from "../slice/entrega.slice";
+import { visitaNovedadSolucionThunk } from "../slice/visita.thunk";
 
 const valoresFormulario: NovedadSolucionFormType = {
   solucion: "",
