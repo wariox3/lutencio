@@ -200,12 +200,12 @@ const entregasSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(visitaNovedadThunk.fulfilled, (state, { payload }) => {
-      const entrega = state.entregas.find((e) => e.id === payload.visita);
+      const entrega = state.entregas.find((e) => e.id === payload.visita);      
       if (entrega) {
         entrega.novedad_id = payload.id;
+        entrega.estado_novedad = !entrega.estado_novedad;
+        entrega.estado_sincronizado = !entrega.estado_sincronizado
       }
-      cambiarEstadoNovedad(payload.visita);
-      cambiarEstadoSinconizado(payload.visita);
     });
     builder.addCase(visitaNovedadSolucionThunk.fulfilled, (state, { payload }) => {
       const entrega = state.entregas.find((e) => e.id === payload.visita);
