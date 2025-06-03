@@ -14,45 +14,37 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Alert } from "react-native";
 import { Avatar, ListItem, XStack, YGroup } from "tamagui";
+import { useAlertaGlobal } from "../../hooks/useAlertaGlobal";
 
 export default function CustomDrawerContent(props: any) {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { abrirAlerta } = useAlertaGlobal();
 
   const cerrarSession = () => {
-    return Alert.alert(
-      "Cerrar sesión",
-      "Esta seguro de cerrar la sesión",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Confirmar",
-          onPress: async () => {
-            await AsyncStorage.removeItem("jwtToken");
-            await AsyncStorage.removeItem("usuario_id");
-            await AsyncStorage.removeItem("despacho");
-            await AsyncStorage.removeItem("subdominio");
-            await detenerTareaSeguimientoUbicacion();
-            dispatch(limpiarEntregaSeleccionada());
-            dispatch(quitarEntregas());
-            dispatch(cerrarSesion());
-            router.replace(rutasApp.login);
-          },
-        },
-      ],
-      { cancelable: true }
-    );
+    return abrirAlerta({
+      titulo: "Cerrar sesión",
+      mensaje: "Esta seguro de cerrar la sesión",
+      onAceptar: async () => {
+        await AsyncStorage.removeItem("jwtToken");
+        await AsyncStorage.removeItem("usuario_id");
+        await AsyncStorage.removeItem("despacho");
+        await AsyncStorage.removeItem("subdominio");
+        await detenerTareaSeguimientoUbicacion();
+        dispatch(limpiarEntregaSeleccionada());
+        dispatch(quitarEntregas());
+        dispatch(cerrarSesion());
+        router.replace(rutasApp.login);
+      }
+    });
   };
 
   const navegar = (ruta: any) => {
     router.push(ruta);
   };
 
-  const miAvatar = require('@/assets/images/usuario.jpeg');
-  
+  const miAvatar = require("@/assets/images/usuario.jpeg");
+
   return (
     <DrawerContentScrollView {...props}>
       <XStack justify={"center"}>

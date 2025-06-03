@@ -8,4 +8,5 @@ export const Validaciones = {
     correoNoValido: "Correo no valido",
     clavesDiferentes: "Claves diferentes",
   },
+
 };

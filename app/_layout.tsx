@@ -1,5 +1,6 @@
 import { themes } from "@/assets/theme/themes";
 import { persistor, store } from "@/src/application/store";
+import AlertDialogGlobal from "@/src/shared/components/comun/alert-dialog-global";
 import { defaultConfig } from "@tamagui/config/v4";
 import { TamaguiProvider, createTamagui } from "@tamagui/core";
 import { useFonts } from "expo-font";
@@ -49,14 +50,15 @@ export default function RootLayout() {
       <PersistGate loading={null} persistor={persistor}>
         <TamaguiProvider config={config}>
           <PortalProvider>
-          <StatusBar barStyle="light-content" backgroundColor="#caeef9" />
-          <GestureHandlerRootView style={{ flex: 1 }}>
+            <StatusBar barStyle="light-content" backgroundColor="#caeef9" />
+            <GestureHandlerRootView style={{ flex: 1 }}>
               <Stack>
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
                 <Stack.Screen name="(app)" options={{ headerShown: false }} />
                 <Stack.Screen name="+not-found" />
               </Stack>
+              <AlertDialogGlobal></AlertDialogGlobal>
             </GestureHandlerRootView>
           </PortalProvider>
         </TamaguiProvider>
