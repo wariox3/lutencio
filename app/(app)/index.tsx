@@ -9,6 +9,7 @@ import {
   PermissionsAndroid,
   Platform
 } from "react-native";
+import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
 export default function MainDreawerIndex() {
   const [permission, requestCamaraPermission] = useCameraPermissions();
@@ -26,6 +27,9 @@ export default function MainDreawerIndex() {
     //permiso camara
     requestCamaraPermission();
     //permiso localización
+    if(Platform.OS === "ios"){
+      await requestTrackingPermissionsAsync();
+    }
     await Location.requestForegroundPermissionsAsync();
     //permiso localización
     await Location.requestBackgroundPermissionsAsync();
