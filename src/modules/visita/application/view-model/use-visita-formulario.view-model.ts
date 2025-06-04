@@ -15,8 +15,10 @@ import {
   actualizarFirmaEntrega,
   agregarImagenEntrega,
   cambiarEstadoEntrega,
-  quitarEntregaSeleccionada
+  quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { alertas } from "@/src/core/constants/alertas.const";
 
 type VisitaFormType = {
   recibe: string;
@@ -88,15 +90,13 @@ export default function useVisitaFormularioViewModel() {
       parentesco: "",
       numeroIdentificacion: "",
       celular: "",
-      fecha_entrega: obtenerFechaYHoraActualFormateada()
+      fecha_entrega: obtenerFechaYHoraActualFormateada(),
     });
   };
 
   const actualizarState = (newState: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
-
-  
 
   const handleCapture = async (uri: string) => {
     //1. guardar la foto en el celular
@@ -159,7 +159,6 @@ export default function useVisitaFormularioViewModel() {
   };
 
   const entregaVisitaOffline = async (data: VisitaFormType, dispatch: any) => {
-    
     // Agregar imágenes a entregas seleccionadas
     entregasSeleccionadas.forEach((entregaId) => {
       state.arrImagenes.forEach((imagen) => {
@@ -184,10 +183,13 @@ export default function useVisitaFormularioViewModel() {
       dispatch(cambiarEstadoEntrega(entregaId));
       dispatch(quitarEntregaSeleccionada(entregaId));
     });
-    Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
+    mostrarAlertHook({
+      titulo: alertas.titulo.exito,
+      mensaje: alertas.mensaje.guardarRegistroLocal,
+    });
   };
 
-  const entregaVisitaOnline = async (data: VisitaFormType, dispatch: any) => {    
+  const entregaVisitaOnline = async (data: VisitaFormType, dispatch: any) => {
     await Promise.all(
       entregasSeleccionadas.map(async (visita: number) => {
         const subdominio = await AsyncStorage.getItem("subdominio");
@@ -224,10 +226,14 @@ export default function useVisitaFormularioViewModel() {
           formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
         });
 
-        const respuesta = await consultarApiFormData<any>(APIS.ruteo.visitaEntrega, formDataToSend, {
-          requiereToken: true,
-          subdominio: subdominio!,
-        });
+        const respuesta = await consultarApiFormData<any>(
+          APIS.ruteo.visitaEntrega,
+          formDataToSend,
+          {
+            requiereToken: true,
+            subdominio: subdominio!,
+          }
+        );
       })
     );
     entregasSeleccionadas.forEach((entrega) => {

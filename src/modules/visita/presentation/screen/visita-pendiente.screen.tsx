@@ -15,6 +15,8 @@ import {
 import { Button, Card, H4, ScrollView, Text, View, XStack } from "tamagui";
 import { obtenerEntregasPendientes } from "../../application/slice/entrega.selector";
 import { quitarVisita } from "../../application/slice/entrega.slice";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { alertas } from "@/src/core/constants/alertas.const";
 
 const VisitaPendienteScreen = () => {
   const navigation = useNavigation();
@@ -39,19 +41,11 @@ const VisitaPendienteScreen = () => {
   };
 
   const confirmarRetirarVisita = async (visita: Entrega) => {
-    Alert.alert(
-      "⚠️ Advertencia",
-      "Esta acción no se puede deshacer una vez completa",
-      [
-        {
-          text: "Cancel",
-        },
-        {
-          text: "Confirmar",
-          onPress: () => retirarVisita(visita),
-        },
-      ]
-    );
+    mostrarAlertHook({
+      titulo: alertas.titulo.advertencia,
+      mensaje: alertas.mensaje.accionIrreversible,
+      onAceptar: () => retirarVisita(visita),
+    });
   };
 
   const retirarVisita = async (visita: Entrega) => {

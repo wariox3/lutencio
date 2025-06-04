@@ -34,6 +34,8 @@ import { Alert, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shallowEqual } from "react-redux";
 import { Button, H4, H6, ListItem, Spinner, XStack, YGroup } from "tamagui";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { alertas } from "@/src/core/constants/alertas.const";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -61,8 +63,8 @@ export const EntregaOpciones = () => {
     return null;
   }
 
-  if(entregas.length === 0) {
-    return null
+  if (entregas.length === 0) {
+    return null;
   }
 
   return (
@@ -141,7 +143,6 @@ const SheetContents = memo(({ setOpen }: any) => {
   const [loadSincronizandoNovedad, setLoadSincronizandoNovedad] =
     useState(false);
 
-
   const navegarEntregaPendietes = () => {
     router.navigate(rutasApp.vistaPendiente);
     setOpen(false);
@@ -156,34 +157,19 @@ const SheetContents = memo(({ setOpen }: any) => {
   };
 
   const confirmarRetirarDespacho = async () => {
-    Alert.alert(
-      "⚠️ Advertencia",
-      "Esta acción retirará las entregas y las visitas pendientes por sincronizar no se puede deshacer una vez completa",
-      [
-        {
-          text: "Cancel",
-        },
-        { text: "Confirmar", onPress: () => retirarDespacho() },
-      ]
-    );
+    mostrarAlertHook({
+      titulo: alertas.titulo.advertencia,
+      mensaje: alertas.mensaje.accionIrreversible,
+      onAceptar: () => retirarDespacho(),
+    });
   };
 
   const confirmarSincornizarEntregas = async () => {
-    Alert.alert(
-      "⚠️ Advertencia",
-      "Esta acción sincronizará las ordenes de entrega pendientes por sincronizar no se puede deshacer una vez completa",
-      [
-        {
-          text: "Cancel",
-        },
-        {
-          text: "Confirmar",
-          onPress: () => {
-            gestionGuias();
-          },
-        },
-      ]
-    );
+    mostrarAlertHook({
+      titulo: alertas.titulo.advertencia,
+      mensaje: alertas.mensaje.accionIrreversible,
+      onAceptar: () => gestionGuias(),
+    });
   };
 
   const gestionGuias = async () => {
@@ -210,7 +196,7 @@ const SheetContents = memo(({ setOpen }: any) => {
           const formDataToSend = new FormData();
           formDataToSend.append("id", `${entrega.id}`);
           formDataToSend.append("fecha_entrega", entrega.fecha_entrega);
-          if(entrega.arrImagenes){
+          if (entrega.arrImagenes) {
             entrega.arrImagenes.forEach((archivo, index) => {
               // Crear un objeto File-like compatible con FormData
               const file = {
@@ -218,20 +204,23 @@ const SheetContents = memo(({ setOpen }: any) => {
                 name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
                 type: "image/jpeg", // Tipo MIME por defecto
               };
-    
+
               // La forma correcta de adjuntar archivos en React Native
-              formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
+              formDataToSend.append(
+                `imagenes`,
+                file as any,
+                `image-${index}.jpg`
+              ); // Usamos 'as any' para evitar el error de tipo
             });
           } else {
             formDataToSend.append(`imagenes`, [].toString()); // Usamos 'as any' para evitar el error de tipo
-          }          
+          }
 
           // 3️ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
-          await consultarApi<any>(
-            APIS.ruteo.visitaEntrega,
-            formDataToSend,
-            { requiereToken: true, subdominio }
-          );
+          await consultarApi<any>(APIS.ruteo.visitaEntrega, formDataToSend, {
+            requiereToken: true,
+            subdominio,
+          });
 
           dispatch(cambiarEstadoSinconizado(entrega.id));
           setLoadSincronizando(false);

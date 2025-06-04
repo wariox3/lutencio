@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
 import { actualizarNovedadSolucion, cambiarEstadoNovedadSolucion } from "../slice/entrega.slice";
 import { visitaNovedadSolucionThunk } from "../slice/visita.thunk";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { alertas } from "@/src/core/constants/alertas.const";
 
 const valoresFormulario: NovedadSolucionFormType = {
   solucion: "",
@@ -48,8 +50,10 @@ export default function useVisitaNovedadSolucionViewModel() {
        })
     ));
     dispatch(cambiarEstadoNovedadSolucion(parseInt(vistaId)))
-    Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
-  };
+    mostrarAlertHook({
+      titulo: alertas.titulo.exito,
+      mensaje: alertas.mensaje.guardarRegistroLocal,
+    });  };
 
   const NovedadSolucionOnline = async (data: NovedadSolucionFormType) => {
     const subdominio = await AsyncStorage.getItem("subdominio");

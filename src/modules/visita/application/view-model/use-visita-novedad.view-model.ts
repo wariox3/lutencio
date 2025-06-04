@@ -18,6 +18,8 @@ import {
   cambiarEstadoSinconizado,
 } from "../slice/entrega.slice";
 import { visitaNovedadThunk } from "../slice/visita.thunk";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { alertas } from "@/src/core/constants/alertas.const";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -128,8 +130,10 @@ export default function useVisitaNovedadViewModel() {
     });
 
     cambiarEntregaEstadoNovedad();
-    Alert.alert(`✅ Éxito`, "Guardado localmente por falta de red");
-  };
+    mostrarAlertHook({
+      titulo: alertas.titulo.exito,
+      mensaje: alertas.mensaje.guardarRegistroLocal,
+    });  };
 
   const entregarNovedadOnline = async (
     data: NovedadFormType,
