@@ -157,6 +157,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   };
 
   const confirmarRetirarDespacho = async () => {
+    setOpen(false)
     mostrarAlertHook({
       titulo: alertas.titulo.advertencia,
       mensaje: alertas.mensaje.accionIrreversible,
@@ -165,6 +166,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   };
 
   const confirmarSincornizarEntregas = async () => {
+    setOpen(false)
     mostrarAlertHook({
       titulo: alertas.titulo.advertencia,
       mensaje: alertas.mensaje.accionIrreversible,
