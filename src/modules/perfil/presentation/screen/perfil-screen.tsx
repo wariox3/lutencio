@@ -1,27 +1,26 @@
-import { View, Text, ScrollView } from "react-native";
 import React from "react";
+import { ScrollView, Text, View } from "react-native";
 import { Button } from "tamagui";
-import { useRouter } from "expo-router";
-import { rutasApp } from "@/src/core/constants/rutas.constant";
-import { perfilStyles } from "../../stylesheet/perfil.stylesheet";
 import usePerfilViewModel from "../../application/view-model/use-perfil.view-model";
-
+import { perfilStyles } from "../../stylesheet/perfil.stylesheet";
 
 const perfilScreen = () => {
-
-  const { navegarPoliticas, navegarTerminos, navegarEliminarCuenta, auth } = usePerfilViewModel()
+  const { navegarPoliticas, navegarTerminos, navegarEliminarCuenta, auth } =
+    usePerfilViewModel();
 
   return (
-    <ScrollView style={perfilStyles.container}>
+    <ScrollView
+      style={perfilStyles.container}
+      contentInsetAdjustmentBehavior="automatic"
+    >
       <View style={perfilStyles.wrapper}>
         <View style={perfilStyles.profileSection}>
-          <Text style={perfilStyles.title}>Perfil de Usuario</Text>
-          
-          {/* Aquí puedes añadir la información del perfil del usuario */}
+          <Text style={perfilStyles.title}>Información personal</Text>
+
           <View style={perfilStyles.profileInfo}>
-            <Text style={perfilStyles.value}>Usuario</Text>
+            <Text style={perfilStyles.value}>Usuario:</Text>
           </View>
-          
+
           <View style={perfilStyles.profileInfo}>
             <Text style={perfilStyles.value}>{auth?.user.correo}</Text>
           </View>
@@ -29,7 +28,7 @@ const perfilScreen = () => {
 
         <View style={perfilStyles.linksSection}>
           <Text style={perfilStyles.sectionTitle}>Enlaces importantes</Text>
-          
+
           <Button
             theme="blue"
             onPress={() => navegarTerminos()}
@@ -37,7 +36,7 @@ const perfilScreen = () => {
           >
             Términos de Uso
           </Button>
-          
+
           <Button
             theme="blue"
             onPress={() => navegarPoliticas()}
@@ -55,7 +54,7 @@ const perfilScreen = () => {
         </View>
       </View>
     </ScrollView>
-  )
-}
+  );
+};
 
-export default perfilScreen
+export default perfilScreen;
