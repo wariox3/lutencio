@@ -63,6 +63,8 @@
 	<string>$(PRODUCT_NAME) Requiere guardar fotos como soporte de las entregas en tu galería para mantener un registro local.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) Accede a tu galería para adjuntar fotos como evidencia de las entregas realizadas.</string>
+	<key>NSMicrophoneUsageDescription</key>
+    <string>$(PRODUCT_NAME) Requiere acceso a tu micrófono para grabar audio como evidencia de las entregas realizadas.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
