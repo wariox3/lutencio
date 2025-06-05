@@ -1,10 +1,10 @@
 import apiService from "@/src/core/api/repositories";
-import { ApiResponse } from "../domain/interfaces/api.interface";
 import APIS from "@/src/core/constants/endpoint.constant";
-import { RuteoRepository } from "../domain/interfaces/ruteo.interface";
-import storageService from "../../services/storage.service";
 import { STORAGE_KEYS } from "../../constants";
-import { novedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
+import storageService from "../../services/storage.service";
+import { RuteoRepository } from "../domain/interfaces/ruteo.interface";
+import { NovedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
+import { RespuestaApiGet } from "../domain/interfaces/api.interface";
 
 export class RuteoApiRepository implements RuteoRepository {
   async getNovedadTipoLista() {
@@ -12,7 +12,7 @@ export class RuteoApiRepository implements RuteoRepository {
       STORAGE_KEYS.subdominio
     )) as string;
 
-    return apiService.get<ApiResponse<novedadTipo[]>>(APIS.ruteo.novedadTipo, {
+    return apiService.get<Promise<RespuestaApiGet<NovedadTipo>>>(APIS.ruteo.novedadTipo, {
       "X-Schema-Name": subdominio,
       requiereToken: true,
     });

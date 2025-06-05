@@ -23,8 +23,8 @@ const configuracionSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(configuracionThunk.fulfilled, (state, { payload }) => {
-      state.selectores = { ...state.selectores, novedadTipo: payload };
+    builder.addCase(configuracionThunk.fulfilled, (state, { payload }) => {      
+      state.selectores = { ...state.selectores, novedadTipo: payload.results };
     });
   },
 });

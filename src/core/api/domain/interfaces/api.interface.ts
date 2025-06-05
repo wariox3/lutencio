@@ -26,3 +26,11 @@ export interface ApiError {
   isCanceled?: boolean;
   isTimeout?: boolean;
 }
+
+
+export interface RespuestaApiGet<T> {
+  count: number;
+  next: any;
+  previous: any;
+  results: T[];
+}

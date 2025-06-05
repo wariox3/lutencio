@@ -1,4 +1,5 @@
-export interface novedadTipo {
-    id: number,
-    nombre: string
+export interface NovedadTipo {
+  id: number;
+  nombre: string;
 }
+
