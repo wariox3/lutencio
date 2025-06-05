@@ -99,7 +99,7 @@ const VisitaPendienteScreen = () => {
                 theme={"red"}
               />
             ) : null}
-            {item.estado_novedad ? (
+            {/* {item.estado_novedad ? (
               <Button
                 size="$3"
                 circular
@@ -107,7 +107,7 @@ const VisitaPendienteScreen = () => {
                 onPress={() => navegarNovedadSolucion(item)}
                 theme={"yellow"}
               />
-            ) : null}
+            ) : null} */}
           </XStack>
         </Card>
       )}

@@ -13,7 +13,7 @@ export default function VisitasLayout() {
         },
         headerLargeTitle: true,
         headerBackButtonDisplayMode: "minimal",
-        headerTintColor: 'black'
+        headerTintColor: "black",
       }}
     >
       <Stack.Screen
@@ -48,7 +48,12 @@ export default function VisitasLayout() {
           title: tituloScreen.visita.pendiente,
         }}
       />
-      <Stack.Screen name="[id]" />
+      <Stack.Screen
+        name="[id]"
+        options={{
+          title: tituloScreen.visita.visita,
+        }}
+      />
       <Stack.Screen
         name="modal-novedad-solucion"
         options={{

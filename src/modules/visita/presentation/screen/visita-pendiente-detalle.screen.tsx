@@ -13,18 +13,16 @@ const VisitaPendienteDetalleScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Titulo texto="Visita"></Titulo>
-      <Card flex={0.1} my={"$1"} padding={16}>
+      <Card p="$3" mx="$2" mt={"$2"} gap={2}>
         <Text>Id: {visita.id}</Text>
         <Text>Despacho: {visita.despacho_id}</Text>
-        <Text>Despacho: {visita.despacho_id}</Text>
-        <Text>Destinatario: {visita.destinatario}</Text>
-        <Text>Dirección: {visita.destinatario_direccion}</Text>
+        <Text>Destinatario:</Text>
+        <Text>{visita.destinatario}</Text>
+        <Text>Dirección:</Text>
+        <Text>{visita.destinatario_direccion}</Text>
         <Text>Fecha: {visita.fecha}</Text>
       </Card>
-      <KeyboardAvoidingView>
-
-      </KeyboardAvoidingView>
+      <KeyboardAvoidingView></KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
