@@ -23,7 +23,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>1.0.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -45,30 +45,34 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<false/>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsUsageDescription</key>
+		<dict/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) Necesita acceder a tu cámara para tomar fotos de las entregas realizadas.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>$(PRODUCT_NAME) Envía tu ubicación periódicamente al servidor para monitorear el progreso de tus entregas. Los datos solo se usan para este fin y no se comparten con terceros.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) Acceda de manera continua a tu ubicación para realizar un seguimiento preciso de tus entregas, incluso cuando la app está en segundo plano.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>$(PRODUCT_NAME) Necesita acceder de manera continua para mantener actualizado el estado de tus entregas.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) Necesita tu ubicación mientras usas la app para rutear las ordenes de entrega cargadas en el sistema.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) Requiere acceso a tu micrófono para grabar audio como evidencia de las entregas realizadas.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) Requiere guardar fotos como soporte de las entregas en tu galería para mantener un registro local.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) Accede a tu galería para adjuntar fotos como evidencia de las entregas realizadas.</string>
-	<key>NSMicrophoneUsageDescription</key>
-    <string>$(PRODUCT_NAME) Requiere acceso a tu micrófono para grabar audio como evidencia de las entregas realizadas.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
 	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>$(PRODUCT_NAME) Envía tu ubicación periódicamente al servidor para monitorear el progreso de tus entregas. Los datos solo se usan para este fin y no se comparten con terceros.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
