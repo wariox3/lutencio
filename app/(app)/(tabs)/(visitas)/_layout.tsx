@@ -11,7 +11,6 @@ export default function VisitasLayout() {
         headerStyle: {
           backgroundColor: COLORES.HEADER_BACKGROUND_COLOR,
         },
-        headerLargeTitle: true,
         headerBackButtonDisplayMode: "minimal",
         headerTintColor: "black",
       }}

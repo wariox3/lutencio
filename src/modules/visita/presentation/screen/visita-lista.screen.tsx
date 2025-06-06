@@ -8,7 +8,7 @@ import { FlatList, RefreshControl } from "react-native";
 import { router } from "expo-router";
 import { ArrowDownToLine, FileWarning } from "@tamagui/lucide-icons";
 import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
-import { XStack } from "tamagui";
+import { Button, ButtonText, XStack } from "tamagui";
 
 export default function VisitaListaScreen() {
   const {
@@ -26,15 +26,7 @@ export default function VisitaListaScreen() {
 
   return (
     <>
-      <FlatList
-        data={arrEntregas}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => (
-          <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
-        )}
-        style={{ backgroundColor: "#ffff" }}
-        ListHeaderComponent={
-          <XStack justify={"space-around"} mx="$2" mt={"$2"}>
+          <XStack justify={"space-around"} mx="$2" py={"$2"} style={{backgroundColor:"#ffff"}}>
             <BotonAccion
               onPress={() => router.navigate(rutasApp.visitaEntregar)}
               icon={<ArrowDownToLine size="$2" />}
@@ -52,8 +44,13 @@ export default function VisitaListaScreen() {
               cantidad={entregasSeleccionadas.length}
             />
           </XStack>
-        }
-        contentInsetAdjustmentBehavior="automatic"
+      <FlatList
+        data={arrEntregas}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({ item }) => (
+          <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
+        )}
+        style={{ backgroundColor: "#ffff" }}
         ListEmptyComponent={<SinElementos />}
         refreshControl={
           <RefreshControl
