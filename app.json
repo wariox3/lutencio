@@ -73,8 +73,7 @@
           "isAccessMediaLocationEnabled": true
         }
       ],
-      "expo-file-system",
-      "expo-tracking-transparency"
+      "expo-file-system"
     ],
     "experiments": {
       "typedRoutes": true
