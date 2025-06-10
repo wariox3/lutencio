@@ -204,7 +204,6 @@ const entregasSlice = createSlice({
       if (entrega) {
         entrega.novedad_id = payload.id;
         entrega.estado_novedad = true;
-        entrega.estado_sincronizado = true;
       }
     });
     builder.addCase(visitaNovedadSolucionThunk.fulfilled, (state, { payload }) => {
