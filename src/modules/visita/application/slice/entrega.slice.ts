@@ -203,8 +203,8 @@ const entregasSlice = createSlice({
       const entrega = state.entregas.find((e) => e.id === payload.visita);      
       if (entrega) {
         entrega.novedad_id = payload.id;
-        entrega.estado_novedad = !entrega.estado_novedad;
-        entrega.estado_sincronizado = !entrega.estado_sincronizado
+        entrega.estado_novedad = true;
+        entrega.estado_sincronizado = true;
       }
     });
     builder.addCase(visitaNovedadSolucionThunk.fulfilled, (state, { payload }) => {
