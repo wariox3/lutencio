@@ -30,12 +30,18 @@ export const obtenerEntregasMapa = createSelector(
   }
 );
 
-
 export const selectEntregasConNovedad = createSelector(
   [selectEntregas],
   (entregas) =>
     entregas.entregas.filter((entrega) => entrega.estado_novedad === true)
 );
+
+export const selectEntregasSincronizadas = createSelector(
+  [selectEntregas],
+  (entregas) =>
+    entregas.entregas.filter((entrega) => entrega.estado_sincronizado === true)
+);
+
 
 export const obtenerVisita = ( visitaId: number) => createSelector(
   [selectEntregas],

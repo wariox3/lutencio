@@ -21,6 +21,7 @@ export default function VisitasLayout() {
           title: "Visitas",
           headerLeft: () => <BtnMenuDrewer />,
           headerRight: () => <EntregaOpciones />,
+          headerShadowVisible: false, // applied here
         }}
       />
       <Stack.Screen

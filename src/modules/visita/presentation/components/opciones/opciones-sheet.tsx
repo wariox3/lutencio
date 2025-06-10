@@ -1,8 +1,12 @@
+import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { alertas } from "@/src/core/constants/alertas.const";
+import COLORES from "@/src/core/constants/colores.constant";
 import APIS from "@/src/core/constants/endpoint.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
-import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
-import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { selectEntregasConNovedad } from "@/src/modules/visita/application/slice/entrega.selector";
+import {
+  selectEntregasConNovedad,
+  selectEntregasSincronizadas,
+} from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   actualizarMensajeError,
   cambiarEstadoError,
@@ -11,17 +15,21 @@ import {
   limpiarEntregaSeleccionada,
   quitarEntregas,
 } from "@/src/modules/visita/application/slice/entrega.slice";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import { consultarApi } from "@/utils/api";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  ClipboardPlus,
+  Bell,
   ClipboardX,
   FileQuestion,
   FileUp,
   FileWarning,
   FileX,
   MoreVertical,
+  Package,
+  Truck,
   XCircle,
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
@@ -30,12 +38,20 @@ import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { memo, useCallback, useState } from "react";
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shallowEqual } from "react-redux";
-import { Button, H4, H6, ListItem, Spinner, XStack, YGroup } from "tamagui";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
-import { alertas } from "@/src/core/constants/alertas.const";
+import {
+  Button,
+  H4,
+  H6,
+  ListItem,
+  Spinner,
+  Text,
+  XStack,
+  YGroup,
+} from "tamagui";
+import CardInformativa from "./card-informativa";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -47,6 +63,8 @@ export const EntregaOpciones = () => {
   const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
+  const arrEntregasConNovedad = useAppSelector(selectEntregasConNovedad);
+  const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
 
   useFocusEffect(
     useCallback(() => {
@@ -69,11 +87,36 @@ export const EntregaOpciones = () => {
 
   return (
     <>
+      <XStack justify={"flex-end"} items="center" gap="$2">
+        <XStack gap="$2">
+          <XStack items="flex-end" gap="$1">
+            <Package size={12} color="$blue10" />
+            <Text fontSize="$2" fontWeight="600" color="$blue10">
+              {entregas.length}
+            </Text>
+          </XStack>
+          <XStack items="center" gap="$1">
+            <Bell size={12} color="orange" />
+            <Text fontSize="$2" fontWeight="600" color="orange">
+              {arrEntregasConNovedad.length}
+            </Text>
+          </XStack>
+        </XStack>
+        <XStack gap="$2">
+          <XStack items="center" gap="$1">
+            <Truck size={12} color="$green10" />
+            <Text fontSize="$2" fontWeight="600" color="$green10">
+              {arrEntregasSinconizado.length}
+            </Text>
+          </XStack>
+        </XStack>
+      </XStack>
+
       <Button
         icon={<MoreVertical size={"$1.5"} />}
         onPress={() => setOpen(true)}
-        variant="outlined"
         marginEnd={"$-0.75"}
+        unstyled
       ></Button>
 
       <Sheet
@@ -118,6 +161,7 @@ const SheetContents = memo(({ setOpen }: any) => {
       entregas.entregas.filter((entrega) => !entrega.estado_entregado) || [],
     shallowEqual
   );
+
   const arrEntregasPendientes = useAppSelector(
     ({ entregas }) =>
       entregas.entregas.filter(
@@ -137,6 +181,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   );
 
   const arrEntregasConNovedad = useAppSelector(selectEntregasConNovedad);
+  const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
 
   const { eliminarArchivo } = useEliminarEnGaleria();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
@@ -157,7 +202,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   };
 
   const confirmarRetirarDespacho = async () => {
-    setOpen(false)
+    setOpen(false);
     mostrarAlertHook({
       titulo: alertas.titulo.advertencia,
       mensaje: alertas.mensaje.accionIrreversible,
@@ -166,7 +211,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   };
 
   const confirmarSincornizarEntregas = async () => {
-    setOpen(false)
+    setOpen(false);
     mostrarAlertHook({
       titulo: alertas.titulo.advertencia,
       mensaje: alertas.mensaje.accionIrreversible,
@@ -371,6 +416,27 @@ const SheetContents = memo(({ setOpen }: any) => {
       <YGroup width={"auto"} flex={1} size="$4" gap="$4">
         <H6>Orden de entrega</H6>
         <YGroup.Item>
+          <XStack gap="$2">
+            <CardInformativa
+              backgroundColor={COLORES.AZUL_SUAVE}
+              titulo="Cargadas"
+              cantidad={arrEntregas.length}
+              icono={<Package size={28} opacity={0.7} />}
+            ></CardInformativa>
+            <CardInformativa
+              backgroundColor={COLORES.NARANJA_SUAVE}
+              titulo="Novedades"
+              cantidad={arrEntregasConNovedad.length}
+              icono={<Bell size={28} opacity={0.7} />}
+            ></CardInformativa>
+            <CardInformativa
+              backgroundColor={COLORES.VERDE_SUAVE}
+              titulo="Entregas"
+              cantidad={arrEntregasSinconizado.length}
+              icono={<Bell size={28} opacity={0.7} />}
+            ></CardInformativa>
+          </XStack>
+
           {entregas.length > 0 ? (
             <ListItem
               hoverTheme
