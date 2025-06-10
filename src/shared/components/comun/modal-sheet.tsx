@@ -6,8 +6,12 @@ type SnapPointsMode = 'percent' | 'constant' | 'fit' | 'mixed';
 
 const spModes: SnapPointsMode[] = ['percent', 'constant', 'fit', 'mixed'];
 
-const ReusableSheet: React.FC<ReusableSheetProps> = ({
-  triggerText = 'Open Sheet',
+interface Props extends ReusableSheetProps {
+  triggerContent?: React.ReactNode;
+}
+
+const ReusableSheet: React.FC<Props> = ({
+  triggerContent,
   triggerProps = {},
   sheetContents,
   initialSnapMode = 'percent',
@@ -52,7 +56,7 @@ const ReusableSheet: React.FC<ReusableSheetProps> = ({
         onPress={() => setOpen(true)}
         {...triggerProps}
       >
-        {triggerText}
+        {triggerContent ?? 'Abrir'}
       </Button>
 
       <Sheet

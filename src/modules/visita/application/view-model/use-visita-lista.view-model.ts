@@ -1,14 +1,15 @@
+import { configuracionThunk } from "@/src/application/slices/configuracion.thunk";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
-import { configuracionThunk } from "@/src/application/slices/configuracion.thunk";
 import { obtenerUsuarioId } from "@/src/modules/user/application/slice/usuario.selector";
 import * as Location from "expo-location";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "tamagui";
 import {
-  obtenerEntregasPendientesOrdenadas,
+  comprobarFiltrosActivos,
+  obtenerEntregasFiltros,
   obtenerEntregasSeleccionadas
 } from "../slice/entrega.selector";
 import {
@@ -23,8 +24,9 @@ import { cargarOrdenThunk } from "../slice/visita.thunk";
 export default function useVisitaListaViewModel() {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const arrEntregas = useAppSelector(obtenerEntregasPendientesOrdenadas);
+  const arrEntregas = useAppSelector(obtenerEntregasFiltros);
   const usuarioId = useAppSelector(obtenerUsuarioId);
+  const filtrosAplicados = useAppSelector(comprobarFiltrosActivos)
   const entregasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
   storageService.setItem(STORAGE_KEYS.usuarioId, `${usuarioId}`);
   const [refreshing, setRefreshing] = useState(false);
@@ -92,5 +94,6 @@ export default function useVisitaListaViewModel() {
     setRefreshing,
     recargarOrdenEntrega,
     theme,
+    filtrosAplicados
   };
 }

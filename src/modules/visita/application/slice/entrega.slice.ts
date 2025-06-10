@@ -1,17 +1,29 @@
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { cargarOrdenThunk, visitaNovedadSolucionThunk, visitaNovedadThunk } from "./visita.thunk";
+import {
+  cargarOrdenThunk,
+  visitaNovedadSolucionThunk,
+  visitaNovedadThunk,
+} from "./visita.thunk";
 
 interface EntregasState {
   entregas: Entrega[];
   entregasSeleccionadas: number[];
   loading: boolean;
+  filtros: {
+    guia: number;
+    numero: number;
+  };
 }
 
 const initialState: EntregasState = {
   entregas: [],
   entregasSeleccionadas: [],
   loading: false,
+  filtros: {
+    guia: 0,
+    numero: 0,
+  },
 };
 
 const entregasSlice = createSlice({
@@ -74,10 +86,10 @@ const entregasSlice = createSlice({
       state,
       action: PayloadAction<{ entregaId: number; fecha_entrega: string }>
     ) => {
-      const { entregaId, fecha_entrega } = action.payload;      
+      const { entregaId, fecha_entrega } = action.payload;
       const entrega = state.entregas.find((e) => e.id === entregaId);
       if (entrega) {
-        entrega.fecha_entrega = fecha_entrega
+        entrega.fecha_entrega = fecha_entrega;
       }
     },
     cambiarEstadoSeleccionado: (state, action: PayloadAction<number>) => {
@@ -186,6 +198,20 @@ const entregasSlice = createSlice({
         seleccionado: false,
       }));
     },
+    actualizarFiltros: (
+      state,
+      action: PayloadAction<{ guia: number; numero: number }>
+    ) => {
+      console.log({action});
+      
+      state.filtros = action.payload;
+    },
+    quitarFiltros: (state) => {
+      state.filtros = {
+        guia: 0,
+        numero: 0,
+      };
+    },
   },
 
   extraReducers(builder) {
@@ -200,18 +226,21 @@ const entregasSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(visitaNovedadThunk.fulfilled, (state, { payload }) => {
-      const entrega = state.entregas.find((e) => e.id === payload.visita);      
+      const entrega = state.entregas.find((e) => e.id === payload.visita);
       if (entrega) {
         entrega.novedad_id = payload.id;
         entrega.estado_novedad = true;
       }
     });
-    builder.addCase(visitaNovedadSolucionThunk.fulfilled, (state, { payload }) => {
-      const entrega = state.entregas.find((e) => e.id === payload.visita);
-       if (entrega) {
-         entrega.estado_novedad_solucion = !entrega.estado_novedad_solucion;
+    builder.addCase(
+      visitaNovedadSolucionThunk.fulfilled,
+      (state, { payload }) => {
+        const entrega = state.entregas.find((e) => e.id === payload.visita);
+        if (entrega) {
+          entrega.estado_novedad_solucion = !entrega.estado_novedad_solucion;
+        }
       }
-    });
+    );
   },
 });
 
@@ -235,6 +264,8 @@ export const {
   cambiarEstadoSeleccionadoATodas,
   actualizarNovedadSolucion,
   cambiarEstadoNovedadSolucion,
-  actualizarFechaEntrega
+  actualizarFechaEntrega,
+  actualizarFiltros,
+  quitarFiltros
 } = entregasSlice.actions;
 export default entregasSlice.reducer;
