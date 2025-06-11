@@ -13,16 +13,14 @@ import {
   cambiarEstadoSeleccionado,
   cambiarEstadoSinconizado,
   limpiarEntregaSeleccionada,
-  quitarEntregas,
 } from "@/src/modules/visita/application/slice/entrega.slice";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import { consultarApi } from "@/utils/api";
-import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   Bell,
-  ClipboardX,
+  FileCheck,
   FileQuestion,
   FileUp,
   FileWarning,
@@ -51,6 +49,7 @@ import {
   XStack,
   YGroup,
 } from "tamagui";
+import CardDesvincularOrdenEntrega from "./card-desvincular-orden-entrega";
 import CardInformativa from "./card-informativa";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
@@ -201,15 +200,6 @@ const SheetContents = memo(({ setOpen }: any) => {
     setOpen(false);
   };
 
-  const confirmarRetirarDespacho = async () => {
-    setOpen(false);
-    mostrarAlertHook({
-      titulo: alertas.titulo.advertencia,
-      mensaje: alertas.mensaje.accionIrreversible,
-      onAceptar: () => retirarDespacho(),
-    });
-  };
-
   const confirmarSincornizarEntregas = async () => {
     setOpen(false);
     mostrarAlertHook({
@@ -357,50 +347,6 @@ const SheetContents = memo(({ setOpen }: any) => {
     setLoadSincronizandoNovedad(false);
   };
 
-  const retirarDespacho = async () => {
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status === "granted") {
-      //eliminar gestiones
-
-      // deterner servicio de la ubicación
-      await detenerTareaSeguimientoUbicacion();
-
-      // Limpiar el despacho almacenado
-      await AsyncStorage.removeItem("despacho");
-
-      // Limpiar el subdominio almacenado
-      await AsyncStorage.removeItem("subdominio");
-
-      for (const entrega of entregas) {
-        if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
-          for (const img of entrega.arrImagenes) {
-            const fileInfo = await FileSystem.getInfoAsync(img.uri);
-            if (fileInfo.exists) {
-              await eliminarArchivo(img.uri);
-            }
-          }
-        }
-
-        //eliminar firma
-        if (entrega.firmarBase64) {
-          const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
-          if (fileInfo.exists) {
-            await eliminarArchivo(entrega.firmarBase64);
-          }
-        }
-      }
-
-      //retirar las entregas
-      dispatch(quitarEntregas());
-
-      //retirar entregas seleccionadas
-      retirarSeleccionadas();
-
-      //cerrar el sheet
-      setOpen(false);
-    }
-  };
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
       <XStack justify="space-between">
@@ -427,24 +373,18 @@ const SheetContents = memo(({ setOpen }: any) => {
               backgroundColor={COLORES.NARANJA_SUAVE}
               titulo="Novedades"
               cantidad={arrEntregasConNovedad.length}
-              icono={<Bell size={28} opacity={0.7} />}
+              icono={<FileWarning size={28} opacity={0.7} />}
             ></CardInformativa>
             <CardInformativa
               backgroundColor={COLORES.VERDE_SUAVE}
               titulo="Entregas"
               cantidad={arrEntregasSinconizado.length}
-              icono={<Bell size={28} opacity={0.7} />}
+              icono={<FileCheck size={28} opacity={0.7} />}
             ></CardInformativa>
           </XStack>
 
           {entregas.length > 0 ? (
-            <ListItem
-              hoverTheme
-              icon={<ClipboardX size="$2" />}
-              title="Desvincular"
-              subTitle="Desvincular la orden de entrega actual"
-              onPress={() => confirmarRetirarDespacho()}
-            />
+            <CardDesvincularOrdenEntrega close={() => setOpen(false)} />
           ) : null}
 
           {entregasSeleccionadas.length > 0 ? (

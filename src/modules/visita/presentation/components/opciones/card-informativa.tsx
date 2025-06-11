@@ -1,42 +1,39 @@
-import { View, OpaqueColorValue } from 'react-native'
-import React, { ReactElement } from 'react'
-import { Card, XStack, YStack, Text } from 'tamagui'
-import { Bell } from '@tamagui/lucide-icons'
-
+import React, { ReactElement } from "react";
+import { Card, Text, XStack, YStack } from "tamagui";
 
 interface cardInterfomativa {
-    backgroundColor: any,
-    titulo: string,
-    icono: ReactElement,
-    cantidad: number
+  backgroundColor: any;
+  titulo: string;
+  icono: ReactElement;
+  cantidad: number;
 }
 
 const CardInformativa = ({
-    backgroundColor,
-    titulo,
-    icono,
-    cantidad
+  backgroundColor,
+  titulo,
+  icono,
+  cantidad,
 }: cardInterfomativa) => {
   return (
     <Card
-    flex={1}
-    backgroundColor={backgroundColor}
-    borderRadius="$4"
-    padding="$3.5"
-  >
-    <XStack items="center" justify="space-between" gap={"$1"}>
-      <YStack>
+      flex={1}
+      backgroundColor={backgroundColor}
+      borderRadius="$4"
+      padding="$3.5"
+    >
+      <YStack gap={"$2"}>
         <Text fontSize="$3" opacity={0.7}>
           {titulo}
         </Text>
-        <Text fontSize="$8" fontWeight="bold">
-          {cantidad}
-        </Text>
+        <XStack items="center" justify="space-between" gap={"$2"}>
+          <Text fontSize="$8" fontWeight="bold">
+            {cantidad}
+          </Text>
+          <>{icono}</>
+        </XStack>
       </YStack>
-      {icono}
-    </XStack>
-  </Card>
-  )
-}
+    </Card>
+  );
+};
 
-export default CardInformativa
+export default CardInformativa;
