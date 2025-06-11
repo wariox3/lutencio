@@ -12,6 +12,7 @@ interface Props extends ReusableSheetProps {
 
 const ReusableSheet: React.FC<Props> = ({
   triggerContent,
+  triggerText,
   triggerProps = {},
   sheetContents,
   initialSnapMode = 'percent',
@@ -56,7 +57,7 @@ const ReusableSheet: React.FC<Props> = ({
         onPress={() => setOpen(true)}
         {...triggerProps}
       >
-        {triggerContent ?? 'Abrir'}
+        {triggerContent ?? triggerText}
       </Button>
 
       <Sheet

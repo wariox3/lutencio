@@ -16,7 +16,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
           : "rgba(200, 195, 195, 0.30)"
       }
     >
-      <Text>ID: {visita.id}</Text>
+      <Text>Número: {visita.numero}</Text>
       <Text>Destinatario: {visita.destinatario}</Text>
       <Text>Dirección: {visita.destinatario_direccion}</Text>
       <Text>Fecha: {visita.fecha}</Text>
