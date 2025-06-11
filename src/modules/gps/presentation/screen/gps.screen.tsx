@@ -24,6 +24,7 @@ import MapView, { Marker, Region } from "react-native-maps";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
 import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
+import SinElementos from "../components/sin-elementos";
 
 const { width } = Dimensions.get("window");
 
@@ -286,9 +287,7 @@ const GpsScreen = () => {
           </XStack>
         </>
       ) : (
-        <Card flex={0.1} my={"$1"} theme={"red"} padding={16}>
-          <H6>No tiene orden de entrega vinculada</H6>
-        </Card>
+        <SinElementos></SinElementos>
       )}
     </View>
   );
