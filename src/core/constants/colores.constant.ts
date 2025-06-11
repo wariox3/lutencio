@@ -4,7 +4,8 @@ const COLORES = {
     AZUL_SUAVE: "rgba(109, 174, 248, 0.30)",
     VERDE_SUAVE: "rgba(109, 248, 180, 0.30)",
     ROJO_SUAVE: "rgba(248, 109, 109, 0.30)",
-    ROJO_FUERTE: "rgba(200, 0, 0, 1)"
+    ROJO_FUERTE: "rgba(200, 0, 0, 1)",
+    AZUL_FUERTE: "rgba(33, 97, 204, 1)"
 } as const;
   
   export default COLORES;
