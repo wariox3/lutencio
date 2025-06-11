@@ -19,7 +19,6 @@ import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import { consultarApi } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  Bell,
   FileCheck,
   FileQuestion,
   FileUp,
@@ -27,8 +26,7 @@ import {
   FileX,
   MoreVertical,
   Package,
-  Truck,
-  XCircle,
+  XCircle
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
 import * as FileSystem from "expo-file-system";
@@ -95,7 +93,7 @@ export const EntregaOpciones = () => {
             </Text>
           </XStack>
           <XStack items="center" gap="$1">
-            <Bell size={12} color="orange" />
+            <FileWarning size={12} color="orange" />
             <Text fontSize="$2" fontWeight="600" color="orange">
               {arrEntregasConNovedad.length}
             </Text>
@@ -103,7 +101,7 @@ export const EntregaOpciones = () => {
         </XStack>
         <XStack gap="$2">
           <XStack items="center" gap="$1">
-            <Truck size={12} color="$green10" />
+            <FileCheck size={12} color="$green10" />
             <Text fontSize="$2" fontWeight="600" color="$green10">
               {arrEntregasSinconizado.length}
             </Text>

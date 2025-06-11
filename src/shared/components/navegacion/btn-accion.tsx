@@ -18,7 +18,7 @@ export const BotonAccion = ({
         disabled={!mostrarCantidad}
       >
         {texto}
-        {mostrarCantidad && <Text> ({cantidad})</Text>}
+        {mostrarCantidad && <Text>({cantidad})</Text>}
       </Button>
     );
   };
