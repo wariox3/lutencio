@@ -3,8 +3,32 @@ import { CircleUser, MapPin, Phone } from "@tamagui/lucide-icons";
 import React from "react";
 import { Card, Text, XStack, YStack } from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista";
+import { Alert, Linking, Platform } from "react-native";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { alertas } from "@/src/core/constants/alertas.const";
 
 const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
+  const llamarDestinatario = (telefono: string) => {
+    let numeroTelefonico = telefono;
+    if (Platform.OS !== "android") {
+      numeroTelefonico = `telprompt:${telefono}`;
+    } else {
+      numeroTelefonico = `tel:${telefono}`;
+    }
+    Linking.canOpenURL(numeroTelefonico)
+      .then((supported) => {
+        if (!supported) {
+          mostrarAlertHook({
+            titulo: alertas.titulo.advertencia,
+            mensaje: alertas.mensaje.numeroNoValido,
+          });
+        } else {
+          return Linking.openURL(numeroTelefonico);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <Card
       p="$3"
@@ -17,32 +41,35 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
     >
       <YStack gap={"$1"}>
         <Text>#{visita.numero}</Text>
-
         <XStack items={"center"} gap={"$1"}>
           <CircleUser size={"$1"} />
           <Text flex={1}>{visita.destinatario}</Text>
         </XStack>
-
         <XStack items={"center"} gap={"$1"}>
           <MapPin size={"$1"} />
           <Text flex={1}>{visita.destinatario_direccion}</Text>
         </XStack>
-        <XStack items={"center"} gap={"$1"}>
-          <Phone size={"$1"}  color={COLORES.AZUL_FUERTE}/>
-          <Text flex={1} color={COLORES.AZUL_FUERTE}>{visita.destinatario_telefono}</Text>
-        </XStack>
-    
+        <>
+          {visita.destinatario_telefono ? (
+            <XStack items={"center"} gap={"$1"}>
+              <Phone size={"$1"} color={COLORES.AZUL_FUERTE} />
+              <Text
+                flex={1}
+                color={COLORES.AZUL_FUERTE}
+                onPress={() => llamarDestinatario(visita.destinatario_telefono)}
+              >
+                {visita.destinatario_telefono}
+              </Text>
+            </XStack>
+          ) : null}
+        </>
       </YStack>
-
-      
-
       {visita.estado_entregado ? <Text>Entregado</Text> : null}
       {visita.estado_novedad ? (
         <Text theme={"yellow"} px={"$0.25"}>
           Novedad
         </Text>
       ) : null}
-
     </Card>
   );
 };

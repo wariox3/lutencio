@@ -20,7 +20,7 @@ import * as Location from "expo-location";
 import { router, useFocusEffect, useNavigation } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList } from "react-native";
-import MapView, { Marker, Region } from "react-native-maps";
+import MapView, { MapMarker, Marker, Region } from "react-native-maps";
 import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
 import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
@@ -40,6 +40,10 @@ const GpsScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const dispatch = useAppDispatch();
   const mapRef = useRef<MapView>(null);
+  const markerRef = useRef<MapMarker>(null);
+  const [markerTitle, setMarkerTitle] = useState("Título inicial");
+  const [markerDescription, setMarkerDescription] = useState("Título inicial");
+
 
   useFocusEffect(
     useCallback(() => {
@@ -47,24 +51,9 @@ const GpsScreen = () => {
     }, [])
   );
 
-  // Modifica tu useEffect para usar esta función
+  // // Modifica tu useEffect para usar esta función
   useEffect(() => {
-    if (entregasPendientesOrdenadas[currentIndex] && mapRef.current && region) {
-      const delivery = entregasPendientesOrdenadas[currentIndex];
-
-      // Crear array con ambas coordenadas (tu ubicación y el destino)
-      const points = [
-        { latitude: region.latitude, longitude: region.longitude },
-        { latitude: delivery.latitud, longitude: delivery.longitud },
-      ];
-
-      // Calcular la región que contiene ambos puntos
-      const newRegion = getRegionForCoordinates(points);
-
-      if (newRegion) {
-        mapRef.current.animateToRegion(newRegion, 1000);
-      }
-    }
+    centrarMapa()
   }, [entregasPendientesOrdenadas, currentIndex, region]);
 
   // Agrega esta función utilitaria al inicio de tu componente
@@ -105,6 +94,8 @@ const GpsScreen = () => {
       dispatch(limpiarEntregaSeleccionada());
       dispatch(seleccionarEntrega(entregasPendientesOrdenadas[0].id));
       dispatch(cambiarEstadoSeleccionado(entregasPendientesOrdenadas[0].id));
+      setMarkerTitle(`${entregasPendientesOrdenadas[0].numero}`)
+      setMarkerDescription(`${entregasPendientesOrdenadas[0].destinatario}`)
     }
   };
 
@@ -155,7 +146,33 @@ const GpsScreen = () => {
     );
 
     flatListRef.current?.scrollToIndex({ index: newIndex, animated: true });
+
+    setMarkerTitle(`${entregasPendientesOrdenadas[newIndex].numero}`); // ✅ Actualiza el estado
+    setMarkerDescription(`${entregasPendientesOrdenadas[newIndex].destinatario.slice(0, 17)}`); // ✅ Actualiza el estado
+
+    setTimeout(() => markerRef.current?.showCallout(), 700);
+
   };
+
+  const centrarMapa = () => {
+    if (entregasPendientesOrdenadas[currentIndex] && mapRef.current && region) {
+      const delivery = entregasPendientesOrdenadas[currentIndex];
+
+      const points = [
+        { latitude: region.latitude, longitude: region.longitude },
+        { latitude: delivery.latitud, longitude: delivery.longitud},
+      ];
+
+      // Calcular la región que contiene ambos puntos
+      const newRegion = getRegionForCoordinates(points);
+      
+
+      if (newRegion) {
+        mapRef.current.animateToRegion(newRegion, 1000);
+      }
+    }
+  };
+
   const blurhash = "=IQcr5bI^*-:_NM|?bof%M";
 
   return (
@@ -196,6 +213,7 @@ const GpsScreen = () => {
                 {entregasPendientesOrdenadas[currentIndex] ? (
                   <>
                     <Marker
+                      ref={markerRef}
                       coordinate={{
                         latitude:
                           entregasPendientesOrdenadas[currentIndex].latitud,
@@ -203,10 +221,8 @@ const GpsScreen = () => {
                           entregasPendientesOrdenadas[currentIndex].longitud,
                       }}
                       image={require("../../../../../assets/images/marca-mapa-azul.png")}
-                      title={`${entregasPendientesOrdenadas[currentIndex].numero}`}
-                      description={`${entregasPendientesOrdenadas[
-                        currentIndex
-                      ].destinatario.slice(0, 14)}`}
+                      title={markerTitle}
+                      description={markerDescription}
                     />
                   </>
                 ) : null}
@@ -231,7 +247,7 @@ const GpsScreen = () => {
             flex={0.1}
             my={"$1"}
             justify={"space-between"}
-            alignItems="center"
+            items="center"
             gap={"$4"}
           >
             <Button

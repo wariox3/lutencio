@@ -11,6 +11,7 @@ export const alertas = {
     error500: "Error interno del servidor. Por favor, intente más tarde.",
     guardarRegistroLocal: "Guardado localmente por falta de red",
     accionIrreversible: "¿Esta acción no se puede deshacer una vez completa?",
+    numeroNoValido: "El número no es valido.",
     defecto: "Ha ocurrido un error inesperado."
   }
 };
