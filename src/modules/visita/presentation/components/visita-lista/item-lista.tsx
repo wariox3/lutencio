@@ -50,7 +50,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
           <Text flex={1}>{visita.destinatario_direccion}</Text>
         </XStack>
         <>
-          {visita.destinatario_telefono ? (
+          {visita.destinatario_telefono !== "None" && visita.destinatario_telefono ? (
             <XStack items={"center"} gap={"$1"}>
               <Phone size={"$1"} color={COLORES.AZUL_FUERTE} />
               <Text
