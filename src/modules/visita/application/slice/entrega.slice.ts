@@ -201,9 +201,7 @@ const entregasSlice = createSlice({
     actualizarFiltros: (
       state,
       action: PayloadAction<{ guia: number; numero: number }>
-    ) => {
-      console.log({action});
-      
+    ) => {      
       state.filtros = action.payload;
     },
     quitarFiltros: (state) => {

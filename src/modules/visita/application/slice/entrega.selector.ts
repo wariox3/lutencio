@@ -10,14 +10,14 @@ export const obtenerEntregasFiltros = createSelector(
   (entregas, filtros) => {
     return entregas.entregas
       .filter((entrega) => !entrega.estado_entregado)
-      .filter((entrega) => {
+      .filter((entrega) => {        
         const coincideGuia = filtros.guia
           ? entrega.guia === filtros.guia
           : true;
         const coincideNumero = filtros.numero
           ? entrega.numero === filtros.numero
           : true;
-        return coincideGuia && coincideNumero;
+        return coincideGuia || coincideNumero;
       });
   }
 );

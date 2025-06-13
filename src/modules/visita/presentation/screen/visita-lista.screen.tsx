@@ -1,18 +1,27 @@
+import COLORES from "@/src/core/constants/colores.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import SinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
 import SinPermisoLocalizacion from "@/src/modules/visita/presentation/components/visita-lista/sin-permiso-localizacion";
 import ReusableSheet from "@/src/shared/components/comun/modal-sheet";
 import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
-import { ArrowDownToLine, FileWarning, Filter } from "@tamagui/lucide-icons";
+import {
+  ArrowDownToLine,
+  FileWarning,
+  Filter,
+  ScanQrCode,
+  Search,
+  Share,
+} from "@tamagui/lucide-icons";
 import { router } from "expo-router";
 import React from "react";
 import { FlatList, RefreshControl } from "react-native";
-import { H6, XStack, YStack } from "tamagui";
+import { Input, XStack, YStack } from "tamagui";
 import useVisitaListaViewModel from "../../application/view-model/use-visita-lista.view-model";
-import FormularioFiltros from "./visita-formulario-filtros.screen";
-import ItemLista from "../components/visita-lista/item-lista";
 import MensajeFiltroAplicado from "../components/visita-filtros/mensaje-filtro-aplicado";
 import MensajeFiltroSinResultados from "../components/visita-filtros/mensaje-filtro-sin-resultados";
+import ItemLista from "../components/visita-lista/item-lista";
+import FormularioFiltros from "../components/visita-lista/input-filtros.screen";
+import InputFiltros from "../components/visita-lista/input-filtros.screen";
 
 export default function VisitaListaScreen() {
   const {
@@ -31,8 +40,14 @@ export default function VisitaListaScreen() {
 
   return (
     <>
-      <YStack p={"$2"} style={{ backgroundColor: "#ffff" }}>
-        <XStack justify={"space-between"}>
+      <YStack
+        p={"$2"}
+        style={{
+          backgroundColor: COLORES.HEADER_BACKGROUND_COLOR,
+          height: 100,
+        }}
+      >
+        <XStack justify={"space-around"}>
           <BotonAccion
             onPress={() => router.navigate(rutasApp.visitaEntregar)}
             icon={<ArrowDownToLine size="$2" />}
@@ -49,17 +64,8 @@ export default function VisitaListaScreen() {
             mostrarCantidad={entregasSeleccionadas.length > 0}
             cantidad={entregasSeleccionadas.length}
           />
-          <ReusableSheet
-            triggerContent={<Filter size={20} bg={"transparent"} />}
-            customSnapPoints={[90]}
-            sheetContents={({ close }) => <FormularioFiltros close={close} />}
-          />
         </XStack>
-        {filtrosAplicados ? (
-          <MensajeFiltroAplicado
-            resultado={arrEntregas.length}
-          ></MensajeFiltroAplicado>
-        ) : null}
+        <InputFiltros />
       </YStack>
       <FlatList
         data={arrEntregas}
@@ -67,9 +73,15 @@ export default function VisitaListaScreen() {
         renderItem={({ item }) => (
           <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
         )}
-        style={{ backgroundColor: "#ffff" }}
+        style={{ backgroundColor: "#ffff", paddingTop: 25 }}
         ListEmptyComponent={
-          <>{filtrosAplicados ? <MensajeFiltroSinResultados /> : <SinElementos />}</>
+          <>
+            {filtrosAplicados ? (
+              <MensajeFiltroSinResultados />
+            ) : (
+              <SinElementos />
+            )}
+          </>
         }
         refreshControl={
           <RefreshControl
