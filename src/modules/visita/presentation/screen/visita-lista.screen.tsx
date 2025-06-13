@@ -14,7 +14,7 @@ import {
 } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
 import React from "react";
-import { FlatList, RefreshControl } from "react-native";
+import { FlatList, Platform, RefreshControl } from "react-native";
 import { Input, XStack, YStack } from "tamagui";
 import useVisitaListaViewModel from "../../application/view-model/use-visita-lista.view-model";
 import MensajeFiltroAplicado from "../components/visita-filtros/mensaje-filtro-aplicado";
@@ -65,7 +65,7 @@ export default function VisitaListaScreen() {
             cantidad={entregasSeleccionadas.length}
           />
         </XStack>
-        <InputFiltros />
+        {arrEntregas.length > 0 ? <InputFiltros /> : null}
       </YStack>
       <FlatList
         data={arrEntregas}
@@ -73,7 +73,7 @@ export default function VisitaListaScreen() {
         renderItem={({ item }) => (
           <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
         )}
-        style={{ backgroundColor: "#ffff", paddingTop: 25 }}
+        style={{ backgroundColor: "#ffff", paddingTop: Platform.OS ==="android" ? 30 : 25 }}
         ListEmptyComponent={
           <>
             {filtrosAplicados ? (
