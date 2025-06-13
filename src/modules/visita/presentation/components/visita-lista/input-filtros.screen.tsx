@@ -1,10 +1,11 @@
 import { useAppDispatch } from "@/src/application/store/hooks";
+import COLORES from "@/src/core/constants/colores.constant";
 import CamaraLectorCodigo from "@/src/shared/components/comun/camara-lector-codigos";
 import { Search, XCircle } from "@tamagui/lucide-icons";
-import React from "react";
-import { Button, Card, Input, XStack } from "tamagui";
+import React, { useState } from "react";
+import { Pressable } from "react-native";
+import { Card, Input, XStack } from "tamagui";
 import { actualizarFiltros } from "../../../application/slice/entrega.slice";
-import { useState } from "react";
 
 const InputFiltros = () => {
   const dispatch = useAppDispatch();
@@ -49,15 +50,13 @@ const InputFiltros = () => {
             }}
           ></CamaraLectorCodigo>
         ) : (
-          <Button unstyled>
-            <Button
-              size="$4"
-              circular
-              icon={<XCircle size={"$1.5"} color={"$red10"} />}
-              onPress={() => {setValorInput(""), filtrarVisitas("")}}
-              theme={"red"}
-            />
-          </Button>
+          <Pressable
+            onPress={() => {
+              setValorInput(""), filtrarVisitas("");
+            }}
+          >
+            <XCircle size={"$1.5"} color={COLORES.ROJO_FUERTE} />
+          </Pressable>
         )}
       </XStack>
     </Card>
