@@ -226,6 +226,13 @@ export default function useVisitaFormularioViewModel() {
           formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
         });
 
+        const filefirma = {
+          uri: state.firmarBase64,
+          name: "firma",
+          type: "image/jpeg", // Tipo MIME por defecto
+        };
+        formDataToSend.append(`firmas`, filefirma as any, `firma.jpg`); // Usamos 'as any' para evitar el error de tipo
+
         const respuesta = await consultarApiFormData<any>(
           APIS.ruteo.visitaEntrega,
           formDataToSend,
