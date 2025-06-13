@@ -17,6 +17,7 @@ import {
   quitarEntregas,
   quitarFiltros,
 } from "../../../application/slice/entrega.slice";
+import { STORAGE_KEYS } from "@/src/core/constants";
 
 const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
@@ -44,6 +45,8 @@ const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
 
       // Limpiar el subdominio almacenado
       await AsyncStorage.removeItem("subdominio");
+
+      await AsyncStorage.removeItem(STORAGE_KEYS.ordenEntrega);
 
       for (const entrega of entregas) {
         if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
