@@ -1,15 +1,17 @@
 import { useAppDispatch } from "@/src/application/store/hooks";
-import { ScanQrCode, Search } from "@tamagui/lucide-icons";
+import CamaraLectorCodigo from "@/src/shared/components/comun/camara-lector-codigos";
+import { Search, XCircle } from "@tamagui/lucide-icons";
 import React from "react";
-import { Card, Input, XStack } from "tamagui";
+import { Button, Card, Input, XStack } from "tamagui";
 import { actualizarFiltros } from "../../../application/slice/entrega.slice";
+import { useState } from "react";
 
 const InputFiltros = () => {
   const dispatch = useAppDispatch();
+  const [valorInput, setValorInput] = useState("");
 
   const filtrarVisitas = (valor: string) => {
-    console.log(valor);
-
+    setValorInput(valor); // Actualiza el estado local
     dispatch(
       actualizarFiltros({
         guia: Number(valor) || 0,
@@ -29,11 +31,7 @@ const InputFiltros = () => {
       borderStyle={"dashed"}
       bordered
     >
-      <XStack
-        bg={"white"}
-        items={"center"}
-        gap={"$2"}
-      >
+      <XStack bg={"white"} items={"center"} gap={"$2"}>
         <Search size={"$1.5"} opacity={0.5}></Search>
         <Input
           flex={1}
@@ -41,8 +39,26 @@ const InputFiltros = () => {
           unstyled
           keyboardType="number-pad"
           onChangeText={(valor) => filtrarVisitas(valor)}
+          value={valorInput} // Asigna el valor del estado al input
         ></Input>
-        <ScanQrCode size={"$1.5"}></ScanQrCode>
+        {valorInput === "" ? (
+          <CamaraLectorCodigo
+            obtenerData={(data: string) => {
+              setValorInput(data); // Actualiza el estado cuando se escanea
+              filtrarVisitas(data);
+            }}
+          ></CamaraLectorCodigo>
+        ) : (
+          <Button unstyled>
+            <Button
+              size="$4"
+              circular
+              icon={<XCircle size={"$1.5"} color={"$red10"} />}
+              onPress={() => {setValorInput(""), filtrarVisitas("")}}
+              theme={"red"}
+            />
+          </Button>
+        )}
       </XStack>
     </Card>
   );

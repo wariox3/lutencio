@@ -65,7 +65,7 @@ export default function VisitaListaScreen() {
             cantidad={entregasSeleccionadas.length}
           />
         </XStack>
-        {arrEntregas.length > 0 ? <InputFiltros /> : null}
+        <InputFiltros />
       </YStack>
       <FlatList
         data={arrEntregas}
@@ -73,7 +73,10 @@ export default function VisitaListaScreen() {
         renderItem={({ item }) => (
           <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
         )}
-        style={{ backgroundColor: "#ffff", paddingTop: Platform.OS ==="android" ? 30 : 25 }}
+        style={{
+          backgroundColor: "#ffff",
+          paddingTop: Platform.OS === "android" ? 30 : 25,
+        }}
         ListEmptyComponent={
           <>
             {filtrosAplicados ? (
