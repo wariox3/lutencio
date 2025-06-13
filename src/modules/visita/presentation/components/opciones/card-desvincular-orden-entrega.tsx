@@ -1,22 +1,22 @@
-import React from "react";
-import { Card, Text, XStack, YStack } from "tamagui";
-import { ClipboardX } from "@tamagui/lucide-icons";
+import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
-import { alertas } from "@/src/core/constants/alertas.const";
-import * as MediaLibrary from "expo-media-library";
+import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { ClipboardX } from "@tamagui/lucide-icons";
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
+import React from "react";
+import { Card, Text, XStack, YStack } from "tamagui";
 import { obtenerEntregasSeleccionadas } from "../../../application/slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
   limpiarEntregaSeleccionada,
   quitarEntregas,
+  quitarFiltros,
 } from "../../../application/slice/entrega.slice";
-import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
-import * as FileSystem from "expo-file-system";
-
 
 const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
@@ -69,6 +69,9 @@ const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
 
       //   //retirar entregas seleccionadas
       retirarSeleccionadas();
+
+      // retirar filtros
+      retirarFiltros();
     }
   };
 
@@ -77,6 +80,10 @@ const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
       dispatch(cambiarEstadoSeleccionado(entrega));
     });
     dispatch(limpiarEntregaSeleccionada());
+  };
+
+  const retirarFiltros = () => {
+    dispatch(quitarFiltros());
   };
 
   return (
