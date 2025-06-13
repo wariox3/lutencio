@@ -1,10 +1,11 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { STORAGE_KEYS } from "@/src/core/constants";
 import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
+import storageService from "@/src/core/services/storage.service";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ClipboardX } from "@tamagui/lucide-icons";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
@@ -17,7 +18,6 @@ import {
   quitarEntregas,
   quitarFiltros,
 } from "../../../application/slice/entrega.slice";
-import { STORAGE_KEYS } from "@/src/core/constants";
 
 const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
@@ -41,12 +41,11 @@ const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
       await detenerTareaSeguimientoUbicacion();
 
       // Limpiar el despacho almacenado
-      await AsyncStorage.removeItem("despacho");
-
+      await storageService.removeItem(STORAGE_KEYS.despacho);
       // Limpiar el subdominio almacenado
-      await AsyncStorage.removeItem("subdominio");
-
-      await AsyncStorage.removeItem(STORAGE_KEYS.ordenEntrega);
+      await storageService.removeItem(STORAGE_KEYS.subdominio);
+      // Limpiar orden de entrega
+      await storageService.removeItem(STORAGE_KEYS.ordenEntrega);
 
       for (const entrega of entregas) {
         if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {

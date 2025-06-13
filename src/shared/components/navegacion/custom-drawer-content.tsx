@@ -15,6 +15,7 @@ import React from "react";
 import { Alert } from "react-native";
 import { Avatar, ListItem, XStack, YGroup } from "tamagui";
 import { useAlertaGlobal } from "../../hooks/useAlertaGlobal";
+import storageService from "@/src/core/services/storage.service";
 
 export default function CustomDrawerContent(props: any) {
   const dispatch = useAppDispatch();
@@ -26,10 +27,7 @@ export default function CustomDrawerContent(props: any) {
       titulo: "Cerrar sesión",
       mensaje: "Esta seguro de cerrar la sesión",
       onAceptar: async () => {
-        await AsyncStorage.removeItem("jwtToken");
-        await AsyncStorage.removeItem("usuario_id");
-        await AsyncStorage.removeItem("despacho");
-        await AsyncStorage.removeItem("subdominio");
+        await storageService.clear();
         await detenerTareaSeguimientoUbicacion();
         dispatch(limpiarEntregaSeleccionada());
         dispatch(quitarEntregas());
