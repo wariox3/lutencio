@@ -235,6 +235,18 @@ export default function useVisitaFormularioViewModel() {
         };
         formDataToSend.append(`firmas`, filefirma as any, `firma.jpg`); // Usamos 'as any' para evitar el error de tipo
 
+        // Agregar datos adicionales como JSON
+        const datosAdicionales = {
+          recibe: data.recibe,
+          recibeParentesco: data.parentesco,
+          recibeNumeroIdentificacion: data.numeroIdentificacion,
+          recibeCelular: data.celular,
+        };
+        formDataToSend.append(
+          "datos_adicionales",
+          JSON.stringify(datosAdicionales)
+        );
+
         const respuesta = await consultarApiFormData<any>(
           APIS.ruteo.visitaEntrega,
           formDataToSend,
