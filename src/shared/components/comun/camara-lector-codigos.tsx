@@ -3,7 +3,7 @@ import { ScanQrCode, XCircle } from "@tamagui/lucide-icons";
 import ReusableSheet from "./modal-sheet";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { Button, H4, Text, View, XStack } from "tamagui";
-import { TIPOS_CODIGO_BARRA } from "@/src/core/constants/tipo-codigo.barras.constant";
+import { TIPOS_CODIGO_BARRA } from "@/src/core/constants";
 
 interface CamaraLectorCodigoProps {
   obtenerData: (data: string) => void;
