@@ -35,6 +35,7 @@ export interface Entrega {
   orden: number;
   distancia: number;
   franja_id: any;
+  datosAdicionales: DatosAdicionalesVisita;
   franja_codigo: any;
   despacho_id: number;
   resultados: Resultado[];
@@ -117,3 +118,9 @@ export interface PlusCode {
   compound_code: string;
 }
 
+export interface DatosAdicionalesVisita {
+  recibe: string
+  recibeParentesco: string
+  recibeNumeroIdentificacion: string
+  recibeCelular: string
+}
