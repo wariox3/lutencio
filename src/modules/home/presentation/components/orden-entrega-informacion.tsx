@@ -1,7 +1,8 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { STORAGE_KEYS } from "@/src/core/constants";
+import storageService from "@/src/core/services/storage.service";
 import { useFocusEffect } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
-import { Card, H4, H6, XStack, YStack } from "tamagui";
+import React, { useCallback, useState } from "react";
+import { Card, H4, H6, XStack } from "tamagui";
 
 const OrdenEntregaInformacion = () => {
   const [despacho, setDespacho] = useState<string | null>(null);
@@ -14,8 +15,12 @@ const OrdenEntregaInformacion = () => {
   );
 
   const obtenerInformacion = async () => {
-    const valorOrdenEntrega = await AsyncStorage.getItem("ordenEntrega");
-    const valorDespacho = await AsyncStorage.getItem("despacho");
+    const valorOrdenEntrega = await storageService.getItem(
+      STORAGE_KEYS.ordenEntrega
+    ) as string;
+    const valorDespacho = await storageService.getItem(
+      STORAGE_KEYS.despacho
+    ) as string;
     setOrdenEntrega(valorOrdenEntrega);
     setDespacho(valorDespacho);
   };

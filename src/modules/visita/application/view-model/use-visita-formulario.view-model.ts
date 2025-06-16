@@ -1,15 +1,17 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { STORAGE_KEYS } from "@/src/core/constants";
+import { alertas } from "@/src/core/constants/alertas.const";
 import APIS from "@/src/core/constants/endpoint.constant";
+import storageService from "@/src/core/services/storage.service";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import useFecha from "@/src/shared/hooks/useFecha";
 import { useGuardarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import { consultarApiFormData } from "@/utils/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as FileSystem from "expo-file-system";
 import * as Network from "expo-network";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Alert } from "react-native";
 import {
   actualizarFechaEntrega,
   actualizarFirmaEntrega,
@@ -17,8 +19,6 @@ import {
   cambiarEstadoEntrega,
   quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
-import { alertas } from "@/src/core/constants/alertas.const";
 
 type VisitaFormType = {
   recibe: string;
@@ -192,7 +192,9 @@ export default function useVisitaFormularioViewModel() {
   const entregaVisitaOnline = async (data: VisitaFormType, dispatch: any) => {
     await Promise.all(
       entregasSeleccionadas.map(async (visita: number) => {
-        const subdominio = await AsyncStorage.getItem("subdominio");
+        const subdominio = (await storageService.getItem(
+          STORAGE_KEYS.subdominio
+        )) as string;
         //Usamos Promise.all para esperar a que todas las imágenes se lean
         const imagenes = await Promise.all(
           state.arrImagenes.map(async (imagen) => {

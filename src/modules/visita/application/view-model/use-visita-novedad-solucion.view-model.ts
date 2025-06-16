@@ -1,14 +1,14 @@
 import { useAppDispatch } from "@/src/application/store/hooks";
+import { STORAGE_KEYS } from "@/src/core/constants";
+import { alertas } from "@/src/core/constants/alertas.const";
 import networkService from "@/src/core/services/network.service";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import storageService from "@/src/core/services/storage.service";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Alert } from "react-native";
 import { actualizarNovedadSolucion, cambiarEstadoNovedadSolucion } from "../slice/entrega.slice";
 import { visitaNovedadSolucionThunk } from "../slice/visita.thunk";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
-import { alertas } from "@/src/core/constants/alertas.const";
 
 const valoresFormulario: NovedadSolucionFormType = {
   solucion: "",
@@ -56,7 +56,7 @@ export default function useVisitaNovedadSolucionViewModel() {
     });  };
 
   const NovedadSolucionOnline = async (data: NovedadSolucionFormType) => {
-    const subdominio = await AsyncStorage.getItem("subdominio");
+    const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
     if (subdominio) {
       dispatch(
         visitaNovedadSolucionThunk({

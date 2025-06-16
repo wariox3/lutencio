@@ -2,6 +2,8 @@ import { useState } from "react";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import storageService from "@/src/core/services/storage.service";
+import { STORAGE_KEYS } from "@/src/core/constants";
 
 export const useMediaLibrary = () => {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -100,7 +102,7 @@ export const useGuardarEnGaleria = () => {
         throw new Error("Se requieren permisos para acceder a la galería");
       }
       // 2. Comprobar si la carpeta existe
-      const subdominio = await AsyncStorage.getItem("subdominio");
+    const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
       const rutaCarpeta = FileSystem.documentDirectory + subdominio! + "/";
 
       const carpetaInfo = await FileSystem.getInfoAsync(rutaCarpeta);

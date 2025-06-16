@@ -1,10 +1,10 @@
-import { useCallback, useEffect } from 'react';
-import { Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import useNetworkStatus from '@/src/shared/hooks/useNetworkStatus';
-import { selectEntregasConNovedad } from '../slice/entrega.selector';
 import { useAppSelector } from '@/src/application/store/hooks';
+import { STORAGE_KEYS } from '@/src/core/constants';
+import storageService from '@/src/core/services/storage.service';
+import useNetworkStatus from '@/src/shared/hooks/useNetworkStatus';
+import { useCallback, useEffect } from 'react';
 import { NovedadService } from '../../infraestructure/services/novedad.service';
+import { selectEntregasConNovedad } from '../slice/entrega.selector';
 
 export const useSincronizacionNovedades = () => {
   const entregasConNovedad = useAppSelector(selectEntregasConNovedad);
@@ -12,7 +12,7 @@ export const useSincronizacionNovedades = () => {
   
   const sincronizarTodasLasNovedades = useCallback(async () => {
 
-    const subdominio = await AsyncStorage.getItem("subdominio");
+    const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
     if (!subdominio) return;
 
     for (const novedad of entregasConNovedad) {
