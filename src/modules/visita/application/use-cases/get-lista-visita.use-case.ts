@@ -16,14 +16,14 @@ export class GetListaVisitaUseCase {
       estadoEntregado,
       subdominio
     );
-    const entregasConEstados = this._addEstadoPropiedades(respuesta.registros);
+    const entregasConEstados = this._agregarCamposVisita(respuesta.registros);
     return {
       cantidad_registros: respuesta.cantidad_registros,
       registros: entregasConEstados,
     };
   }
 
-  private _addEstadoPropiedades(lista: Entrega[]) {
+  private _agregarCamposVisita(lista: Entrega[]) {
     return lista.map((entrega) => ({
       ...entrega,
       estado_entregado: false,
@@ -35,6 +35,12 @@ export class GetListaVisitaUseCase {
       novedad_id: 0,
       estado_novedad_solucion: false,
       fecha_entrega: "",
+      datosAdicionales: {
+        recibe: "",
+        recibeParentesco: "",
+        recibeNumeroIdentificacion: "",
+        recibeCelular: ""
+      }
     }));
   }
 }
