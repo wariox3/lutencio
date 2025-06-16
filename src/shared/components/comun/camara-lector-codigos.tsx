@@ -3,6 +3,7 @@ import { ScanQrCode, XCircle } from "@tamagui/lucide-icons";
 import ReusableSheet from "./modal-sheet";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { Button, H4, Text, View, XStack } from "tamagui";
+import { TIPOS_CODIGO_BARRA } from "@/src/core/constants/tipo-codigo.barras.constant";
 
 interface CamaraLectorCodigoProps {
   obtenerData: (data: string) => void;
@@ -53,7 +54,7 @@ const CamaraLectorCodigo = ({ obtenerData, }: CamaraLectorCodigoProps) => {
               style={{ flex: 1 }}
               facing={"back"}
               barcodeScannerSettings={{
-                barcodeTypes: ["qr", "ean13"],
+                barcodeTypes: Object.values(TIPOS_CODIGO_BARRA),
               }}
               onBarcodeScanned={(event) => handleBarCodeScanned(event, close)}
             />
