@@ -13,6 +13,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
+  actualizarDatosAdiciones,
   actualizarFechaEntrega,
   actualizarFirmaEntrega,
   agregarImagenEntrega,
@@ -180,6 +181,17 @@ export default function useVisitaFormularioViewModel() {
           fecha_entrega: obtenerFechaYHoraActualFormateada(),
         })
       );
+      dispatch(
+        actualizarDatosAdiciones({
+          entrega_id: entregaId,
+          datosAdicionales: {
+            recibe: data.recibe,
+            recibeParentesco: data.parentesco,
+            recibeNumeroIdentificacion: data.numeroIdentificacion,
+            recibeCelular: data.celular
+          }
+        })
+      )
       dispatch(cambiarEstadoEntrega(entregaId));
       dispatch(quitarEntregaSeleccionada(entregaId));
     });

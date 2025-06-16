@@ -1,4 +1,4 @@
-import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
+import { DatosAdicionalesVisita, Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   cargarOrdenThunk,
@@ -210,6 +210,13 @@ const entregasSlice = createSlice({
         numero: 0,
       };
     },
+    actualizarDatosAdiciones: (state, action: PayloadAction<{entrega_id: number, datosAdicionales: DatosAdicionalesVisita}>) => {
+      const { entrega_id, datosAdicionales } = action.payload;
+      const entrega = state.entregas.find((e) => e.id === entrega_id);
+      if (entrega) {
+        entrega.datosAdicionales = datosAdicionales;
+      }
+    }
   },
 
   extraReducers(builder) {
@@ -264,6 +271,7 @@ export const {
   cambiarEstadoNovedadSolucion,
   actualizarFechaEntrega,
   actualizarFiltros,
-  quitarFiltros
+  quitarFiltros,
+  actualizarDatosAdiciones
 } = entregasSlice.actions;
 export default entregasSlice.reducer;
