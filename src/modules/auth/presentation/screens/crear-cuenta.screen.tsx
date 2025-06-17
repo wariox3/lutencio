@@ -9,7 +9,8 @@ import { useCrearCuentaViewModel } from "../../application/view-models/use-crear
 import { Validaciones } from "@/src/core/constants";
 
 const CrearCuentaScreen = () => {
-  const { control, handleSubmit, submit, loading } = useCrearCuentaViewModel();
+  const { control, handleSubmit, submit, loading, obtenerColor } =
+    useCrearCuentaViewModel();
 
   return (
     <ScrollView
@@ -20,6 +21,7 @@ const CrearCuentaScreen = () => {
       }}
       flex={1}
       paddingInline="$4"
+      style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
     >
       <BasicInput
         name="username"

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Keyboard } from "react-native";
 import { OlvidoClaveUseCase } from "../user-cases/olvido-clave.use-case";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 export default function useOlvidoClaveViewModel() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function useOlvidoClaveViewModel() {
       username: "",
     },
   });
+  const { obtenerColor } = useTemaVisual();
 
   const handleOlvidoClave = async (data: OlvidoClaveFormType) => {
     setIsLoading(true);
@@ -36,5 +38,6 @@ export default function useOlvidoClaveViewModel() {
     control,
     handleSubmit,
     handleOlvidoClave,
+    obtenerColor
   };
 }

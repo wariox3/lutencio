@@ -5,7 +5,7 @@ import { Button, Spinner, View, ScrollView } from "tamagui";
 import useOlvidoClaveViewModel from "../../application/view-models/use-olvido-clave.view-model";
 
 export default function OlvidoClave() {
-  const { control, handleOlvidoClave, handleSubmit, isLoading } =
+  const { control, handleOlvidoClave, handleSubmit, isLoading, obtenerColor } =
     useOlvidoClaveViewModel();
 
   return (
@@ -16,6 +16,7 @@ export default function OlvidoClave() {
         rowGap: "$4",
       }}
       flex={1}
+      style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
     >
       <View gap="$4" flex={1} paddingInline="$4">
         <BasicInput

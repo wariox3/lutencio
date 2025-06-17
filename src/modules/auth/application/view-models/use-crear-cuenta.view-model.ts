@@ -3,11 +3,13 @@ import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import { CrearCuentaFormType } from "../../domain/interfaces/crear-cuenta.interface";
 import { crearCuentaThunk, loginThunk } from "../slices/auth.thunk";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 export const useCrearCuentaViewModel = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { loading, error } = useAppSelector(({ auth }) => auth);
+  const { obtenerColor } = useTemaVisual();
 
   const {
     control,
@@ -47,5 +49,6 @@ export const useCrearCuentaViewModel = () => {
     handleSubmit,
     loading,
     error,
+    obtenerColor
   };
 };

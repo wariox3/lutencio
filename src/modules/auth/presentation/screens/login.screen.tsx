@@ -5,10 +5,19 @@ import MensajeModoPrueba from "@/src/modules/auth/presentation/components/mensaj
 import ModoPruebaSheet from "@/src/modules/auth/presentation/components/modo-prueba-sheet";
 import { Validaciones } from "@/src/core/constants";
 import React from "react";
-import { Button, ScrollView, Spinner, Text, View, XStack } from "tamagui";
+import {
+  Button,
+  Image,
+  ScrollView,
+  Spinner,
+  Text,
+  View,
+  XStack,
+} from "tamagui";
 import { useLoginViewModel } from "../../application/view-models/use-login.view-model";
 import ReusableSheet from "@/src/shared/components/comun/modal-sheet";
 import { SafeAreaView } from "react-native";
+import { Settings } from "@tamagui/lucide-icons";
 
 export default function LoginScreen() {
   const {
@@ -27,21 +36,14 @@ export default function LoginScreen() {
       style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
-        <XStack justify={"space-between"}>
-          <Titulo texto="Ingresar" />
-          <ReusableSheet
-            triggerText="Configuración"
-            initialSnapMode="constant"
-            initialModalType={false}
-            customSnapPoints={[300, 200]}
-            sheetContents={(props) => <ModoPruebaSheet {...props} />}
-            sheetProps={{
-              animation: 'quick',
-              overlayStyle: { backgroundColor: 'rgba(0,0,0,0.7)' }
-            }}
-          />
+        <XStack justify={"center"}>
+          <Image
+            source={require("../../../../../assets/images/adaptive-icon.png")}
+            width={110}
+            height={110}
+          ></Image>
         </XStack>
-        <View gap="$4" flex={1} paddingInline="$4">
+        <View gap="$3" flex={1} paddingInline="$4">
           {modoPrueba ? <MensajeModoPrueba></MensajeModoPrueba> : null}
           <BasicInput
             name="username"
