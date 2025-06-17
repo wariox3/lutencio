@@ -1,27 +1,16 @@
-import COLORES from "@/src/core/constants/colores.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import SinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
 import SinPermisoLocalizacion from "@/src/modules/visita/presentation/components/visita-lista/sin-permiso-localizacion";
-import ReusableSheet from "@/src/shared/components/comun/modal-sheet";
 import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
-import {
-  ArrowDownToLine,
-  FileWarning,
-  Filter,
-  ScanQrCode,
-  Search,
-  Share,
-} from "@tamagui/lucide-icons";
+import { ArrowDownToLine, FileWarning } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
 import React from "react";
 import { FlatList, Platform, RefreshControl } from "react-native";
-import { Input, XStack, YStack } from "tamagui";
+import { XStack, YStack } from "tamagui";
 import useVisitaListaViewModel from "../../application/view-model/use-visita-lista.view-model";
-import MensajeFiltroAplicado from "../components/visita-filtros/mensaje-filtro-aplicado";
 import MensajeFiltroSinResultados from "../components/visita-filtros/mensaje-filtro-sin-resultados";
-import ItemLista from "../components/visita-lista/item-lista";
-import FormularioFiltros from "../components/visita-lista/input-filtros.screen";
 import InputFiltros from "../components/visita-lista/input-filtros.screen";
+import ItemLista from "../components/visita-lista/item-lista";
 
 export default function VisitaListaScreen() {
   const {
@@ -30,10 +19,10 @@ export default function VisitaListaScreen() {
     permisoLocalizacion,
     entregasSeleccionadas,
     refreshing,
-    setRefreshing,
     recargarOrdenEntrega,
     theme,
     filtrosAplicados,
+    obtenerColor,
   } = useVisitaListaViewModel();
 
   if (permisoLocalizacion !== "granted") return <SinPermisoLocalizacion />;
@@ -42,10 +31,10 @@ export default function VisitaListaScreen() {
     <>
       <YStack
         p={"$2"}
-        style={{
-          backgroundColor: COLORES.HEADER_BACKGROUND_COLOR,
-          height: 100,
-        }}
+        height={100}
+        bg={
+          obtenerColor("HEADER_BACKGROUND_COLOR_LIGHT","HEADER_BACKGROUND_COLOR_DARK")
+        }
       >
         <XStack justify={"space-around"}>
           <BotonAccion
@@ -74,7 +63,7 @@ export default function VisitaListaScreen() {
           <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
         )}
         style={{
-          backgroundColor: "#ffff",
+          backgroundColor: obtenerColor("BLANCO", "NEGRO"),
           paddingTop: Platform.OS === "android" ? 30 : 25,
         }}
         ListEmptyComponent={

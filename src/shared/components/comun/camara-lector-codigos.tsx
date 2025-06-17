@@ -39,7 +39,7 @@ const CamaraLectorCodigo = ({ obtenerData, }: CamaraLectorCodigoProps) => {
       triggerProps={{ unstyled: true }}
       sheetContents={ ({close}) =>
         <>
-          <XStack justify="space-between">
+          <XStack justify="space-between" px={"$4"}>
             <H4 mb="$2">Escanear código</H4>
             <Button
               size="$4"

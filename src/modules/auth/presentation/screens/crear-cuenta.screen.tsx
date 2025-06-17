@@ -20,7 +20,6 @@ const CrearCuentaScreen = () => {
       }}
       flex={1}
       paddingInline="$4"
-      bg={"#ffff"}
     >
       <BasicInput
         name="username"

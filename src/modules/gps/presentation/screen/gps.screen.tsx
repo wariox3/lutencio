@@ -25,6 +25,7 @@ import { Button, Card, H6, Text, View, XStack } from "tamagui";
 import { gpsStyles } from "../stylesheet/gps.stylessheet";
 import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
 import SinElementos from "../components/sin-elementos";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 const { width } = Dimensions.get("window");
 
@@ -43,7 +44,7 @@ const GpsScreen = () => {
   const markerRef = useRef<MapMarker>(null);
   const [markerTitle, setMarkerTitle] = useState("Título inicial");
   const [markerDescription, setMarkerDescription] = useState("Título inicial");
-
+  const { obtenerColor } = useTemaVisual();
 
   useFocusEffect(
     useCallback(() => {
@@ -53,7 +54,7 @@ const GpsScreen = () => {
 
   // // Modifica tu useEffect para usar esta función
   useEffect(() => {
-    centrarMapa()
+    centrarMapa();
   }, [entregasPendientesOrdenadas, currentIndex, region]);
 
   // Agrega esta función utilitaria al inicio de tu componente
@@ -94,8 +95,8 @@ const GpsScreen = () => {
       dispatch(limpiarEntregaSeleccionada());
       dispatch(seleccionarEntrega(entregasPendientesOrdenadas[0].id));
       dispatch(cambiarEstadoSeleccionado(entregasPendientesOrdenadas[0].id));
-      setMarkerTitle(`${entregasPendientesOrdenadas[0].numero}`)
-      setMarkerDescription(`${entregasPendientesOrdenadas[0].destinatario}`)
+      setMarkerTitle(`${entregasPendientesOrdenadas[0].numero}`);
+      setMarkerDescription(`${entregasPendientesOrdenadas[0].destinatario}`);
     }
   };
 
@@ -148,10 +149,11 @@ const GpsScreen = () => {
     flatListRef.current?.scrollToIndex({ index: newIndex, animated: true });
 
     setMarkerTitle(`${entregasPendientesOrdenadas[newIndex].numero}`); // ✅ Actualiza el estado
-    setMarkerDescription(`${entregasPendientesOrdenadas[newIndex].destinatario.slice(0, 17)}`); // ✅ Actualiza el estado
+    setMarkerDescription(
+      `${entregasPendientesOrdenadas[newIndex].destinatario.slice(0, 17)}`
+    ); // ✅ Actualiza el estado
 
     setTimeout(() => markerRef.current?.showCallout(), 700);
-
   };
 
   const centrarMapa = () => {
@@ -160,12 +162,11 @@ const GpsScreen = () => {
 
       const points = [
         { latitude: region.latitude, longitude: region.longitude },
-        { latitude: delivery.latitud, longitude: delivery.longitud},
+        { latitude: delivery.latitud, longitude: delivery.longitud },
       ];
 
       // Calcular la región que contiene ambos puntos
       const newRegion = getRegionForCoordinates(points);
-      
 
       if (newRegion) {
         mapRef.current.animateToRegion(newRegion, 1000);
@@ -176,7 +177,7 @@ const GpsScreen = () => {
   const blurhash = "=IQcr5bI^*-:_NM|?bof%M";
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+    <View style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}>
       <XStack justify={"space-around"} mx="$2" mt={"$2"}>
         <BotonAccion
           onPress={() => router.navigate(rutasApp.visitaEntregar)}

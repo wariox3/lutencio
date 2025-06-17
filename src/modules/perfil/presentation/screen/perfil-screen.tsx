@@ -1,6 +1,6 @@
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
-import { Button } from "tamagui";
+import { ScrollView} from "react-native";
+import { Button, Card, Text, View } from "tamagui";
 import usePerfilViewModel from "../../application/view-model/use-perfil.view-model";
 import { perfilStyles } from "../../stylesheet/perfil.stylesheet";
 
@@ -14,7 +14,7 @@ const perfilScreen = () => {
       contentInsetAdjustmentBehavior="automatic"
     >
       <View style={perfilStyles.wrapper}>
-        <View style={perfilStyles.profileSection}>
+        <Card style={perfilStyles.profileSection}>
           <Text style={perfilStyles.title}>Información personal</Text>
 
           <View style={perfilStyles.profileInfo}>
@@ -24,9 +24,9 @@ const perfilScreen = () => {
           <View style={perfilStyles.profileInfo}>
             <Text style={perfilStyles.value}>{auth?.user.correo}</Text>
           </View>
-        </View>
+        </Card>
 
-        <View style={perfilStyles.linksSection}>
+        <Card style={perfilStyles.linksSection}>
           <Text style={perfilStyles.sectionTitle}>Enlaces importantes</Text>
 
           <Button
@@ -51,7 +51,7 @@ const perfilScreen = () => {
           >
             Eliminar cuenta
           </Button>
-        </View>
+        </Card>
       </View>
     </ScrollView>
   );

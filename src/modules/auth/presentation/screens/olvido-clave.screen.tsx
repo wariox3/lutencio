@@ -16,8 +16,6 @@ export default function OlvidoClave() {
         rowGap: "$4",
       }}
       flex={1}
-      paddingInline="$4"
-      bg={"#ffff"}
     >
       <View gap="$4" flex={1} paddingInline="$4">
         <BasicInput

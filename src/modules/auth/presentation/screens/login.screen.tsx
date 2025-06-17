@@ -5,10 +5,10 @@ import MensajeModoPrueba from "@/src/modules/auth/presentation/components/mensaj
 import ModoPruebaSheet from "@/src/modules/auth/presentation/components/modo-prueba-sheet";
 import { Validaciones } from "@/src/core/constants";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, ScrollView, Spinner, View, XStack } from "tamagui";
+import { Button, ScrollView, Spinner, Text, View, XStack } from "tamagui";
 import { useLoginViewModel } from "../../application/view-models/use-login.view-model";
 import ReusableSheet from "@/src/shared/components/comun/modal-sheet";
+import { SafeAreaView } from "react-native";
 
 export default function LoginScreen() {
   const {
@@ -19,10 +19,13 @@ export default function LoginScreen() {
     handleNavegarRegistrarse,
     handleSubmit,
     submit,
+    obtenerColor,
   } = useLoginViewModel();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffff" }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
+    >
       <ScrollView showsVerticalScrollIndicator={false}>
         <XStack justify={"space-between"}>
           <Titulo texto="Ingresar" />

@@ -1,26 +1,27 @@
+import { useAppDispatch } from "@/src/application/store/hooks";
 import { menuItems } from "@/src/core/constants/menuItems.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
-import { useAppDispatch } from "@/src/application/store/hooks";
+import storageService from "@/src/core/services/storage.service";
 import { cerrarSesion } from "@/src/modules/auth/application/slices/auth.slice";
 import {
   limpiarEntregaSeleccionada,
   quitarEntregas,
 } from "@/src/modules/visita/application/slice/entrega.slice";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { LogOut } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Alert } from "react-native";
 import { Avatar, ListItem, XStack, YGroup } from "tamagui";
 import { useAlertaGlobal } from "../../hooks/useAlertaGlobal";
-import storageService from "@/src/core/services/storage.service";
+import { useTemaVisual } from "../../hooks/useTemaVisual";
+import COLORES from "@/src/core/constants/colores.constant";
 
 export default function CustomDrawerContent(props: any) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { abrirAlerta } = useAlertaGlobal();
+  const { obtenerColor } = useTemaVisual();
 
   const cerrarSession = () => {
     return abrirAlerta({
@@ -33,7 +34,7 @@ export default function CustomDrawerContent(props: any) {
         dispatch(quitarEntregas());
         dispatch(cerrarSesion());
         router.replace(rutasApp.login);
-      }
+      },
     });
   };
 
@@ -44,11 +45,11 @@ export default function CustomDrawerContent(props: any) {
   const miAvatar = require("@/assets/images/usuario.jpeg");
 
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView {...props}   style={{backgroundColor: obtenerColor("BLANCO","NEGRO")}}>
       <XStack justify={"center"}>
         <Avatar circular size="$8">
           <Avatar.Image src={miAvatar} />
-          <Avatar.Fallback bg="red" />
+          <Avatar.Fallback bg={COLORES.AZUL_FUERTE} />
         </Avatar>
       </XStack>
 
@@ -61,12 +62,10 @@ export default function CustomDrawerContent(props: any) {
           <YGroup width={300} size="$4">
             <YGroup.Item>
               <ListItem
-                hoverTheme
-                pressTheme
-                style={{ backgroundColor: "white" }}
                 icon={LogOut}
                 title={"Salir"}
                 onPress={() => cerrarSession()}
+                mt={"$2"}
               />
             </YGroup.Item>
           </YGroup>
@@ -83,13 +82,11 @@ export default function CustomDrawerContent(props: any) {
     return (
       <YGroup.Item key={index.toString()}>
         <ListItem
-          hoverTheme
-          pressTheme
-          style={{ backgroundColor: "white" }}
           icon={IconComponent}
           title={name}
           onPress={() => navegar(item.ruta)}
-        />
+          mt={"$2"}
+          />
       </YGroup.Item>
     );
   }

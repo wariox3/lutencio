@@ -25,23 +25,27 @@ const InputFiltros = () => {
     <Card
       position="relative"
       z={99}
-      p="$3"
+      p="$2"
       mx="$2"
       mt={"$2"}
-      bg={"white"}
       borderStyle={"dashed"}
       bordered
     >
-      <XStack bg={"white"} items={"center"} gap={"$2"}>
+      <XStack items={"center"} gap={"$2"} p={0} >
+        <>
         <Search size={"$1.5"} opacity={0.5}></Search>
         <Input
           flex={1}
           placeholder="Buscar numero o guía"
-          unstyled
           keyboardType="number-pad"
+          borderStyle="unset"
+          borderColor={"transparent"}
+          focusStyle={{ borderColor: "transparent" }}
           onChangeText={(valor) => filtrarVisitas(valor)}
           value={valorInput} // Asigna el valor del estado al input
         ></Input>
+        </>
+
         {valorInput === "" ? (
           <CamaraLectorCodigo
             obtenerData={(data: string) => {

@@ -35,7 +35,6 @@ const VisitaNovedadScreen = () => {
       }}
       flex={1}
       paddingInline="$4"
-      bg={"#ffff"}
     >
       <TextAreaInput
         name="descripcion"

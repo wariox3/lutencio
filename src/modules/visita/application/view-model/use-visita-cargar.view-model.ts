@@ -6,12 +6,14 @@ import { useCallback } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { Keyboard } from "react-native";
 import { cargarOrdenThunk } from "../slice/visita.thunk";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
     codigo: "",
   };
   const { loading } = useAppSelector(({ entregas }) => entregas);
+  const {obtenerColor} = useTemaVisual()
 
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: valoresFormularioCargar,
@@ -46,5 +48,5 @@ export default function useVisitaCargarViewModel() {
     }
   };
 
-  return { control, handleSubmit, loading, cargarOrden };
+  return { control, handleSubmit, loading, cargarOrden, obtenerColor  };
 }

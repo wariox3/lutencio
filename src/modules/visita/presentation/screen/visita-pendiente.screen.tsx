@@ -1,22 +1,19 @@
-import { rutasApp } from "@/src/core/constants/rutas.constant";
-import { useMediaLibrary } from "@/src/shared/hooks/useMediaLibrary";
-import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { AlertCircle, Trash2 } from "@tamagui/lucide-icons";
+import { alertas } from "@/src/core/constants/alertas.const";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
+import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { useMediaLibrary } from "@/src/shared/hooks/useMediaLibrary";
+import { Trash2 } from "@tamagui/lucide-icons";
 import * as FileSystem from "expo-file-system";
 import { useNavigation, useRouter } from "expo-router";
 import React from "react";
 import {
-  Alert,
-  FlatList,
-  KeyboardAvoidingView,
-  SafeAreaView,
+  FlatList
 } from "react-native";
-import { Button, Card, H4, ScrollView, Text, View, XStack } from "tamagui";
+import { Button, Card, Text, View, XStack } from "tamagui";
 import { obtenerEntregasPendientes } from "../../application/slice/entrega.selector";
 import { quitarVisita } from "../../application/slice/entrega.slice";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
-import { alertas } from "@/src/core/constants/alertas.const";
 
 const VisitaPendienteScreen = () => {
   const navigation = useNavigation();

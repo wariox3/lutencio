@@ -20,6 +20,7 @@ import {
   cambiarEstadoEntrega,
   quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 type VisitaFormType = {
   recibe: string;
@@ -36,7 +37,7 @@ export default function useVisitaFormularioViewModel() {
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
   );
-
+  const {obtenerColor} = useTemaVisual()
   const router = useRouter();
   const { control, handleSubmit, reset } = useForm<VisitaFormType>({
     defaultValues: {
@@ -288,5 +289,6 @@ export default function useVisitaFormularioViewModel() {
     handleSubmit,
     guardarEntrega,
     removerFoto,
+    obtenerColor
   };
 }

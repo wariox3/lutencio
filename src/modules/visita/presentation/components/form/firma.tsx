@@ -1,11 +1,13 @@
 import { PencilLine, XCircle } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import SignatureScreen from "react-native-signature-canvas";
 import { Button, H4, Text, View } from "tamagui";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
+import COLORES from "@/src/core/constants/colores.constant";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -21,6 +23,7 @@ export const EntregaFirma = ({
   const snapPoints = [100];
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] =
     useState<boolean>(false);
+  const { obtenerColor } = useTemaVisual();
 
   useEffect(() => {
     (async () => {
@@ -72,11 +75,13 @@ export const EntregaFirma = ({
       >
         <Sheet.Overlay
           animation="lazy"
-          backgroundColor="$shadow6"
+          bg="$shadow6"
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
         />
-        <Sheet.Frame>
+        <Sheet.Frame
+          style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
+        >
           <SheetContentsEntregaCamara setOpen={setOpen} onCapture={onCapture} />
         </Sheet.Frame>
       </Sheet>
@@ -88,6 +93,7 @@ export const EntregaFirma = ({
 const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
   const ref = useRef<any>();
   const { height } = useWindowDimensions();
+  const { obtenerColor, esquemaActual } = useTemaVisual();
 
   const handleOK = async (signature: string) => {
     try {
@@ -131,10 +137,41 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
   // Called after ref.current.getData()
   const handleData = (data: any) => {};
 
+  const webStyle = useMemo(() => {
+    const isDarkMode = esquemaActual === 'dark';
+    const background = isDarkMode ? COLORES.GRIS_OSCURO : COLORES.BLANCO;
+    const color = isDarkMode ? COLORES.BLANCO : COLORES.NEGRO;
+  
+    return `
+      body, html {
+        background-color: ${background};
+      }
+  
+      .m-signature-pad {
+        background-color: ${background};
+        border: 2px solid ${background};
+      }
+  
+      .m-signature-pad--body {
+        border: 2px solid ${background};
+      }
+  
+      .m-signature-pad--footer {
+        color: ${color};
+      }
+  
+      .m-signature-pad--footer .button {
+        color: ${color};
+      }
+  
+      canvas {
+        background-color: ${background};
+        border: 2px solid ${background};
+      }
+    `;
+  }, [esquemaActual]);
   return (
-    <View style={styles.container}>
-      {/* Botón de cerrar */}
-
+    <View flex={1} bg={obtenerColor("BLANCO", "NEGRO")}>
       <Button
         size="$4"
         circular
@@ -143,31 +180,24 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
         onPress={() => setOpen(false)}
       />
 
-      <View style={styles.firmaContenedor}>
       <SignatureScreen
-      ref={ref}
-      onEnd={() => handleEnd}
-      onOK={handleOK}
-      onEmpty={handleEmpty}
-      onClear={handleClear}
-      autoClear={true}
-      descriptionText={"Ingresa firma"}
-      clearText="Limpiar"
-      confirmText="Aceptar"
-      style={{ height: height }}
-    />
-      </View>
+        ref={ref}
+        onEnd={() => handleEnd}
+        onOK={handleOK}
+        onEmpty={handleEmpty}
+        onClear={handleClear}
+        autoClear={true}
+        descriptionText={"Ingresa firma"}
+        clearText="Limpiar"
+        confirmText="Aceptar"
+        style={{ height: height }}
+        webStyle={webStyle}
+      />
     </View>
   );
 });
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: "relative",
-    width: "100%",
-    height: "100%",
-  },
   botonCerrar: {
     position: "absolute",
     top: 8,
@@ -176,7 +206,6 @@ const styles = StyleSheet.create({
   },
   firmaContenedor: {
     flex: 1,
-    backgroundColor: "red", // Cámbialo según necesites
   },
   signature: {
     flex: 1,

@@ -38,7 +38,7 @@ const OrdenEntregaInformacion = () => {
     >
       <XStack justify="space-between" px="$3">
         <H4>Orden entrega</H4>
-        <H6 color={"black"}>{ordenEntrega}</H6>
+        <H6>{ordenEntrega}</H6>
       </XStack>
       <XStack justify="space-between" px="$3">
         <H4>Despacho</H4>

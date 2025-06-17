@@ -35,7 +35,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
       mx="$2"
       mt={"$2"}
       onPress={() => onPress(visita.id)}
-      bg={visita.seleccionado ? COLORES.NARANJA_SUAVE : "white"}
+      bg={visita.seleccionado ? COLORES.NARANJA_SUAVE : null}
       borderStyle={"dashed"}
       bordered
     >

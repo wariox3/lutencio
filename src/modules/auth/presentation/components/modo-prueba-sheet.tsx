@@ -3,6 +3,7 @@ import { setModoPrueba } from "@/src/application/slices/configuracion.slice";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { Check as CheckIcon, XCircle } from "@tamagui/lucide-icons";
 import React, { memo } from "react";
 import { SafeAreaView } from "react-native";
@@ -17,7 +18,7 @@ interface ModoPruebaSheetProps {
 const ModoPruebaSheet = memo(({ close }: ModoPruebaSheetProps) => {
   const dispatch = useAppDispatch();
   const modoPruebaActivo = useSelector(obtenerConfiguracionModoPrueba);
-
+  const { obtenerColor } = useTemaVisual();
   const gestionModoPruebas = async (checked: boolean) => {
     dispatch(setModoPrueba(checked));
     storageService.setItem(STORAGE_KEYS.modoPrueba, checked);
@@ -25,8 +26,10 @@ const ModoPruebaSheet = memo(({ close }: ModoPruebaSheetProps) => {
   };
 
   return (
-    <SafeAreaView>
-      <View mt={"$2"} p={"$4"}>
+    <SafeAreaView
+      style={{flex:1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
+    >
+      <View px={"$4"} flex={1}>
         <XStack justify="space-between">
           <H4 mb="$2">Opciones</H4>
           <Button
@@ -37,7 +40,7 @@ const ModoPruebaSheet = memo(({ close }: ModoPruebaSheetProps) => {
             theme={"red"}
           />
         </XStack>
-        <XStack alignItems="center" gap="$4">
+        <XStack items="center" gap="$4">
           <Checkbox
             id="modoPrueba"
             size={"$5"}

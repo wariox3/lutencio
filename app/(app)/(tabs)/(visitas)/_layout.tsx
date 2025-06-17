@@ -1,18 +1,23 @@
-import { EntregaOpciones } from "@/src/modules/visita/presentation/components/opciones/opciones-sheet";
-import COLORES from "@/src/core/constants/colores.constant";
 import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
+import { EntregaOpciones } from "@/src/modules/visita/presentation/components/opciones/opciones-sheet";
 import BtnMenuDrewer from "@/src/shared/components/navegacion/btn-menu-drewer";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { Stack } from "expo-router";
 
 export default function VisitasLayout() {
+  const { obtenerColor } = useTemaVisual();
+
   return (
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: COLORES.HEADER_BACKGROUND_COLOR,
+          backgroundColor: obtenerColor(
+            "HEADER_BACKGROUND_COLOR_LIGHT",
+            "HEADER_BACKGROUND_COLOR_DARK"
+          ),
         },
         headerBackButtonDisplayMode: "minimal",
-        headerTintColor: "black",
+        headerTintColor: obtenerColor("NEGRO","BLANCO"),
       }}
     >
       <Stack.Screen

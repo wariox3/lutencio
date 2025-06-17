@@ -20,6 +20,7 @@ import {
   seleccionarEntrega,
 } from "../slice/entrega.slice";
 import { cargarOrdenThunk } from "../slice/visita.thunk";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 export default function useVisitaListaViewModel() {
   const navigation = useNavigation();
@@ -33,7 +34,9 @@ export default function useVisitaListaViewModel() {
   const [permisoLocalizacion, setPermisoLocalizacion] = useState<string | null>(
     null
   );
+  const {obtenerColor} = useTemaVisual()
   const theme = useTheme();
+  
 
   useEffect(() => {
     async function getCurrentLocation() {
@@ -94,6 +97,7 @@ export default function useVisitaListaViewModel() {
     setRefreshing,
     recargarOrdenEntrega,
     theme,
-    filtrosAplicados
+    filtrosAplicados,
+    obtenerColor
   };
 }

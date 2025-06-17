@@ -1,11 +1,11 @@
-import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
 import { Validaciones } from "@/src/core/constants";
+import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
 import React from "react";
-import { Button, H4, ScrollView, Spinner, View } from "tamagui";
+import { Button, ScrollView, Spinner } from "tamagui";
 import useVisitaCargarViewModel from "../../application/view-model/use-visita-cargar.view-model";
 
 const VisitaCargarScreen = () => {
-  const { control, handleSubmit, cargarOrden, loading } =
+  const { control, handleSubmit, cargarOrden, loading, obtenerColor } =
     useVisitaCargarViewModel();
 
   return (
@@ -17,7 +17,9 @@ const VisitaCargarScreen = () => {
       }}
       flex={1}
       paddingInline="$4"
-      bg={"#ffff"}
+      bg={
+        obtenerColor("BLANCO","NEGRO")
+      }
     >
       <BasicInput
         name="codigo"

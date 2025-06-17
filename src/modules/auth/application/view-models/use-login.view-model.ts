@@ -6,10 +6,12 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { LoginFormType } from "../../domain/types/login.types";
 import { loginThunk } from "../slices/auth.thunk";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 export const useLoginViewModel = () => {
   const modoPrueba = useAppSelector(obtenerConfiguracionModoPrueba);
   const router = useRouter();
+  const { obtenerColor } = useTemaVisual();
 
   const dispatch = useAppDispatch();
   const { loading, error } = useAppSelector(({ auth }) => auth);
@@ -72,5 +74,6 @@ export const useLoginViewModel = () => {
     modoPrueba,
     handleNagevarOlvideClave,
     handleNavegarRegistrarse,
+    obtenerColor
   };
 };

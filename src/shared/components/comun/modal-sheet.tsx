@@ -1,10 +1,11 @@
-import React from 'react';
-import { Button, Sheet } from 'tamagui';
-import { ReusableSheetProps } from '../../interface/comun';
+import React from "react";
+import { Button, Sheet } from "tamagui";
+import { ReusableSheetProps } from "../../interface/comun";
+import { useTemaVisual } from "../../hooks/useTemaVisual";
 
-type SnapPointsMode = 'percent' | 'constant' | 'fit' | 'mixed';
+type SnapPointsMode = "percent" | "constant" | "fit" | "mixed";
 
-const spModes: SnapPointsMode[] = ['percent', 'constant', 'fit', 'mixed'];
+const spModes: SnapPointsMode[] = ["percent", "constant", "fit", "mixed"];
 
 interface Props extends ReusableSheetProps {
   triggerContent?: React.ReactNode;
@@ -15,7 +16,7 @@ const ReusableSheet: React.FC<Props> = ({
   triggerText,
   triggerProps = {},
   sheetContents,
-  initialSnapMode = 'percent',
+  initialSnapMode = "percent",
   initialModalType = true,
   customSnapPoints,
   onOpenChange,
@@ -24,7 +25,8 @@ const ReusableSheet: React.FC<Props> = ({
   const [open, setOpen] = React.useState(false);
   const [position, setPosition] = React.useState(0);
   const [modal, setModal] = React.useState(initialModalType);
-  const [snapPointsMode, setSnapPointsMode] = React.useState<SnapPointsMode>(initialSnapMode);
+  const [snapPointsMode, setSnapPointsMode] =
+    React.useState<SnapPointsMode>(initialSnapMode);
   const [mixedFitDemo, setMixedFitDemo] = React.useState(false);
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -34,10 +36,12 @@ const ReusableSheet: React.FC<Props> = ({
 
   const close = () => setOpen(false);
 
-  const isPercent = snapPointsMode === 'percent';
-  const isConstant = snapPointsMode === 'constant';
-  const isFit = snapPointsMode === 'fit';
-  const isMixed = snapPointsMode === 'mixed';
+  const isPercent = snapPointsMode === "percent";
+  const isConstant = snapPointsMode === "constant";
+  const isFit = snapPointsMode === "fit";
+  const isMixed = snapPointsMode === "mixed";
+
+  const { obtenerColor } = useTemaVisual();
 
   const snapPoints = customSnapPoints
     ? customSnapPoints
@@ -48,18 +52,14 @@ const ReusableSheet: React.FC<Props> = ({
     : isFit
     ? undefined
     : mixedFitDemo
-    ? ['fit', 110]
-    : ['80%', 256, 190];
+    ? ["fit", 110]
+    : ["80%", 256, 190];
 
   return (
     <>
-      <Button 
-        onPress={() => setOpen(true)}
-        {...triggerProps}
-      >
+      <Button onPress={() => setOpen(true)} {...triggerProps}>
         {triggerContent ?? triggerText}
       </Button>
-
       <Sheet
         forceRemoveScrollEnabled={open}
         modal={modal}
@@ -72,6 +72,7 @@ const ReusableSheet: React.FC<Props> = ({
         onPositionChange={setPosition}
         zIndex={100_000}
         animation="medium"
+        native={true}
         {...sheetProps}
       >
         <Sheet.Overlay
@@ -80,8 +81,10 @@ const ReusableSheet: React.FC<Props> = ({
           exitStyle={{ opacity: 0 }}
         />
         <Sheet.Handle />
-        <Sheet.Frame p="$4">
-          {typeof sheetContents === 'function'
+        <Sheet.Frame
+          style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
+        >
+          {typeof sheetContents === "function"
             ? sheetContents({ close })
             : sheetContents}
         </Sheet.Frame>

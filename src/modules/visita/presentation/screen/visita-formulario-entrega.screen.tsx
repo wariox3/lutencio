@@ -21,6 +21,7 @@ const VisitaFormularioEntregaScreen = () => {
     removerFirma,
     state,
     removerFoto,
+    obtenerColor
   } = useVisitaFormularioViewModel();
 
   return (
@@ -32,7 +33,9 @@ const VisitaFormularioEntregaScreen = () => {
         rowGap: "$4",
       }}
       paddingInline="$4"
-      bg={"#ffff"}
+      bg={
+        obtenerColor("BLANCO","NEGRO")
+      }
     >
       <Text>Seleccionas: {entregasSeleccionadas.join(", ")}</Text>
       <XStack justify={"space-between"}>

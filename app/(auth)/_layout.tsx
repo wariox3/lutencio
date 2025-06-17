@@ -1,23 +1,26 @@
+import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
-import COLORES from "@/src/core/constants/colores.constant";
-import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function LoginLayout() {
+  const { obtenerColor } = useTemaVisual();
+  
   return (
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: COLORES.HEADER_BACKGROUND_COLOR,
+          backgroundColor: obtenerColor(
+            "HEADER_BACKGROUND_COLOR_LIGHT",
+            "HEADER_BACKGROUND_COLOR_DARK"
+          ),
         },
-        headerLargeTitle: true,
         headerBackButtonDisplayMode: "minimal",
-        headerTintColor: 'black',
-        headerShadowVisible: false,
+        headerTintColor: obtenerColor("NEGRO", "BLANCO"),
       }}
     >
       <Stack.Screen name="login" options={{ headerShown: false }} />

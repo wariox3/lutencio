@@ -1,32 +1,38 @@
-import { Tabs } from "expo-router";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { FileText, Home, MapPinned } from "@tamagui/lucide-icons";
-import BtnMenuDrewer from "@/src/shared/components/navegacion/btn-menu-drewer";
+import { Tabs } from "expo-router";
 
 export default function TabLayout() {
+  const { obtenerColor } = useTemaVisual();
+  
   return (
     <Tabs
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: obtenerColor("BLANCO", "NEGRO"),
+          borderTopWidth: 0,
+        },
         tabBarIcon: ({ focused, color, size }) => {
           switch (route.name) {
             case "(inicio)":
               return focused ? (
-                <Home size={size} color={"$blue10"} />
+                <Home size={size}  color={obtenerColor("AZUL_FUERTE", "BLANCO")} />
               ) : (
-                <Home size={size} />
+                <Home size={size} color={obtenerColor("GRIS_MEDIO", "GRIS_MEDIO")}/>
               );
             case "(visitas)":
               return focused ? (
-                <FileText size={size} color={"$blue10"} />
+                <FileText size={size}  color={obtenerColor("AZUL_FUERTE", "BLANCO")} />
               ) : (
-                <FileText size={size} />
+                <FileText size={size}  color={obtenerColor("GRIS_MEDIO", "GRIS_MEDIO")} />
               );
               case "(gps)":
                 return focused ? (
-                  <MapPinned size={size} color={"$blue10"} />
+                  <MapPinned size={size} color={obtenerColor("AZUL_FUERTE", "BLANCO")}/>
                 ) : (
-                  <MapPinned size={size} />
+                  <MapPinned size={size} color={obtenerColor("GRIS_MEDIO", "GRIS_MEDIO")} />
                 );
           }
         },
