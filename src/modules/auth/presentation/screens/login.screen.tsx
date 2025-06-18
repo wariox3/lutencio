@@ -38,9 +38,9 @@ export default function LoginScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <XStack justify={"center"}>
           <Image
-            source={require("../../../../../assets/images/adaptive-icon.png")}
-            width={110}
-            height={110}
+            source={require("../../../../../assets/images/logocontexto.png")}
+            width={150}
+            height={150}
           ></Image>
         </XStack>
         <View gap="$3" flex={1} paddingInline="$4">
