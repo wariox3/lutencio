@@ -52,7 +52,7 @@ export default function LoginLayout() {
       <Stack.Screen
         name="configuracion"
         options={{
-          title: tituloScreen.auth.olvidoClave,
+          title: "",
           presentation: 'modal'
         }}
       />
