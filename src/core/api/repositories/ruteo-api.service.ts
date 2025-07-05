@@ -19,7 +19,7 @@ export class RuteoApiRepository implements RuteoRepository {
   }
 
   async postNovedad(data: FormData, subdominio: string) {
-    return apiService.post<Promise<any>>(APIS.ruteo.novedad, data, {
+    return apiService.post<Promise<any>>(APIS.ruteo.novedadNuevo, data, {
       "X-Schema-Name": subdominio,
       "Content-Type": "multipart/form-data",
     });

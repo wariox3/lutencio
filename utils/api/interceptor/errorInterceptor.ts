@@ -8,7 +8,7 @@ import { Alert } from "react-native";
 const urlExentas = [
   APIS.ruteo.visitaEntrega,
   APIS.ruteo.ubicacion,
-  APIS.ruteo.novedad,
+  APIS.ruteo.novedadNuevo,
 ];
 
 const obtenerRuta = (url: string): string | null => {

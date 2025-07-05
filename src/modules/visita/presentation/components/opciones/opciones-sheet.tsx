@@ -314,11 +314,11 @@ const SheetContents = memo(({ setOpen }: any) => {
         }
 
         const respuestaNovedad = await consultarApi<any>(
-          APIS.ruteo.novedad,
+          APIS.ruteo.novedadNuevo,
           {
-            visita: novedad.id,
+            visita_id: novedad.id,
             descripcion: novedad.novedad_descripcion,
-            novedad_tipo: novedad.novedad_tipo,
+            novedad_tipo_id: novedad.novedad_tipo,
             imagenes,
           },
           {

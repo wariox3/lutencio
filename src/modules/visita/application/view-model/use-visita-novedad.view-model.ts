@@ -20,6 +20,7 @@ import {
 import { visitaNovedadThunk } from "../slice/visita.thunk";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { alertas } from "@/src/core/constants/alertas.const";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -41,6 +42,7 @@ export default function useVisitaNovedadViewModel() {
   });
   const visitasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
   const novedadesTipo = useAppSelector(obtenerConfiguracionSelectorNovedadTipo);
+  const {obtenerColor} = useTemaVisual()
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -209,5 +211,6 @@ export default function useVisitaNovedadViewModel() {
     guardarNovedad,
     handleSubmit,
     novedadesTipo,
+    obtenerColor
   };
 }

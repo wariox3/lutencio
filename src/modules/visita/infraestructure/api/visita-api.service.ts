@@ -46,9 +46,9 @@ export class VisitaApiRepository implements VisitaRepository {
       STORAGE_KEYS.subdominio
     )) as string;
     const formData = new FormData()
-    formData.append('visita', `${visita}`);
+    formData.append('visita_id', `${visita}`);
     formData.append('descripcion', descripcion);
-    formData.append('novedad_tipo', novedad_tipo);
+    formData.append('novedad_tipo_id', novedad_tipo);
     imagenes.forEach((archivo: any, index: number) => {
       // Crear un objeto File-like compatible con FormData
       const file = {

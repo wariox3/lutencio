@@ -23,6 +23,7 @@ const APIS = {
     visitaEntrega: `${URL_SUBDOMINIO}/ruteo/visita/entrega/`,
     novedadTipo: `${URL_SUBDOMINIO}/ruteo/novedad_tipo/`,
     novedad: `${URL_SUBDOMINIO}/ruteo/novedad/`,
+    novedadNuevo: `${URL_SUBDOMINIO}/ruteo/novedad/nuevo/`,
     novedadSolucionar: `${URL_SUBDOMINIO}/ruteo/novedad/solucionar/`,
   },
 };

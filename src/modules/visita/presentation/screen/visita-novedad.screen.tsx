@@ -24,6 +24,7 @@ const VisitaNovedadScreen = () => {
     state,
     handleSubmit,
     novedadesTipo,
+    obtenerColor
   } = useVisitaNovedadViewModel();
 
   return (
@@ -35,6 +36,9 @@ const VisitaNovedadScreen = () => {
       }}
       flex={1}
       paddingInline="$4"
+      bg={
+        obtenerColor("BLANCO", "NEGRO")
+      }
     >
       <TextAreaInput
         name="descripcion"

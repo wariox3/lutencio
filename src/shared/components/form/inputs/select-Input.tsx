@@ -1,6 +1,9 @@
+import COLORES from '@/src/core/constants/colores.constant';
+import { useTemaVisual } from '@/src/shared/hooks/useTemaVisual';
 import { SelectInputProps } from '@/src/shared/interface/forms';
 import { Picker } from '@react-native-picker/picker';
 import { Controller } from "react-hook-form";
+import { useColorScheme } from 'react-native';
 import { Label, Text, View } from "tamagui";
 
 
@@ -13,6 +16,10 @@ export const SelectInput: React.FC<SelectInputProps> = ({
   isRequired = false,
   data = [],
 }) => {
+  const { esquemaActual } = useTemaVisual()
+    const isDarkMode = esquemaActual === 'dark';
+    const background = isDarkMode ? COLORES.GRIS_OSCURO : COLORES.BLANCO;
+    const color = isDarkMode ? COLORES.BLANCO : COLORES.NEGRO;
   return (
     <View mb="$3">
       <Label fontSize="$4" mb="$2">
@@ -23,33 +30,37 @@ export const SelectInput: React.FC<SelectInputProps> = ({
           </Text>
         )}
       </Label>
-      
+
       <Controller
         name={name}
         control={control}
         rules={rules}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <View>
-            <View 
-              borderWidth={1} 
-              borderColor={error ? "$red10" : "$borderColor"} 
+            <View
+              borderWidth={1}
+              borderColor={error ? "$red10" : "$borderColor"}
               borderRadius="$2"
             >
               <Picker
                 selectedValue={value}
                 onValueChange={(itemValue) => onChange(itemValue)}
+                style={{ color: color }}
+
               >
-                <Picker.Item label={placeholder} value="0" />
+                <Picker.Item label={placeholder} value="0"  style={{ color: color, backgroundColor: background }} />
                 {data.map((item) => (
-                  <Picker.Item 
-                    key={item.id.toString()} 
-                    label={item.nombre} 
-                    value={item.id} 
+                  <Picker.Item
+                    key={item.id.toString()}
+                    label={item.nombre}
+                    value={item.id}
+                    style={{ color: color, backgroundColor: background }}
+
                   />
                 ))}
               </Picker>
             </View>
-            
+
             {error && (
               <Text color="$red10" fontSize="$3" mt="$1">
                 {error.message}

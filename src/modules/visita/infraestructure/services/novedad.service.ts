@@ -13,9 +13,11 @@ export class NovedadService {
 
     try {
       const formData = new FormData();
-      formData.append("visita", `${novedad.id}`);
+      formData.append("visita_id", `${novedad.id}`);
       formData.append("descripcion", novedad.novedad_descripcion);
-      formData.append("novedad_tipo", novedad.novedad_tipo);
+      formData.append("novedad_tipo_id", novedad.novedad_tipo);
+      console.log(novedad.arrImagenes);
+      
       novedad.arrImagenes.forEach((archivo: any, index: number) => {
         // Crear un objeto File-like compatible con FormData
         const file = {
@@ -23,7 +25,6 @@ export class NovedadService {
           name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
           type: "image/jpeg", // Tipo MIME por defecto
         };
-
         // La forma correcta de adjuntar archivos en React Native
         formData.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
       });
