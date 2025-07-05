@@ -21,6 +21,7 @@ import { visitaNovedadThunk } from "../slice/visita.thunk";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { alertas } from "@/src/core/constants/alertas.const";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
+import useFecha from "@/src/shared/hooks/useFecha";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -37,6 +38,8 @@ type NovedadFormType = {
 export default function useVisitaNovedadViewModel() {
   const { guardarArchivo } = useGuardarEnGaleria();
   const { eliminarArchivo } = useEliminarEnGaleria();
+  const { obtenerFechaYHoraActualFormateada } = useFecha();
+  
   const { control, handleSubmit, setValue } = useForm<NovedadFormType>({
     defaultValues: valoresFormulario,
   });
@@ -127,6 +130,7 @@ export default function useVisitaNovedadViewModel() {
           entregaId,
           novedad_tipo: data.novedad_tipo,
           novedad_descripcion: data.descripcion,
+          fecha_entrega: obtenerFechaYHoraActualFormateada()
         })
       );
     });
@@ -150,6 +154,7 @@ export default function useVisitaNovedadViewModel() {
             descripcion: data.descripcion,
             novedad_tipo: data.novedad_tipo,
             imagenes: state.arrImagenes,
+            fecha_entrega: obtenerFechaYHoraActualFormateada()
           })
         );
       })

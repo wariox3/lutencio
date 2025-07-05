@@ -155,13 +155,15 @@ const entregasSlice = createSlice({
         entregaId: number;
         novedad_tipo: string;
         novedad_descripcion: string;
+        fecha_entrega: string;
       }>
     ) => {
-      const { entregaId, novedad_tipo, novedad_descripcion } = action.payload;
+      const { entregaId, novedad_tipo, novedad_descripcion, fecha_entrega } = action.payload;
       const entrega = state.entregas.find((e) => e.id === entregaId);
       if (entrega) {
         entrega.novedad_tipo = novedad_tipo;
         entrega.novedad_descripcion = novedad_descripcion;
+        entrega.fecha_entrega = fecha_entrega
       }
     },
     actualizarNovedadSolucion: (

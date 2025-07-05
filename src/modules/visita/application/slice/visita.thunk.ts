@@ -52,6 +52,7 @@ export const visitaNovedadThunk = createAsyncThunk(
       descripcion: string;
       novedad_tipo: string;
       imagenes: any;
+      fecha_entrega: any
     },
     { rejectWithValue }
   ) => {
@@ -61,7 +62,8 @@ export const visitaNovedadThunk = createAsyncThunk(
           payload.visita,
           payload.descripcion,
           payload.novedad_tipo,
-          payload.imagenes
+          payload.imagenes,
+          payload.fecha_entrega
         );
       return { ...respuestaVistaNovedad, visita: payload.visita };
     } catch (error: any) {

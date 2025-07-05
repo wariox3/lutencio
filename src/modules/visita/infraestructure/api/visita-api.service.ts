@@ -40,7 +40,8 @@ export class VisitaApiRepository implements VisitaRepository {
     visita: number,
     descripcion: string,
     novedad_tipo: string,
-    imagenes: any
+    imagenes: any,
+    fecha_entrega: any
   ): Promise<any> {
     const subdominio = (await storageService.getItem(
       STORAGE_KEYS.subdominio
@@ -49,6 +50,7 @@ export class VisitaApiRepository implements VisitaRepository {
     formData.append('visita_id', `${visita}`);
     formData.append('descripcion', descripcion);
     formData.append('novedad_tipo_id', novedad_tipo);
+    formData.append("fecha_entrega", fecha_entrega);
     imagenes.forEach((archivo: any, index: number) => {
       // Crear un objeto File-like compatible con FormData
       const file = {
