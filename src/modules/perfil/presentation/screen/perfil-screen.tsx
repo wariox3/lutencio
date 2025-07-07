@@ -1,17 +1,19 @@
 import React from "react";
-import { ScrollView} from "react-native";
-import { Button, Card, Text, View } from "tamagui";
+import { Button, Card, Text, View, ScrollView } from "tamagui";
 import usePerfilViewModel from "../../application/view-model/use-perfil.view-model";
 import { perfilStyles } from "../../stylesheet/perfil.stylesheet";
 
 const perfilScreen = () => {
-  const { navegarPoliticas, navegarTerminos, navegarEliminarCuenta, auth } =
+  const { navegarPoliticas, navegarTerminos, navegarEliminarCuenta, auth, obtenerColor } =
     usePerfilViewModel();
 
   return (
     <ScrollView
       style={perfilStyles.container}
       contentInsetAdjustmentBehavior="automatic"
+      bg={
+        obtenerColor("BLANCO","NEGRO")
+      }
     >
       <View style={perfilStyles.wrapper}>
         <Card style={perfilStyles.profileSection}>
