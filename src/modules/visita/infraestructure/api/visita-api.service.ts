@@ -50,7 +50,7 @@ export class VisitaApiRepository implements VisitaRepository {
     formData.append('visita_id', `${visita}`);
     formData.append('descripcion', descripcion);
     formData.append('novedad_tipo_id', novedad_tipo);
-    formData.append("fecha_entrega", fecha_entrega);
+    formData.append("fecha", fecha_entrega);
     imagenes.forEach((archivo: any, index: number) => {
       // Crear un objeto File-like compatible con FormData
       const file = {

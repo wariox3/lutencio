@@ -1,11 +1,16 @@
+import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
-import { CircleUser, MapPin, Phone } from "@tamagui/lucide-icons";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import {
+  AlertTriangle,
+  CircleUser,
+  MapPin,
+  Phone,
+} from "@tamagui/lucide-icons";
 import React from "react";
+import { Linking, Platform } from "react-native";
 import { Card, Text, XStack, YStack } from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista";
-import { Alert, Linking, Platform } from "react-native";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
-import { alertas } from "@/src/core/constants/alertas.const";
 
 const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   const llamarDestinatario = (telefono: string) => {
@@ -50,13 +55,14 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
           <Text flex={1}>{visita.destinatario_direccion}</Text>
         </XStack>
         <>
-          {visita.destinatario_telefono !== "None" && visita.destinatario_telefono ? (
+          {visita.destinatario_telefono !== "None" &&
+          visita.destinatario_telefono ? (
             <XStack items={"center"} gap={"$1"}>
               <Phone size={"$1"} color={COLORES.AZUL_FUERTE} />
               <Text
                 flex={1}
                 color={COLORES.AZUL_FUERTE}
-                onPress={() => llamarDestinatario(visita.destinatario_telefono)}
+                onPress={() => llamarDestinatario("+57"+visita.destinatario_telefono)}
               >
                 {visita.destinatario_telefono}
               </Text>
@@ -66,9 +72,12 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
       </YStack>
       {visita.estado_entregado ? <Text>Entregado</Text> : null}
       {visita.estado_novedad ? (
-        <Text theme={"yellow"} px={"$0.25"}>
-          Novedad
-        </Text>
+        <XStack items={"center"} gap={"$1"}>
+          <AlertTriangle size={"$1"} />
+          <Text theme={"yellow"} px={"$0.25"}>
+            Novedad
+          </Text>
+        </XStack>
       ) : null}
     </Card>
   );

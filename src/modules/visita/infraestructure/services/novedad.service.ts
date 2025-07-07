@@ -16,7 +16,7 @@ export class NovedadService {
       formData.append("visita_id", `${novedad.id}`);
       formData.append("descripcion", novedad.novedad_descripcion);
       formData.append("novedad_tipo_id", novedad.novedad_tipo);
-      formData.append("fecha_entrega", novedad.fecha_entrega);
+      formData.append("fecha", novedad.fecha_entrega);
       
       novedad.arrImagenes.forEach((archivo: any, index: number) => {
         // Crear un objeto File-like compatible con FormData

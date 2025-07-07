@@ -26,15 +26,6 @@ export class GetListaVisitaUseCase {
   private _agregarCamposVisita(lista: Entrega[]) {
     return lista.map((entrega) => ({
       ...entrega,
-      estado_entregado: false,
-      estado_sincronizado: false,
-      estado_novedad: false,
-      estado_error: false,
-      mensaje_error: "",
-      solucion_novedad: "",
-      novedad_id: 0,
-      estado_novedad_solucion: false,
-      fecha_entrega: "",
       datosAdicionales: {
         recibe: "",
         recibeParentesco: "",

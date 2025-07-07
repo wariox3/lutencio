@@ -1,15 +1,18 @@
 import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { novedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
+import { alertas } from "@/src/core/constants/alertas.const";
+import { NovedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import useFecha from "@/src/shared/hooks/useFecha";
 import {
   useEliminarEnGaleria,
   useGuardarEnGaleria,
 } from "@/src/shared/hooks/useMediaLibrary";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import * as Network from "expo-network";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Alert } from "react-native";
 import { obtenerEntregasSeleccionadas } from "../slice/entrega.selector";
 import {
   actualizarNovedad,
@@ -18,10 +21,6 @@ import {
   cambiarEstadoSinconizado,
 } from "../slice/entrega.slice";
 import { visitaNovedadThunk } from "../slice/visita.thunk";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
-import { alertas } from "@/src/core/constants/alertas.const";
-import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
-import useFecha from "@/src/shared/hooks/useFecha";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -52,7 +51,7 @@ export default function useVisitaNovedadViewModel() {
 
   const estadoInicial: {
     arrImagenes: { uri: string }[];
-    arrNovedadesTipo: novedadTipo[];
+    arrNovedadesTipo: NovedadTipo[];
     mostrarAnimacionCargando: boolean;
     ubicacionHabilitada: boolean;
     activarCamara: boolean;
