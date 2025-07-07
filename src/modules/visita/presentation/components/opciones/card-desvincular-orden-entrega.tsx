@@ -102,7 +102,7 @@ const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
           <Text color={COLORES.ROJO_FUERTE} fontWeight={"bold"}>
             Desvincular
           </Text>
-          <Text color={COLORES.ROJO_FUERTE}>
+          <Text color={COLORES.ROJO_FUERTE} textWrap="pretty">
             Se eliminará la vinculación con la orden de entrega actual.
           </Text>
         </YStack>
