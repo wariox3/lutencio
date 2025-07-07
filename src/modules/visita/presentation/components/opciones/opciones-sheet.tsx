@@ -111,9 +111,9 @@ export const EntregaOpciones = () => {
       </XStack>
 
       <Button
-        icon={<MoreVertical size={"$1.5"} />}
+        icon={<MoreVertical size={"$3"} />}
         onPress={() => setOpen(true)}
-        marginEnd={"$-0.75"}
+        mx={"$2"}
         unstyled
       ></Button>
 
