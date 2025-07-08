@@ -31,6 +31,7 @@ export class VisitaApiRepository implements VisitaRepository {
             valor1: estadoEntregado,
           },
         ],
+        limite: 1000
       },
       subdominio
     );
