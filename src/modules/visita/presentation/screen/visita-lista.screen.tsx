@@ -33,7 +33,7 @@ export default function VisitaListaScreen() {
         p={"$2"}
         height={100}
         bg={
-          obtenerColor("HEADER_BACKGROUND_COLOR_LIGHT","HEADER_BACKGROUND_COLOR_DARK")
+          obtenerColor("HEADER_BACKGROUND_COLOR_LIGHT", "HEADER_BACKGROUND_COLOR_DARK")
         }
       >
         <XStack justify={"space-around"}>
@@ -62,6 +62,9 @@ export default function VisitaListaScreen() {
         renderItem={({ item }) => (
           <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
         )}
+        contentContainerStyle={{
+          paddingBottom: 50, // Ajusta este valor según el alto de tu tab bar
+        }}
         style={{
           backgroundColor: obtenerColor("BLANCO", "NEGRO"),
           paddingTop: Platform.OS === "android" ? 30 : 25,
