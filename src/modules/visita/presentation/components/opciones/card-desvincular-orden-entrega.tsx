@@ -93,16 +93,17 @@ const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
       backgroundColor={COLORES.ROJO_SUAVE}
       borderRadius="$4"
       padding="$3.5"
+      width="100%"
+      maxWidth="100%"
       onPress={() => confirmarRetirarDespacho()}
     >
-      <XStack gap={"$2"} items={"center"}>
+      <XStack gap="$2" items="center" flexWrap="wrap">
         <ClipboardX size="$2" color={COLORES.ROJO_FUERTE} />
-
-        <YStack justify="space-between" gap={"$2"}>
-          <Text color={COLORES.ROJO_FUERTE} fontWeight={"bold"}>
+        <YStack flex={1} gap="$2">
+          <Text color={COLORES.ROJO_FUERTE} fontWeight="bold">
             Desvincular
           </Text>
-          <Text color={COLORES.ROJO_FUERTE} textWrap="pretty">
+          <Text color={COLORES.ROJO_FUERTE} numberOfLines={3} ellipsizeMode="tail">
             Se eliminará la vinculación con la orden de entrega actual.
           </Text>
         </YStack>
