@@ -21,9 +21,9 @@ export interface Entrega {
   estado_despacho: boolean;
   estado_entregado: boolean;
   estado_sincronizado: boolean;
-  estado_novedad:boolean;
-  estado_novedad_solucion: boolean
-  entregada_sincronizada_error: boolean
+  estado_novedad: boolean;
+  estado_novedad_solucion: boolean;
+  entregada_sincronizada_error: boolean;
   estado_error: boolean;
   mensaje_error: string;
   novedad_tipo: string;
@@ -120,8 +120,8 @@ export interface PlusCode {
 }
 
 export interface DatosAdicionalesVisita {
-  recibe: string
-  recibeParentesco: string
-  recibeNumeroIdentificacion: string
-  recibeCelular: string
+  recibe: string;
+  recibeParentesco: string;
+  recibeNumeroIdentificacion: string;
+  recibeCelular: string;
 }
