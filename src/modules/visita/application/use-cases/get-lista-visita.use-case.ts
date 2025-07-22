@@ -30,8 +30,9 @@ export class GetListaVisitaUseCase {
         recibe: "",
         recibeParentesco: "",
         recibeNumeroIdentificacion: "",
-        recibeCelular: ""
-      }
+        recibeCelular: "",
+      },
+      entregada_sincronizada_error: false
     }));
   }
 }
