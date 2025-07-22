@@ -73,9 +73,9 @@ export const consultarApiFormData = async <T>(
         "X-Schema-Name": configuracion.subdominio, // Pasar el subdominio en los headers
         "Content-Type": 'multipart/form-data',
       },
-    });
+    });    
     return informacionConsulta.data;
-  } catch (error: any) {
+  } catch (error: any) {    
     throw error; // Lanzar el error para que el controlador de llamadas pueda manejarlo
   }
 };

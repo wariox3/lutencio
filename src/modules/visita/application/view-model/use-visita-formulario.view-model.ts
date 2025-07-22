@@ -18,6 +18,7 @@ import {
   actualizarFirmaEntrega,
   agregarImagenEntrega,
   cambiarEstadoEntrega,
+  cambiarEstadoSinconizado,
   quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
@@ -37,7 +38,7 @@ export default function useVisitaFormularioViewModel() {
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
   );
-  const {obtenerColor} = useTemaVisual()
+  const { obtenerColor } = useTemaVisual();
   const router = useRouter();
   const { control, handleSubmit, reset } = useForm<VisitaFormType>({
     defaultValues: {
@@ -189,10 +190,10 @@ export default function useVisitaFormularioViewModel() {
             recibe: data.recibe,
             recibeParentesco: data.parentesco,
             recibeNumeroIdentificacion: data.numeroIdentificacion,
-            recibeCelular: data.celular
-          }
+            recibeCelular: data.celular,
+          },
         })
-      )
+      );
       dispatch(cambiarEstadoEntrega(entregaId));
       dispatch(quitarEntregaSeleccionada(entregaId));
     });
@@ -241,8 +242,8 @@ export default function useVisitaFormularioViewModel() {
           formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
         });
 
-        let filefirma: any = "" 
-        if(state.firmarBase64){
+        let filefirma: any = "";
+        if (state.firmarBase64) {
           filefirma = {
             uri: state.firmarBase64,
             name: "firma",
@@ -271,12 +272,13 @@ export default function useVisitaFormularioViewModel() {
             subdominio: subdominio!,
           }
         );
+        if (respuesta) {
+          dispatch(cambiarEstadoEntrega(visita));
+          dispatch(cambiarEstadoSinconizado(visita));
+          dispatch(quitarEntregaSeleccionada(visita));
+        }
       })
     );
-    entregasSeleccionadas.forEach((entrega) => {
-      dispatch(cambiarEstadoEntrega(entrega));
-      dispatch(quitarEntregaSeleccionada(entrega));
-    });
   };
 
   return {
@@ -289,6 +291,6 @@ export default function useVisitaFormularioViewModel() {
     handleSubmit,
     guardarEntrega,
     removerFoto,
-    obtenerColor
+    obtenerColor,
   };
 }
