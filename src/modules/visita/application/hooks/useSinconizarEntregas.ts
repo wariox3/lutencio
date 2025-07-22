@@ -17,7 +17,6 @@ export const useSincronizacionEntregas = () => {
     if (!subdominio) return;
 
     for (const entrega of entregasPendientes) {
-           
       await PenditesService.sincronizarPenditentes(entrega, subdominio);
     }
   }, [entregasPendientes, estaEnLinea]);

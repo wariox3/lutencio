@@ -1,4 +1,7 @@
-import { DatosAdicionalesVisita, Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
+import {
+  DatosAdicionalesVisita,
+  Entrega,
+} from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   cargarOrdenThunk,
@@ -98,10 +101,15 @@ const entregasSlice = createSlice({
         entrega.seleccionado = !entrega.seleccionado;
       }
     },
-    cambiarEstadoEntrega: (state, action: PayloadAction<number>) => {
-      const entrega = state.entregas.find((e) => e.id === action.payload);
-      if (entrega) {
-        entrega.estado_entregado = !entrega.estado_entregado;
+    cambiarEstadoEntrega: (
+      state,
+      action: PayloadAction<{ visitaId: number; nuevoEstado: boolean }>
+    ) => {
+      const visita = state.entregas.find(
+        (e) => e.id === action.payload.visitaId
+      );
+      if (visita) {
+        visita.estado_entregado = action.payload.nuevoEstado;
       }
     },
     cambiarEstadoNovedad: (state, action: PayloadAction<number>) => {
@@ -158,12 +166,13 @@ const entregasSlice = createSlice({
         fecha_entrega: string;
       }>
     ) => {
-      const { entregaId, novedad_tipo, novedad_descripcion, fecha_entrega } = action.payload;
+      const { entregaId, novedad_tipo, novedad_descripcion, fecha_entrega } =
+        action.payload;
       const entrega = state.entregas.find((e) => e.id === entregaId);
       if (entrega) {
         entrega.novedad_tipo = novedad_tipo;
         entrega.novedad_descripcion = novedad_descripcion;
-        entrega.fecha_entrega = fecha_entrega
+        entrega.fecha_entrega = fecha_entrega;
       }
     },
     actualizarNovedadSolucion: (
@@ -203,7 +212,7 @@ const entregasSlice = createSlice({
     actualizarFiltros: (
       state,
       action: PayloadAction<{ guia: number; numero: number }>
-    ) => {      
+    ) => {
       state.filtros = action.payload;
     },
     quitarFiltros: (state) => {
@@ -212,13 +221,19 @@ const entregasSlice = createSlice({
         numero: 0,
       };
     },
-    actualizarDatosAdiciones: (state, action: PayloadAction<{entrega_id: number, datosAdicionales: DatosAdicionalesVisita}>) => {
+    actualizarDatosAdiciones: (
+      state,
+      action: PayloadAction<{
+        entrega_id: number;
+        datosAdicionales: DatosAdicionalesVisita;
+      }>
+    ) => {
       const { entrega_id, datosAdicionales } = action.payload;
       const entrega = state.entregas.find((e) => e.id === entrega_id);
       if (entrega) {
         entrega.datosAdicionales = datosAdicionales;
       }
-    }
+    },
   },
 
   extraReducers(builder) {
@@ -274,6 +289,6 @@ export const {
   actualizarFechaEntrega,
   actualizarFiltros,
   quitarFiltros,
-  actualizarDatosAdiciones
+  actualizarDatosAdiciones,
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

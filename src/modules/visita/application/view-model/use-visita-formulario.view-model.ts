@@ -6,9 +6,10 @@ import storageService from "@/src/core/services/storage.service";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import useFecha from "@/src/shared/hooks/useFecha";
 import { useGuardarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
+import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { consultarApiFormData } from "@/utils/api";
 import * as FileSystem from "expo-file-system";
-import * as Network from "expo-network";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -21,7 +22,6 @@ import {
   cambiarEstadoSinconizado,
   quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
-import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 type VisitaFormType = {
   recibe: string;
@@ -35,6 +35,7 @@ export default function useVisitaFormularioViewModel() {
   const dispatch = useAppDispatch();
   const { guardarArchivo } = useGuardarEnGaleria();
   const { obtenerFechaYHoraActualFormateada } = useFecha();
+  const estaEnLinea = useNetworkStatus();
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
   );
@@ -143,12 +144,8 @@ export default function useVisitaFormularioViewModel() {
 
   const guardarEntrega = async (data: VisitaFormType) => {
     try {
-      const networkState = await Network.getNetworkStateAsync();
-      const hayConexion =
-        networkState.isConnected && networkState.isInternetReachable;
-
       actualizarState({ mostrarAnimacionCargando: true });
-      if (!hayConexion) {
+      if (!estaEnLinea) {
         await entregaVisitaOffline(data, dispatch);
         return;
       }
@@ -163,15 +160,18 @@ export default function useVisitaFormularioViewModel() {
 
   const entregaVisitaOffline = async (data: VisitaFormType, dispatch: any) => {
     // Agregar imágenes a entregas seleccionadas
-    entregasSeleccionadas.forEach((entregaId) => {
+    entregasSeleccionadas.forEach((visitaId) => {
       state.arrImagenes.forEach((imagen) => {
         dispatch(
-          agregarImagenEntrega({ entregaId, imagen: { uri: imagen.uri } })
+          agregarImagenEntrega({
+            entregaId: visitaId,
+            imagen: { uri: imagen.uri },
+          })
         );
         if (state.firmarBase64 !== null) {
           dispatch(
             actualizarFirmaEntrega({
-              entregaId,
+              entregaId: visitaId,
               firmarBase64: state.firmarBase64,
             })
           );
@@ -179,13 +179,13 @@ export default function useVisitaFormularioViewModel() {
       });
       dispatch(
         actualizarFechaEntrega({
-          entregaId,
+          entregaId: visitaId,
           fecha_entrega: obtenerFechaYHoraActualFormateada(),
         })
       );
       dispatch(
         actualizarDatosAdiciones({
-          entrega_id: entregaId,
+          entrega_id: visitaId,
           datosAdicionales: {
             recibe: data.recibe,
             recibeParentesco: data.parentesco,
@@ -194,8 +194,8 @@ export default function useVisitaFormularioViewModel() {
           },
         })
       );
-      dispatch(cambiarEstadoEntrega(entregaId));
-      dispatch(quitarEntregaSeleccionada(entregaId));
+      dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
+      dispatch(quitarEntregaSeleccionada(visitaId));
     });
     mostrarAlertHook({
       titulo: alertas.titulo.exito,
@@ -204,6 +204,7 @@ export default function useVisitaFormularioViewModel() {
   };
 
   const entregaVisitaOnline = async (data: VisitaFormType, dispatch: any) => {
+ 
     await Promise.all(
       entregasSeleccionadas.map(async (visita: number) => {
         const subdominio = (await storageService.getItem(
@@ -263,7 +264,8 @@ export default function useVisitaFormularioViewModel() {
           "datos_adicionales",
           JSON.stringify(datosAdicionales)
         );
-
+        console.log(formDataToSend);
+        
         const respuesta = await consultarApiFormData<any>(
           APIS.ruteo.visitaEntrega,
           formDataToSend,
@@ -273,7 +275,9 @@ export default function useVisitaFormularioViewModel() {
           }
         );
         if (respuesta) {
-          dispatch(cambiarEstadoEntrega(visita));
+          dispatch(
+            cambiarEstadoEntrega({ visitaId: visita, nuevoEstado: true })
+          );
           dispatch(cambiarEstadoSinconizado(visita));
           dispatch(quitarEntregaSeleccionada(visita));
         }

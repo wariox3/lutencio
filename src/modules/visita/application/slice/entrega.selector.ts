@@ -92,7 +92,15 @@ export const obtenerEntregasPendientes = createSelector(
     entregas.entregas.filter(
       (entrega) =>
         (entrega.estado_entregado === true &&
-          entrega.estado_sincronizado === false) ||
+          entrega.estado_sincronizado === false)
+    )
+);
+
+export const obtenerNovedadesPendientes = createSelector(
+  [selectEntregas],
+  (entregas) =>
+    entregas.entregas.filter(
+      (entrega) =>
         (entrega.estado_novedad === true &&
           entrega.estado_novedad_solucion == false)
     )

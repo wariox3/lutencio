@@ -6,7 +6,7 @@ import { Alert } from "react-native";
 
 // TODO: url exentas de visualizar error http
 const urlExentas = [
-  APIS.ruteo.visitaEntrega,
+  //APIS.ruteo.visitaEntrega,
   APIS.ruteo.ubicacion,
   APIS.ruteo.novedadNuevo,
 ];
