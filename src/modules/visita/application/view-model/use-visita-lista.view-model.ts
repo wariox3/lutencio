@@ -1,8 +1,8 @@
-import { configuracionThunk } from "@/src/application/slices/configuracion.thunk";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
 import { obtenerUsuarioId } from "@/src/modules/user/application/slice/usuario.selector";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import * as Location from "expo-location";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
@@ -19,8 +19,6 @@ import {
   quitarEntregaSeleccionada,
   seleccionarEntrega,
 } from "../slice/entrega.slice";
-import { cargarOrdenThunk } from "../slice/visita.thunk";
-import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 export default function useVisitaListaViewModel() {
   const navigation = useNavigation();
@@ -72,20 +70,7 @@ export default function useVisitaListaViewModel() {
   };
 
   const recargarOrdenEntrega = async () => {
-    try {
-      const codigoOrdenEntrega = await storageService.getItem(
-        STORAGE_KEYS.ordenEntrega
-      );
-      if (codigoOrdenEntrega) {
-        const respuesta = await dispatch(
-          cargarOrdenThunk({ codigo: codigoOrdenEntrega as string })
-        ).unwrap();
-
-        await dispatch(configuracionThunk()).unwrap();
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    return arrEntregas
   };
 
   return {
