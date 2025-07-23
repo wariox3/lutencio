@@ -196,6 +196,7 @@ export default function useVisitaFormularioViewModel() {
         })
       );
       dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
+      dispatch(cambiarEstadoSinconizado({ visitaId, nuevoEstado: false }));
       dispatch(cambiarEstadoSinconizadoError({ visitaId, nuevoEstado: false }));
       dispatch(quitarEntregaSeleccionada(visitaId));
     });

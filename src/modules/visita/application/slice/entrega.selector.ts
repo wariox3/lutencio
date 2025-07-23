@@ -10,7 +10,7 @@ export const obtenerEntregasFiltros = createSelector(
   (entregas, filtros) => {
     return entregas.entregas
       .filter((entrega) => !entrega.estado_entregado)
-      .filter((entrega) => {        
+      .filter((entrega) => {
         const coincideGuia = filtros.guia
           ? entrega.guia === filtros.guia
           : true;
@@ -91,10 +91,10 @@ export const obtenerEntregasPendientes = createSelector(
   (entregas) =>
     entregas.entregas.filter(
       (entrega) =>
-        (entrega.estado_entregado === true &&
-          entrega.estado_sincronizado === false &&
-          entrega.entregada_sincronizada_error === false
-        )
+      (entrega.estado_entregado === true &&
+        entrega.estado_sincronizado === false &&
+        entrega.entregada_sincronizada_error === false
+      )
     )
 );
 
@@ -103,8 +103,8 @@ export const obtenerNovedadesPendientes = createSelector(
   (entregas) =>
     entregas.entregas.filter(
       (entrega) =>
-        (entrega.estado_novedad === true &&
-          entrega.estado_novedad_solucion == false)
+      (entrega.estado_novedad === true &&
+        entrega.estado_novedad_solucion == false)
     )
 );
 

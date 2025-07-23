@@ -62,8 +62,8 @@ export class PenditesService {
           subdominio: subdominio!,
         }
       );
-      return respuesta.success;
-    } catch (error) {
+      return true;
+    } catch (error) {      
       return false;
     }
   }
