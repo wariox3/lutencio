@@ -32,6 +32,7 @@ export class GetListaVisitaUseCase {
         recibeNumeroIdentificacion: "",
         recibeCelular: "",
       },
+      estado_sincronizado: false,
       entregada_sincronizada_error: false
     }));
   }
