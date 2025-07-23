@@ -34,7 +34,7 @@ export class NovedadService {
         subdominio
       );
       if (respuesta) {
-        dispatch(cambiarEstadoSinconizado(novedad.id));
+        dispatch(cambiarEstadoSinconizado({ visitaId: novedad.id, nuevoEstado: false }));
       }
 
       return respuesta.success;

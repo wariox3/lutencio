@@ -264,7 +264,6 @@ export default function useVisitaFormularioViewModel() {
           "datos_adicionales",
           JSON.stringify(datosAdicionales)
         );
-        console.log(formDataToSend);
         
         const respuesta = await consultarApiFormData<any>(
           APIS.ruteo.visitaEntrega,
@@ -278,7 +277,7 @@ export default function useVisitaFormularioViewModel() {
           dispatch(
             cambiarEstadoEntrega({ visitaId: visita, nuevoEstado: true })
           );
-          dispatch(cambiarEstadoSinconizado(visita));
+          dispatch(cambiarEstadoSinconizado({ visitaId: visita, nuevoEstado: false }));
           dispatch(quitarEntregaSeleccionada(visita));
         }
       })

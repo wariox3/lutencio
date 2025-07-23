@@ -203,7 +203,7 @@ export default function useVisitaNovedadViewModel() {
 
   const cambiarEntregaEstadoSinconizado = () => {
     visitasSeleccionadas.map((visita: number) => {
-      dispatch(cambiarEstadoSinconizado(visita));
+          dispatch(cambiarEstadoSinconizado({ visitaId: visita, nuevoEstado: false }));
     });
   };
 

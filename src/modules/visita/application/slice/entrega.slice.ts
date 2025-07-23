@@ -118,10 +118,12 @@ const entregasSlice = createSlice({
         entrega.estado_novedad = !entrega.estado_novedad;
       }
     },
-    cambiarEstadoSinconizado: (state, action: PayloadAction<number>) => {
-      const entrega = state.entregas.find((e) => e.id === action.payload);
-      if (entrega) {
-        entrega.estado_sincronizado = !entrega.estado_sincronizado;
+    cambiarEstadoSinconizado: (state, action: PayloadAction<{ visitaId: number; nuevoEstado: boolean }>) => {
+      const visita = state.entregas.find(
+        (e) => e.id === action.payload.visitaId
+      );
+      if (visita) {
+        visita.estado_sincronizado = action.payload.nuevoEstado;
       }
     },
     cambiarEstadoError: (state, action: PayloadAction<number>) => {
