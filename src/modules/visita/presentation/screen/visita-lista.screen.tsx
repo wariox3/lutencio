@@ -1,22 +1,22 @@
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import SinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
-import SinPermisoLocalizacion from "@/src/modules/visita/presentation/components/visita-lista/sin-permiso-localizacion";
-import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
 import { ArrowDownToLine, FileWarning } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
 import React from "react";
 import { FlatList, Platform, RefreshControl } from "react-native";
-import { XStack, YStack } from "tamagui";
+import { View, XStack, YStack } from "tamagui";
 import useVisitaListaViewModel from "../../application/view-model/use-visita-lista.view-model";
 import MensajeFiltroSinResultados from "../components/visita-filtros/mensaje-filtro-sin-resultados";
 import InputFiltros from "../components/visita-lista/input-filtros.screen";
 import ItemLista from "../components/visita-lista/item-lista";
+import SinPermisos from "@/src/shared/components/comun/sin-permisos";
+import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
 
 export default function VisitaListaScreen() {
   const {
     arrEntregas,
     gestionEntrega,
-    permisoLocalizacion,
+    tienePermisos,
     entregasSeleccionadas,
     refreshing,
     recargarOrdenEntrega,
@@ -25,7 +25,13 @@ export default function VisitaListaScreen() {
     obtenerColor,
   } = useVisitaListaViewModel();
 
-  if (permisoLocalizacion !== "granted") return <SinPermisoLocalizacion />;
+  if (!tienePermisos) return (
+    <View flex={1} bg={
+      obtenerColor("BLANCO", "NEGRO")
+    }>
+      <SinPermisos />
+    </View>
+  );
 
   return (
     <>
