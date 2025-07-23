@@ -277,7 +277,7 @@ export default function useVisitaFormularioViewModel() {
           dispatch(
             cambiarEstadoEntrega({ visitaId: visita, nuevoEstado: true })
           );
-          dispatch(cambiarEstadoSinconizado({ visitaId: visita, nuevoEstado: false }));
+          dispatch(cambiarEstadoSinconizado({ visitaId: visita, nuevoEstado: true }));
           dispatch(quitarEntregaSeleccionada(visita));
         }
       })
