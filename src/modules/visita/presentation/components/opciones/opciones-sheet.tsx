@@ -209,141 +209,141 @@ const SheetContents = memo(({ setOpen }: any) => {
   };
 
   const gestionGuias = async () => {
-    try {
-      setLoadSincronizando(true);
-      if (Platform.OS === "android") {
-        const { status } = await MediaLibrary.requestPermissionsAsync();
-        if (status !== "granted") {
-          alert("Se necesitan permisos para guardar en la galería");
-          return;
-        }
-      }
+    // try {
+    //   setLoadSincronizando(true);
+    //   if (Platform.OS === "android") {
+    //     const { status } = await MediaLibrary.requestPermissionsAsync();
+    //     if (status !== "granted") {
+    //       alert("Se necesitan permisos para guardar en la galería");
+    //       return;
+    //     }
+    //   }
 
-    const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
-      if (!subdominio) {
-        console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
-        return;
-      }
+    // const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
+    //   if (!subdominio) {
+    //     console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
+    //     return;
+    //   }
 
-      for (const entrega of arrEntregasPendientes) {
-        try {
-          let imagenes: { base64: string }[] = [];
+    //   for (const entrega of arrEntregasPendientes) {
+    //     try {
+    //       let imagenes: { base64: string }[] = [];
 
-          const formDataToSend = new FormData();
-          formDataToSend.append("id", `${entrega.id}`);
-          formDataToSend.append("fecha_entrega", entrega.fecha_entrega);
-          if (entrega.arrImagenes) {
-            entrega.arrImagenes.forEach((archivo, index) => {
-              // Crear un objeto File-like compatible con FormData
-              const file = {
-                uri: archivo.uri,
-                name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
-                type: "image/jpeg", // Tipo MIME por defecto
-              };
+    //       const formDataToSend = new FormData();
+    //       formDataToSend.append("id", `${entrega.id}`);
+    //       formDataToSend.append("fecha_entrega", entrega.fecha_entrega);
+    //       if (entrega.arrImagenes) {
+    //         entrega.arrImagenes.forEach((archivo, index) => {
+    //           // Crear un objeto File-like compatible con FormData
+    //           const file = {
+    //             uri: archivo.uri,
+    //             name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
+    //             type: "image/jpeg", // Tipo MIME por defecto
+    //           };
 
-              // La forma correcta de adjuntar archivos en React Native
-              formDataToSend.append(
-                `imagenes`,
-                file as any,
-                `image-${index}.jpg`
-              ); // Usamos 'as any' para evitar el error de tipo
-            });
-          } else {
-            formDataToSend.append(`imagenes`, [].toString()); // Usamos 'as any' para evitar el error de tipo
-          }
+    //           // La forma correcta de adjuntar archivos en React Native
+    //           formDataToSend.append(
+    //             `imagenes`,
+    //             file as any,
+    //             `image-${index}.jpg`
+    //           ); // Usamos 'as any' para evitar el error de tipo
+    //         });
+    //       } else {
+    //         formDataToSend.append(`imagenes`, [].toString()); // Usamos 'as any' para evitar el error de tipo
+    //       }
 
-          // 3️ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
-          await consultarApi<any>(APIS.ruteo.visitaEntrega, formDataToSend, {
-            requiereToken: true,
-            subdominio,
-          });
+    //       // 3️ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
+    //       await consultarApi<any>(APIS.ruteo.visitaEntrega, formDataToSend, {
+    //         requiereToken: true,
+    //         subdominio,
+    //       });
 
-          dispatch(cambiarEstadoSinconizado(entrega.id));
-          setLoadSincronizando(false);
-        } catch (error: any) {
-          setOpen(true);
-          setLoadSincronizando(false);
-          dispatch(cambiarEstadoError(entrega.id));
-          dispatch(
-            actualizarMensajeError({
-              entregaId: entrega.id,
-              mensaje: error.response?.data?.mensaje,
-            })
-          );
-          console.error(`❌ Error en la entrega ${entrega.id}:`, error);
-          continue;
-        }
-      }
-    } catch (error) {
-      setLoadSincronizando(false);
-      console.error("Error general en gestionGuias:", error);
-    }
+    //       dispatch(cambiarEstadoSinconizado(entrega.id));
+    //       setLoadSincronizando(false);
+    //     } catch (error: any) {
+    //       setOpen(true);
+    //       setLoadSincronizando(false);
+    //       dispatch(cambiarEstadoError(entrega.id));
+    //       dispatch(
+    //         actualizarMensajeError({
+    //           entregaId: entrega.id,
+    //           mensaje: error.response?.data?.mensaje,
+    //         })
+    //       );
+    //       console.error(`❌ Error en la entrega ${entrega.id}:`, error);
+    //       continue;
+    //     }
+    //   }
+    // } catch (error) {
+    //   setLoadSincronizando(false);
+    //   console.error("Error general en gestionGuias:", error);
+    // }
   };
 
   const gestionGuiasNovedades = async () => {
-    setLoadSincronizandoNovedad(true);
+    // setLoadSincronizandoNovedad(true);
 
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== "granted") {
-      alert("Se necesitan permisos para guardar en la galería");
-      return;
-    }
+    // const { status } = await MediaLibrary.requestPermissionsAsync();
+    // if (status !== "granted") {
+    //   alert("Se necesitan permisos para guardar en la galería");
+    //   return;
+    // }
 
-    const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
-    if (!subdominio) {
-      console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
-      return;
-    }
+    // const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
+    // if (!subdominio) {
+    //   console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
+    //   return;
+    // }
 
-    for (const novedad of arrEntregasConNovedad) {
-      try {
-        let imagenes: { base64: string }[] = [];
-        // 1️ Procesar imágenes (si existen)
-        if (novedad.arrImagenes?.length > 0) {
-          for (const imagen of novedad.arrImagenes) {
-            const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
-            if (!fileInfo.exists) {
-              console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
-              continue;
-            }
-            const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
-              encoding: FileSystem.EncodingType.Base64,
-            });
-            imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
-          }
-        }
+    // for (const novedad of arrEntregasConNovedad) {
+    //   try {
+    //     let imagenes: { base64: string }[] = [];
+    //     // 1️ Procesar imágenes (si existen)
+    //     if (novedad.arrImagenes?.length > 0) {
+    //       for (const imagen of novedad.arrImagenes) {
+    //         const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
+    //         if (!fileInfo.exists) {
+    //           console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
+    //           continue;
+    //         }
+    //         const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
+    //           encoding: FileSystem.EncodingType.Base64,
+    //         });
+    //         imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
+    //       }
+    //     }
 
-        const respuestaNovedad = await consultarApi<any>(
-          APIS.ruteo.novedadNuevo,
-          {
-            visita_id: novedad.id,
-            descripcion: novedad.novedad_descripcion,
-            novedad_tipo_id: novedad.novedad_tipo,
-            imagenes,
-          },
-          {
-            requiereToken: true,
-            subdominio,
-          }
-        );
+    //     const respuestaNovedad = await consultarApi<any>(
+    //       APIS.ruteo.novedadNuevo,
+    //       {
+    //         visita_id: novedad.id,
+    //         descripcion: novedad.novedad_descripcion,
+    //         novedad_tipo_id: novedad.novedad_tipo,
+    //         imagenes,
+    //       },
+    //       {
+    //         requiereToken: true,
+    //         subdominio,
+    //       }
+    //     );
 
-        // 4️ Solo si la API responde OK, borrar archivos y marcar como sincronizado
-        if (novedad.arrImagenes?.length > 0) {
-          for (const img of novedad.arrImagenes) {
-            const fileInfo = await FileSystem.getInfoAsync(img.uri);
-            if (fileInfo.exists) await eliminarArchivo(img.uri);
-          }
-        }
+    //     // 4️ Solo si la API responde OK, borrar archivos y marcar como sincronizado
+    //     if (novedad.arrImagenes?.length > 0) {
+    //       for (const img of novedad.arrImagenes) {
+    //         const fileInfo = await FileSystem.getInfoAsync(img.uri);
+    //         if (fileInfo.exists) await eliminarArchivo(img.uri);
+    //       }
+    //     }
 
-        setLoadSincronizando(false);
-        dispatch(cambiarEstadoSinconizado(novedad.id));
-        setOpen(false);
-      } catch (error) {
-        console.error("❌ Error procesando novedad:", error);
-      }
-    }
+    //     setLoadSincronizando(false);
+    //     dispatch(cambiarEstadoSinconizado(novedad.id));
+    //     setOpen(false);
+    //   } catch (error) {
+    //     console.error("❌ Error procesando novedad:", error);
+    //   }
+    // }
 
-    setLoadSincronizandoNovedad(false);
+    // setLoadSincronizandoNovedad(false);
   };
 
   return (
