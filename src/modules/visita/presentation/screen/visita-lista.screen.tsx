@@ -25,13 +25,13 @@ export default function VisitaListaScreen() {
     obtenerColor,
   } = useVisitaListaViewModel();
 
-  if (!tienePermisos) return (
-    <View flex={1} bg={
-      obtenerColor("BLANCO", "NEGRO")
-    }>
-      <SinPermisos />
-    </View>
-  );
+  // if (!tienePermisos) return (
+  //   <View flex={1} bg={
+  //     obtenerColor("BLANCO", "NEGRO")
+  //   }>
+  //     <SinPermisos />
+  //   </View>
+  // );
 
   return (
     <>
