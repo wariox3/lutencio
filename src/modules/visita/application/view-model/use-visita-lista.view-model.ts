@@ -38,19 +38,19 @@ export default function useVisitaListaViewModel() {
   const appState = useRef(AppState.currentState);
 
   // Escucha cuando la app vuelve a primer plano (active)
-  useEffect(() => {
-    const suscripcion = AppState.addEventListener("change", async (estado: AppStateStatus) => {
-      if (appState.current.match(/inactive|background/) && estado === "active") {
-        const resultado = await validarPermisos();
-        setTienePermisos(resultado);
-      }
-      appState.current = estado;
-    });
+  // useEffect(() => {
+  //   const suscripcion = AppState.addEventListener("change", async (estado: AppStateStatus) => {
+  //     if (appState.current.match(/inactive|background/) && estado === "active") {
+  //       const resultado = await validarPermisos();
+  //       setTienePermisos(resultado);
+  //     }
+  //     appState.current = estado;
+  //   });
 
-    return () => {
-      suscripcion.remove();
-    };
-  }, []);
+  //   return () => {
+  //     suscripcion.remove();
+  //   };
+  // }, []);
 
   // solo se ejecuta cuando salen y vuelven a la vista
   useFocusEffect(
