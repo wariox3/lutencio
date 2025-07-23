@@ -20,6 +20,7 @@ import {
   agregarImagenEntrega,
   cambiarEstadoEntrega,
   cambiarEstadoSinconizado,
+  cambiarEstadoSinconizadoError,
   quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
 
@@ -195,6 +196,7 @@ export default function useVisitaFormularioViewModel() {
         })
       );
       dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
+      dispatch(cambiarEstadoSinconizadoError({ visitaId, nuevoEstado: false }));
       dispatch(quitarEntregaSeleccionada(visitaId));
     });
     mostrarAlertHook({
