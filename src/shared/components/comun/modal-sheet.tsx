@@ -46,14 +46,14 @@ const ReusableSheet: React.FC<Props> = ({
   const snapPoints = customSnapPoints
     ? customSnapPoints
     : isPercent
-    ? [85, 50, 25]
-    : isConstant
-    ? [256, 190]
-    : isFit
-    ? undefined
-    : mixedFitDemo
-    ? ["fit", 110]
-    : ["80%", 256, 190];
+      ? [85, 50, 25]
+      : isConstant
+        ? [256, 190]
+        : isFit
+          ? undefined
+          : mixedFitDemo
+            ? ["fit", 110]
+            : ["80%", 256, 190];
 
   return (
     <>
@@ -84,9 +84,15 @@ const ReusableSheet: React.FC<Props> = ({
         <Sheet.Frame
           style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
         >
-          {typeof sheetContents === "function"
-            ? sheetContents({ close })
-            : sheetContents}
+          {
+            open ? (
+              <>
+                {typeof sheetContents === "function"
+                  ? sheetContents({ close })
+                  : sheetContents}
+              </>
+            ) : null
+          }
         </Sheet.Frame>
       </Sheet>
     </>
