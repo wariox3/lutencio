@@ -40,7 +40,7 @@ const error400 = (error: AxiosError<ApiErrorResponse>): ApiErrorResponse => {
   const mensaje = procesarErroresValidacion(error);
 
   return {
-    titulo: `${alertas.titulo.error} 400`,
+    titulo: `${alertas.titulo.error}`,
     mensaje,
     codigo: 400,
   };
@@ -48,7 +48,7 @@ const error400 = (error: AxiosError<ApiErrorResponse>): ApiErrorResponse => {
 
 const error401 = (error: AxiosError): ApiErrorResponse => {
   return {
-    titulo: `${alertas.titulo.error} 401`,
+    titulo: `${alertas.titulo.error}`,
     mensaje: alertas.mensaje.error401,
     codigo: 401,
   };
@@ -56,7 +56,7 @@ const error401 = (error: AxiosError): ApiErrorResponse => {
 
 const error404 = (error: AxiosError): ApiErrorResponse => {
   return {
-    titulo: `${alertas.titulo.error} 404`,
+    titulo: `${alertas.titulo.error}`,
     mensaje: alertas.mensaje.error404,
     codigo: 404,
   };
@@ -64,7 +64,7 @@ const error404 = (error: AxiosError): ApiErrorResponse => {
 
 const error405 = (error: AxiosError): ApiErrorResponse => {
   return {
-    titulo: `${alertas.titulo.error} 405`,
+    titulo: `${alertas.titulo.error}`,
     mensaje: alertas.mensaje.error405,
     codigo: 405,
   };
@@ -72,7 +72,7 @@ const error405 = (error: AxiosError): ApiErrorResponse => {
 
 const error500 = (error: AxiosError): ApiErrorResponse => {
   return {
-    titulo: `${alertas.titulo.error} 500`,
+    titulo: `${alertas.titulo.error}`,
     mensaje: alertas.mensaje.error500,
     codigo: 500,
   };
