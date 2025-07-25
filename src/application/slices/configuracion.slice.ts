@@ -18,8 +18,8 @@ const configuracionSlice = createSlice({
   name: "configuracion",
   initialState,
   reducers: {
-    setModoPrueba(state, action: PayloadAction<boolean>) {
-      state.modoPrueba = action.payload;
+    cambiarEstadoModoPrueba(state, action: PayloadAction<{nuevoEstado: boolean}>) {
+      state.modoPrueba = action.payload.nuevoEstado;
     },
   },
   extraReducers(builder) {
@@ -29,5 +29,5 @@ const configuracionSlice = createSlice({
   },
 });
 
-export const { setModoPrueba } = configuracionSlice.actions;
+export const { cambiarEstadoModoPrueba } = configuracionSlice.actions;
 export default configuracionSlice.reducer;

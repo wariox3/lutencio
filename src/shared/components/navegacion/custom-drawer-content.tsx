@@ -16,6 +16,7 @@ import { Avatar, ListItem, XStack, YGroup } from "tamagui";
 import { useAlertaGlobal } from "../../hooks/useAlertaGlobal";
 import { useTemaVisual } from "../../hooks/useTemaVisual";
 import COLORES from "@/src/core/constants/colores.constant";
+import { cambiarEstadoModoPrueba } from "@/src/application/slices/configuracion.slice";
 
 export default function CustomDrawerContent(props: any) {
   const dispatch = useAppDispatch();
@@ -32,6 +33,7 @@ export default function CustomDrawerContent(props: any) {
         await detenerTareaSeguimientoUbicacion();
         dispatch(limpiarEntregaSeleccionada());
         dispatch(quitarEntregas());
+        dispatch(cambiarEstadoModoPrueba({ nuevoEstado: false }));
         dispatch(cerrarSesion());
         router.replace(rutasApp.login);
       },
@@ -45,7 +47,7 @@ export default function CustomDrawerContent(props: any) {
   const miAvatar = require("@/assets/images/usuario.jpeg");
 
   return (
-    <DrawerContentScrollView {...props}   style={{backgroundColor: obtenerColor("BLANCO","NEGRO")}}>
+    <DrawerContentScrollView {...props} style={{ backgroundColor: obtenerColor("BLANCO", "NEGRO") }}>
       <XStack justify={"center"}>
         <Avatar circular size="$8">
           <Avatar.Image src={miAvatar} />
@@ -86,7 +88,7 @@ export default function CustomDrawerContent(props: any) {
           title={name}
           onPress={() => navegar(item.ruta)}
           mt={"$2"}
-          />
+        />
       </YGroup.Item>
     );
   }

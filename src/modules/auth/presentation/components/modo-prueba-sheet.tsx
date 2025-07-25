@@ -1,5 +1,5 @@
 import { obtenerConfiguracionModoPrueba } from "@/src/application/selectors/configuracion.selector";
-import { setModoPrueba } from "@/src/application/slices/configuracion.slice";
+import { cambiarEstadoModoPrueba } from "@/src/application/slices/configuracion.slice";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
@@ -18,16 +18,16 @@ const ModoPruebaSheet = memo(() => {
   const modoPruebaActivo = useSelector(obtenerConfiguracionModoPrueba);
   const { obtenerColor } = useTemaVisual();
   const router = useRouter(); // Hook para navegación
-  
+
   const gestionModoPruebas = async (checked: boolean) => {
-    dispatch(setModoPrueba(checked));
+    dispatch(cambiarEstadoModoPrueba({ nuevoEstado: true }));
     storageService.setItem(STORAGE_KEYS.modoPrueba, checked);
     router.navigate("..")
   };
 
   return (
     <SafeAreaView
-      style={{flex:1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
+      style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
     >
       <View px={"$4"} flex={1}>
         <XStack items="center" gap="$4">
