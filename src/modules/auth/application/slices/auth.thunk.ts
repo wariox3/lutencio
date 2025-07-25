@@ -12,6 +12,7 @@ export const loginThunk = createAsyncThunk(
     try {
       const response = await new LoginUserUseCase().execute(payload);
       await storageService.setItem(STORAGE_KEYS.jwtToken, response.token);
+      await storageService.setItem(STORAGE_KEYS["refresh-token"], response["refresh-token"]);
       return response;
     } catch (error: any) {
       return rejectWithValue(error);
