@@ -1,6 +1,8 @@
+import { useAppDispatch } from "@/src/application/store/hooks";
 import APIS from "@/src/core/constants/endpoint.constant";
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
-import { consultarApiFormData } from "@/utils/api";
+// import { consultarApiFormData } from "@/utils/api";
+import { visitaEntregaThunk } from "../../application/slice/visita.thunk";
 
 export class PenditesService {
   static async sincronizarPenditentes(
@@ -8,13 +10,14 @@ export class PenditesService {
     subdominio: string | null
   ) {
     if (!subdominio) return false;
+    const dispatch = useAppDispatch();
 
-    try {      
+    try {
       const formDataToSend = new FormData();
 
       formDataToSend.append("id", `${entrega.id}`);
       formDataToSend.append("fecha_entrega", entrega.fecha_entrega);
-      
+
       entrega.arrImagenes?.forEach((archivo: any, index: number) => {
         // Crear un objeto File-like compatible con FormData
         const file = {
@@ -27,7 +30,7 @@ export class PenditesService {
         formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
       });
 
-      
+
       let filefirma: any = "";
 
       if (entrega.firmarBase64) {
@@ -48,22 +51,25 @@ export class PenditesService {
           entrega.datosAdicionales.recibeNumeroIdentificacion,
         recibeCelular: entrega.datosAdicionales.recibeCelular,
       };
-      
+
       formDataToSend.append(
         "datos_adicionales",
         JSON.stringify(datosAdicionales)
       );
 
-      const respuesta = await consultarApiFormData<any>(
-        APIS.ruteo.visitaEntrega,
-        formDataToSend,
-        {
-          requiereToken: true,
-          subdominio: subdominio!,
-        }
-      );
+      // const respuesta = await consultarApiFormData<any>(
+      //   APIS.ruteo.visitaEntrega,
+      //   formDataToSend,
+      //   {
+      //     requiereToken: true,
+      //     subdominio: subdominio!,
+      //   }
+      // );
+      const respuesta = await dispatch(visitaEntregaThunk({ formData: formDataToSend, visitaId: entrega.id })).unwrap();
+
+
       return true;
-    } catch (error) {      
+    } catch (error) {
       return false;
     }
   }
