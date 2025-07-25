@@ -57,7 +57,6 @@ export class PenditesService {
       await new SetEntregaVisitaUseCase().setVisita(formDataToSend)
       return true;
     } catch (error) {
-      console.log("PenditesService", error);
       return false;
     }
   }

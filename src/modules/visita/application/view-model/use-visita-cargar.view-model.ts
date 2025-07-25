@@ -9,6 +9,7 @@ import { cargarOrdenThunk } from "../slice/visita.thunk";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { alertas } from "@/src/core/constants";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
@@ -49,7 +50,7 @@ export default function useVisitaCargarViewModel() {
       const errorParseado = error as ApiErrorResponse;
       mostrarAlertHook({
         titulo: errorParseado.titulo,
-        mensaje: errorParseado.mensaje,
+        mensaje: alertas.mensaje.ordenEntregaError404,
       });
     }
   };

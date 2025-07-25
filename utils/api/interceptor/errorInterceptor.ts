@@ -55,9 +55,11 @@ const error401 = (error: AxiosError): ApiErrorResponse => {
 };
 
 const error404 = (error: AxiosError): ApiErrorResponse => {
+  const mensaje = procesarErroresValidacion(error);
+  
   return {
     titulo: `${alertas.titulo.error}`,
-    mensaje: alertas.mensaje.error404,
+    mensaje,
     codigo: 404,
   };
 };

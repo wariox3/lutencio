@@ -12,6 +12,7 @@ export const alertas = {
     guardarRegistroLocal: "Guardado localmente por falta de red",
     accionIrreversible: "¿Esta acción no se puede deshacer una vez completa?",
     numeroNoValido: "El número no es valido.",
-    defecto: "Ha ocurrido un error inesperado."
+    defecto: "Ha ocurrido un error inesperado.",
+    ordenEntregaError404: "No se encontró ninguna orden de entrega asociada."
   }
 };
