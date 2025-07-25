@@ -1,8 +1,6 @@
-import { useAppDispatch } from "@/src/application/store/hooks";
-import APIS from "@/src/core/constants/endpoint.constant";
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 // import { consultarApiFormData } from "@/utils/api";
-import { visitaEntregaThunk } from "../../application/slice/visita.thunk";
+import { SetEntregaVisitaUseCase } from "../../application/use-cases";
 
 export class PenditesService {
   static async sincronizarPenditentes(
@@ -10,7 +8,6 @@ export class PenditesService {
     subdominio: string | null
   ) {
     if (!subdominio) return false;
-    const dispatch = useAppDispatch();
 
     try {
       const formDataToSend = new FormData();
@@ -65,11 +62,18 @@ export class PenditesService {
       //     subdominio: subdominio!,
       //   }
       // );
-      const respuesta = await dispatch(visitaEntregaThunk({ formData: formDataToSend, visitaId: entrega.id })).unwrap();
+      try {
+      const respuestaVistaEntrega =
+        await new SetEntregaVisitaUseCase().setVisita(formDataToSend)
+      } catch (error) {
+              console.log("PenditesService", error);
+
+      }
 
 
       return true;
     } catch (error) {
+      
       return false;
     }
   }
