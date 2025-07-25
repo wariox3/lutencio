@@ -10,7 +10,7 @@ import {
 } from "../domain/constants/api.constant";
 import {
   ApiConfig,
-  ApiError,
+  ApiErrorResponse,
   RequestOptions,
 } from "../domain/interfaces/api.interface";
 import { dominioInterceptor } from "@/utils/api/interceptor/dominioInterceptor";
@@ -18,6 +18,7 @@ import { handleErrorResponse } from "@/utils/api/interceptor/errorInterceptor";
 import { subdominioInterceptor } from "@/utils/api/interceptor/subdominioInterceptor";
 import storageService from "../../services/storage.service";
 import { STORAGE_KEYS } from "../../constants";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 
 class ApiService {
   private instance: AxiosInstance;
@@ -65,9 +66,12 @@ class ApiService {
     //Interceptor para manejar errores de respuesta
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => response,
-      (error: AxiosError) => {
-        handleErrorResponse(error);
-        return Promise.reject(error);
+      (error: AxiosError<ApiErrorResponse>) => {
+        const errorResponse = handleErrorResponse(error);
+        console.log(errorResponse);
+        
+        // Rechazar la promesa con el error estandarizado
+        return Promise.reject(errorResponse);
       }
     );
   }
@@ -108,7 +112,8 @@ class ApiService {
       const response: AxiosResponse<T> = await this.instance.request(config);
       return response.data;
     } catch (error) {
-      throw error as ApiError;
+      // El error ya ha sido transformado por el interceptor
+      throw error as ApiErrorResponse;
     }
   }
 
@@ -122,7 +127,8 @@ class ApiService {
       });
       return response.data;
     } catch (error) {
-      throw error as ApiError;
+      // El error ya ha sido transformado por el interceptor
+      throw error as ApiErrorResponse;
     }
   }
 

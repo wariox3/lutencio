@@ -7,6 +7,8 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Keyboard } from "react-native";
 import { cargarOrdenThunk } from "../slice/visita.thunk";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
+import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
@@ -43,8 +45,12 @@ export default function useVisitaCargarViewModel() {
       if (respuesta) {
         router.navigate(rutasApp.visitas);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      const errorParseado = error as ApiErrorResponse;
+      mostrarAlertHook({
+        titulo: errorParseado.titulo,
+        mensaje: errorParseado.mensaje,
+      });
     }
   };
 

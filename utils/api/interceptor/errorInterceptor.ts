@@ -1,69 +1,99 @@
+import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface";
 import { alertas } from "@/src/core/constants/alertas.const";
-import APIS from "@/src/core/constants/endpoint.constant";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { AxiosError } from "axios";
-import { Alert } from "react-native";
 
-// TODO: url exentas de visualizar error http
-const urlExentas = [
-  //APIS.ruteo.visitaEntrega,
-  APIS.ruteo.ubicacion,
-  APIS.ruteo.novedadNuevo,
-];
-
-const obtenerRuta = (url: string): string | null => {
-  const match = url.match(/(?:reddocapi\.online|reddocapi\.co)\/(.+)/); // Busca lo que hay después de "reddocapi.online/" o "reddocapi.co/
-  return match ? match[1] : null; // Devuelve solo la parte de la ruta
-};
-
-export const handleErrorResponse = (error: AxiosError): void => {
-  let _errores = new Map<number, () => void>();
-  _errores.set(400, () => error400(error));
-  _errores.set(401, () => error401(error));
-  _errores.set(404, () => error404(error));
-  _errores.set(405, () => error405(error));
-  _errores.set(500, () => error500(error));
+/**
+ * Maneja los errores de respuesta HTTP y devuelve un objeto de error estandarizado
+ */
+export const handleErrorResponse = (
+  error: AxiosError<ApiErrorResponse>
+): ApiErrorResponse => {
+  let _errores = new Map<
+    number,
+    (error: AxiosError<ApiErrorResponse>) => ApiErrorResponse
+  >();
+  _errores.set(400, (error) => error400(error));
+  _errores.set(401, (error) => error401(error));
+  _errores.set(404, (error) => error404(error));
+  _errores.set(405, (error) => error405(error));
+  _errores.set(500, (error) => error500(error));
 
   // Obtener el código de error de la respuesta
   const statusCode = error.response?.status || 500;
 
   // Obtener la función del Map usando el código de error
   const handler = _errores.get(statusCode);
-  // Si la función existe, ejecutarla
+
+  // Si la función existe, ejecutarla, sino manejar como error por defecto
   if (handler) {
-    handler(); // Llama a la función
+    return handler(error);
   } else {
-    // Manejar el caso en que no haya una función para el código de error
-    mostrarAlertHook({
-      titulo: `${alertas.titulo.error}`,
-      mensaje: alertas.mensaje.defecto
-    });
-  
+    return {
+      titulo: alertas.titulo.error,
+      mensaje: alertas.mensaje.defecto,
+      codigo: statusCode,
+      axiosError: error,
+    };
   }
 };
 
-const error400 = (error: AxiosError): AxiosError => {
-  const urlFallida = error.config?.url || "URL desconocida";
+const error400 = (error: AxiosError<ApiErrorResponse>): ApiErrorResponse => {
+  const mensaje = procesarErroresValidacion(error);
 
-  // Obtener la parte relevante de la URL (después de "online/")
-  const rutaFallida = obtenerRuta(urlFallida);
+  return {
+    titulo: `${alertas.titulo.error} 400`,
+    mensaje,
+    codigo: 400,
+    axiosError: error,
+  };
+};
 
-  // Verificar si la URL fallida coincide con alguna en urlExentas
-  const esExenta = urlExentas.some(
-    (exenta) => obtenerRuta(exenta) === rutaFallida
-  );
+const error401 = (error: AxiosError): ApiErrorResponse => {
+  return {
+    titulo: `${alertas.titulo.error} 401`,
+    mensaje: alertas.mensaje.error401,
+    codigo: 401,
+    axiosError: error,
+  };
+};
 
-  if (esExenta) {
-    return error;
-  }
+const error404 = (error: AxiosError): ApiErrorResponse => {
+  return {
+    titulo: `${alertas.titulo.error} 404`,
+    mensaje: alertas.mensaje.error404,
+    codigo: 404,
+    axiosError: error,
+  };
+};
 
-  // Obtener código de error y mensaje
-  const codigo = error.response?.data?.codigo || "Desconocido";
+const error405 = (error: AxiosError): ApiErrorResponse => {
+  return {
+    titulo: `${alertas.titulo.error} 405`,
+    mensaje: alertas.mensaje.error405,
+    codigo: 405,
+    axiosError: error,
+  };
+};
 
-  let mensaje =
-    error.response?.data?.mensaje ||
-    error.response?.data?.error ||
-    "Ha ocurrido un error inesperado.";
+const error500 = (error: AxiosError): ApiErrorResponse => {
+  return {
+    titulo: `${alertas.titulo.error} 500`,
+    mensaje: alertas.mensaje.error500,
+    codigo: 500,
+    axiosError: error,
+  };
+};
+
+/**
+ * Procesa los errores de validación y construye un mensaje de error
+ * @param error Error de Axios que contiene validaciones
+ * @returns Mensaje de error formateado
+ */
+const procesarErroresValidacion = (
+  error: AxiosError<ApiErrorResponse>
+): string => {
+  let mensaje = error.response?.data?.error || "";
+
   if (error.response?.data?.hasOwnProperty("validaciones")) {
     for (const key in error.response?.data?.validaciones) {
       if (error.response?.data?.validaciones.hasOwnProperty(key)) {
@@ -71,42 +101,7 @@ const error400 = (error: AxiosError): AxiosError => {
         mensaje += `${key}: ${value}`;
       }
     }
-  }  
-  mostrarAlertHook({
-    titulo: `${alertas.titulo.error} ${codigo}`,
-    mensaje,
-  });
-  return error;
-};
+  }
 
-const error401 = (error: AxiosError): AxiosError => {
-  mostrarAlertHook({
-    titulo: `${alertas.titulo.error} 401`,
-    mensaje: alertas.mensaje.error401
-  });
-  return error;
-};
-
-const error404 = (error: AxiosError): AxiosError => {
-  mostrarAlertHook({
-    titulo: `${alertas.titulo.error} 404`,
-    mensaje: alertas.mensaje.error404
-  });
-  return error;
-};
-
-const error405 = (error: AxiosError): AxiosError => {
-  mostrarAlertHook({
-    titulo: `${alertas.titulo.error} 405`,
-    mensaje: alertas.mensaje.error405
-  });
-  return error;
-};
-
-const error500 = (error: AxiosError): AxiosError => {
-  mostrarAlertHook({
-    titulo: `${alertas.titulo.error} 500`,
-    mensaje: alertas.mensaje.error500
-  });
-  return error;
+  return mensaje;
 };

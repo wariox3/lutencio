@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export interface ApiResponse<T> {
@@ -19,12 +21,14 @@ export interface RequestOptions {
   timeout?: number;
 }
 
-export interface ApiError {
-  message: string;
+export interface ApiErrorResponse {
+  titulo: string;
+  mensaje: string;
+  codigo: number;
+  validaciones?: any;
+  error?: string;
   status?: number;
-  data?: any;
-  isCanceled?: boolean;
-  isTimeout?: boolean;
+  axiosError?: AxiosError;
 }
 
 
