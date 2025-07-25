@@ -20,7 +20,7 @@ const ModoPruebaSheet = memo(() => {
   const router = useRouter(); // Hook para navegación
 
   const gestionModoPruebas = async (checked: boolean) => {
-    dispatch(cambiarEstadoModoPrueba({ nuevoEstado: true }));
+    dispatch(cambiarEstadoModoPrueba({ nuevoEstado: checked }));
     storageService.setItem(STORAGE_KEYS.modoPrueba, checked);
     router.navigate("..")
   };
