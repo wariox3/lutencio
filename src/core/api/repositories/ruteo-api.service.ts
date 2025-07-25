@@ -18,23 +18,30 @@ export class RuteoApiRepository implements RuteoRepository {
     });
   }
 
-  async postNovedad(data: FormData, subdominio: string) {
-    return apiService.post<Promise<any>>(APIS.ruteo.novedadNuevo, data, {
+  async postVisita(data: FormData, subdominio: string){
+    return apiService.post<Promise<any>>(APIS.ruteo.visitaEntrega, data, {
       "X-Schema-Name": subdominio,
       "Content-Type": "multipart/form-data",
     });
   }
 
+  async postNovedad(data: FormData, subdominio: string) {
+  return apiService.post<Promise<any>>(APIS.ruteo.novedadNuevo, data, {
+    "X-Schema-Name": subdominio,
+    "Content-Type": "multipart/form-data",
+  });
+}
+
   async postNovedadSolucion(id: number, solucion: string, subdominio: string) {
-    return apiService.post<any>(
-      APIS.ruteo.novedadSolucionar,
-      {
-        id,
-        solucion,
-      },
-      {
-        "X-Schema-Name": subdominio,
-      }
-    );
-  }
+  return apiService.post<any>(
+    APIS.ruteo.novedadSolucionar,
+    {
+      id,
+      solucion,
+    },
+    {
+      "X-Schema-Name": subdominio,
+    }
+  );
+}
 }

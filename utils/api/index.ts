@@ -1,9 +1,8 @@
 import Axios, { AxiosError, AxiosResponse } from "axios";
 import { authInterceptor } from "./interceptor/authInterceptor";
-import { Alert } from "react-native";
+import { dominioInterceptor } from "./interceptor/dominioInterceptor";
 import { handleErrorResponse } from "./interceptor/errorInterceptor";
 import { subdominioInterceptor } from "./interceptor/subdominioInterceptor";
-import { dominioInterceptor } from "./interceptor/dominioInterceptor";
 
 interface Configuracion {
   method?: "post" | "get" | "put" | "delete";
@@ -56,26 +55,26 @@ export const consultarApi = async <T>(
   }
 };
 
-export const consultarApiFormData = async <T>(
-  url: string,
-  data?: T | null,
-  configuracion: Configuracion = {
-    requiereToken: true,
-  }
-): Promise<T> => {
-  try {    
-    const informacionConsulta: AxiosResponse<T> = await axios({
-      method: configuracion.method ?? "post",
-      url,
-      data,
-      headers: {
-        requiereToken: configuracion.requiereToken, // Pasar `requiereToken` en headers para ser usado por el interceptor
-        "X-Schema-Name": configuracion.subdominio, // Pasar el subdominio en los headers
-        "Content-Type": 'multipart/form-data',
-      },
-    });    
-    return informacionConsulta.data;
-  } catch (error: any) {    
-    throw error; // Lanzar el error para que el controlador de llamadas pueda manejarlo
-  }
-};
+// export const consultarApiFormData = async <T>(
+//   url: string,
+//   data?: T | null,
+//   configuracion: Configuracion = {
+//     requiereToken: true,
+//   }
+// ): Promise<T> => {
+//   try {    
+//     const informacionConsulta: AxiosResponse<T> = await axios({
+//       method: configuracion.method ?? "post",
+//       url,
+//       data,
+//       headers: {
+//         requiereToken: configuracion.requiereToken, // Pasar `requiereToken` en headers para ser usado por el interceptor
+//         "X-Schema-Name": configuracion.subdominio, // Pasar el subdominio en los headers
+//         "Content-Type": 'multipart/form-data',
+//       },
+//     });    
+//     return informacionConsulta.data;
+//   } catch (error: any) {    
+//     throw error; // Lanzar el error para que el controlador de llamadas pueda manejarlo
+//   }
+// };

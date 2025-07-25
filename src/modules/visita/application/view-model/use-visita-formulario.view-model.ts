@@ -1,14 +1,13 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import { alertas } from "@/src/core/constants/alertas.const";
-import APIS from "@/src/core/constants/endpoint.constant";
 import storageService from "@/src/core/services/storage.service";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import useFecha from "@/src/shared/hooks/useFecha";
 import { useGuardarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
-import { consultarApiFormData } from "@/utils/api";
 import * as FileSystem from "expo-file-system";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -23,6 +22,7 @@ import {
   cambiarEstadoSinconizadoError,
   quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
+import { visitaEntregaThunk } from "../slice/visita.thunk";
 
 type VisitaFormType = {
   recibe: string;
@@ -207,7 +207,7 @@ export default function useVisitaFormularioViewModel() {
   };
 
   const entregaVisitaOnline = async (data: VisitaFormType, dispatch: any) => {
- 
+
     await Promise.all(
       entregasSeleccionadas.map(async (visita: number) => {
         const subdominio = (await storageService.getItem(
@@ -267,21 +267,30 @@ export default function useVisitaFormularioViewModel() {
           "datos_adicionales",
           JSON.stringify(datosAdicionales)
         );
-        
-        const respuesta = await consultarApiFormData<any>(
-          APIS.ruteo.visitaEntrega,
-          formDataToSend,
-          {
-            requiereToken: true,
-            subdominio: subdominio!,
-          }
-        );
-        if (respuesta) {
-          dispatch(
-            cambiarEstadoEntrega({ visitaId: visita, nuevoEstado: true })
-          );
-          dispatch(cambiarEstadoSinconizado({ visitaId: visita, nuevoEstado: true }));
-          dispatch(quitarEntregaSeleccionada(visita));
+
+        try {
+          const respuesta = await dispatch(visitaEntregaThunk({ formData: formDataToSend })).unwrap();
+          // const respuesta = await consultarApiFormData<any>(
+          //   APIS.ruteo.visitaEntrega,
+          //   formDataToSend,
+          //   {
+          //     requiereToken: true,
+          //     subdominio: subdominio!,
+          //   }
+          // );
+          // if (respuesta) {
+          //   dispatch(
+          //     cambiarEstadoEntrega({ visitaId: visita, nuevoEstado: true })
+          //   );
+          //   dispatch(cambiarEstadoSinconizado({ visitaId: visita, nuevoEstado: true }));
+          //   dispatch(quitarEntregaSeleccionada(visita));
+          //}
+        } catch (error: any) {
+          const errorParseado = error as ApiErrorResponse;
+          mostrarAlertHook({
+            titulo: errorParseado.titulo,
+            mensaje: errorParseado.mensaje,
+          });
         }
       })
     );

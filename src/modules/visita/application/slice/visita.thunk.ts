@@ -6,8 +6,9 @@ import { VerticalApiRepository } from "../../infraestructure/api/vertical-api.se
 import {
   GetListaVisitaUseCase,
   SetNovedadSolucionVisitaUseCase,
-  SetNovedadVisitaUseCase
+  SetEntregaVisitaUseCase
 } from "../use-cases";
+import { SetNovedadVisitaUseCase } from "../use-cases/set-novedad-visita.use-case";
 
 export const cargarOrdenThunk = createAsyncThunk(
   "visita/cargar-orden",
@@ -43,6 +44,19 @@ export const cargarOrdenThunk = createAsyncThunk(
     }
   }
 );
+
+export const visitaEntregaThunk = createAsyncThunk(
+  "visita/guardar-visita",
+  async (payload: { formData: any }, { rejectWithValue }) => {
+    try {
+      const respuestaVistaEntrega =
+        await new SetEntregaVisitaUseCase().setVisita(payload.formData)
+      return [];
+    } catch (error: any) {      
+      return rejectWithValue(error);
+    }
+  }
+)
 
 export const visitaNovedadThunk = createAsyncThunk(
   "visita/guardar-novedad",

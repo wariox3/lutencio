@@ -9,7 +9,7 @@ export class VisitaApiRepository implements VisitaRepository {
   constructor(
     private generalApiService = new GeneralApiRepository(),
     private ruteoApiRepository = new RuteoApiRepository()
-  ) {}
+  ) { }
 
   async getLista(
     despachoId: number,
@@ -33,8 +33,22 @@ export class VisitaApiRepository implements VisitaRepository {
         ],
         limite: 1000
       },
-      subdominio
+      {
+        "X-Schema-Name": subdominio,
+      }
     );
+  }
+
+  async postVisita(
+    formData: any
+  ) {
+    const subdominio = (await storageService.getItem(
+      STORAGE_KEYS.subdominio
+    )) as string; 
+    return this.ruteoApiRepository.postVisita(
+      formData,
+      subdominio
+    )
   }
 
   async setNovedad(
@@ -59,7 +73,7 @@ export class VisitaApiRepository implements VisitaRepository {
         name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
         type: 'image/jpeg' // Tipo MIME por defecto
       };
-    
+
       // La forma correcta de adjuntar archivos en React Native
       formData.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
     });
