@@ -5,6 +5,7 @@ import {
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   cargarOrdenThunk,
+  visitaEntregaThunk,
   visitaNovedadSolucionThunk,
   visitaNovedadThunk,
 } from "./visita.thunk";
@@ -276,6 +277,20 @@ const entregasSlice = createSlice({
         }
       }
     );
+    builder.addCase(
+      visitaEntregaThunk.fulfilled, (state, {
+        payload
+      }) => {
+      const entrega = state.entregas.find((e) => e.id === payload.visita);
+      if (entrega) {
+        entrega.estado_entregado = true;
+        entrega.estado_sincronizado = true;
+        state.entregasSeleccionadas = state.entregasSeleccionadas.filter(
+          (id) => id !== payload.visita
+        );
+      }
+    }
+    )
   },
 });
 

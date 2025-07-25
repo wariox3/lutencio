@@ -269,22 +269,7 @@ export default function useVisitaFormularioViewModel() {
         );
 
         try {
-          const respuesta = await dispatch(visitaEntregaThunk({ formData: formDataToSend })).unwrap();
-          // const respuesta = await consultarApiFormData<any>(
-          //   APIS.ruteo.visitaEntrega,
-          //   formDataToSend,
-          //   {
-          //     requiereToken: true,
-          //     subdominio: subdominio!,
-          //   }
-          // );
-          // if (respuesta) {
-          //   dispatch(
-          //     cambiarEstadoEntrega({ visitaId: visita, nuevoEstado: true })
-          //   );
-          //   dispatch(cambiarEstadoSinconizado({ visitaId: visita, nuevoEstado: true }));
-          //   dispatch(quitarEntregaSeleccionada(visita));
-          //}
+          const respuesta = await dispatch(visitaEntregaThunk({ formData: formDataToSend, visitaId: visita })).unwrap();
         } catch (error: any) {
           const errorParseado = error as ApiErrorResponse;
           mostrarAlertHook({

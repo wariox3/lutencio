@@ -47,11 +47,11 @@ export const cargarOrdenThunk = createAsyncThunk(
 
 export const visitaEntregaThunk = createAsyncThunk(
   "visita/guardar-visita",
-  async (payload: { formData: any }, { rejectWithValue }) => {
+  async (payload: { formData: any, visitaId: number }, { rejectWithValue }) => {
     try {
       const respuestaVistaEntrega =
         await new SetEntregaVisitaUseCase().setVisita(payload.formData)
-      return [];
+      return {...respuestaVistaEntrega, visita: payload.visitaId};
     } catch (error: any) {      
       return rejectWithValue(error);
     }
