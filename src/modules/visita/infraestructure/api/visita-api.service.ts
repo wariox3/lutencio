@@ -44,7 +44,7 @@ export class VisitaApiRepository implements VisitaRepository {
   ) {
     const subdominio = (await storageService.getItem(
       STORAGE_KEYS.subdominio
-    )) as string; 
+    )) as string;
     return this.ruteoApiRepository.postVisita(
       formData,
       subdominio
@@ -97,6 +97,22 @@ export class VisitaApiRepository implements VisitaRepository {
       solucion,
       subdominio
     );
+  }
+
+  async setUbiciacion(
+    latitud: string,
+    longitud: string,
+  ) {
+    const despacho = (await storageService.getItem(
+      STORAGE_KEYS.despacho
+    )) as string;
+    const usuario_id = (await storageService.getItem(
+      STORAGE_KEYS.usuarioId
+    )) as string;
+    const subdominio = (await storageService.getItem(
+      STORAGE_KEYS.subdominio
+    )) as string;
+    return this.ruteoApiRepository.postUbicacionVisita(usuario_id, despacho, latitud, longitud, subdominio)
   }
 
 }
