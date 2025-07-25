@@ -68,7 +68,6 @@ class ApiService {
       (response: AxiosResponse) => response,
       (error: AxiosError<ApiErrorResponse>) => {
         const errorResponse = handleErrorResponse(error);
-        console.log(errorResponse);
         
         // Rechazar la promesa con el error estandarizado
         return Promise.reject(errorResponse);

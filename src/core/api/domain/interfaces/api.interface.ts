@@ -28,7 +28,6 @@ export interface ApiErrorResponse {
   validaciones?: any;
   error?: string;
   status?: number;
-  axiosError?: AxiosError;
 }
 
 

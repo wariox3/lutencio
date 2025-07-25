@@ -32,7 +32,6 @@ export const handleErrorResponse = (
       titulo: alertas.titulo.error,
       mensaje: alertas.mensaje.defecto,
       codigo: statusCode,
-      axiosError: error,
     };
   }
 };
@@ -44,7 +43,6 @@ const error400 = (error: AxiosError<ApiErrorResponse>): ApiErrorResponse => {
     titulo: `${alertas.titulo.error} 400`,
     mensaje,
     codigo: 400,
-    axiosError: error,
   };
 };
 
@@ -53,7 +51,6 @@ const error401 = (error: AxiosError): ApiErrorResponse => {
     titulo: `${alertas.titulo.error} 401`,
     mensaje: alertas.mensaje.error401,
     codigo: 401,
-    axiosError: error,
   };
 };
 
@@ -62,7 +59,6 @@ const error404 = (error: AxiosError): ApiErrorResponse => {
     titulo: `${alertas.titulo.error} 404`,
     mensaje: alertas.mensaje.error404,
     codigo: 404,
-    axiosError: error,
   };
 };
 
@@ -71,7 +67,6 @@ const error405 = (error: AxiosError): ApiErrorResponse => {
     titulo: `${alertas.titulo.error} 405`,
     mensaje: alertas.mensaje.error405,
     codigo: 405,
-    axiosError: error,
   };
 };
 
@@ -80,7 +75,6 @@ const error500 = (error: AxiosError): ApiErrorResponse => {
     titulo: `${alertas.titulo.error} 500`,
     mensaje: alertas.mensaje.error500,
     codigo: 500,
-    axiosError: error,
   };
 };
 
