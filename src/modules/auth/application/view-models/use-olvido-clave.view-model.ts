@@ -6,6 +6,8 @@ import { Keyboard } from "react-native";
 import { OlvidoClaveUseCase } from "../user-cases/olvido-clave.use-case";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
+import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 
 export default function useOlvidoClaveViewModel() {
   const router = useRouter();
@@ -28,6 +30,11 @@ export default function useOlvidoClaveViewModel() {
         router.replace(rutasApp.login);
       }
     } catch (error: any) {
+      const errorParseado = error as ApiErrorResponse
+      mostrarAlertHook({
+        mensaje: errorParseado.mensaje,
+        titulo: errorParseado.titulo
+      })
     } finally {
       setIsLoading(false);
     }

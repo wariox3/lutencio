@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { CrearCuentaFormType } from "../../domain/interfaces/crear-cuenta.interface";
 import { crearCuentaThunk, loginThunk } from "../slices/auth.thunk";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
+import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 
 export const useCrearCuentaViewModel = () => {
   const router = useRouter();
@@ -36,7 +38,13 @@ export const useCrearCuentaViewModel = () => {
         ).unwrap();
       }
       handleNavegarApp();
-    } catch (error) {}
+    } catch (error: any) {
+      const errorParseado = error as ApiErrorResponse
+      mostrarAlertHook({
+        mensaje: errorParseado.mensaje,
+        titulo: errorParseado.titulo
+      })
+    }
   };
 
   const handleNavegarApp = () => {

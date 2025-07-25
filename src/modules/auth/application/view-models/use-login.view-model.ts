@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import { LoginFormType } from "../../domain/types/login.types";
 import { loginThunk } from "../slices/auth.thunk";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
+import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 
 export const useLoginViewModel = () => {
   const modoPrueba = useAppSelector(obtenerConfiguracionModoPrueba);
@@ -34,7 +36,13 @@ export const useLoginViewModel = () => {
         loginThunk({ username: data.username, password: data.password })
       ).unwrap();
       handleNavegarApp();
-    } catch (error) {}
+    } catch (error: any) {
+      const errorParseado = error as ApiErrorResponse
+      mostrarAlertHook({
+        mensaje: errorParseado.mensaje,
+        titulo: errorParseado.titulo
+      })
+    }
   };
 
   useFocusEffect(

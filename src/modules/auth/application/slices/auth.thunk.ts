@@ -14,7 +14,7 @@ export const loginThunk = createAsyncThunk(
       await storageService.setItem(STORAGE_KEYS.jwtToken, response.token);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.data);
+      return rejectWithValue(error);
     }
   }
 );
@@ -26,7 +26,7 @@ export const crearCuentaThunk = createAsyncThunk(
       const response = await new CrearCuentaUseCase().execute(payload)
       return response;
     } catch (error: any) {      
-      return rejectWithValue(error.data);
+      return rejectWithValue(error);
     }
   }
 )

@@ -86,7 +86,7 @@ const error500 = (error: AxiosError): ApiErrorResponse => {
 const procesarErroresValidacion = (
   error: AxiosError<ApiErrorResponse>
 ): string => {
-  let mensaje = error.response?.data?.error || "";
+  let mensaje = error.response?.data?.error || error.response?.data?.mensaje || "";
 
   if (error.response?.data?.hasOwnProperty("validaciones")) {
     for (const key in error.response?.data?.validaciones) {
