@@ -5,7 +5,7 @@ import {
   CrearCuentaFormType,
   CrearCuentaResponse,
 } from "../../domain/interfaces/crear-cuenta.interface";
-import { LoginResponse } from "../../domain/interfaces/login.interface";
+import { LoginResponse, RefreshTokenResponse } from "../../domain/interfaces/login.interface";
 import { LoginFormType } from "../../domain/types/login.types";
 import {
   OlvidoClaveFormType,
@@ -14,7 +14,10 @@ import {
 
 export class AuthApiRepository implements AuthRepository {
   async login(payload: LoginFormType): Promise<LoginResponse> {
-    return apiService.post<LoginResponse>(APIS.seguridad.login, {...payload, proyecto:"RUTEOAPP"});
+    return apiService.post<LoginResponse>(APIS.seguridad.login, {
+      ...payload,
+      proyecto: "RUTEOAPP",
+    });
   }
 
   async crearCuenta(
@@ -33,5 +36,11 @@ export class AuthApiRepository implements AuthRepository {
       APIS.seguridad.cambioClaveSolicitar,
       payload
     );
+  }
+
+  async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
+    return apiService.post<RefreshTokenResponse>(APIS.seguridad.refreshToken, {
+      refresh: refreshToken,
+    });
   }
 }

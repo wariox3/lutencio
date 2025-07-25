@@ -4,6 +4,7 @@ const URL_SUBDOMINIO = "https://subdominio.reddocapi.co";
 const APIS = {
   seguridad: {
     login: `${URL_BASE}/seguridad/login/`,
+    refreshToken: `${URL_BASE}/seguridad/token/refresh/`,
     usuario: `${URL_BASE}/seguridad/usuario/`,
     verificar: `${URL_BASE}/seguridad/usuario/verificar/`,
     cambioClaveSolicitar: `${URL_BASE}/seguridad/usuario/cambio-clave-solicitar/`,
