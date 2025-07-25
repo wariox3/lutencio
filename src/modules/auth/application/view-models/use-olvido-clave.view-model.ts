@@ -27,7 +27,7 @@ export default function useOlvidoClaveViewModel() {
       const respuestaApiLogin = await new OlvidoClaveUseCase().execute(data);
 
       if (respuestaApiLogin.verificacion) {
-        router.replace(rutasApp.login);
+        router.replace("/(auth)");
       }
     } catch (error: any) {
       const errorParseado = error as ApiErrorResponse
