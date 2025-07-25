@@ -54,26 +54,10 @@ export class PenditesService {
         JSON.stringify(datosAdicionales)
       );
 
-      // const respuesta = await consultarApiFormData<any>(
-      //   APIS.ruteo.visitaEntrega,
-      //   formDataToSend,
-      //   {
-      //     requiereToken: true,
-      //     subdominio: subdominio!,
-      //   }
-      // );
-      try {
-      const respuestaVistaEntrega =
-        await new SetEntregaVisitaUseCase().setVisita(formDataToSend)
-      } catch (error) {
-              console.log("PenditesService", error);
-
-      }
-
-
+      await new SetEntregaVisitaUseCase().setVisita(formDataToSend)
       return true;
     } catch (error) {
-      
+      console.log("PenditesService", error);
       return false;
     }
   }

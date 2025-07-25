@@ -88,24 +88,26 @@ export const obtenerVisitaFiltroPorGuia = (guia: number) =>
 
 export const obtenerEntregasPendientes = createSelector(
   [selectEntregas],
-  (entregas) =>
-    entregas.entregas.filter(
+  (entregas) => {
+    return entregas.entregas.filter(
       (entrega) =>
       (entrega.estado_entregado === true &&
         entrega.estado_sincronizado === false &&
         entrega.entregada_sincronizada_error === false
       )
     )
+  }
 );
 
 export const obtenerNovedadesPendientes = createSelector(
   [selectEntregas],
-  (entregas) =>
-    entregas.entregas.filter(
-      (entrega) =>
+  (entregas) => {
+    return entregas.entregas.filter(
+       (entrega) =>
       (entrega.estado_novedad === true &&
         entrega.estado_novedad_solucion == false)
     )
+  }
 );
 
 export const comprobarFiltrosActivos = createSelector(
