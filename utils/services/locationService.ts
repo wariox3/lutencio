@@ -5,6 +5,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { consultarApi } from "../api";
 import networkService from "@/src/core/services/network.service";
 import APIS from "@/src/core/constants/endpoint.constant";
+import { VisitaApiRepository } from "@/src/modules/visita/infraestructure/api/visita-api.service";
+import { SetUbicacionVisitaUseCase } from "@/src/modules/visita/application/use-cases/set-ubicacion-visita.use-case";
 
 export const TAREA_SEGUIMIENTO_UBICACION = "tarea-seguimiento-ubicacion";
 
@@ -21,24 +23,9 @@ TaskManager.defineTask(TAREA_SEGUIMIENTO_UBICACION, ({ data, error }) => {
 });
 
 const enviarUbicacion = async (locations: any) => {
-  const subdominio = await AsyncStorage.getItem("subdominio");
-  const usuario_id = await AsyncStorage.getItem("usuario_id");
-  const despacho = await AsyncStorage.getItem("despacho");
   const estadoRed = await networkService.validarEstadoRed()
-  if(estadoRed){
-    const respuestaApiUbicacion = await consultarApi<any>(
-      APIS.ruteo.ubicacion,
-      {
-        usuario_id,
-        despacho: despacho!,
-        latitud: locations.coords.latitude,
-        longitud: locations.coords.longitude,
-      },
-      {
-        requiereToken: true,
-        subdominio: subdominio!,
-      }
-    );
+  if (estadoRed) {
+    await new SetUbicacionVisitaUseCase().setUbucacion(locations.coords.latitude, locations.coords.longitude)
   }
 };
 
@@ -96,7 +83,7 @@ export async function detenerTareaSeguimientoUbicacion() {
     // 1. Verificar si la tarea está registrada
     const tareaRegistrada = await TaskManager.isTaskRegisteredAsync(
       TAREA_SEGUIMIENTO_UBICACION
-    );    
+    );
     if (tareaRegistrada) {
       // 2. Detener las actualizaciones de ubicación
       await Location.stopLocationUpdatesAsync(TAREA_SEGUIMIENTO_UBICACION);

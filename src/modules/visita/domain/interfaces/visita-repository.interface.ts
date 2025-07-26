@@ -20,4 +20,8 @@ export interface VisitaRepository {
     id: number, solucion: string
   ): Promise<any>
 
+  setUbiciacion(
+    longitud: any,
+    subdominio: string
+  ): Promise<any>
 }

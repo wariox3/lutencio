@@ -32,28 +32,28 @@ axios.interceptors.response.use(
   }
 );
 
-export const consultarApi = async <T>(
-  url: string,
-  data?: T | null,
-  configuracion: Configuracion = {
-    requiereToken: true,
-  }
-): Promise<T> => {
-  try {    
-    const informacionConsulta: AxiosResponse<T> = await axios({
-      method: configuracion.method ?? "post",
-      url,
-      data,
-      headers: {
-        requiereToken: configuracion.requiereToken, // Pasar `requiereToken` en headers para ser usado por el interceptor
-        "X-Schema-Name": configuracion.subdominio, // Pasar el subdominio en los headers
-      },
-    });
-    return informacionConsulta.data;
-  } catch (error: any) {
-    throw error; // Lanzar el error para que el controlador de llamadas pueda manejarlo
-  }
-};
+// export const consultarApi = async <T>(
+//   url: string,
+//   data?: T | null,
+//   configuracion: Configuracion = {
+//     requiereToken: true,
+//   }
+// ): Promise<T> => {
+//   try {    
+//     const informacionConsulta: AxiosResponse<T> = await axios({
+//       method: configuracion.method ?? "post",
+//       url,
+//       data,
+//       headers: {
+//         requiereToken: configuracion.requiereToken, // Pasar `requiereToken` en headers para ser usado por el interceptor
+//         "X-Schema-Name": configuracion.subdominio, // Pasar el subdominio en los headers
+//       },
+//     });
+//     return informacionConsulta.data;
+//   } catch (error: any) {
+//     throw error; // Lanzar el error para que el controlador de llamadas pueda manejarlo
+//   }
+// };
 
 // export const consultarApiFormData = async <T>(
 //   url: string,
