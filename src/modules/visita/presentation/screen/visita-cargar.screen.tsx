@@ -35,6 +35,7 @@ const VisitaCargarScreen = () => {
       <Button
         theme={loading ? "accent" : "blue"}
         icon={loading ? () => <Spinner /> : undefined}
+        disabled={loading}
         onPress={handleSubmit(cargarOrden)}
       >
         Vincular
