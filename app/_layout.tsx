@@ -1,6 +1,7 @@
 import { themes } from "@/assets/theme/themes";
 import { persistor, store } from "@/src/application/store";
 import COLORES from "@/src/core/constants/colores.constant";
+import { initializeServices } from "@/src/core/services/init-services";
 import AlertDialogGlobal from "@/src/shared/components/comun/alert-dialog-global";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import {
@@ -43,6 +44,12 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  // Inicializar servicios al cargar la aplicación
+  useEffect(() => {
+    // Inicializar servicios (token, auth, etc.)
+    initializeServices();
+  }, []);
 
   useEffect(() => {
     if (loaded) {

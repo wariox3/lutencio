@@ -1,6 +1,5 @@
 import { Validaciones } from "@/src/core/constants";
 import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
-import React from "react";
 import { Button, ScrollView, Spinner } from "tamagui";
 import useVisitaCargarViewModel from "../../application/view-model/use-visita-cargar.view-model";
 
@@ -36,7 +35,6 @@ const VisitaCargarScreen = () => {
       <Button
         theme={loading ? "accent" : "blue"}
         icon={loading ? () => <Spinner /> : undefined}
-        disabled={loading}
         onPress={handleSubmit(cargarOrden)}
       >
         Vincular

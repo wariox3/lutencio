@@ -1,5 +1,5 @@
-const URL_BASE = "https://reddocapi.co";
-const URL_SUBDOMINIO = "https://subdominio.reddocapi.co";
+export const URL_BASE = "https://reddocapi.co";
+export const URL_SUBDOMINIO = "https://subdominio.reddocapi.co";
 
 const APIS = {
   seguridad: {

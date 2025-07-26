@@ -1,5 +1,7 @@
 import APIS from "@/src/core/api/domain/constants/endpoint.constant";
 import apiService from "@/src/core/api/repositories";
+import { IAuthService } from "@/src/core/services/auth-service.interface";
+import axios from "axios";
 import { AuthRepository } from "../../domain/interfaces/auth-repository.interface";
 import {
   CrearCuentaFormType,
@@ -12,7 +14,7 @@ import {
   OlvidoClaveResponse,
 } from "../../domain/types/olvido-clave.type";
 
-export class AuthApiRepository implements AuthRepository {
+export class AuthApiRepository implements AuthRepository, IAuthService {
   async login(payload: LoginFormType): Promise<LoginResponse> {
     return apiService.post<LoginResponse>(APIS.seguridad.login, {
       ...payload,
@@ -39,8 +41,24 @@ export class AuthApiRepository implements AuthRepository {
   }
 
   async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
-    return apiService.post<RefreshTokenResponse>(APIS.seguridad.refreshToken, {
-      refresh: refreshToken,
-    });
+    try {
+      // Crear una instancia de axios independiente para evitar ciclos
+      const directAxios = axios.create({
+        baseURL: 'https://reddocapi.co',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      
+      // Hacer la petición directamente sin pasar por apiService
+      const response = await directAxios.post<RefreshTokenResponse>(
+        '/seguridad/token/refresh/',
+        { refresh: refreshToken }
+      );
+      
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 }

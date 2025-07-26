@@ -1,6 +1,7 @@
-import { AuthApiRepository } from "@/src/modules/auth/infrastructure/api/auth-api.service";
+import { router } from "expo-router";
+import { rutasApp, STORAGE_KEYS } from "../constants";
+import { IAuthService } from "./auth-service.interface";
 import storageService from "./storage.service";
-import { STORAGE_KEYS } from "../constants";
 
 /**
  * Servicio para gestionar tokens de autenticación
@@ -10,17 +11,23 @@ class TokenService {
   private static instance: TokenService;
   private isRefreshing = false;
   private refreshSubscribers: Array<(token: string) => void> = [];
-  private authRepository: AuthApiRepository;
+  private authService: IAuthService | null = null;
 
-  private constructor() {
-    this.authRepository = new AuthApiRepository();
-  }
+  private constructor() {}
 
   public static getInstance(): TokenService {
     if (!TokenService.instance) {
       TokenService.instance = new TokenService();
     }
     return TokenService.instance;
+  }
+
+  /**
+   * Establece el servicio de autenticación a utilizar
+   * @param authService Implementación del servicio de autenticación
+   */
+  public setAuthService(authService: IAuthService): void {
+    this.authService = authService;
   }
 
   /**
@@ -82,7 +89,11 @@ class TokenService {
         throw new Error("No hay refresh token disponible");
       }
 
-      const response = await this.authRepository.refreshToken(refreshToken);
+      if (!this.authService) {
+        throw new Error("Servicio de autenticación no configurado");
+      }
+
+      const response = await this.authService.refreshToken(refreshToken);
 
       if (response && response.access) {
         // Guardar los nuevos tokens
@@ -96,12 +107,26 @@ class TokenService {
         throw new Error("Error al renovar el token");
       }
     } catch (error) {
-      // Si hay un error en la renovación, limpiamos los tokens
-      await this.clearTokens();
+      await this.handleAuthFailure();
       throw error;
     } finally {
       this.isRefreshing = false;
     }
+  }
+
+  /**
+   * Maneja el fallo de autenticación: limpia tokens y redirige al login
+   */
+  public async handleAuthFailure(): Promise<void> {
+    // Limpiar tokens
+    await this.clearTokens();
+    
+   // Redirigir al login usando expo-router
+   try {
+    router.replace(rutasApp.login);
+  } catch (error) {
+    console.error("Error al redirigir al login:", error);
+  }
   }
 
   /**

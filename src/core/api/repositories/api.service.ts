@@ -111,6 +111,9 @@ class ApiService {
             // Si falla la renovación del token, procesar la cola con el error
             this.processQueue(refreshError, null);
 
+            // Redirigir al login (el tokenService ya se encarga de limpiar los tokens)
+            await tokenService.handleAuthFailure();
+
             // Transformar el error para mantener consistencia
             const errorResponse = handleErrorResponse(error);
             return Promise.reject(errorResponse);
