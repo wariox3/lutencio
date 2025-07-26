@@ -24,7 +24,7 @@ const SinPermisos = () => {
         <Separator />
 
         <Text>
-          🔒 <Text fontWeight="bold">Cámara:</Text> para capturar imágenes o escanear códigos QR.
+          📷 <Text fontWeight="bold">Cámara:</Text> para capturar imágenes o escanear códigos QR.
         </Text>
         <Text>
           🌍 <Text fontWeight="bold">Ubicación:</Text> necesaria para registrar tu posición en las visitas.
