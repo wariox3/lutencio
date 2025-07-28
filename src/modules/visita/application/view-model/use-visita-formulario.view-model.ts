@@ -146,11 +146,8 @@ export default function useVisitaFormularioViewModel() {
   const guardarEntrega = async (data: VisitaFormType) => {
     try {
       actualizarState({ mostrarAnimacionCargando: true });
-      if (!estaEnLinea) {
-        await entregaVisitaOffline(data, dispatch);
+        await guardarEntregaLocal(data, dispatch);
         return;
-      }
-      await entregaVisitaOnline(data, dispatch);
     } catch (error) {
       actualizarState({ mostrarAnimacionCargando: false });
     } finally {
@@ -159,14 +156,14 @@ export default function useVisitaFormularioViewModel() {
     }
   };
 
-  const entregaVisitaOffline = async (data: VisitaFormType, dispatch: any) => {
+  const guardarEntregaLocal = async (data: VisitaFormType, dispatch: any) => {
     // Agregar imágenes a entregas seleccionadas
     entregasSeleccionadas.forEach((visitaId) => {
       state.arrImagenes.forEach((imagen) => {
         dispatch(
           agregarImagenEntrega({
             entregaId: visitaId,
-            imagen: { uri: imagen.uri },
+            imagen: { uri: imagen.uri },  
           })
         );
         if (state.firmarBase64 !== null) {
@@ -206,80 +203,6 @@ export default function useVisitaFormularioViewModel() {
     });
   };
 
-  const entregaVisitaOnline = async (data: VisitaFormType, dispatch: any) => {
-
-    await Promise.all(
-      entregasSeleccionadas.map(async (visita: number) => {
-        const subdominio = (await storageService.getItem(
-          STORAGE_KEYS.subdominio
-        )) as string;
-        //Usamos Promise.all para esperar a que todas las imágenes se lean
-        const imagenes = await Promise.all(
-          state.arrImagenes.map(async (imagen) => {
-            const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
-              encoding: FileSystem.EncodingType.Base64,
-            });
-            return { base64: `data:image/jpeg;base64,${base64}` };
-          })
-        );
-
-        let firmaBase64 = null;
-        if (state.firmarBase64 !== null) {
-          firmaBase64 = await FileSystem.readAsStringAsync(state.firmarBase64, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-          firmaBase64 = `data:image/jpeg;base64,${firmaBase64}`;
-        }
-
-        const formDataToSend = new FormData();
-        formDataToSend.append("id", `${visita}`);
-        formDataToSend.append("fecha_entrega", data.fecha_entrega);
-        state.arrImagenes.forEach((archivo, index) => {
-          // Crear un objeto File-like compatible con FormData
-          const file = {
-            uri: archivo.uri,
-            name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
-            type: "image/jpeg", // Tipo MIME por defecto
-          };
-
-          // La forma correcta de adjuntar archivos en React Native
-          formDataToSend.append(`imagenes`, file as any, `image-${index}.jpg`); // Usamos 'as any' para evitar el error de tipo
-        });
-
-        let filefirma: any = "";
-        if (state.firmarBase64) {
-          filefirma = {
-            uri: state.firmarBase64,
-            name: "firma",
-            type: "image/jpeg", // Tipo MIME por defecto
-          };
-        }
-        formDataToSend.append(`firmas`, filefirma as any, `firma.jpg`); // Usamos 'as any' para evitar el error de tipo
-
-        // Agregar datos adicionales como JSON
-        const datosAdicionales = {
-          recibe: data.recibe,
-          recibeParentesco: data.parentesco,
-          recibeNumeroIdentificacion: data.numeroIdentificacion,
-          recibeCelular: data.celular,
-        };
-        formDataToSend.append(
-          "datos_adicionales",
-          JSON.stringify(datosAdicionales)
-        );
-
-        try {
-          const respuesta = await dispatch(visitaEntregaThunk({ formData: formDataToSend, visitaId: visita })).unwrap();
-        } catch (error: any) {
-          const errorParseado = error as ApiErrorResponse;
-          mostrarAlertHook({
-            titulo: errorParseado.titulo,
-            mensaje: errorParseado.mensaje,
-          });
-        }
-      })
-    );
-  };
 
   return {
     control,
