@@ -10,14 +10,15 @@ import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { alertas } from "@/src/core/constants";
+import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
     codigo: "",
   };
   const { loading } = useAppSelector(({ entregas }) => entregas);
-  const {obtenerColor} = useTemaVisual()
-
+  const { obtenerColor } = useTemaVisual()
+  const estaEnLinea = useNetworkStatus();
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: valoresFormularioCargar,
   });
@@ -35,25 +36,32 @@ export default function useVisitaCargarViewModel() {
     reset({
       codigo: "",
     });
-    try {
-      const respuesta = await dispatch(
-        cargarOrdenThunk({ codigo: data.codigo })
-      ).unwrap();
+    if (estaEnLinea) {
+      try {
+        const respuesta = await dispatch(
+          cargarOrdenThunk({ codigo: data.codigo })
+        ).unwrap();
 
-      await dispatch(
-        configuracionThunk()
-      ).unwrap()
-      if (respuesta) {
-        router.navigate(rutasApp.visitas);
+        await dispatch(
+          configuracionThunk()
+        ).unwrap()
+        if (respuesta) {
+          router.navigate(rutasApp.visitas);
+        }
+      } catch (error: any) {
+        const errorParseado = error as ApiErrorResponse;
+        mostrarAlertHook({
+          titulo: errorParseado.titulo,
+          mensaje: alertas.mensaje.ordenEntregaError404,
+        });
       }
-    } catch (error: any) {
-      const errorParseado = error as ApiErrorResponse;
+    } else {
       mostrarAlertHook({
-        titulo: errorParseado.titulo,
-        mensaje: alertas.mensaje.ordenEntregaError404,
+        titulo: alertas.titulo.error,
+        mensaje: alertas.mensaje.sinConexionInternet,
       });
-    }
+    };
   };
 
-  return { control, handleSubmit, loading, cargarOrden, obtenerColor  };
+  return { control, handleSubmit, loading, cargarOrden, obtenerColor };
 }

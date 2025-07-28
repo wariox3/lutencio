@@ -13,6 +13,7 @@ export const alertas = {
     accionIrreversible: "¿Esta acción no se puede deshacer una vez completa?",
     numeroNoValido: "El número no es valido.",
     defecto: "Ha ocurrido un error inesperado.",
-    ordenEntregaError404: "No se encontró ninguna orden de entrega asociada."
+    ordenEntregaError404: "No se encontró ninguna orden de entrega asociada.",
+    sinConexionInternet: "No hay conexión a internet. Por favor, verifica tu conexión y vuelve a intentarlo."
   }
 };
