@@ -36,7 +36,7 @@ const InputFiltros = () => {
         <Search size={"$1.5"} opacity={0.5}></Search>
         <Input
           flex={1}
-          placeholder="Buscar numero o guía"
+          placeholder="Buscar número o guía"
           keyboardType="number-pad"
           borderStyle="unset"
           borderColor={"transparent"}

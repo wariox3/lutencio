@@ -5,6 +5,22 @@ const selectEntregas = (state: RootState) => state.entregas;
 
 const selectFiltros = (state: RootState) => state.entregas.filtros;
 
+export const obtenerVisitasLog = createSelector(
+  [selectEntregas, selectFiltros],
+  (entregas, filtros) => {
+    return entregas.entregas
+      .filter((entrega) => {
+        const coincideGuia = filtros.guia
+          ? entrega.guia === filtros.guia
+          : true;
+        const coincideNumero = filtros.numero
+          ? entrega.numero === filtros.numero
+          : true;
+        return coincideGuia || coincideNumero;
+      });
+  }
+);
+
 export const obtenerEntregasFiltros = createSelector(
   [selectEntregas, selectFiltros],
   (entregas, filtros) => {
@@ -103,7 +119,7 @@ export const obtenerNovedadesPendientes = createSelector(
   [selectEntregas],
   (entregas) => {
     return entregas.entregas.filter(
-       (entrega) =>
+      (entrega) =>
       (entrega.estado_novedad === true &&
         entrega.estado_novedad_solucion == false)
     )

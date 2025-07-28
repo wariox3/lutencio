@@ -17,7 +17,7 @@ export default function VisitasLayout() {
           ),
         },
         headerBackButtonDisplayMode: "minimal",
-        headerTintColor: obtenerColor("NEGRO","BLANCO"),
+        headerTintColor: obtenerColor("NEGRO", "BLANCO"),
       }}
     >
       <Stack.Screen
@@ -51,6 +51,13 @@ export default function VisitasLayout() {
         name="pendiente"
         options={{
           title: tituloScreen.visita.pendiente,
+        }}
+      />
+      <Stack.Screen
+        name="log"
+        options={{
+          title: tituloScreen.visita.log,
+          headerShadowVisible: false,
         }}
       />
       <Stack.Screen

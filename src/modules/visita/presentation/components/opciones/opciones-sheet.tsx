@@ -25,6 +25,7 @@ import {
   FileUp,
   FileWarning,
   FileX,
+  Logs,
   MoreVertical,
   Package,
   XCircle
@@ -198,6 +199,12 @@ const SheetContents = memo(({ setOpen }: any) => {
     dispatch(limpiarEntregaSeleccionada());
     setOpen(false);
   };
+
+  const navegarLog = () => {
+    router.navigate(rutasApp.vistaLog);
+    setOpen(false);
+
+  }
 
   const confirmarSincornizarEntregas = async () => {
     setOpen(false);
@@ -400,8 +407,8 @@ const SheetContents = memo(({ setOpen }: any) => {
           ) : null}
 
           {arrEntregasPendientes.length > 0 ||
-          arrEntregasConErrores.length > 0 ||
-          arrEntregasConNovedad.length > 0 ? (
+            arrEntregasConErrores.length > 0 ||
+            arrEntregasConNovedad.length > 0 ? (
             <>
               <H6 mb="$2">Sincronizar</H6>
               <>
@@ -470,6 +477,15 @@ const SheetContents = memo(({ setOpen }: any) => {
               </>
             </>
           ) : null}
+
+          <H6 mb="$2">Log</H6>
+          <ListItem
+            hoverTheme
+            icon={<Logs size="$2" />}
+            title="Log visitas"
+            subTitle="Registro de acciones realizadas sobre las visitas"
+            onPress={() => navegarLog()}
+          />
         </YGroup.Item>
       </YGroup>
     </SafeAreaView>

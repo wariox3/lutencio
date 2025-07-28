@@ -5,6 +5,7 @@ export const rutasApp = {
   home: "/(app)/(tabs)/(inicio)/inicio",
   visitas: "/(app)/(tabs)/(visitas)/lista",
   vistaCargar: "/(app)/(tabs)/(visitas)/cargar",
+  vistaLog: "/(app)/(tabs)/(visitas)/log",
   vistaPendiente: "/(app)/(tabs)/(visitas)/pendiente",
   vistaPendienteDetalle: "/(app)/(tabs)/(visitas)/[id]",
   visitaEntregar: "/(app)/(tabs)/(visitas)/entregar",
