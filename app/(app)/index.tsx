@@ -1,3 +1,4 @@
+import { networkMonitor } from "@/src/core/services/network-monitor.service";
 import { useSincronizacionEntregas } from "@/src/modules/visita/application/hooks/useSinconizarEntregas";
 import { useSincronizacionNovedades } from "@/src/modules/visita/application/hooks/useSincronizacionNovedades";
 import { useCameraPermissions } from "expo-camera";
@@ -17,10 +18,11 @@ export default function MainDreawerIndex() {
 
   useEffect(() => {
     solicitarPermiso();
+    networkMonitor.startMonitoring();
   }, []);
 
   useSincronizacionNovedades();
-  useSincronizacionEntregas();
+  // useSincronizacionEntregas();
 
   const solicitarPermiso = async () => {
     //permiso camara

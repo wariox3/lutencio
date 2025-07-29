@@ -13,7 +13,7 @@ import {
   actualizarMensajeError,
   cambiarEstadoError,
   cambiarEstadoSeleccionado,
-  cambiarEstadoSinconizado,
+  cambiarEstadoSincronizado,
   limpiarEntregaSeleccionada,
 } from "@/src/modules/visita/application/slice/entrega.slice";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
@@ -265,7 +265,7 @@ const SheetContents = memo(({ setOpen }: any) => {
     //         subdominio,
     //       });
 
-    //       dispatch(cambiarEstadoSinconizado(entrega.id));
+    //       dispatch(cambiarEstadoSincronizado(entrega.id));
     //       setLoadSincronizando(false);
     //     } catch (error: any) {
     //       setOpen(true);
@@ -343,7 +343,7 @@ const SheetContents = memo(({ setOpen }: any) => {
     //     }
 
     //     setLoadSincronizando(false);
-    //     dispatch(cambiarEstadoSinconizado(novedad.id));
+    //     dispatch(cambiarEstadoSincronizado(novedad.id));
     //     setOpen(false);
     //   } catch (error) {
     //     console.error("❌ Error procesando novedad:", error);

@@ -1,7 +1,7 @@
 import { useAppSelector } from "@/src/application/store/hooks";
 import { comprobarFiltrosActivos, obtenerVisitasLog } from "../slice/entrega.selector";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "tamagui";
 
 export default function useVisitaLogViewModel() {
@@ -13,8 +13,14 @@ export default function useVisitaLogViewModel() {
     const theme = useTheme();
 
     const recargarVisitas = async () => {
+        console.log("recargarVisitas", arrVisitas);
         return arrVisitas
     };
+
+    useEffect(() => {
+        console.log("arrVisitas", arrVisitas);
+        ;
+    }, [arrVisitas]);
 
     return {
         arrVisitas,

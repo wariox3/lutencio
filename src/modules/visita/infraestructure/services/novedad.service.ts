@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/src/application/store/hooks";
 import { RuteoApiRepository } from "@/src/core/api/repositories/ruteo-api.service";
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
-import { cambiarEstadoSinconizado } from "../../application/slice/entrega.slice";
+import { cambiarEstadoSincronizado } from "../../application/slice/entrega.slice";
 
 export class NovedadService {
   static async sincronizarNovedad(
@@ -34,7 +34,7 @@ export class NovedadService {
         subdominio
       );
       if (respuesta) {
-        dispatch(cambiarEstadoSinconizado({ visitaId: novedad.id, nuevoEstado: false }));
+        dispatch(cambiarEstadoSincronizado({ visitaId: novedad.id, nuevoEstado: false }));
       }
 
       return respuesta.success;

@@ -5,6 +5,6 @@ export class SetEntregaVisitaUseCase {
     constructor(private repo: VisitaRepository = new VisitaApiRepository()) {}
 
     async setVisita(formData: any): Promise<any> {
-        return await this.repo.postVisita(formData);
+        return this.repo.postVisita(formData);
     }
 }

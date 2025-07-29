@@ -47,17 +47,19 @@ const entregasSlice = createSlice({
       state,
       action: PayloadAction<{
         entregaId: number;
-        imagen: { uri: string };
+        imagenes: { uri: string }[];
       }>
     ) => {
-      const { entregaId, imagen } = action.payload;
+      const { entregaId, imagenes } = action.payload;
       const entrega = state.entregas.find((e) => e.id === entregaId);
+
       if (entrega) {
-        // Asegurarnos que arrImagenes existe
         if (!entrega.arrImagenes) {
           entrega.arrImagenes = [];
         }
-        entrega.arrImagenes.push(imagen);
+
+        entrega.arrImagenes.push(...imagenes);
+        console.log("entrega al agregar imagen", JSON.stringify(entrega));
       }
     },
     quitarImagenEntrega: (
@@ -73,6 +75,16 @@ const entregasSlice = createSlice({
         entrega.arrImagenes = entrega.arrImagenes.filter(
           (img) => img.uri !== imagenUri
         );
+      }
+    },
+    actualizarEntrega: (
+      state,
+      action: PayloadAction<{ entregaId: number; camposActualizados: Partial<Entrega> }>
+    ) => {
+      const { entregaId, camposActualizados } = action.payload;
+      const entrega = state.entregas.find((e) => e.id === entregaId);
+      if (entrega) {
+        Object.assign(entrega, camposActualizados);
       }
     },
     actualizarFirmaEntrega: (
@@ -113,7 +125,7 @@ const entregasSlice = createSlice({
         visita.estado_entregado = action.payload.nuevoEstado;
       }
     },
-    cambiarEstadoSinconizadoError: (
+    cambiarEstadoSincronizadoError: (
       state,
       action: PayloadAction<{ visitaId: number; nuevoEstado: boolean }>
     ) => {
@@ -130,7 +142,7 @@ const entregasSlice = createSlice({
         entrega.estado_novedad = !entrega.estado_novedad;
       }
     },
-    cambiarEstadoSinconizado: (state, action: PayloadAction<{ visitaId: number; nuevoEstado: boolean }>) => {
+    cambiarEstadoSincronizado: (state, action: PayloadAction<{ visitaId: number; nuevoEstado: boolean }>) => {
       const visita = state.entregas.find(
         (e) => e.id === action.payload.visitaId
       );
@@ -300,7 +312,7 @@ export const {
   cambiarEstadoSeleccionado,
   limpiarEntregaSeleccionada,
   quitarEntregaSeleccionada,
-  cambiarEstadoSinconizado,
+  cambiarEstadoSincronizado,
   quitarEntregas,
   quitarVisita,
   agregarImagenEntrega,
@@ -318,6 +330,7 @@ export const {
   actualizarFiltros,
   quitarFiltros,
   actualizarDatosAdiciones,
-  cambiarEstadoSinconizadoError,
+  cambiarEstadoSincronizadoError,
+  actualizarEntrega,
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

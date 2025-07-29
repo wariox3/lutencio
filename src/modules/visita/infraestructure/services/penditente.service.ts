@@ -54,10 +54,9 @@ export class PenditesService {
         JSON.stringify(datosAdicionales)
       );
 
-      await new SetEntregaVisitaUseCase().setVisita(formDataToSend)
-      return true;
+      return new SetEntregaVisitaUseCase().setVisita(formDataToSend)
     } catch (error) {
-      return false;
+      throw error;
     }
   }
 }

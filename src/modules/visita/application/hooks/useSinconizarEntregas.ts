@@ -5,7 +5,7 @@ import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import { useCallback, useEffect } from "react";
 import { PenditesService } from "../../infraestructure/services/penditente.service";
 import { obtenerEntregasPendientes } from "../slice/entrega.selector";
-import { cambiarEstadoSinconizado, cambiarEstadoSinconizadoError } from "../slice/entrega.slice";
+import { cambiarEstadoSincronizado, cambiarEstadoSincronizadoError } from "../slice/entrega.slice";
 
 export const useSincronizacionEntregas = () => {
   const entregasPendientes = useAppSelector(obtenerEntregasPendientes);
@@ -19,11 +19,11 @@ export const useSincronizacionEntregas = () => {
     if (!subdominio) return;
 
     for (const entrega of entregasPendientes) {
-      const respuesta: boolean = await PenditesService.sincronizarPenditentes(entrega, subdominio);
+      const respuesta = await PenditesService.sincronizarPenditentes(entrega, subdominio);
       if (respuesta) {
-        dispatch(cambiarEstadoSinconizado({ visitaId: entrega.id, nuevoEstado: true }));
+        dispatch(cambiarEstadoSincronizado({ visitaId: entrega.id, nuevoEstado: true }));
       } else {
-        dispatch(cambiarEstadoSinconizadoError({ visitaId: entrega.id, nuevoEstado: true }));
+        dispatch(cambiarEstadoSincronizadoError({ visitaId: entrega.id, nuevoEstado: true }));
       }
     }
   }, [entregasPendientes, estaEnLinea]);

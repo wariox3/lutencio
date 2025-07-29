@@ -14,12 +14,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   actualizarDatosAdiciones,
+  actualizarEntrega,
   actualizarFechaEntrega,
   actualizarFirmaEntrega,
   agregarImagenEntrega,
   cambiarEstadoEntrega,
-  cambiarEstadoSinconizado,
-  cambiarEstadoSinconizadoError,
+  cambiarEstadoSincronizado,
+  cambiarEstadoSincronizadoError,
   quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
 import { visitaEntregaThunk } from "../slice/visita.thunk";
@@ -158,49 +159,74 @@ export default function useVisitaFormularioViewModel() {
 
   const guardarEntregaLocal = async (data: VisitaFormType, dispatch: any) => {
     // Agregar imágenes a entregas seleccionadas
+    
     entregasSeleccionadas.forEach((visitaId) => {
-      state.arrImagenes.forEach((imagen) => {
-        dispatch(
-          agregarImagenEntrega({
-            entregaId: visitaId,
-            imagen: { uri: imagen.uri },  
-          })
-        );
-        if (state.firmarBase64 !== null) {
-          dispatch(
-            actualizarFirmaEntrega({
-              entregaId: visitaId,
-              firmarBase64: state.firmarBase64,
-            })
-          );
-        }
+      const imagenesEntrega: { uri: string }[] = []
+      const firmaEntrega = state.firmarBase64 ? state.firmarBase64 : null
+      state.arrImagenes?.forEach((imagen) => {
+        imagenesEntrega.push({ uri: imagen.uri })
+        // dispatch(
+        //   agregarImagenEntrega({
+        //     entregaId: visitaId,
+        //     imagen: { uri: imagenEntrega },  
+        //   })
+        // );
+        // if (state.firmarBase64 !== null) {
+        //   dispatch(
+        //     actualizarFirmaEntrega({
+        //       entregaId: visitaId,
+        //       firmarBase64: state.firmarBase64,
+        //     })
+        //   );
+        // }
       });
-      dispatch(
-        actualizarFechaEntrega({
-          entregaId: visitaId,
+
+      // dispatch(agregarImagenEntrega({
+      //   entregaId: visitaId,
+      //   imagenes: imagenesEntrega,
+      // }));
+
+      dispatch(actualizarEntrega({
+        entregaId: visitaId,
+        camposActualizados: {
+          firmarBase64: firmaEntrega,
           fecha_entrega: obtenerFechaYHoraActualFormateada(),
-        })
-      );
-      dispatch(
-        actualizarDatosAdiciones({
-          entrega_id: visitaId,
+          arrImagenes: imagenesEntrega,
           datosAdicionales: {
             recibe: data.recibe,
             recibeParentesco: data.parentesco,
             recibeNumeroIdentificacion: data.numeroIdentificacion,
             recibeCelular: data.celular,
           },
-        })
-      );
+        },
+      }));
+       
+      // dispatch(
+      //   actualizarFechaEntrega({
+      //     entregaId: visitaId,
+      //     fecha_entrega: obtenerFechaYHoraActualFormateada(),
+      //   })
+      // );
+      // dispatch(
+      //   actualizarDatosAdiciones({
+      //     entrega_id: visitaId,
+      //     datosAdicionales: {
+      //       recibe: data.recibe,
+      //       recibeParentesco: data.parentesco,
+      //       recibeNumeroIdentificacion: data.numeroIdentificacion,
+      //       recibeCelular: data.celular,
+      //     },
+      //   })
+      // );
       dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
-      dispatch(cambiarEstadoSinconizado({ visitaId, nuevoEstado: false }));
-      dispatch(cambiarEstadoSinconizadoError({ visitaId, nuevoEstado: false }));
+      dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: false }));
+      dispatch(cambiarEstadoSincronizado({ visitaId, nuevoEstado: false }));
       dispatch(quitarEntregaSeleccionada(visitaId));
     });
-    mostrarAlertHook({
-      titulo: alertas.titulo.exito,
-      mensaje: alertas.mensaje.guardarRegistroLocal,
-    });
+    // mostrarAlertHook({
+    //   titulo: alertas.titulo.exito,
+    //   mensaje: alertas.mensaje.guardarRegistroLocal,
+    // });
   };
 
 

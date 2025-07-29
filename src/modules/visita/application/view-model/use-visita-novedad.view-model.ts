@@ -18,7 +18,7 @@ import {
   actualizarNovedad,
   agregarImagenEntrega,
   cambiarEstadoNovedad,
-  cambiarEstadoSinconizado,
+  cambiarEstadoSincronizado,
 } from "../slice/entrega.slice";
 import { visitaNovedadThunk } from "../slice/visita.thunk";
 
@@ -121,7 +121,7 @@ export default function useVisitaNovedadViewModel() {
       dispatch(
         agregarImagenEntrega({
           entregaId,
-          imagen: { uri: state.arrImagenes[0].uri },
+          imagenes: [{ uri: state.arrImagenes[0].uri }],
         })
       );
       dispatch(
@@ -203,7 +203,7 @@ export default function useVisitaNovedadViewModel() {
 
   const cambiarEntregaEstadoSinconizado = () => {
     visitasSeleccionadas.map((visita: number) => {
-          dispatch(cambiarEstadoSinconizado({ visitaId: visita, nuevoEstado: false }));
+          dispatch(cambiarEstadoSincronizado({ visitaId: visita, nuevoEstado: false }));
     });
   };
 

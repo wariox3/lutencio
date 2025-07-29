@@ -1,0 +1,78 @@
+import { sincronizacionService } from '@/src/modules/visita/application/services/sincronizacion.service';
+import * as Network from 'expo-network';
+
+/**
+ * Servicio para monitorear cambios en la conectividad de red
+ * y desencadenar acciones cuando la conectividad cambia
+ */
+export class NetworkMonitorService {
+  private static instance: NetworkMonitorService;
+  private subscription: any = null;
+  private isOnline: boolean = false;
+
+  // Patrón Singleton
+  public static getInstance(): NetworkMonitorService {
+    if (!NetworkMonitorService.instance) {
+      NetworkMonitorService.instance = new NetworkMonitorService();
+    }
+    return NetworkMonitorService.instance;
+  }
+
+  private constructor() {}
+
+  /**
+   * Inicia el monitoreo de la red
+   */
+  public startMonitoring(): void {
+    if (this.subscription) return;
+
+    // Verificar estado inicial
+    this.checkNetworkStatus();
+
+    // Suscribirse a cambios de estado de red
+    this.subscription = Network.addNetworkStateListener(async ({ isConnected }) => {
+      console.log(`Estado de red cambió: ${isConnected ? 'conectado' : 'desconectado'}`);
+      
+      // Si pasamos de offline a online, intentar sincronizar
+      if (isConnected && !this.isOnline) {
+        console.log('Conexión restaurada, iniciando sincronización...');
+        sincronizacionService.sincronizarEntregas();
+      }
+      
+      this.isOnline = isConnected ?? false;
+    });
+  }
+
+  /**
+   * Detiene el monitoreo de la red
+   */
+  public stopMonitoring(): void {
+    if (this.subscription) {
+      this.subscription.remove();
+      this.subscription = null;
+    }
+  }
+
+  /**
+   * Verifica el estado actual de la red
+   */
+  private async checkNetworkStatus(): Promise<void> {
+    try {
+      const { isConnected } = await Network.getNetworkStateAsync();
+      this.isOnline = isConnected ?? false;
+    } catch (error) {
+      console.error('Error al verificar estado de red:', error);
+      this.isOnline = false;
+    }
+  }
+
+  /**
+   * Devuelve el estado actual de la conexión
+   */
+  public isConnected(): boolean {
+    return this.isOnline;
+  }
+}
+
+// Exportar instancia por defecto para facilitar su uso
+export const networkMonitor = NetworkMonitorService.getInstance();
