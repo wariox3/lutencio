@@ -44,7 +44,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
       pb="$0"
       px="$3"
       mx="$2"
-      mt="$2"
+      mt="$1.5"
       onPress={() => onPress(visita.id)}
       bg={visita.seleccionado ? COLORES.NARANJA_SUAVE : null}
       borderRadius="$3"
@@ -111,6 +111,8 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
 
           {/* Cobro */}
           {visita.cobro > 0 && (
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+            <Text>Cobro: </Text>
             <View
               bg={COLORES.ROJO_SUAVE}
               borderRadius="$2"
@@ -122,6 +124,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
                   {visita.cobro.toLocaleString()}
                 </Text>
               </XStack>
+            </View>
             </View>
           )}
         </XStack>

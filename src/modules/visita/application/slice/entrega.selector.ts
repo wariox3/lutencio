@@ -122,7 +122,7 @@ export const obtenerNovedadesPendientes = createSelector(
       (entrega) =>
       (entrega.estado_novedad === true &&
         entrega.estado_sincronizado === false &&
-        entrega.entregada_sincronizada_error === false)
+        entrega.novedad_sincronizada_error === false)
     )
   }
 );

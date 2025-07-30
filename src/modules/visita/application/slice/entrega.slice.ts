@@ -132,13 +132,24 @@ const entregasSlice = createSlice({
     },
     cambiarEstadoSincronizadoError: (
       state,
-      action: PayloadAction<{ visitaId: number; nuevoEstado: boolean }>
+      action: PayloadAction<{ visitaId: number; nuevoEstado: boolean; mensaje?: string }>
     ) => {
       const visita = state.entregas.find(
         (e) => e.id === action.payload.visitaId
       );
       if (visita) {
         visita.entregada_sincronizada_error = action.payload.nuevoEstado;
+        visita.entregada_sincronizada_error_mensaje = action.payload.mensaje || "";
+      }
+    },
+    cambiarEstadoNovedadError: (
+      state,
+      action: PayloadAction<{ entregaId: number; nuevoEstado: boolean; mensaje?: string }>
+    ) => {
+      const entrega = state.entregas.find((e) => e.id === action.payload.entregaId);
+      if (entrega) {
+        entrega.novedad_sincronizada_error = action.payload.nuevoEstado;
+        entrega.novedad_sincronizada_error_mensaje = action.payload.mensaje || "";
       }
     },
     cambiarEstadoNovedad: (state, action: PayloadAction<{ entregaId: number; nuevoEstado: boolean }>) => {
@@ -347,6 +358,7 @@ export const {
   actualizarEntrega,
   setSincronizandoEntregas,
   entregasProcesadas,
+  cambiarEstadoNovedadError,
   novedadesProcesadas,
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

@@ -5,6 +5,7 @@ import storageService from "@/src/core/services/storage.service";
 import { PenditesService } from "../../infraestructure/services/penditente.service";
 import { obtenerEntregasPendientes, obtenerNovedadesPendientes } from "../slice/entrega.selector";
 import {
+  cambiarEstadoNovedadError,
   cambiarEstadoSincronizado,
   cambiarEstadoSincronizadoError,
   setSincronizandoEntregas,
@@ -125,7 +126,8 @@ export class SincronizacionService {
             console.log(`[Sync ${syncId}] Error al sincronizar entrega:`, resultado.value.respuesta);
             this.storeRef.dispatch(cambiarEstadoSincronizadoError({ 
               visitaId: entrega.id, 
-              nuevoEstado: true 
+              nuevoEstado: true,
+              mensaje: resultado.value.respuesta?.mensaje
             }));
             fallidos++;
             exitoTotal = false;
@@ -236,9 +238,10 @@ export class SincronizacionService {
             exitosos++;
           } else {
             console.log(`[Sync ${syncId}] Error al sincronizar novedad:`, resultado.value.respuesta);
-            this.storeRef.dispatch(cambiarEstadoSincronizadoError({ 
-              visitaId: novedad.id, 
-              nuevoEstado: true 
+            this.storeRef.dispatch(cambiarEstadoNovedadError({ 
+              entregaId: novedad.id, 
+              nuevoEstado: true,
+              mensaje: resultado.value.respuesta?.mensaje
             }));
             fallidos++;
             exitoTotal = false;

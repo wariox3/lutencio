@@ -24,7 +24,10 @@ export interface Entrega {
   estado_sincronizado: boolean;
   estado_novedad: boolean;
   estado_novedad_solucion: boolean;
-  entregada_sincronizada_error: boolean;
+  entregada_sincronizada_error?: boolean;
+  entregada_sincronizada_error_mensaje?: string;
+  novedad_sincronizada_error?: boolean;
+  novedad_sincronizada_error_mensaje?: string;
   estado_error: boolean;
   mensaje_error: string;
   novedad_tipo: string;

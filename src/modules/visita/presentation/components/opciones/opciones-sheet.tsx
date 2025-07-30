@@ -30,7 +30,7 @@ import {
   Logs,
   MoreVertical,
   Package,
-  XCircle
+  XCircle,
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
 import * as FileSystem from "expo-file-system";
@@ -70,24 +70,24 @@ export const EntregaOpciones = () => {
   const sincronizandoEntregas = useAppSelector(getSincronizandoEntregas);
 
   // Add this inside the EntregaOpciones component
-const spinValue = useRef(new Animated.Value(0)).current;
+  const spinValue = useRef(new Animated.Value(0)).current;
 
-// Set up the animation when sincronizandoEntregas changes
-useEffect(() => {
-  if (sincronizandoEntregas) {
-    Animated.loop(
-      Animated.timing(spinValue, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      })
-    ).start();
-  } else {
-    // Stop the animation when not syncing
-    spinValue.stopAnimation();
-    spinValue.setValue(0);
-  }
-}, [sincronizandoEntregas]);
+  // Set up the animation when sincronizandoEntregas changes
+  useEffect(() => {
+    if (sincronizandoEntregas) {
+      Animated.loop(
+        Animated.timing(spinValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        })
+      ).start();
+    } else {
+      // Stop the animation when not syncing
+      spinValue.stopAnimation();
+      spinValue.setValue(0);
+    }
+  }, [sincronizandoEntregas]);
 
   useFocusEffect(
     useCallback(() => {
@@ -110,7 +110,7 @@ useEffect(() => {
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: ["0deg", "360deg"],
   });
 
   return (
@@ -237,8 +237,12 @@ const SheetContents = memo(({ setOpen }: any) => {
   const navegarLog = () => {
     router.navigate(rutasApp.vistaLog);
     setOpen(false);
+  };
 
-  }
+  const navegarLogNovedades = () => {
+    router.navigate(rutasApp.vistaLogNovedades);
+    setOpen(false);
+  };
 
   const confirmarSincornizarEntregas = async () => {
     setOpen(false);
@@ -259,17 +263,14 @@ const SheetContents = memo(({ setOpen }: any) => {
     //       return;
     //     }
     //   }
-
     // const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
     //   if (!subdominio) {
     //     console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
     //     return;
     //   }
-
     //   for (const entrega of arrEntregasPendientes) {
     //     try {
     //       let imagenes: { base64: string }[] = [];
-
     //       const formDataToSend = new FormData();
     //       formDataToSend.append("id", `${entrega.id}`);
     //       formDataToSend.append("fecha_entrega", entrega.fecha_entrega);
@@ -281,7 +282,6 @@ const SheetContents = memo(({ setOpen }: any) => {
     //             name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
     //             type: "image/jpeg", // Tipo MIME por defecto
     //           };
-
     //           // La forma correcta de adjuntar archivos en React Native
     //           formDataToSend.append(
     //             `imagenes`,
@@ -292,13 +292,11 @@ const SheetContents = memo(({ setOpen }: any) => {
     //       } else {
     //         formDataToSend.append(`imagenes`, [].toString()); // Usamos 'as any' para evitar el error de tipo
     //       }
-
     //       // 3️ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
     //       await consultarApi<any>(APIS.ruteo.visitaEntrega, formDataToSend, {
     //         requiereToken: true,
     //         subdominio,
     //       });
-
     //       dispatch(cambiarEstadoSincronizado(entrega.id));
     //       setLoadSincronizando(false);
     //     } catch (error: any) {
@@ -323,19 +321,16 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   const gestionGuiasNovedades = async () => {
     // setLoadSincronizandoNovedad(true);
-
     // const { status } = await MediaLibrary.requestPermissionsAsync();
     // if (status !== "granted") {
     //   alert("Se necesitan permisos para guardar en la galería");
     //   return;
     // }
-
     // const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
     // if (!subdominio) {
     //   console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
     //   return;
     // }
-
     // for (const novedad of arrEntregasConNovedad) {
     //   try {
     //     let imagenes: { base64: string }[] = [];
@@ -353,7 +348,6 @@ const SheetContents = memo(({ setOpen }: any) => {
     //         imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
     //       }
     //     }
-
     //     const respuestaNovedad = await consultarApi<any>(
     //       APIS.ruteo.novedadNuevo,
     //       {
@@ -367,7 +361,6 @@ const SheetContents = memo(({ setOpen }: any) => {
     //         subdominio,
     //       }
     //     );
-
     //     // 4️ Solo si la API responde OK, borrar archivos y marcar como sincronizado
     //     if (novedad.arrImagenes?.length > 0) {
     //       for (const img of novedad.arrImagenes) {
@@ -375,7 +368,6 @@ const SheetContents = memo(({ setOpen }: any) => {
     //         if (fileInfo.exists) await eliminarArchivo(img.uri);
     //       }
     //     }
-
     //     setLoadSincronizando(false);
     //     dispatch(cambiarEstadoSincronizado(novedad.id));
     //     setOpen(false);
@@ -383,7 +375,6 @@ const SheetContents = memo(({ setOpen }: any) => {
     //     console.error("❌ Error procesando novedad:", error);
     //   }
     // }
-
     // setLoadSincronizandoNovedad(false);
   };
 
@@ -441,8 +432,8 @@ const SheetContents = memo(({ setOpen }: any) => {
           ) : null}
 
           {arrEntregasPendientes.length > 0 ||
-            arrEntregasConErrores.length > 0 ||
-            arrEntregasConNovedad.length > 0 ? (
+          arrEntregasConErrores.length > 0 ||
+          arrEntregasConNovedad.length > 0 ? (
             <>
               <H6 mb="$2">Sincronizar</H6>
               <>
@@ -519,6 +510,14 @@ const SheetContents = memo(({ setOpen }: any) => {
             title="Log visitas"
             subTitle="Registro de acciones realizadas sobre las visitas"
             onPress={() => navegarLog()}
+          />
+
+          <ListItem
+            hoverTheme
+            icon={<Logs size="$2" />}
+            title="Log novedades"
+            subTitle="Registro de acciones realizadas sobre las novedades"
+            onPress={() => navegarLogNovedades()}
           />
         </YGroup.Item>
       </YGroup>

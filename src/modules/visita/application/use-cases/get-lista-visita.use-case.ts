@@ -26,7 +26,7 @@ export class GetListaVisitaUseCase {
     };
   }
 
-  private _agregarCamposVisita(lista: Entrega[]) {
+  private _agregarCamposVisita(lista: Entrega[]): Entrega[] {
     return lista.map((entrega) => ({
       ...entrega,
       datosAdicionales: {
@@ -36,7 +36,10 @@ export class GetListaVisitaUseCase {
         recibeCelular: "",
       },
       estado_sincronizado: false,
-      entregada_sincronizada_error: false
+      entregada_sincronizada_error: false,
+      entregada_sincronizada_error_mensaje: "",
+      novedad_sincronizada_error: false,
+      novedad_sincronizada_error_mensaje: "",
     }));
   }
 }
