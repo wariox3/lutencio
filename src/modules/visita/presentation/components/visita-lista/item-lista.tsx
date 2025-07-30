@@ -52,7 +52,6 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
       borderWidth={1}
       borderStyle={visita.seleccionado ? "dashed" : "solid"}
       bordered={visita.seleccionado}
-      elevate
       pressStyle={{ scale: 0.98, opacity: 0.9 }}
     >
       {/* Encabezado con número y documento */}
