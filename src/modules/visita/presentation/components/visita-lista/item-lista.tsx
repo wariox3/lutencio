@@ -128,7 +128,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
       </YStack>
 
       {/* Estados y alertas */}
-      <XStack mt="$3" gap="$2" flexWrap="wrap">
+      <XStack mt="$1" mb="$2" gap="$1" flexWrap="wrap">
         {visita.estado_entregado && (
           <View bg={COLORES.VERDE_SUAVE} borderRadius="$2" p="$1.5">
             <XStack items="center" gap="$1">
