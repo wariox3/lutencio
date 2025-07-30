@@ -141,10 +141,10 @@ const entregasSlice = createSlice({
         visita.entregada_sincronizada_error = action.payload.nuevoEstado;
       }
     },
-    cambiarEstadoNovedad: (state, action: PayloadAction<number>) => {
-      const entrega = state.entregas.find((e) => e.id === action.payload);
+    cambiarEstadoNovedad: (state, action: PayloadAction<{ entregaId: number; nuevoEstado: boolean }>) => {
+      const entrega = state.entregas.find((e) => e.id === action.payload.entregaId);
       if (entrega) {
-        entrega.estado_novedad = !entrega.estado_novedad;
+        entrega.estado_novedad = action.payload.nuevoEstado;
       }
     },
     cambiarEstadoSincronizado: (state, action: PayloadAction<{ visitaId: number; nuevoEstado: boolean }>) => {
@@ -190,20 +190,12 @@ const entregasSlice = createSlice({
     },
     actualizarNovedad: (
       state,
-      action: PayloadAction<{
-        entregaId: number;
-        novedad_tipo: string;
-        novedad_descripcion: string;
-        fecha_entrega: string;
-      }>
+      action: PayloadAction<{ entregaId: number; camposActualizados: Partial<Entrega> }>
     ) => {
-      const { entregaId, novedad_tipo, novedad_descripcion, fecha_entrega } =
-        action.payload;
+      const { entregaId, camposActualizados } = action.payload;
       const entrega = state.entregas.find((e) => e.id === entregaId);
       if (entrega) {
-        entrega.novedad_tipo = novedad_tipo;
-        entrega.novedad_descripcion = novedad_descripcion;
-        entrega.fecha_entrega = fecha_entrega;
+        Object.assign(entrega, camposActualizados);
       }
     },
     actualizarNovedadSolucion: (
@@ -265,13 +257,21 @@ const entregasSlice = createSlice({
         entrega.datosAdicionales = datosAdicionales;
       }
     },
-    procesarTodasLasEntregas: (
+    entregasProcesadas: (
       state,
       action: PayloadAction<{
         entregasIds: number[];
       }>
     ) => {
       console.log(`Procesadas ${action.payload.entregasIds.length} entregas`);
+    },
+    novedadesProcesadas: (
+      state,
+      action: PayloadAction<{
+        novedadesIds: number[];
+      }>
+    ) => {
+      console.log(`Procesadas ${action.payload.novedadesIds.length} novedades`);
     },
   },
 
@@ -346,6 +346,7 @@ export const {
   cambiarEstadoSincronizadoError,
   actualizarEntrega,
   setSincronizandoEntregas,
-  procesarTodasLasEntregas,
+  entregasProcesadas,
+  novedadesProcesadas,
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

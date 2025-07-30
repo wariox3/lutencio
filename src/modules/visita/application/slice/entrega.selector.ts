@@ -121,7 +121,8 @@ export const obtenerNovedadesPendientes = createSelector(
     return entregas.entregas.filter(
       (entrega) =>
       (entrega.estado_novedad === true &&
-        entrega.estado_novedad_solucion == false)
+        entrega.estado_sincronizado === false &&
+        entrega.entregada_sincronizada_error === false)
     )
   }
 );

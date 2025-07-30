@@ -45,6 +45,7 @@ export default function useVisitaCargarViewModel() {
         await dispatch(
           configuracionThunk()
         ).unwrap()
+        
         if (respuesta) {
           router.navigate(rutasApp.visitas);
         }

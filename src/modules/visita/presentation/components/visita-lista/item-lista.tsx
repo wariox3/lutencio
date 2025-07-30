@@ -40,7 +40,9 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
 
   return (
     <Card
-      p="$3"
+      pt="$2"
+      pb="$0"
+      px="$3"
       mx="$2"
       mt="$2"
       onPress={() => onPress(visita.id)}
@@ -54,7 +56,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
       pressStyle={{ scale: 0.98, opacity: 0.9 }}
     >
       {/* Encabezado con número y documento */}
-      <XStack justify="space-between" items="center" mb="$2">
+      <XStack justify="space-between" items="center" mb="$1.5">
         <View bg={COLORES.AZUL_FUERTE} borderRadius="$2" p="$1.5">
           <XStack items="center" gap="$1">
             <Package size="$1" color={COLORES.BLANCO} />
@@ -64,10 +66,10 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
         <Text fontSize="$2" color={COLORES.GRIS_OSCURO}>Doc: {visita.documento}</Text>
       </XStack>
 
-      <Separator mb="$2" />
+      <Separator mb="$1.5" />
 
       {/* Información principal */}
-      <YStack gap="$2">
+      <YStack gap="$1">
         {/* Destinatario */}
         <XStack items="center" gap="$2">
           <CircleUser size="$1.5" color={COLORES.AZUL_FUERTE} />
@@ -128,19 +130,18 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
       {/* Estados y alertas */}
       <XStack mt="$3" gap="$2" flexWrap="wrap">
         {visita.estado_entregado && (
-          <View bg={COLORES.VERDE_SUAVE} borderRadius="$2" p="$1">
+          <View bg={COLORES.VERDE_SUAVE} borderRadius="$2" p="$1.5">
             <XStack items="center" gap="$1">
-              <CheckCircle size="$1" color={COLORES.VERDE_FUERTE} />
-              <Text color={COLORES.VERDE_FUERTE} fontWeight="500">Entregado</Text>
+              <Text color={COLORES.VERDE_FUERTE} fontSize="$2" fontWeight="500">Entregado</Text>
             </XStack>
           </View>
         )}
         
         {visita.estado_novedad && (
-          <View bg={COLORES.ROJO_SUAVE} borderRadius="$2" p="$1">
+          <View bg={COLORES.NARANJA_SUAVE} borderRadius="$2" p="$1.5">
             <XStack items="center" gap="$1">
-              <AlertTriangle size="$1" color={'yellow'} />
-              <Text color={'yellow'} fontWeight="500">Novedad</Text>
+              {/* <AlertTriangle size="$1" color={'yellow'} /> */}
+              <Text color={COLORES.NARANJA_FUERTE} fontSize="$2" fontWeight="500">Novedad</Text>
             </XStack>
           </View>
         )}

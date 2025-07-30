@@ -1,26 +1,22 @@
 import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { alertas } from "@/src/core/constants/alertas.const";
 import { NovedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import useFecha from "@/src/shared/hooks/useFecha";
 import {
   useEliminarEnGaleria,
   useGuardarEnGaleria,
 } from "@/src/shared/hooks/useMediaLibrary";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
-import * as Network from "expo-network";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { obtenerEntregasSeleccionadas } from "../slice/entrega.selector";
 import {
   actualizarNovedad,
-  agregarImagenEntrega,
   cambiarEstadoNovedad,
   cambiarEstadoSincronizado,
+  novedadesProcesadas,
 } from "../slice/entrega.slice";
-import { visitaNovedadThunk } from "../slice/visita.thunk";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -38,13 +34,13 @@ export default function useVisitaNovedadViewModel() {
   const { guardarArchivo } = useGuardarEnGaleria();
   const { eliminarArchivo } = useEliminarEnGaleria();
   const { obtenerFechaYHoraActualFormateada } = useFecha();
-  
+
   const { control, handleSubmit, setValue } = useForm<NovedadFormType>({
     defaultValues: valoresFormulario,
   });
   const visitasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
   const novedadesTipo = useAppSelector(obtenerConfiguracionSelectorNovedadTipo);
-  const {obtenerColor} = useTemaVisual()
+  const { obtenerColor } = useTemaVisual();
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -110,101 +106,62 @@ export default function useVisitaNovedadViewModel() {
     }
   };
 
-  const entregarNovedadOffline = async (
+  const guardarNovedadLocal = async (
     data: NovedadFormType,
     visitasSeleccionadas: number[],
-    state: any,
-    dispatch: any,
-    cambiarEntregaEstadoNovedad: () => void
   ) => {
-    visitasSeleccionadas.forEach((entregaId) => {
-      dispatch(
-        agregarImagenEntrega({
-          entregaId,
-          imagenes: [{ uri: state.arrImagenes[0].uri }],
-        })
-      );
+    visitasSeleccionadas.forEach((id) => {
       dispatch(
         actualizarNovedad({
-          entregaId,
-          novedad_tipo: data.novedad_tipo,
-          novedad_descripcion: data.descripcion,
-          fecha_entrega: obtenerFechaYHoraActualFormateada()
+          entregaId: id,
+          camposActualizados: {
+            arrImagenes: [{ uri: state.arrImagenes[0].uri }],
+            novedad_tipo: data.novedad_tipo,
+            novedad_descripcion: data.descripcion,
+            fecha_entrega: obtenerFechaYHoraActualFormateada(),
+          },
         })
       );
+
+      dispatch(cambiarEstadoNovedad({ entregaId: id, nuevoEstado: true }));
+      dispatch(cambiarEstadoSincronizado({ visitaId: id, nuevoEstado: false }));
     });
-
-    cambiarEntregaEstadoNovedad();
-    mostrarAlertHook({
-      titulo: alertas.titulo.exito,
-      mensaje: alertas.mensaje.guardarRegistroLocal,
-    });  };
-
-  const entregarNovedadOnline = async (
-    data: NovedadFormType,
-    visitasSeleccionadas: number[],
-    cambiarEntregaEstadoNovedad: () => void
-  ) => {
-    await Promise.all(
-      visitasSeleccionadas.map(async (visita: number) => {
-        dispatch(
-          visitaNovedadThunk({
-            visita,
-            descripcion: data.descripcion,
-            novedad_tipo: data.novedad_tipo,
-            imagenes: state.arrImagenes,
-            fecha_entrega: obtenerFechaYHoraActualFormateada()
-          })
-        );
-      })
-    );
-
-    cambiarEntregaEstadoNovedad();
-    cambiarEntregaEstadoSinconizado();
+    
+    dispatch(novedadesProcesadas({ novedadesIds: visitasSeleccionadas }));
   };
+
+  // const entregarNovedadOnline = async (
+  //   data: NovedadFormType,
+  //   visitasSeleccionadas: number[],
+  //   cambiarEntregaEstadoNovedad: () => void
+  // ) => {
+  //   await Promise.all(
+  //     visitasSeleccionadas.map(async (visita: number) => {
+  //       dispatch(
+  //         visitaNovedadThunk({
+  //           visita,
+  //           descripcion: data.descripcion,
+  //           novedad_tipo: data.novedad_tipo,
+  //           imagenes: state.arrImagenes,
+  //           fecha_entrega: obtenerFechaYHoraActualFormateada(),
+  //         })
+  //       );
+  //     })
+  //   );
+
+  //   cambiarEntregaEstadoNovedad();
+  //   cambiarEntregaEstadoSinconizado();
+  // };
 
   const guardarNovedad = async (data: NovedadFormType) => {
     try {
-      const networkState = await Network.getNetworkStateAsync();
-      const hayConexion =
-        networkState.isConnected && networkState.isInternetReachable;
-
       actualizarState({ mostrarAnimacionCargando: true });
-
-      if (!hayConexion) {
-        await entregarNovedadOffline(
-          data,
-          visitasSeleccionadas,
-          state,
-          dispatch,
-          cambiarEntregaEstadoNovedad
-        );
-        return;
-      }
-
-      await entregarNovedadOnline(
-        data,
-        visitasSeleccionadas,
-        cambiarEntregaEstadoNovedad
-      );
+      guardarNovedadLocal(data, visitasSeleccionadas);
     } catch (error) {
-      actualizarState({ mostrarAnimacionCargando: false });
     } finally {
       actualizarState({ mostrarAnimacionCargando: false });
       router.back();
     }
-  };
-
-  const cambiarEntregaEstadoNovedad = () => {
-    visitasSeleccionadas.map((visita: number) => {
-      dispatch(cambiarEstadoNovedad(visita));
-    });
-  };
-
-  const cambiarEntregaEstadoSinconizado = () => {
-    visitasSeleccionadas.map((visita: number) => {
-          dispatch(cambiarEstadoSincronizado({ visitaId: visita, nuevoEstado: false }));
-    });
   };
 
   return {
@@ -215,6 +172,6 @@ export default function useVisitaNovedadViewModel() {
     guardarNovedad,
     handleSubmit,
     novedadesTipo,
-    obtenerColor
+    obtenerColor,
   };
 }

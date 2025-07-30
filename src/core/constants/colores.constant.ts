@@ -2,6 +2,7 @@ const COLORES = {
     HEADER_BACKGROUND_COLOR_LIGHT: "rgba(197, 236, 248, 1)",
     HEADER_BACKGROUND_COLOR_DARK: "rgba(30, 60, 70, 1)",
     NARANJA_SUAVE: "rgba(248, 158, 109, 0.30)",
+    NARANJA_FUERTE: "rgba(248, 158, 109, 1)",
     AZUL_SUAVE: "rgba(109, 174, 248, 0.30)",
     VERDE_SUAVE: "rgba(109, 248, 180, 0.30)",
     VERDE_FUERTE: "rgba(0, 204, 153, 1)",

@@ -59,8 +59,10 @@ export class NetworkMonitorService {
     this.syncDebounceTimeout = setTimeout(async () => {
       console.log('Ejecutando sincronización después de debounce');
       try {
-        const resultado = await sincronizacionService.sincronizarEntregas();
-        console.log(`Resultado de sincronización: ${resultado ? 'exitoso' : 'fallido'}`);
+        const resultadoSincronizacionEntregas = await sincronizacionService.sincronizarEntregas();
+        const resultadoSincronizacionNovedades = await sincronizacionService.sincronizarNovedades();
+        console.log(`Resultado de sincronización de entregas: ${resultadoSincronizacionEntregas ? 'exitoso' : 'fallido'}`);
+        console.log(`Resultado de sincronización de novedades: ${resultadoSincronizacionNovedades ? 'exitoso' : 'fallido'}`);
       } catch (error) {
         console.error('Error al ejecutar sincronización:', error);
       }

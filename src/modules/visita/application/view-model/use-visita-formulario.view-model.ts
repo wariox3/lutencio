@@ -11,7 +11,7 @@ import {
   cambiarEstadoEntrega,
   cambiarEstadoSincronizado,
   cambiarEstadoSincronizadoError,
-  procesarTodasLasEntregas,
+  entregasProcesadas,
   quitarEntregaSeleccionada
 } from "../slice/entrega.slice";
 
@@ -179,9 +179,8 @@ export default function useVisitaFormularioViewModel() {
     });
 
     // notificamos que las entregas han sido procesadas
-    dispatch(procesarTodasLasEntregas({ entregasIds: entregasSeleccionadas }));
+    dispatch(entregasProcesadas({ entregasIds: entregasSeleccionadas }));
   };
-
 
   return {
     control,

@@ -3,19 +3,22 @@
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
 import { PenditesService } from "../../infraestructure/services/penditente.service";
-import { obtenerEntregasPendientes } from "../slice/entrega.selector";
+import { obtenerEntregasPendientes, obtenerNovedadesPendientes } from "../slice/entrega.selector";
 import {
   cambiarEstadoSincronizado,
   cambiarEstadoSincronizadoError,
   setSincronizandoEntregas,
 } from "../slice/entrega.slice";
+import { VisitaApiRepository } from "../../infraestructure/api/visita-api.service";
 
 export class SincronizacionService {
   private static instance: SincronizacionService;
   private sincronizando = false;
   private storeRef: any = null;
-  private lastSyncAttempt: number = 0;
+  private lastSyncAttemptEntrega: number = 0;
+  private lastSyncAttemptNovedad: number = 0;
   private readonly MIN_SYNC_INTERVAL = 2000; // Mínimo 2 segundos entre intentos
+  private readonly visitaService = new VisitaApiRepository();
 
   // Patrón Singleton para asegurar una única instancia
   public static getInstance(): SincronizacionService {
@@ -41,8 +44,8 @@ export class SincronizacionService {
     const syncId = Math.random().toString(36).substring(2, 9); // ID único para rastrear esta sincronización
     
     // Evitar sincronizaciones muy frecuentes
-    if (now - this.lastSyncAttempt < this.MIN_SYNC_INTERVAL) {
-      console.log(`[Sync ${syncId}] Sincronización rechazada: demasiado pronto desde último intento (${now - this.lastSyncAttempt}ms)`);
+    if (now - this.lastSyncAttemptEntrega < this.MIN_SYNC_INTERVAL) {
+      console.log(`[Sync ${syncId}] Sincronización rechazada: demasiado pronto desde último intento (${now - this.lastSyncAttemptEntrega}ms)`);
       return false;
     }
     
@@ -53,7 +56,7 @@ export class SincronizacionService {
     }
 
     // Actualizar timestamp del último intento
-    this.lastSyncAttempt = now;
+    this.lastSyncAttemptEntrega = now;
     console.log(`[Sync ${syncId}] Iniciando proceso de sincronización`);
 
     try {
@@ -133,11 +136,7 @@ export class SincronizacionService {
         }
       });
 
-      console.log(`[Sync ${syncId}] Sincronización completada - Exitosos: ${exitosos}, Fallidos: ${fallidos}`);
-      
-      // Registrar hora de última sincronización
-      // store.dispatch(setUltimaSincronizacion(new Date().toISOString()));
-      
+      console.log(`[Sync ${syncId}] Sincronización completada - Exitosos: ${exitosos}, Fallidos: ${fallidos}`);      
       return exitoTotal;
     } catch (error) {
       console.error(`[Sync ${syncId}] Error en sincronización:`, error);
@@ -148,6 +147,120 @@ export class SincronizacionService {
       this.storeRef.dispatch(setSincronizandoEntregas(false));
     }
   }
+
+   /**
+   * Sincroniza todas las entregas pendientes
+   * @returns {Promise<boolean>} Éxito de la sincronización
+   */
+   public async sincronizarNovedades(): Promise<boolean> {
+    const now = Date.now();
+    const syncId = Math.random().toString(36).substring(2, 9); // ID único para rastrear esta sincronización
+    
+    // Evitar sincronizaciones muy frecuentes
+    if (now - this.lastSyncAttemptNovedad < this.MIN_SYNC_INTERVAL) {
+      console.log(`[Sync ${syncId}] Sincronización rechazada: demasiado pronto desde último intento (${now - this.lastSyncAttemptNovedad}ms)`);
+      return false;
+    }
+    
+    // Evitar sincronizaciones simultáneas
+    if (this.sincronizando) {
+      console.log(`[Sync ${syncId}] Sincronización rechazada: ya hay una sincronización en curso`);
+      return false;
+    }
+
+    // Actualizar timestamp del último intento
+    this.lastSyncAttemptNovedad = now;
+    console.log(`[Sync ${syncId}] Iniciando proceso de sincronización`);
+
+    try {
+      if (!this.storeRef) {
+        console.error(`[Sync ${syncId}] Store no inicializada en sincronizacionService`);
+        return false;
+      }
+
+      // Obtener estado actual
+      const state = this.storeRef.getState();
+      const novedadesPendientes = obtenerNovedadesPendientes(state);
+
+      // Validaciones iniciales
+      if (novedadesPendientes.length === 0) {
+        console.log(`[Sync ${syncId}] No hay novedades pendientes para sincronizar`);
+        return false;
+      }
+
+      console.log(`[Sync ${syncId}] Encontradas ${novedadesPendientes.length} novedades pendientes`);
+
+      // Obtener subdominio
+      const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
+      if (!subdominio) {
+        console.error(`[Sync ${syncId}] No se encontró subdominio para sincronizar`);
+        return false;
+      }
+      
+      // Iniciar sincronización - usar un bloque atómico para evitar condiciones de carrera
+      this.sincronizando = true;
+      this.storeRef.dispatch(setSincronizandoEntregas(true));
+
+      // Procesar todas las entregas en paralelo
+      const resultados = await Promise.allSettled(
+        novedadesPendientes.map(async (novedad) => {
+          const novedadId = novedad.id;
+          console.log(`[Sync ${syncId}] Procesando novedad ID: ${novedadId}`);
+          
+          return this.visitaService.setNovedad(novedad.id, novedad.novedad_descripcion, novedad.novedad_tipo, novedad.arrImagenes, novedad.fecha_entrega)
+            .then(respuesta => {
+              console.log(`[Sync ${syncId}] Novedad ${novedadId} sincronizada con éxito`);
+              return { novedad, respuesta, exito: true };
+            })
+            .catch(error => {
+              console.error(`[Sync ${syncId}] Error al sincronizar novedad ${novedadId}:`, error);
+              return { novedad, respuesta: error, exito: false };
+            });
+        })
+      );
+
+      // Actualizar estado según resultados
+      let exitoTotal = true;
+      let exitosos = 0;
+      let fallidos = 0;
+      
+      resultados.forEach(resultado => {
+        if (resultado.status === 'fulfilled') {
+          const { novedad, exito, respuesta } = resultado.value;
+          
+          if (exito && respuesta) {
+            this.storeRef.dispatch(cambiarEstadoSincronizado({ 
+              visitaId: novedad.id, 
+              nuevoEstado: true 
+            }));
+            exitosos++;
+          } else {
+            console.log(`[Sync ${syncId}] Error al sincronizar novedad:`, resultado.value.respuesta);
+            this.storeRef.dispatch(cambiarEstadoSincronizadoError({ 
+              visitaId: novedad.id, 
+              nuevoEstado: true 
+            }));
+            fallidos++;
+            exitoTotal = false;
+          }
+        } else {
+          fallidos++;
+          exitoTotal = false;
+        }
+      });
+
+      console.log(`[Sync ${syncId}] Sincronización completada - Exitosos: ${exitosos}, Fallidos: ${fallidos}`);      
+      return exitoTotal;
+    } catch (error) {
+      console.error(`[Sync ${syncId}] Error en sincronización:`, error);
+      return false;
+    } finally {
+      console.log(`[Sync ${syncId}] Finalizando proceso de sincronización`);
+      this.sincronizando = false;
+      this.storeRef.dispatch(setSincronizandoEntregas(false));
+    }
+  }
+  
 }
 
 // Exportar instancia por defecto para facilitar su uso
