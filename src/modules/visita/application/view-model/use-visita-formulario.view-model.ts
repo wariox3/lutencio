@@ -1,29 +1,19 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface";
-import { STORAGE_KEYS } from "@/src/core/constants";
-import { alertas } from "@/src/core/constants/alertas.const";
-import storageService from "@/src/core/services/storage.service";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import useFecha from "@/src/shared/hooks/useFecha";
 import { useGuardarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
-import * as FileSystem from "expo-file-system";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
-  actualizarDatosAdiciones,
   actualizarEntrega,
-  actualizarFechaEntrega,
-  actualizarFirmaEntrega,
-  agregarImagenEntrega,
   cambiarEstadoEntrega,
   cambiarEstadoSincronizado,
   cambiarEstadoSincronizadoError,
-  quitarEntregaSeleccionada,
+  procesarTodasLasEntregas,
+  quitarEntregaSeleccionada
 } from "../slice/entrega.slice";
-import { visitaEntregaThunk } from "../slice/visita.thunk";
 
 type VisitaFormType = {
   recibe: string;
@@ -165,26 +155,7 @@ export default function useVisitaFormularioViewModel() {
       const firmaEntrega = state.firmarBase64 ? state.firmarBase64 : null
       state.arrImagenes?.forEach((imagen) => {
         imagenesEntrega.push({ uri: imagen.uri })
-        // dispatch(
-        //   agregarImagenEntrega({
-        //     entregaId: visitaId,
-        //     imagen: { uri: imagenEntrega },  
-        //   })
-        // );
-        // if (state.firmarBase64 !== null) {
-        //   dispatch(
-        //     actualizarFirmaEntrega({
-        //       entregaId: visitaId,
-        //       firmarBase64: state.firmarBase64,
-        //     })
-        //   );
-        // }
       });
-
-      // dispatch(agregarImagenEntrega({
-      //   entregaId: visitaId,
-      //   imagenes: imagenesEntrega,
-      // }));
 
       dispatch(actualizarEntrega({
         entregaId: visitaId,
@@ -201,32 +172,14 @@ export default function useVisitaFormularioViewModel() {
         },
       }));
        
-      // dispatch(
-      //   actualizarFechaEntrega({
-      //     entregaId: visitaId,
-      //     fecha_entrega: obtenerFechaYHoraActualFormateada(),
-      //   })
-      // );
-      // dispatch(
-      //   actualizarDatosAdiciones({
-      //     entrega_id: visitaId,
-      //     datosAdicionales: {
-      //       recibe: data.recibe,
-      //       recibeParentesco: data.parentesco,
-      //       recibeNumeroIdentificacion: data.numeroIdentificacion,
-      //       recibeCelular: data.celular,
-      //     },
-      //   })
-      // );
-      dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
       dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: false }));
       dispatch(cambiarEstadoSincronizado({ visitaId, nuevoEstado: false }));
+      dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
       dispatch(quitarEntregaSeleccionada(visitaId));
     });
-    // mostrarAlertHook({
-    //   titulo: alertas.titulo.exito,
-    //   mensaje: alertas.mensaje.guardarRegistroLocal,
-    // });
+
+    // notificamos que las entregas han sido procesadas
+    dispatch(procesarTodasLasEntregas({ entregasIds: entregasSeleccionadas }));
   };
 
 

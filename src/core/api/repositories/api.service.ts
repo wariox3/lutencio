@@ -17,6 +17,7 @@ import {
 import {
   ApiConfig,
   ApiErrorResponse,
+  ParametrosApi,
   RequestOptions,
 } from "../domain/interfaces/api.interface";
 
@@ -190,10 +191,12 @@ class ApiService {
 
   public async get<T = any>(
     endpoint: string,
+    params?: ParametrosApi,
     headers?: Record<string, any>
   ): Promise<T> {
     try {
       const response: AxiosResponse<T> = await this.instance.get(endpoint, {
+        params,
         headers,
       });
       return response.data;

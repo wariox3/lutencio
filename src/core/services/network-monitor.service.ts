@@ -9,6 +9,8 @@ export class NetworkMonitorService {
   private static instance: NetworkMonitorService;
   private subscription: any = null;
   private isOnline: boolean = false;
+  private syncDebounceTimeout: NodeJS.Timeout | null = null;
+  private readonly DEBOUNCE_TIME = 3000; // 3 segundos de debounce
 
   // Patrón Singleton
   public static getInstance(): NetworkMonitorService {
@@ -33,14 +35,37 @@ export class NetworkMonitorService {
     this.subscription = Network.addNetworkStateListener(async ({ isConnected }) => {
       console.log(`Estado de red cambió: ${isConnected ? 'conectado' : 'desconectado'}`);
       
-      // Si pasamos de offline a online, intentar sincronizar
+      // Si pasamos de offline a online, intentar sincronizar con debounce
       if (isConnected && !this.isOnline) {
-        console.log('Conexión restaurada, iniciando sincronización...');
-        sincronizacionService.sincronizarEntregas();
+        console.log('Conexión restaurada, programando sincronización...');
+        this.debounceSyncAttempt();
       }
       
       this.isOnline = isConnected ?? false;
     });
+  }
+
+  /**
+   * Aplica debounce a los intentos de sincronización
+   * para evitar múltiples llamadas cuando la red fluctúa
+   */
+  private debounceSyncAttempt(): void {
+    // Cancelar cualquier intento previo pendiente
+    if (this.syncDebounceTimeout) {
+      clearTimeout(this.syncDebounceTimeout);
+    }
+
+    // Programar nuevo intento con debounce
+    this.syncDebounceTimeout = setTimeout(async () => {
+      console.log('Ejecutando sincronización después de debounce');
+      try {
+        const resultado = await sincronizacionService.sincronizarEntregas();
+        console.log(`Resultado de sincronización: ${resultado ? 'exitoso' : 'fallido'}`);
+      } catch (error) {
+        console.error('Error al ejecutar sincronización:', error);
+      }
+      this.syncDebounceTimeout = null;
+    }, this.DEBOUNCE_TIME);
   }
 
   /**
@@ -50,6 +75,12 @@ export class NetworkMonitorService {
     if (this.subscription) {
       this.subscription.remove();
       this.subscription = null;
+    }
+
+    // Limpiar cualquier timeout pendiente
+    if (this.syncDebounceTimeout) {
+      clearTimeout(this.syncDebounceTimeout);
+      this.syncDebounceTimeout = null;
     }
   }
 

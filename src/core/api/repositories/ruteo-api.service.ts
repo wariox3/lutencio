@@ -4,18 +4,24 @@ import { STORAGE_KEYS } from "../../constants";
 import storageService from "../../services/storage.service";
 import { RuteoRepository } from "../domain/interfaces/ruteo.interface";
 import { NovedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
-import { RespuestaApiGet } from "../domain/interfaces/api.interface";
+import { RespuestaApi } from "../domain/interfaces/api.interface";
+import { GeneralApiRepository } from "./general-api.service";
 
 export class RuteoApiRepository implements RuteoRepository {
+  constructor(private generalApiService = new GeneralApiRepository()) {}
+
   async getNovedadTipoLista() {
     const subdominio = (await storageService.getItem(
       STORAGE_KEYS.subdominio
     )) as string;
 
-    return apiService.get<Promise<RespuestaApiGet<NovedadTipo>>>(APIS.ruteo.novedadTipo, {
-      "X-Schema-Name": subdominio,
-      requiereToken: true,
-    });
+    return this.generalApiService.consultaApi<RespuestaApi<NovedadTipo>>(
+      APIS.ruteo.novedadTipo,
+      {},
+      {
+        "X-Schema-Name": subdominio,
+      }
+    );
   }
 
   async postVisita(data: FormData, subdominio: string) {
@@ -52,14 +58,17 @@ export class RuteoApiRepository implements RuteoRepository {
     longitud: any,
     subdominio: string
   ) {
-    return apiService.post<any>(APIS.ruteo.ubicacion, {
-      usuario_id,
-      despacho,
-      latitud,
-      longitud,
-    },
+    return apiService.post<any>(
+      APIS.ruteo.ubicacion,
+      {
+        usuario_id,
+        despacho,
+        latitud,
+        longitud,
+      },
       {
         "X-Schema-Name": subdominio,
-      })
+      }
+    );
   }
 }

@@ -1,12 +1,12 @@
+import { RespuestaApi } from "@/src/core/api/domain/interfaces/api.interface";
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
-import { ApiResponse } from "@/src/core/api/domain/interfaces/api.interface";
 
 export interface VisitaRepository {
   getLista(
     despachoId: number,
     estadoEntregado: boolean,
     subdominio: string
-  ): Promise<ApiResponse<Entrega[]>>;
+  ): Promise<RespuestaApi<Entrega>>;
 
   postVisita(
     formData: any

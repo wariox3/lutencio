@@ -23,9 +23,14 @@ TaskManager.defineTask(TAREA_SEGUIMIENTO_UBICACION, ({ data, error }) => {
 });
 
 const enviarUbicacion = async (locations: any) => {
-  const estadoRed = await networkService.validarEstadoRed()
-  if (estadoRed) {
-    await new SetUbicacionVisitaUseCase().setUbucacion(locations.coords.latitude, locations.coords.longitude)
+  try {
+    const estadoRed = await networkService.validarEstadoRed()
+    if (estadoRed) {
+      await new SetUbicacionVisitaUseCase().setUbucacion(locations.coords.latitude, locations.coords.longitude)
+    }
+  } catch (error) {
+    console.log("error enviarUbicacion", error);
+    
   }
 };
 

@@ -10,6 +10,7 @@ const TRIGGER_ACTIONS = [
   'entregas/cambiarEstadoEntrega',
   // Cuando se agregan imágenes a una entrega
   'entregas/agregarImagenEntrega',
+  'entregas/procesarTodasLasEntregas',
 ];
 
 // Iniciar el monitoreo de red al cargar el middleware
@@ -24,7 +25,7 @@ export const sincronizacionMiddleware: Middleware = store => next => action => {
   if (TRIGGER_ACTIONS.includes(action.type)) {
     // Si es cambiarEstadoSincronizado, solo sincronizamos si se está marcando como no sincronizado
     // @ts-ignore
-    if (action.type === 'entregas/cambiarEstadoSincronizado' && action.payload?.nuevoEstado === false) {
+    if (action.type === 'entregas/procesarTodasLasEntregas') {
       // No sincronizamos cuando se marca como sincronizado
       if (networkMonitor.isConnected()) {
         setTimeout(() => {

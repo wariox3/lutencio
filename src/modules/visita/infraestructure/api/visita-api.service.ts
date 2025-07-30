@@ -4,6 +4,8 @@ import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface"
 import { RuteoApiRepository } from "@/src/core/api/repositories/ruteo-api.service";
 import storageService from "@/src/core/services/storage.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
+import APIS from "@/src/core/api/domain/constants/endpoint.constant";
+import { RespuestaApi } from "@/src/core/api/domain/interfaces/api.interface";
 
 export class VisitaApiRepository implements VisitaRepository {
   constructor(
@@ -16,22 +18,11 @@ export class VisitaApiRepository implements VisitaRepository {
     estadoEntregado: boolean,
     subdominio: string
   ) {
-    return this.generalApiService.consulta<Entrega[]>(
+    return this.generalApiService.consultaApi<RespuestaApi<Entrega>>(
+      APIS.ruteo.visita,
       {
-        modelo: "RutVisita",
-        filtros: [
-          {
-            propiedad: "despacho_id",
-            valor1: despachoId,
-            operador: "exact",
-          },
-          {
-            propiedad: "estado_entregado",
-            operador: "exact",
-            valor1: estadoEntregado,
-          },
-        ],
-        limite: 1000
+        despacho_id: despachoId,
+        estado_entregado: estadoEntregado ? 'True' : 'False',
       },
       {
         "X-Schema-Name": subdominio,

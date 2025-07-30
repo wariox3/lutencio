@@ -13,6 +13,7 @@ import {
 interface EntregasState {
   entregas: Entrega[];
   entregasSeleccionadas: number[];
+  sincronizando: boolean;
   loading: boolean;
   filtros: {
     guia: number;
@@ -23,6 +24,7 @@ interface EntregasState {
 const initialState: EntregasState = {
   entregas: [],
   entregasSeleccionadas: [],
+  sincronizando: false,
   loading: false,
   filtros: {
     guia: 0,
@@ -61,6 +63,9 @@ const entregasSlice = createSlice({
         entrega.arrImagenes.push(...imagenes);
         console.log("entrega al agregar imagen", JSON.stringify(entrega));
       }
+    },
+    setSincronizandoEntregas: (state, action: PayloadAction<boolean>) => {
+      state.sincronizando = action.payload;
     },
     quitarImagenEntrega: (
       state,
@@ -260,6 +265,14 @@ const entregasSlice = createSlice({
         entrega.datosAdicionales = datosAdicionales;
       }
     },
+    procesarTodasLasEntregas: (
+      state,
+      action: PayloadAction<{
+        entregasIds: number[];
+      }>
+    ) => {
+      console.log(`Procesadas ${action.payload.entregasIds.length} entregas`);
+    },
   },
 
   extraReducers(builder) {
@@ -332,5 +345,7 @@ export const {
   actualizarDatosAdiciones,
   cambiarEstadoSincronizadoError,
   actualizarEntrega,
+  setSincronizandoEntregas,
+  procesarTodasLasEntregas,
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

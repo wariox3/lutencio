@@ -1,7 +1,7 @@
+import { RespuestaApi } from "@/src/core/api/domain/interfaces/api.interface";
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
 import { VisitaApiRepository } from "../../infraestructure/api/visita-api.service";
-import { ApiResponse } from "@/src/core/api/domain/interfaces/api.interface";
 
 export class GetListaVisitaUseCase {
   constructor(private repo: VisitaRepository = new VisitaApiRepository()) {}
@@ -10,16 +10,19 @@ export class GetListaVisitaUseCase {
     despachoId: number,
     estadoEntregado: boolean,
     subdominio: string
-  ): Promise<ApiResponse<Entrega[]>> {
+  ): Promise<RespuestaApi<Entrega>> {    
     const respuesta = await this.repo.getLista(
       despachoId,
       estadoEntregado,
       subdominio
     );
-    const entregasConEstados = this._agregarCamposVisita(respuesta.registros);
+    
+    const entregasConEstados = this._agregarCamposVisita(respuesta.results);
     return {
-      cantidad_registros: respuesta.cantidad_registros,
-      registros: entregasConEstados,
+      count: respuesta.count,
+      results: entregasConEstados,
+      next: respuesta.next,
+      previous: respuesta.previous
     };
   }
 

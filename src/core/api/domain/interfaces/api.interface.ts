@@ -31,9 +31,13 @@ export interface ApiErrorResponse {
 }
 
 
-export interface RespuestaApiGet<T> {
+export interface RespuestaApi<T> {
   count: number;
   next: any;
   previous: any;
   results: T[];
+}
+
+export interface ParametrosApi {
+  [key: string]: string | number;
 }

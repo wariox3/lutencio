@@ -143,3 +143,10 @@ export const obtenerFiltroNumero = createSelector(
     return filtros.numero;
   }
 );
+
+export const getSincronizandoEntregas = createSelector(
+  [selectEntregas],
+  (entregas) => {
+    return entregas.sincronizando;
+  }
+);

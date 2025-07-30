@@ -6,6 +6,7 @@ import APIS from "@/src/core/constants/endpoint.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import storageService from "@/src/core/services/storage.service";
 import {
+  getSincronizandoEntregas,
   selectEntregasConNovedad,
   selectEntregasSincronizadas,
 } from "@/src/modules/visita/application/slice/entrega.selector";
@@ -25,6 +26,7 @@ import {
   FileUp,
   FileWarning,
   FileX,
+  Loader2,
   Logs,
   MoreVertical,
   Package,
@@ -35,7 +37,7 @@ import * as FileSystem from "expo-file-system";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import { useFocusEffect, useRouter } from "expo-router";
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shallowEqual } from "react-redux";
@@ -51,6 +53,7 @@ import {
 } from "tamagui";
 import CardDesvincularOrdenEntrega from "./card-desvincular-orden-entrega";
 import CardInformativa from "./card-informativa";
+import { Animated } from "react-native";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -64,6 +67,27 @@ export const EntregaOpciones = () => {
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
   const arrEntregasConNovedad = useAppSelector(selectEntregasConNovedad);
   const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
+  const sincronizandoEntregas = useAppSelector(getSincronizandoEntregas);
+
+  // Add this inside the EntregaOpciones component
+const spinValue = useRef(new Animated.Value(0)).current;
+
+// Set up the animation when sincronizandoEntregas changes
+useEffect(() => {
+  if (sincronizandoEntregas) {
+    Animated.loop(
+      Animated.timing(spinValue, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      })
+    ).start();
+  } else {
+    // Stop the animation when not syncing
+    spinValue.stopAnimation();
+    spinValue.setValue(0);
+  }
+}, [sincronizandoEntregas]);
 
   useFocusEffect(
     useCallback(() => {
@@ -84,11 +108,21 @@ export const EntregaOpciones = () => {
     return null;
   }
 
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
   return (
     <>
       <XStack justify={"flex-end"} items="center" gap="$2">
+        {sincronizandoEntregas && (
+          <Animated.View style={{ transform: [{ rotate: spin }] }}>
+            <Loader2 size={12} fontWeight={"bold"} />
+          </Animated.View>
+        )}
         <XStack gap="$2">
-          <XStack items="flex-end" gap="$1">
+          <XStack items="center" gap="$1">
             <Package size={12} color="$blue10" />
             <Text fontSize="$2" fontWeight="600" color="$blue10">
               {entregas.length}

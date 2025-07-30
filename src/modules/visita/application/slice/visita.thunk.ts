@@ -16,15 +16,16 @@ export const cargarOrdenThunk = createAsyncThunk(
     try {
       const respuestaEntregaVertical =
         await new VerticalApiRepository().getEntregaPorCodigo(payload.codigo);
-      if (respuestaEntregaVertical) {
-        const { despacho_id, schema_name } = respuestaEntregaVertical;
-        const visitas = await new GetListaVisitaUseCase().execute(
-          despacho_id,
-          false,
-          schema_name
-        );
-
-        if (visitas.registros.length > 0) {
+        
+        if (respuestaEntregaVertical) {
+          const { despacho_id, schema_name } = respuestaEntregaVertical;
+          const visitas = await new GetListaVisitaUseCase().execute(
+            despacho_id,
+            false,
+            schema_name
+          );
+          
+        if (visitas.results.length > 0) {
           await storageService.setItem(STORAGE_KEYS.subdominio, schema_name);
           await storageService.setItem(STORAGE_KEYS.despacho, `${despacho_id}`);
           await storageService.setItem(
@@ -35,7 +36,7 @@ export const cargarOrdenThunk = createAsyncThunk(
           await iniciarTareaSeguimientoUbicacion();
         }
 
-        return visitas.registros;
+        return visitas.results;
       }
 
       return [];

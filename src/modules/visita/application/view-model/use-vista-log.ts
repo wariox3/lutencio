@@ -13,14 +13,8 @@ export default function useVisitaLogViewModel() {
     const theme = useTheme();
 
     const recargarVisitas = async () => {
-        console.log("recargarVisitas", arrVisitas);
         return arrVisitas
     };
-
-    useEffect(() => {
-        console.log("arrVisitas", arrVisitas);
-        ;
-    }, [arrVisitas]);
 
     return {
         arrVisitas,
