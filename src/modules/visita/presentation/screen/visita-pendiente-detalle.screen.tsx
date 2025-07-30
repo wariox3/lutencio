@@ -11,7 +11,7 @@ const VisitaPendienteDetalleScreen = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <Card p="$3" mx="$2" mt={"$2"} gap={2}>
         <Text>Id: {visita.id}</Text>
-        <Text>Despacho: {visita.despacho_id}</Text>
+        <Text>Despacho: {visita.despacho}</Text>
         <Text>Destinatario:</Text>
         <Text>{visita.destinatario}</Text>
         <Text>Dirección:</Text>

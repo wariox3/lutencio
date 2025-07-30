@@ -7,11 +7,12 @@ export interface Entrega {
   destinatario: string;
   destinatario_direccion: string;
   destinatario_direccion_formato: string;
-  ciudad_id?: number;
-  ciudad_nombre: string;
+  ciudad?: number;
+  ciudad__nombre: string;
   destinatario_telefono: string;
   destinatario_correo: any;
   peso: number;
+  cobro: number;
   volumen: number;
   tiempo: number;
   tiempo_servicio: number;
@@ -38,7 +39,7 @@ export interface Entrega {
   franja_id: any;
   datosAdicionales: DatosAdicionalesVisita;
   franja_codigo: any;
-  despacho_id: number;
+  despacho: number;
   resultados: Resultado[];
   seleccionado: boolean;
   arrImagenes: { uri: string }[];
