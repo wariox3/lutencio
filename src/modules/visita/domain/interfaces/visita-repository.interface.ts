@@ -6,7 +6,7 @@ export interface VisitaRepository {
     despachoId: number,
     estadoEntregado: boolean,
     subdominio: string
-  ): Promise<RespuestaApi<Entrega>>;
+  ): Promise<Entrega[]>;
 
   postVisita(
     formData: any

@@ -1,11 +1,10 @@
-import { GeneralApiRepository } from "@/src/core/api/repositories/general-api.service";
-import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
-import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
-import { RuteoApiRepository } from "@/src/core/api/repositories/ruteo-api.service";
-import storageService from "@/src/core/services/storage.service";
-import { STORAGE_KEYS } from "@/src/core/constants";
-import { RespuestaApi } from "@/src/core/api/domain/interfaces/api.interface";
 import APIS from "@/src/core/api/domain/constants/endpoint.constant";
+import { GeneralApiRepository } from "@/src/core/api/repositories/general-api.service";
+import { RuteoApiRepository } from "@/src/core/api/repositories/ruteo-api.service";
+import { STORAGE_KEYS } from "@/src/core/constants";
+import storageService from "@/src/core/services/storage.service";
+import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
+import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
 
 export class VisitaApiRepository implements VisitaRepository {
   constructor(
@@ -18,12 +17,12 @@ export class VisitaApiRepository implements VisitaRepository {
     estadoEntregado: boolean,
     subdominio: string
   ) {
-    return this.generalApiService.consultaApi<RespuestaApi<Entrega>>(
+    return this.generalApiService.consultaApi<Entrega[]>(
       APIS.ruteo.visita,
       {
         despacho_id: despachoId,
         estado_entregado: estadoEntregado ? 'True' : 'False',
-        lista: 'True',
+        lista: true,
         serializador: 'lista'
       },
       {

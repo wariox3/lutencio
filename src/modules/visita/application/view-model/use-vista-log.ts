@@ -1,12 +1,12 @@
 import { useAppSelector } from "@/src/application/store/hooks";
-import { comprobarFiltrosActivos, obtenerVisitasLog } from "../slice/entrega.selector";
+import { comprobarFiltrosActivos, obtenerNovedadesLog, obtenerVisitasLog } from "../slice/entrega.selector";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { useEffect, useState } from "react";
 import { useTheme } from "tamagui";
 
 export default function useVisitaLogViewModel() {
 
-    const arrVisitas = useAppSelector(obtenerVisitasLog);
+    const arrVisitas = useAppSelector(obtenerNovedadesLog);
     const { obtenerColor } = useTemaVisual()
     const filtrosAplicados = useAppSelector(comprobarFiltrosActivos)
     const [refreshing, setRefreshing] = useState(false);

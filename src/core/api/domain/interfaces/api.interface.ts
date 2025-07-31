@@ -39,5 +39,5 @@ export interface RespuestaApi<T> {
 }
 
 export interface ParametrosApi {
-  [key: string]: string | number;
+  [key: string]: string | number | boolean;
 }

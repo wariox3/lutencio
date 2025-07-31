@@ -25,7 +25,7 @@ export const cargarOrdenThunk = createAsyncThunk(
             schema_name
           );
           
-        if (visitas.results.length > 0) {
+        if (visitas.length > 0) {
           await storageService.setItem(STORAGE_KEYS.subdominio, schema_name);
           await storageService.setItem(STORAGE_KEYS.despacho, `${despacho_id}`);
           await storageService.setItem(
@@ -36,7 +36,7 @@ export const cargarOrdenThunk = createAsyncThunk(
           await iniciarTareaSeguimientoUbicacion();
         }
 
-        return visitas.results;
+        return visitas;
       }
 
       return [];

@@ -21,6 +21,27 @@ export const obtenerVisitasLog = createSelector(
   }
 );
 
+export const obtenerNovedadesLog = createSelector(
+  [selectEntregas, selectFiltros],
+  (entregas, filtros) => {
+    return entregas.entregas
+      .filter((entrega) => entrega.estado_novedad)
+      .filter((entrega) => {
+        const coincideGuia = filtros.guia
+          ? entrega.guia === filtros.guia
+          : true;
+        const coincideNumero = filtros.numero
+          ? entrega.numero === filtros.numero
+          : true;
+        console.log('filtro guia', filtros.guia);
+        console.log('filtro numero', filtros.numero);
+        console.log("coincideGuia", coincideGuia);
+        console.log("coincideNumero", coincideNumero);
+        return coincideGuia || coincideNumero;
+      });
+  }
+);
+
 export const obtenerEntregasFiltros = createSelector(
   [selectEntregas, selectFiltros],
   (entregas, filtros) => {
@@ -33,6 +54,10 @@ export const obtenerEntregasFiltros = createSelector(
         const coincideNumero = filtros.numero
           ? entrega.numero === filtros.numero
           : true;
+        console.log('filtro guia', filtros.guia);
+        console.log('filtro numero', filtros.numero);
+        console.log("coincideGuia", coincideGuia);
+        console.log("coincideNumero", coincideNumero);
         return coincideGuia || coincideNumero;
       });
   }

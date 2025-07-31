@@ -1,4 +1,3 @@
-import { RespuestaApi } from "@/src/core/api/domain/interfaces/api.interface";
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
 import { VisitaApiRepository } from "../../infraestructure/api/visita-api.service";
@@ -10,20 +9,17 @@ export class GetListaVisitaUseCase {
     despachoId: number,
     estadoEntregado: boolean,
     subdominio: string
-  ): Promise<RespuestaApi<Entrega>> {    
+  ): Promise<Entrega[]> {    
     const respuesta = await this.repo.getLista(
       despachoId,
       estadoEntregado,
       subdominio
     );
+
+    console.log("respuesta", respuesta);
     
-    const entregasConEstados = this._agregarCamposVisita(respuesta.results);
-    return {
-      count: respuesta.count,
-      results: entregasConEstados,
-      next: respuesta.next,
-      previous: respuesta.previous
-    };
+    const entregasConEstados = this._agregarCamposVisita(respuesta);
+    return entregasConEstados;
   }
 
   private _agregarCamposVisita(lista: Entrega[]): Entrega[] {
