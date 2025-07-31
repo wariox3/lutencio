@@ -21,8 +21,9 @@ export const sincronizacionMiddleware: Middleware =
 
     // Verificamos si es una acción que debería desencadenar sincronización
     // @ts-ignore
-    if (action.type === "entregas/novedadesProcesadas") {
+    if (action.type === "novedades/finishedSavingProcessNovedades") {
       // No sincronizamos cuando se marca como sincronizado
+      console.log("sincronizando novedades");
       if (networkMonitor.isConnected()) {
         setTimeout(() => {
           sincronizacionService.sincronizarNovedades();

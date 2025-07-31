@@ -14,6 +14,7 @@ export default function VisitaListaScreen() {
     refreshing,
     recargarVisitas,
     theme,
+    actualizarFiltros,
   } = useVisitaLogViewModel();
 
   return (
@@ -25,7 +26,7 @@ export default function VisitaListaScreen() {
           obtenerColor("HEADER_BACKGROUND_COLOR_LIGHT", "HEADER_BACKGROUND_COLOR_DARK")
         }
       >
-        <InputFiltros />
+        <InputFiltros onFilterChange={actualizarFiltros} />
       </YStack>
       <FlatList
         data={arrVisitas}

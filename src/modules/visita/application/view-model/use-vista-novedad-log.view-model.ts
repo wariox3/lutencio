@@ -1,64 +1,61 @@
 import { useAppSelector } from "@/src/application/store/hooks";
-import { obtenerEntregas, obtenerEntregasPendientesOrdenadas, obtenerNovedades } from "../slice/entrega.selector";
+import { selectAllNovedades } from "@/src/modules/novedad/application/store/novedad.selector";
+import { Novedad } from "@/src/modules/novedad/domain/novedad.interface";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { useEffect, useState } from "react";
 import { useTheme } from "tamagui";
-import { Entrega } from "../../domain/interfaces/vista.interface";
 
-export default function useVisitaLogViewModel() {
-    const todasLasVisitas = useAppSelector(obtenerEntregas);
+export default function useVisitaNovedadLogViewModel() {
+    const todasLasNovedades = useAppSelector(selectAllNovedades);
     const { obtenerColor } = useTemaVisual();
     const [refreshing, setRefreshing] = useState(false);
     const theme = useTheme();
     
     // Estado local para los filtros
-    const [filtros, setFiltros] = useState<{ guia: number; numero: number }>({
+    const [filtros, setFiltros] = useState<{ guia: number }>({
         guia: 0,
-        numero: 0,
     });
     
     // Estado derivado para las novedades filtradas
-    const [visitasFiltradas, setVisitasFiltradas] = useState<Entrega[]>(todasLasVisitas);
+    const [novedadesFiltradas, setNovedadesFiltradas] = useState<Novedad[]>(todasLasNovedades);
     
     // Comprobar si hay filtros activos
-    const hayFiltrosActivos = filtros.guia > 0 || filtros.numero > 0;
+    const hayFiltrosActivos = filtros.guia > 0;
 
     // Actualizar las novedades filtradas cuando cambien los filtros o las novedades
     useEffect(() => {
-        if (filtros.guia === 0 && filtros.numero === 0) {
+        if (filtros.guia === 0) {
             // Si no hay filtros activos, mostrar todas las novedades
-            setVisitasFiltradas(todasLasVisitas);
+            setNovedadesFiltradas(todasLasNovedades);
         } else {
             // Aplicar filtros con coincidencia parcial
-            const valorBusqueda = filtros.guia || filtros.numero;
+            const valorBusqueda = filtros.guia;
             const valorBusquedaStr = valorBusqueda.toString();
             
-            const filtradas = todasLasVisitas.filter((visita) => {
+            const filtradas = todasLasNovedades.filter((novedad) => {
                 // Convertir los valores a string para buscar coincidencias parciales
-                const guiaStr = visita.guia?.toString() || '';
-                const numeroStr = visita.numero?.toString() || '';
+                const guiaStr = novedad.visita_id?.toString() || '';
                 
                 // Buscar si el valor de búsqueda está contenido en alguno de los campos
                 const coincideGuia = guiaStr.includes(valorBusquedaStr);
-                const coincideNumero = numeroStr.includes(valorBusquedaStr);
                 
-                return coincideGuia || coincideNumero;
+                return coincideGuia;
             });
             
-            setVisitasFiltradas(filtradas);
+            setNovedadesFiltradas(filtradas);
         }
-    }, [filtros, todasLasVisitas]);
+    }, [filtros, todasLasNovedades]);
 
     const recargarVisitas = async () => {
-        return visitasFiltradas;
+        return novedadesFiltradas;
     };
 
-    const actualizarFiltros = (nuevosFiltros: { guia: number; numero: number }) => {
+    const actualizarFiltros = (nuevosFiltros: { guia: number }) => {
         setFiltros(nuevosFiltros);
     };
 
     return {
-        arrVisitas: visitasFiltradas,
+        arrVisitas: novedadesFiltradas,
         filtrosAplicados: hayFiltrosActivos,
         obtenerColor,
         refreshing,

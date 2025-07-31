@@ -37,7 +37,7 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
           <Separator self="stretch" vertical mx={16} />
 
           <YStack items={"center"} gap={"$1.5"} flex={1}>
-            <Text >Sinconizado</Text>
+            <Text >Sincronizado</Text>
             <>
               {
                 visita.estado_sincronizado ? (

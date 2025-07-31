@@ -1,10 +1,10 @@
 import SinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
 import { FlatList, Platform, RefreshControl } from "react-native";
 import { YStack } from "tamagui";
-import useVisitaLogViewModel from "../../application/view-model/use-vista-log";
+import useVisitaNovedadLogViewModel from "../../application/view-model/use-vista-novedad-log.view-model";
+import NovedadLogItem from "../components/novedad-log-item/novedad-log-item";
 import MensajeFiltroSinResultados from "../components/visita-filtros/mensaje-filtro-sin-resultados";
 import InputFiltros from "../components/visita-lista/input-filtros.screen";
-import NovedadLogItem from "../components/novedad-log-item/novedad-log-item";
 
 export default function VisitaNovedadLogScreen() {
   const {
@@ -14,7 +14,8 @@ export default function VisitaNovedadLogScreen() {
     refreshing,
     recargarVisitas,
     theme,
-  } = useVisitaLogViewModel();
+    actualizarFiltros
+  } = useVisitaNovedadLogViewModel();
 
   return (
     <>
@@ -25,13 +26,13 @@ export default function VisitaNovedadLogScreen() {
           obtenerColor("HEADER_BACKGROUND_COLOR_LIGHT", "HEADER_BACKGROUND_COLOR_DARK")
         }
       >
-        <InputFiltros />
+        <InputFiltros onFilterChange={actualizarFiltros} />
       </YStack>
       <FlatList
         data={arrVisitas}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => (
-          <NovedadLogItem visita={item}></NovedadLogItem>
+          <NovedadLogItem novedad={item}></NovedadLogItem>
         )}
         contentContainerStyle={{
           paddingBottom: 50, // Ajusta este valor según el alto de tu tab bar

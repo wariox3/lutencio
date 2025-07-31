@@ -1,20 +1,16 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { STORAGE_KEYS } from "@/src/core/constants";
 import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
-import storageService from "@/src/core/services/storage.service";
+import { selectCantidadNovedades, selectSincronizandoNovedades } from "@/src/modules/novedad/application/store/novedad.selector";
 import {
   getSincronizandoEntregas,
   selectEntregasConNovedad,
   selectEntregasSincronizadas,
 } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
-  actualizarMensajeError,
-  cambiarEstadoError,
   cambiarEstadoSeleccionado,
-  cambiarEstadoSincronizado,
-  limpiarEntregaSeleccionada,
+  limpiarEntregaSeleccionada
 } from "@/src/modules/visita/application/slice/entrega.slice";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
@@ -31,12 +27,10 @@ import {
   XCircle,
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
-import * as FileSystem from "expo-file-system";
 import * as Location from "expo-location";
-import * as MediaLibrary from "expo-media-library";
 import { useFocusEffect, useRouter } from "expo-router";
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
-import { Platform } from "react-native";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { Animated } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shallowEqual } from "react-redux";
 import {
@@ -51,7 +45,6 @@ import {
 } from "tamagui";
 import CardDesvincularOrdenEntrega from "./card-desvincular-orden-entrega";
 import CardInformativa from "./card-informativa";
-import { Animated } from "react-native";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -63,16 +56,17 @@ export const EntregaOpciones = () => {
   const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
-  const arrEntregasConNovedad = useAppSelector(selectEntregasConNovedad);
+  const cantidadNovedades = useAppSelector(selectCantidadNovedades);
   const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
   const sincronizandoEntregas = useAppSelector(getSincronizandoEntregas);
+  const sincronizandoLoader = useAppSelector(selectSincronizandoNovedades);
 
   // Add this inside the EntregaOpciones component
   const spinValue = useRef(new Animated.Value(0)).current;
 
   // Set up the animation when sincronizandoEntregas changes
   useEffect(() => {
-    if (sincronizandoEntregas) {
+    if (sincronizandoEntregas || sincronizandoLoader) {
       Animated.loop(
         Animated.timing(spinValue, {
           toValue: 1,
@@ -85,7 +79,7 @@ export const EntregaOpciones = () => {
       spinValue.stopAnimation();
       spinValue.setValue(0);
     }
-  }, [sincronizandoEntregas]);
+  }, [sincronizandoEntregas, sincronizandoLoader]);
 
   useFocusEffect(
     useCallback(() => {
@@ -114,7 +108,7 @@ export const EntregaOpciones = () => {
   return (
     <>
       <XStack justify={"flex-end"} items="center" gap="$2">
-        {sincronizandoEntregas && (
+        {sincronizandoEntregas || sincronizandoLoader && (
           <Animated.View style={{ transform: [{ rotate: spin }] }}>
             <Loader2 size={12} fontWeight={"bold"} />
           </Animated.View>
@@ -129,7 +123,7 @@ export const EntregaOpciones = () => {
           <XStack items="center" gap="$1">
             <FileWarning size={12} color="orange" />
             <Text fontSize="$2" fontWeight="600" color="orange">
-              {arrEntregasConNovedad.length}
+              {cantidadNovedades}
             </Text>
           </XStack>
         </XStack>

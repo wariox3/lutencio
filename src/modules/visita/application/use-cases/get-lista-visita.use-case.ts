@@ -15,8 +15,6 @@ export class GetListaVisitaUseCase {
       estadoEntregado,
       subdominio
     );
-
-    console.log("respuesta", respuesta);
     
     const entregasConEstados = this._agregarCamposVisita(respuesta);
     return entregasConEstados;

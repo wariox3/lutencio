@@ -1,5 +1,9 @@
 import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selectors/configuracion.selector";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import {
+  addNovedad,
+  finishedSavingProcessNovedades,
+} from "@/src/modules/novedad/application/store/novedad.slice";
 import { NovedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
 import useFecha from "@/src/shared/hooks/useFecha";
 import {
@@ -11,12 +15,9 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { obtenerEntregasSeleccionadas } from "../slice/entrega.selector";
-import {
-  actualizarNovedad,
-  cambiarEstadoNovedad,
-  cambiarEstadoSincronizado,
-  novedadesProcesadas,
-} from "../slice/entrega.slice";
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+import { quitarEntregaSeleccionada } from "../slice/entrega.slice";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -108,50 +109,30 @@ export default function useVisitaNovedadViewModel() {
 
   const guardarNovedadLocal = async (
     data: NovedadFormType,
-    visitasSeleccionadas: number[],
+    visitasSeleccionadas: number[]
   ) => {
     visitasSeleccionadas.forEach((id) => {
       dispatch(
-        actualizarNovedad({
-          entregaId: id,
-          camposActualizados: {
-            arrImagenes: [{ uri: state.arrImagenes[0].uri }],
-            novedad_tipo: data.novedad_tipo,
-            novedad_descripcion: data.descripcion,
-            fecha_entrega: obtenerFechaYHoraActualFormateada(),
-          },
+        addNovedad({
+          id: uuidv4(),
+          visita_id: id,
+          arrImagenes: [{ uri: state?.arrImagenes[0]?.uri || '' }],
+          novedad_tipo_id: Number(data.novedad_tipo),
+          descripcion: data.descripcion,
+          fecha: obtenerFechaYHoraActualFormateada(),
+          estado_sincronizado: false,
+          estado_sincronizada_error: false,
+          estado_sincronizada_error_mensaje: "",
         })
       );
 
-      dispatch(cambiarEstadoNovedad({ entregaId: id, nuevoEstado: true }));
-      dispatch(cambiarEstadoSincronizado({ visitaId: id, nuevoEstado: false }));
+      dispatch(quitarEntregaSeleccionada(id));
     });
-    
-    dispatch(novedadesProcesadas({ novedadesIds: visitasSeleccionadas }));
+
+    dispatch(
+      finishedSavingProcessNovedades({ novedadesIds: visitasSeleccionadas })
+    );
   };
-
-  // const entregarNovedadOnline = async (
-  //   data: NovedadFormType,
-  //   visitasSeleccionadas: number[],
-  //   cambiarEntregaEstadoNovedad: () => void
-  // ) => {
-  //   await Promise.all(
-  //     visitasSeleccionadas.map(async (visita: number) => {
-  //       dispatch(
-  //         visitaNovedadThunk({
-  //           visita,
-  //           descripcion: data.descripcion,
-  //           novedad_tipo: data.novedad_tipo,
-  //           imagenes: state.arrImagenes,
-  //           fecha_entrega: obtenerFechaYHoraActualFormateada(),
-  //         })
-  //       );
-  //     })
-  //   );
-
-  //   cambiarEntregaEstadoNovedad();
-  //   cambiarEntregaEstadoSinconizado();
-  // };
 
   const guardarNovedad = async (data: NovedadFormType) => {
     try {

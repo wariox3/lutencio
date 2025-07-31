@@ -8,16 +8,13 @@ const selectFiltros = (state: RootState) => state.entregas.filtros;
 export const obtenerVisitasLog = createSelector(
   [selectEntregas, selectFiltros],
   (entregas, filtros) => {
-    return entregas.entregas
-      .filter((entrega) => {
-        const coincideGuia = filtros.guia
-          ? entrega.guia === filtros.guia
-          : true;
-        const coincideNumero = filtros.numero
-          ? entrega.numero === filtros.numero
-          : true;
-        return coincideGuia || coincideNumero;
-      });
+    return entregas.entregas.filter((entrega) => {
+      const coincideGuia = filtros.guia ? entrega.guia === filtros.guia : true;
+      const coincideNumero = filtros.numero
+        ? entrega.numero === filtros.numero
+        : true;
+      return coincideGuia || coincideNumero;
+    });
   }
 );
 
@@ -33,8 +30,8 @@ export const obtenerNovedadesLog = createSelector(
         const coincideNumero = filtros.numero
           ? entrega.numero === filtros.numero
           : true;
-        console.log('filtro guia', filtros.guia);
-        console.log('filtro numero', filtros.numero);
+        console.log("filtro guia", filtros.guia);
+        console.log("filtro numero", filtros.numero);
         console.log("coincideGuia", coincideGuia);
         console.log("coincideNumero", coincideNumero);
         return coincideGuia || coincideNumero;
@@ -42,29 +39,31 @@ export const obtenerNovedadesLog = createSelector(
   }
 );
 
-export const obtenerEntregasFiltros = createSelector(
-  [selectEntregas, selectFiltros],
-  (entregas, filtros) => {
-    return entregas.entregas
-      .filter((entrega) => !entrega.estado_entregado)
-      .filter((entrega) => {
-        const coincideGuia = filtros.guia
-          ? entrega.guia === filtros.guia
-          : true;
-        const coincideNumero = filtros.numero
-          ? entrega.numero === filtros.numero
-          : true;
-        return coincideGuia || coincideNumero;
-      });
-  }
+export const obtenerNovedades = createSelector(
+  [selectEntregas],
+  (entregas) => 
+    entregas.entregas
+      ? entregas.entregas
+          .filter((entrega) => entrega.estado_novedad)
+          .sort((a, b) => a.orden - b.orden)
+      : []
 );
+export const obtenerEntregas = createSelector(
+  [selectEntregas],
+  (entregas) => (entregas.entregas ? entregas.entregas
+    .filter((entrega) => entrega)
+    .sort((a, b) => a.orden - b.orden) : [])
+);
+
 
 export const obtenerEntregasPendientesOrdenadas = createSelector(
   [selectEntregas],
   (entregas) =>
     entregas.entregas
-      .filter((entrega) => !entrega.estado_entregado)
-      .sort((a, b) => a.orden - b.orden) || []
+      ? entregas.entregas
+          .filter((entrega) => !entrega.estado_entregado)
+          .sort((a, b) => a.orden - b.orden)
+      : []
 );
 
 export const obtenerEntregasSeleccionadas = (state: RootState) =>
@@ -128,11 +127,10 @@ export const obtenerEntregasPendientes = createSelector(
   (entregas) => {
     return entregas.entregas.filter(
       (entrega) =>
-      (entrega.estado_entregado === true &&
+        entrega.estado_entregado === true &&
         entrega.estado_sincronizado === false &&
         entrega.entregada_sincronizada_error === false
-      )
-    )
+    );
   }
 );
 
@@ -141,10 +139,10 @@ export const obtenerNovedadesPendientes = createSelector(
   (entregas) => {
     return entregas.entregas.filter(
       (entrega) =>
-      (entrega.estado_novedad === true &&
+        entrega.estado_novedad === true &&
         entrega.estado_sincronizado === false &&
-        entrega.novedad_sincronizada_error === false)
-    )
+        entrega.novedad_sincronizada_error === false
+    );
   }
 );
 
