@@ -1,12 +1,8 @@
 
-import * as TaskManager from "expo-task-manager";
-import * as Location from "expo-location";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { consultarApi } from "../api";
 import networkService from "@/src/core/services/network.service";
-import APIS from "@/src/core/constants/endpoint.constant";
-import { VisitaApiRepository } from "@/src/modules/visita/infraestructure/api/visita-api.service";
 import { SetUbicacionVisitaUseCase } from "@/src/modules/visita/application/use-cases/set-ubicacion-visita.use-case";
+import * as Location from "expo-location";
+import * as TaskManager from "expo-task-manager";
 
 export const TAREA_SEGUIMIENTO_UBICACION = "tarea-seguimiento-ubicacion";
 

@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
-import APIS from "@/src/core/constants/endpoint.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import storageService from "@/src/core/services/storage.service";
 import {
@@ -19,7 +18,6 @@ import {
 } from "@/src/modules/visita/application/slice/entrega.slice";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
-import { consultarApi } from "@/utils/api";
 import {
   FileCheck,
   FileQuestion,
