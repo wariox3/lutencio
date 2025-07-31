@@ -10,6 +10,7 @@ import { useTheme } from "tamagui";
 import {
   comprobarFiltrosActivos,
   obtenerEntregasFiltros,
+  obtenerEntregasPendientesOrdenadas,
   obtenerEntregasSeleccionadas
 } from "../slice/entrega.selector";
 import {
@@ -21,21 +22,58 @@ import {
 } from "../slice/entrega.slice";
 import { usePermisos } from "@/src/shared/hooks/usePermisos";
 import { AppState, AppStateStatus } from "react-native";
+import { Entrega } from "../../domain/interfaces/vista.interface";
 
 export default function useVisitaListaViewModel() {
-  const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const arrEntregas = useAppSelector(obtenerEntregasFiltros);
+  const todasLasEntregas = useAppSelector(obtenerEntregasPendientesOrdenadas);
   const usuarioId = useAppSelector(obtenerUsuarioId);
   const filtrosAplicados = useAppSelector(comprobarFiltrosActivos)
   const entregasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
   storageService.setItem(STORAGE_KEYS.usuarioId, `${usuarioId}`);
   const [refreshing, setRefreshing] = useState(false);
-  const [tienePermisos, setTienePermisos] = useState<boolean | null>(null);
   const { validarPermisos } = usePermisos();
   const { obtenerColor } = useTemaVisual()
   const theme = useTheme();
-  const appState = useRef(AppState.currentState);
+
+  // Estado local para los filtros
+  const [filtros, setFiltros] = useState<{ guia: number; numero: number }>({
+    guia: 0,
+    numero: 0,
+  });
+  
+  // Estado derivado para las entregas filtradas
+  const [entregasFiltradas, setEntregasFiltradas] = useState<Entrega[]>(todasLasEntregas);
+
+  // Actualizar las entregas filtradas cuando cambien los filtros o las entregas
+  useEffect(() => {
+    if (filtros.guia === 0 && filtros.numero === 0) {
+      // Si no hay filtros activos, mostrar todas las entregas
+      setEntregasFiltradas(todasLasEntregas);
+    } else {
+      // Aplicar filtros con coincidencia parcial
+      const valorBusqueda = filtros.guia || filtros.numero;
+      const valorBusquedaStr = valorBusqueda.toString();
+      // Aplicar filtros
+      const filtradas = todasLasEntregas.filter((entrega) => {
+        // Convertir los valores a string para buscar coincidencias parciales
+        const guiaStr = entrega.guia?.toString() || '';
+        const numeroStr = entrega.numero?.toString() || '';
+        
+        // Buscar si el valor de búsqueda está contenido en alguno de los campos
+        const coincideGuia = guiaStr.includes(valorBusquedaStr);
+        const coincideNumero = numeroStr.includes(valorBusquedaStr);
+        
+        return coincideGuia || coincideNumero;
+      });
+      setEntregasFiltradas(filtradas);
+    }
+  }, [filtros, todasLasEntregas]);
+
+  const actualizarFiltros = (nuevosFiltros: { guia: number; numero: number }) => {
+    setFiltros(nuevosFiltros);
+  };
+
 
   // Escucha cuando la app vuelve a primer plano (active)
   // useEffect(() => {
@@ -76,18 +114,13 @@ export default function useVisitaListaViewModel() {
     }
   };
 
-  const recargarOrdenEntrega = async () => {
-    return arrEntregas
-  };
-
   return {
     gestionEntrega,
-    arrEntregas,
-    tienePermisos,
+    entregasFiltradas,
     entregasSeleccionadas,
+    actualizarFiltros,
     refreshing,
     setRefreshing,
-    recargarOrdenEntrega,
     theme,
     filtrosAplicados,
     obtenerColor,

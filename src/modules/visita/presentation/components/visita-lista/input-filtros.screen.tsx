@@ -1,24 +1,28 @@
-import { useAppDispatch } from "@/src/application/store/hooks";
 import COLORES from "@/src/core/constants/colores.constant";
 import CamaraLectorCodigo from "@/src/shared/components/comun/camara-lector-codigos";
 import { Search, XCircle } from "@tamagui/lucide-icons";
 import React, { useState } from "react";
 import { Pressable } from "react-native";
 import { Card, Input, XStack } from "tamagui";
-import { actualizarFiltros } from "../../../application/slice/entrega.slice";
 
-const InputFiltros = () => {
-  const dispatch = useAppDispatch();
+interface InputFiltrosProps {
+  onFilterChange: (filters: { guia: number; numero: number }) => void;
+}
+
+const InputFiltros: React.FC<InputFiltrosProps> = ({ onFilterChange }) => {
   const [valorInput, setValorInput] = useState("");
 
   const filtrarVisitas = (valor: string) => {
-    setValorInput(valor); // Actualiza el estado local
-    dispatch(
-      actualizarFiltros({
-        guia: Number(valor) || 0,
-        numero: Number(valor) || 0,
-      })
-    );
+    setValorInput(valor);
+    
+    // Convertir el valor a número o usar 0 si no es un número válido
+    const numeroValor = Number(valor) || 0;
+    
+    // Llamar al callback con los nuevos valores de filtro
+    onFilterChange({
+      guia: numeroValor,
+      numero: numeroValor,
+    });
   };
 
   return (
@@ -42,21 +46,22 @@ const InputFiltros = () => {
           borderColor={"transparent"}
           focusStyle={{ borderColor: "transparent" }}
           onChangeText={(valor) => filtrarVisitas(valor)}
-          value={valorInput} // Asigna el valor del estado al input
+          value={valorInput}
         ></Input>
         </>
 
         {valorInput === "" ? (
           <CamaraLectorCodigo
             obtenerData={(data: string) => {
-              setValorInput(data); // Actualiza el estado cuando se escanea
+              setValorInput(data);
               filtrarVisitas(data);
             }}
           ></CamaraLectorCodigo>
         ) : (
           <Pressable
             onPress={() => {
-              setValorInput(""), filtrarVisitas("");
+              setValorInput("");
+              filtrarVisitas("");
             }}
           >
             <XCircle size={"$1.5"} color={COLORES.ROJO_FUERTE} />

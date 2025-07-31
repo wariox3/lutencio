@@ -54,10 +54,6 @@ export const obtenerEntregasFiltros = createSelector(
         const coincideNumero = filtros.numero
           ? entrega.numero === filtros.numero
           : true;
-        console.log('filtro guia', filtros.guia);
-        console.log('filtro numero', filtros.numero);
-        console.log("coincideGuia", coincideGuia);
-        console.log("coincideNumero", coincideNumero);
         return coincideGuia || coincideNumero;
       });
   }

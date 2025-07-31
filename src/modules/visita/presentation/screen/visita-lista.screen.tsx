@@ -1,25 +1,22 @@
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import SinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
+import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
 import { ArrowDownToLine, FileWarning } from "@tamagui/lucide-icons";
 import { router } from "expo-router";
-import React, { useEffect } from "react";
-import { Alert, FlatList, Platform, RefreshControl } from "react-native";
-import { View, XStack, YStack } from "tamagui";
+import { FlatList, Platform, RefreshControl } from "react-native";
+import { XStack, YStack } from "tamagui";
 import useVisitaListaViewModel from "../../application/view-model/use-visita-lista.view-model";
 import MensajeFiltroSinResultados from "../components/visita-filtros/mensaje-filtro-sin-resultados";
 import InputFiltros from "../components/visita-lista/input-filtros.screen";
 import ItemLista from "../components/visita-lista/item-lista";
-import SinPermisos from "@/src/shared/components/comun/sin-permisos";
-import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
 
 export default function VisitaListaScreen() {
   const {
-    arrEntregas,
+    entregasFiltradas,
     gestionEntrega,
-    tienePermisos,
     entregasSeleccionadas,
+    actualizarFiltros,
     refreshing,
-    recargarOrdenEntrega,
     theme,
     filtrosAplicados,
     obtenerColor,
@@ -60,10 +57,10 @@ export default function VisitaListaScreen() {
             cantidad={entregasSeleccionadas.length}
           />
         </XStack>
-        <InputFiltros />
+        <InputFiltros onFilterChange={actualizarFiltros} />
       </YStack>
       <FlatList
-        data={arrEntregas}
+        data={entregasFiltradas}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => (
           <ItemLista visita={item} onPress={gestionEntrega}></ItemLista>
@@ -87,7 +84,6 @@ export default function VisitaListaScreen() {
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={recargarOrdenEntrega}
             colors={[theme.blue10.val]} // Accede al valor HEX/RGB del color
             progressBackgroundColor={theme.blue5.val} // Opcional
             tintColor={theme.blue10.val} // Opcional (iOS)
