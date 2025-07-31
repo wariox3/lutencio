@@ -4,8 +4,8 @@ import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface"
 import { RuteoApiRepository } from "@/src/core/api/repositories/ruteo-api.service";
 import storageService from "@/src/core/services/storage.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
-import APIS from "@/src/core/api/domain/constants/endpoint.constant";
 import { RespuestaApi } from "@/src/core/api/domain/interfaces/api.interface";
+import APIS from "@/src/core/api/domain/constants/endpoint.constant";
 
 export class VisitaApiRepository implements VisitaRepository {
   constructor(
@@ -23,6 +23,8 @@ export class VisitaApiRepository implements VisitaRepository {
       {
         despacho_id: despachoId,
         estado_entregado: estadoEntregado ? 'True' : 'False',
+        lista: 'True',
+        serializador: 'lista'
       },
       {
         "X-Schema-Name": subdominio,

@@ -25,6 +25,8 @@ const APIS = {
     novedadTipo: `${URL_SUBDOMINIO}/ruteo/novedad_tipo/`,
     novedad: `${URL_SUBDOMINIO}/ruteo/novedad/`,
     visita: `${URL_SUBDOMINIO}/ruteo/visita/`,
+    novedadNuevo: `${URL_SUBDOMINIO}/ruteo/novedad/nuevo/`,
+    novedadSolucionar: `${URL_SUBDOMINIO}/ruteo/novedad/solucionar/`,
   },
 };
 

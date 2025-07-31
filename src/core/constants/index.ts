@@ -1,6 +1,5 @@
 export * from './alertas.const';
 export * from './colores.constant';
-export * from './endpoint.constant';
 export * from './mensajes.constant';
 export * from './menuItems.constant';
 export * from './parentesco.constant';

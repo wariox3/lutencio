@@ -1,14 +1,29 @@
 import apiService from "@/src/core/api/repositories";
-import APIS from "@/src/core/constants/endpoint.constant";
 import { STORAGE_KEYS } from "../../constants";
 import storageService from "../../services/storage.service";
 import { RuteoRepository } from "../domain/interfaces/ruteo.interface";
 import { NovedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
 import { RespuestaApi } from "../domain/interfaces/api.interface";
 import { GeneralApiRepository } from "./general-api.service";
+import APIS from "../domain/constants/endpoint.constant";
 
 export class RuteoApiRepository implements RuteoRepository {
   constructor(private generalApiService = new GeneralApiRepository()) {}
+
+  async getNovedades() {
+    const subdominio = (await storageService.getItem(
+      STORAGE_KEYS.subdominio
+    )) as string;
+
+    return this.generalApiService.consultaApi<RespuestaApi<any>>(
+      APIS.ruteo.novedad,
+      {},
+      {
+        "X-Schema-Name": subdominio,
+      }
+    );
+  }
+
 
   async getNovedadTipoLista() {
     const subdominio = (await storageService.getItem(
