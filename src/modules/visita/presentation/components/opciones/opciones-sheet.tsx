@@ -2,7 +2,10 @@ import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
-import { selectCantidadNovedades, selectSincronizandoNovedades } from "@/src/modules/novedad/application/store/novedad.selector";
+import {
+  selectCantidadNovedades,
+  selectSincronizandoNovedades,
+} from "@/src/modules/novedad/application/store/novedad.selector";
 import {
   getSincronizandoEntregas,
   selectEntregasConNovedad,
@@ -10,7 +13,7 @@ import {
 } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
-  limpiarEntregaSeleccionada
+  limpiarEntregaSeleccionada,
 } from "@/src/modules/visita/application/slice/entrega.slice";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
@@ -30,7 +33,7 @@ import { Sheet } from "@tamagui/sheet";
 import * as Location from "expo-location";
 import { useFocusEffect, useRouter } from "expo-router";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { Animated } from "react-native";
+import { Animated, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shallowEqual } from "react-redux";
 import {
@@ -40,6 +43,7 @@ import {
   ListItem,
   Spinner,
   Text,
+  View,
   XStack,
   YGroup,
 } from "tamagui";
@@ -52,7 +56,8 @@ export const EntregaOpciones = () => {
   const [position, setPosition] = useState(0);
   const [open, setOpen] = useState(false);
   const [modal] = useState(true);
-  const [permiso, setPermiso] = useState("");
+  const [permiso, setPermiso] = useState<string | null>(null);
+  const [cargando, setCargando] = useState(true);
   const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
@@ -81,22 +86,40 @@ export const EntregaOpciones = () => {
     }
   }, [sincronizandoEntregas, sincronizandoLoader]);
 
+  // Iniciar la verificación de permisos al montar el componente
+  useEffect(() => {
+    validacionPermisoLocalizacion();
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
-      validacionPermisoLocalizacion();
-    }, [])
+      // Solo verificar permisos si aún no se han verificado o si se necesita actualizar
+      if (permiso === null) {
+        validacionPermisoLocalizacion();
+      }
+    }, [permiso])
   );
 
   const validacionPermisoLocalizacion = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    setPermiso(status);
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      setPermiso(status);
+    } finally {
+      setCargando(false);
+    }
   };
 
-  if (permiso !== "granted") {
-    return null;
+  // Mostrar un indicador de carga mientras se verifica el permiso
+  if (cargando) {
+    return (
+      <XStack justify="flex-end" items="center" gap="$2">
+        <Spinner size="small" />
+      </XStack>
+    );
   }
 
-  if (entregas.length === 0) {
+  // Verificar permisos y entregas después de cargar
+  if (permiso !== "granted" || entregas.length === 0) {
     return null;
   }
 
@@ -108,11 +131,12 @@ export const EntregaOpciones = () => {
   return (
     <>
       <XStack justify={"flex-end"} items="center" gap="$2">
-        {sincronizandoEntregas || sincronizandoLoader && (
-          <Animated.View style={{ transform: [{ rotate: spin }] }}>
-            <Loader2 size={12} fontWeight={"bold"} />
-          </Animated.View>
-        )}
+        {sincronizandoEntregas ||
+          (sincronizandoLoader && (
+            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+              <Loader2 size={12} fontWeight={"bold"} />
+            </Animated.View>
+          ))}
         <XStack gap="$2">
           <XStack items="center" gap="$1">
             <Package size={12} color="$blue10" />
@@ -205,7 +229,7 @@ const SheetContents = memo(({ setOpen }: any) => {
     shallowEqual
   );
 
-  const arrEntregasConNovedad = useAppSelector(selectEntregasConNovedad);
+  const cantidadNovedades = useAppSelector(selectCantidadNovedades);
   const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
 
   const { eliminarArchivo } = useEliminarEnGaleria();
@@ -245,130 +269,7 @@ const SheetContents = memo(({ setOpen }: any) => {
     });
   };
 
-  const gestionGuias = async () => {
-    // try {
-    //   setLoadSincronizando(true);
-    //   if (Platform.OS === "android") {
-    //     const { status } = await MediaLibrary.requestPermissionsAsync();
-    //     if (status !== "granted") {
-    //       alert("Se necesitan permisos para guardar en la galería");
-    //       return;
-    //     }
-    //   }
-    // const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
-    //   if (!subdominio) {
-    //     console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
-    //     return;
-    //   }
-    //   for (const entrega of arrEntregasPendientes) {
-    //     try {
-    //       let imagenes: { base64: string }[] = [];
-    //       const formDataToSend = new FormData();
-    //       formDataToSend.append("id", `${entrega.id}`);
-    //       formDataToSend.append("fecha_entrega", entrega.fecha_entrega);
-    //       if (entrega.arrImagenes) {
-    //         entrega.arrImagenes.forEach((archivo, index) => {
-    //           // Crear un objeto File-like compatible con FormData
-    //           const file = {
-    //             uri: archivo.uri,
-    //             name: `image-${index}.jpg`, // Usar nombre del archivo o generar uno
-    //             type: "image/jpeg", // Tipo MIME por defecto
-    //           };
-    //           // La forma correcta de adjuntar archivos en React Native
-    //           formDataToSend.append(
-    //             `imagenes`,
-    //             file as any,
-    //             `image-${index}.jpg`
-    //           ); // Usamos 'as any' para evitar el error de tipo
-    //         });
-    //       } else {
-    //         formDataToSend.append(`imagenes`, [].toString()); // Usamos 'as any' para evitar el error de tipo
-    //       }
-    //       // 3️ Enviar datos al servidor (si falla, NO se borran imágenes ni se marca como sincronizado)
-    //       await consultarApi<any>(APIS.ruteo.visitaEntrega, formDataToSend, {
-    //         requiereToken: true,
-    //         subdominio,
-    //       });
-    //       dispatch(cambiarEstadoSincronizado(entrega.id));
-    //       setLoadSincronizando(false);
-    //     } catch (error: any) {
-    //       setOpen(true);
-    //       setLoadSincronizando(false);
-    //       dispatch(cambiarEstadoError(entrega.id));
-    //       dispatch(
-    //         actualizarMensajeError({
-    //           entregaId: entrega.id,
-    //           mensaje: error.response?.data?.mensaje,
-    //         })
-    //       );
-    //       console.error(`❌ Error en la entrega ${entrega.id}:`, error);
-    //       continue;
-    //     }
-    //   }
-    // } catch (error) {
-    //   setLoadSincronizando(false);
-    //   console.error("Error general en gestionGuias:", error);
-    // }
-  };
-
-  const gestionGuiasNovedades = async () => {
-    // setLoadSincronizandoNovedad(true);
-    // const { status } = await MediaLibrary.requestPermissionsAsync();
-    // if (status !== "granted") {
-    //   alert("Se necesitan permisos para guardar en la galería");
-    //   return;
-    // }
-    // const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
-    // if (!subdominio) {
-    //   console.warn("⚠️ No se encontró el subdominio en AsyncStorage");
-    //   return;
-    // }
-    // for (const novedad of arrEntregasConNovedad) {
-    //   try {
-    //     let imagenes: { base64: string }[] = [];
-    //     // 1️ Procesar imágenes (si existen)
-    //     if (novedad.arrImagenes?.length > 0) {
-    //       for (const imagen of novedad.arrImagenes) {
-    //         const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
-    //         if (!fileInfo.exists) {
-    //           console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
-    //           continue;
-    //         }
-    //         const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
-    //           encoding: FileSystem.EncodingType.Base64,
-    //         });
-    //         imagenes.push({ base64: `data:image/jpeg;base64,${base64}` });
-    //       }
-    //     }
-    //     const respuestaNovedad = await consultarApi<any>(
-    //       APIS.ruteo.novedadNuevo,
-    //       {
-    //         visita_id: novedad.id,
-    //         descripcion: novedad.novedad_descripcion,
-    //         novedad_tipo_id: novedad.novedad_tipo,
-    //         imagenes,
-    //       },
-    //       {
-    //         requiereToken: true,
-    //         subdominio,
-    //       }
-    //     );
-    //     // 4️ Solo si la API responde OK, borrar archivos y marcar como sincronizado
-    //     if (novedad.arrImagenes?.length > 0) {
-    //       for (const img of novedad.arrImagenes) {
-    //         const fileInfo = await FileSystem.getInfoAsync(img.uri);
-    //         if (fileInfo.exists) await eliminarArchivo(img.uri);
-    //       }
-    //     }
-    //     setLoadSincronizando(false);
-    //     dispatch(cambiarEstadoSincronizado(novedad.id));
-    //     setOpen(false);
-    //   } catch (error) {
-    //     console.error("❌ Error procesando novedad:", error);
-    //   }
-    // }
-    // setLoadSincronizandoNovedad(false);
-  };
+  const gestionGuias = async () => {};
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -382,136 +283,141 @@ const SheetContents = memo(({ setOpen }: any) => {
           theme={"red"}
         />
       </XStack>
-      <YGroup width={"auto"} flex={1} size="$4" gap="$4">
-        <H6>Orden de entrega</H6>
-        <YGroup.Item>
-          <XStack gap="$2">
-            <CardInformativa
-              backgroundColor={COLORES.AZUL_SUAVE}
-              titulo="Cargadas"
-              cantidad={arrEntregas.length}
-              icono={<Package size={28} opacity={0.7} />}
-            ></CardInformativa>
-            <CardInformativa
-              backgroundColor={COLORES.NARANJA_SUAVE}
-              titulo="Novedades"
-              cantidad={arrEntregasConNovedad.length}
-              icono={<FileWarning size={28} opacity={0.7} />}
-            ></CardInformativa>
-            <CardInformativa
-              backgroundColor={COLORES.VERDE_SUAVE}
-              titulo="Entregas"
-              cantidad={arrEntregasSinconizado.length}
-              icono={<FileCheck size={28} opacity={0.7} />}
-            ></CardInformativa>
-          </XStack>
+      <YGroup width={"auto"} flex={1} size="$4" gap="$4" overflow="hidden">
+        <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+          <H6>Orden de entrega</H6>
+          <YGroup.Item>
+            <XStack gap="$2">
+              <CardInformativa
+                backgroundColor={COLORES.AZUL_SUAVE}
+                titulo="Cargadas"
+                cantidad={arrEntregas.length}
+                icono={<Package size={28} opacity={0.7} />}
+              ></CardInformativa>
+              <CardInformativa
+                backgroundColor={COLORES.NARANJA_SUAVE}
+                titulo="Novedades"
+                cantidad={cantidadNovedades}
+                icono={<FileWarning size={28} opacity={0.7} />}
+              ></CardInformativa>
+              <CardInformativa
+                backgroundColor={COLORES.VERDE_SUAVE}
+                titulo="Entregas"
+                cantidad={arrEntregasSinconizado.length}
+                icono={<FileCheck size={28} opacity={0.7} />}
+              ></CardInformativa>
+            </XStack>
 
-          {entregas.length > 0 ? (
-            <CardDesvincularOrdenEntrega close={() => setOpen(false)} />
-          ) : null}
+            {entregas.length > 0 ? (
+              <View my="$2">
+                <CardDesvincularOrdenEntrega close={() => setOpen(false)} />
+              </View>
+            ) : null}
 
-          {entregasSeleccionadas.length > 0 ? (
-            <>
-              <H6 mb="$2">Seleccionadas</H6>
-              <ListItem
-                hoverTheme
-                icon={<FileX size="$2" />}
-                title="Retirar seleccionados"
-                subTitle="Retirar todos los elementos seleccionados"
-                onPress={() => retirarSeleccionadas()}
-              />
-            </>
-          ) : null}
-
-          {arrEntregasPendientes.length > 0 ||
-          arrEntregasConErrores.length > 0 ||
-          arrEntregasConNovedad.length > 0 ? (
-            <>
-              <H6 mb="$2">Sincronizar</H6>
+            {entregasSeleccionadas.length > 0 ? (
               <>
-                {arrEntregasPendientes.length > 0 ? (
-                  <>
+                <H6 mb="$2">Seleccionadas</H6>
+                <ListItem
+                  hoverTheme
+                  icon={<FileX size="$2" />}
+                  title="Retirar seleccionados"
+                  subTitle="Retirar todos los elementos seleccionados"
+                  onPress={() => retirarSeleccionadas()}
+                />
+              </>
+            ) : null}
+
+            {arrEntregasPendientes.length > 0 ||
+            arrEntregasConErrores.length > 0 ||
+            cantidadNovedades > 0 ? (
+              <>
+                <H6 mb="$2">Sincronizar</H6>
+                <>
+                  {arrEntregasPendientes.length > 0 ? (
+                    <>
+                      <ListItem
+                        hoverTheme
+                        icon={<FileUp size="$2" />}
+                        iconAfter={
+                          <>
+                            {loadSincronizando ? (
+                              <Spinner size="small" color="$green10" />
+                            ) : null}
+                          </>
+                        }
+                        title="Sincronizar"
+                        subTitle="Entregas pendientes por entregar"
+                        onPress={() => confirmarSincornizarEntregas()}
+                      />
+
+                      <ListItem
+                        hoverTheme
+                        icon={<FileQuestion size="$2" />}
+                        title="Pendientes"
+                        subTitle={
+                          "Cantidad pendientes por sincronizar: " +
+                          arrEntregasPendientes.length
+                        }
+                        onPress={() => navegarEntregaPendietes()}
+                      />
+                    </>
+                  ) : null}
+                </>
+                <>
+                  {arrEntregasConErrores.length > 0 ? (
                     <ListItem
                       hoverTheme
-                      icon={<FileUp size="$2" />}
+                      icon={<FileQuestion size="$2" />}
+                      title="Errores"
+                      subTitle={
+                        "Cantidad con errores: " + arrEntregasConErrores.length
+                      }
+                      onPress={() => navegarEntregaPendietes()}
+                    />
+                  ) : null}
+                </>
+                <>
+                  {cantidadNovedades > 0 ? (
+                    <ListItem
+                      hoverTheme
+                      icon={<FileWarning size="$2" />}
                       iconAfter={
                         <>
-                          {loadSincronizando ? (
+                          {loadSincronizandoNovedad ? (
                             <Spinner size="small" color="$green10" />
                           ) : null}
                         </>
                       }
-                      title="Sincronizar"
-                      subTitle="Entregas pendientes por entregar"
-                      onPress={() => confirmarSincornizarEntregas()}
-                    />
-
-                    <ListItem
-                      hoverTheme
-                      icon={<FileQuestion size="$2" />}
-                      title="Pendientes"
-                      subTitle={
-                        "Cantidad pendientes por sincronizar: " +
-                        arrEntregasPendientes.length
-                      }
+                      title="Novedades"
+                      subTitle={"Cantidad con novedades: " + cantidadNovedades}
                       onPress={() => navegarEntregaPendietes()}
                     />
-                  </>
-                ) : null}
+                  ) : null}
+                </>
               </>
-              <>
-                {arrEntregasConErrores.length > 0 ? (
-                  <ListItem
-                    hoverTheme
-                    icon={<FileQuestion size="$2" />}
-                    title="Errores"
-                    subTitle={
-                      "Cantidad con errores: " + arrEntregasConErrores.length
-                    }
-                    onPress={() => navegarEntregaPendietes()}
-                  />
-                ) : null}
-              </>
-              <>
-                {arrEntregasConNovedad.length > 0 ? (
-                  <ListItem
-                    hoverTheme
-                    icon={<FileWarning size="$2" />}
-                    iconAfter={
-                      <>
-                        {loadSincronizandoNovedad ? (
-                          <Spinner size="small" color="$green10" />
-                        ) : null}
-                      </>
-                    }
-                    title="Novedades"
-                    subTitle={
-                      "Cantidad con novedades: " + arrEntregasConNovedad.length
-                    }
-                    onPress={() => navegarEntregaPendietes()}
-                  />
-                ) : null}
-              </>
-            </>
-          ) : null}
+            ) : null}
 
-          <H6 mb="$2">Log</H6>
-          <ListItem
-            hoverTheme
-            icon={<Logs size="$2" />}
-            title="Log visitas"
-            subTitle="Registro de acciones realizadas sobre las visitas"
-            onPress={() => navegarLog()}
-          />
-
-          <ListItem
-            hoverTheme
-            icon={<Logs size="$2" />}
-            title="Log novedades"
-            subTitle="Registro de acciones realizadas sobre las novedades"
-            onPress={() => navegarLogNovedades()}
-          />
-        </YGroup.Item>
+            <H6 mb="$2">Log</H6>
+            <View my="$2">
+              <ListItem
+                hoverTheme
+                icon={<Logs size="$2" />}
+                title="Log visitas"
+                subTitle="Registro de acciones realizadas sobre las visitas"
+                onPress={() => navegarLog()}
+              />
+            </View>
+            <View my="$2">
+              <ListItem
+                hoverTheme
+                icon={<Logs size="$2" />}
+                title="Log novedades"
+                subTitle="Registro de acciones realizadas sobre las novedades"
+                onPress={() => navegarLogNovedades()}
+              />
+            </View>
+          </YGroup.Item>
+        </ScrollView>
       </YGroup>
     </SafeAreaView>
   );

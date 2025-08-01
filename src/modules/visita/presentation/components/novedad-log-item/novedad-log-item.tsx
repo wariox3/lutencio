@@ -9,7 +9,7 @@ const NovedadLogItem: React.FC<ItemListaProps> = ({ novedad }) => {
     <Card p="$3" mx="$2" mt={"$2"} borderStyle={"dashed"} bordered>
       <YStack gap={"$1"}>
         <XStack justify={"space-between"}>
-          <Text>ID: {novedad.visita_id}</Text>
+          <Text>Visita ID: {novedad.visita_id}</Text>
         </XStack>
         <XStack justify={"space-between"}>
           <YStack items={"center"} gap={"$1.5"} flex={1}>

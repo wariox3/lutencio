@@ -61,6 +61,13 @@ export default function VisitasLayout() {
         }}
       />
       <Stack.Screen
+        name="log-novedades"
+        options={{
+          title: 'Log Novedades',
+          headerShadowVisible: false,
+        }}
+      />
+      <Stack.Screen
         name="[id]"
         options={{
           title: tituloScreen.visita.visita,

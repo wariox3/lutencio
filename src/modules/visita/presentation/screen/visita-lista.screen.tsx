@@ -74,7 +74,7 @@ export default function VisitaListaScreen() {
         }}
         ListEmptyComponent={
           <>
-            {filtrosAplicados ? (
+            {filtrosAplicados() ? (
               <MensajeFiltroSinResultados />
             ) : (
               <SinElementos />

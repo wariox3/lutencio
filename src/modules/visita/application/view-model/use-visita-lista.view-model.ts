@@ -28,7 +28,6 @@ export default function useVisitaListaViewModel() {
   const dispatch = useAppDispatch();
   const todasLasEntregas = useAppSelector(obtenerEntregasPendientesOrdenadas);
   const usuarioId = useAppSelector(obtenerUsuarioId);
-  const filtrosAplicados = useAppSelector(comprobarFiltrosActivos)
   const entregasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
   storageService.setItem(STORAGE_KEYS.usuarioId, `${usuarioId}`);
   const [refreshing, setRefreshing] = useState(false);
@@ -74,6 +73,9 @@ export default function useVisitaListaViewModel() {
     setFiltros(nuevosFiltros);
   };
 
+  const filtrosAplicados = () => {
+    return filtros.guia > 0 || filtros.numero > 0;
+  };
 
   // Escucha cuando la app vuelve a primer plano (active)
   // useEffect(() => {

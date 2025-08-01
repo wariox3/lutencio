@@ -11,6 +11,7 @@ import { ApiErrorResponse } from "@/src/core/api/domain/interfaces/api.interface
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { alertas } from "@/src/core/constants";
 import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
+import { cleanNovedades } from "@/src/modules/novedad/application/store/novedad.slice";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
@@ -47,7 +48,10 @@ export default function useVisitaCargarViewModel() {
         ).unwrap()
         
         if (respuesta) {
-          router.navigate(rutasApp.visitas);
+          dispatch(
+           cleanNovedades() 
+          )
+          router.replace(rutasApp.visitas);
         }
       } catch (error: any) {
         const errorParseado = error as ApiErrorResponse;

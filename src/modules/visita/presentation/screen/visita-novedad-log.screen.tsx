@@ -1,6 +1,6 @@
 import SinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
-import { FlatList, Platform, RefreshControl } from "react-native";
-import { YStack } from "tamagui";
+import { FlatList, Platform, RefreshControl, Text } from "react-native";
+import { View, YStack } from "tamagui";
 import useVisitaNovedadLogViewModel from "../../application/view-model/use-vista-novedad-log.view-model";
 import NovedadLogItem from "../components/novedad-log-item/novedad-log-item";
 import MensajeFiltroSinResultados from "../components/visita-filtros/mensaje-filtro-sin-resultados";
@@ -46,7 +46,9 @@ export default function VisitaNovedadLogScreen() {
             {filtrosAplicados ? (
               <MensajeFiltroSinResultados />
             ) : (
-              <SinElementos />
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <Text>No hay novedades</Text>
+              </View>
             )}
           </>
         }

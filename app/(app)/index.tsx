@@ -6,10 +6,7 @@ import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import { Redirect } from "expo-router";
 import { useEffect } from "react";
-import {
-  PermissionsAndroid,
-  Platform
-} from "react-native";
+import { PermissionsAndroid, Platform } from "react-native";
 
 export default function MainDreawerIndex() {
   const [permission, requestCamaraPermission] = useCameraPermissions();
@@ -19,10 +16,11 @@ export default function MainDreawerIndex() {
   useEffect(() => {
     solicitarPermiso();
     networkMonitor.startMonitoring();
-  }, []);
 
-  useSincronizacionNovedades();
-  // useSincronizacionEntregas();
+    return () => {
+      networkMonitor.stopMonitoring();
+    };
+  }, []);
 
   const solicitarPermiso = async () => {
     //permiso camara

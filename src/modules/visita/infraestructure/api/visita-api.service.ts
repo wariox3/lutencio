@@ -22,6 +22,7 @@ export class VisitaApiRepository implements VisitaRepository {
       {
         despacho_id: despachoId,
         estado_entregado: estadoEntregado ? 'True' : 'False',
+        estado_novedad: 'False',
         lista: true,
         serializador: 'lista'
       },

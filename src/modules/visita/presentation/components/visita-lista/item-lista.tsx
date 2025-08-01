@@ -111,7 +111,6 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
           {/* Cobro */}
           {visita.cobro > 0 && (
             <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
-            <Text>Cobro: </Text>
             <View
               bg={COLORES.ROJO_SUAVE}
               borderRadius="$2"
@@ -119,7 +118,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
             >
               <XStack items="center" gap="$1">
                 <DollarSign size="$1" color={COLORES.ROJO_FUERTE} />
-                <Text color={COLORES.ROJO_FUERTE} fontWeight="500">
+                <Text color={COLORES.ROJO_FUERTE} fontWeight="bold">
                   {visita.cobro.toLocaleString()}
                 </Text>
               </XStack>

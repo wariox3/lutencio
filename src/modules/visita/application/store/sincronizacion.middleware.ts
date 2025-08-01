@@ -1,6 +1,7 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { sincronizacionService } from "../services/sincronizacion.service";
 import { networkMonitor } from "@/src/core/services/network-monitor.service";
+import { Alert } from "react-native";
 
 export const sincronizacionMiddleware: Middleware =
   (store) => (next) => (action) => {
@@ -23,7 +24,6 @@ export const sincronizacionMiddleware: Middleware =
     // @ts-ignore
     if (action.type === "novedades/finishedSavingProcessNovedades") {
       // No sincronizamos cuando se marca como sincronizado
-      console.log("sincronizando novedades");
       if (networkMonitor.isConnected()) {
         setTimeout(() => {
           sincronizacionService.sincronizarNovedades();

@@ -19,9 +19,7 @@ const novedadSlice = createSlice({
       state.novedades = [];
     },
     addNovedad: (state, action: PayloadAction<Novedad>) => {
-      console.log("guardando novedad local", action.payload);
       state.novedades.push(action.payload);
-      console.log("novedades", state.novedades);
     },
     changeEstadoSincronizado: (
       state,

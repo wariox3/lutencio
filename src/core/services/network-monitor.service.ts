@@ -1,5 +1,6 @@
 import { sincronizacionService } from '@/src/modules/visita/application/services/sincronizacion.service';
 import * as Network from 'expo-network';
+import { Alert } from 'react-native';
 
 /**
  * Servicio para monitorear cambios en la conectividad de red
@@ -25,23 +26,29 @@ export class NetworkMonitorService {
   /**
    * Inicia el monitoreo de la red
    */
-  public startMonitoring(): void {
+  public async startMonitoring(): Promise<void> {
     if (this.subscription) return;
 
-    // Verificar estado inicial
-    this.checkNetworkStatus();
+    // Verificar estado inicial antes de configurar el listener
+    await this.checkNetworkStatus();
+    console.log(`Estado inicial de red: ${this.isOnline ? 'conectado' : 'desconectado'}`);
 
     // Suscribirse a cambios de estado de red
     this.subscription = Network.addNetworkStateListener(async ({ isConnected }) => {
-      console.log(`Estado de red cambió: ${isConnected ? 'conectado' : 'desconectado'}`);
+      const nuevoEstado = isConnected ?? false;
+      console.log(`Estado de red cambió: ${nuevoEstado ? 'conectado' : 'desconectado'}`);
+      
+      // Guardar el estado anterior antes de actualizarlo
+      const estadoAnterior = this.isOnline;
+      
+      // Actualizar el estado primero
+      this.isOnline = nuevoEstado;
       
       // Si pasamos de offline a online, intentar sincronizar con debounce
-      if (isConnected && !this.isOnline) {
+      if (nuevoEstado && !estadoAnterior) {
         console.log('Conexión restaurada, programando sincronización...');
         this.debounceSyncAttempt();
       }
-      
-      this.isOnline = isConnected ?? false;
     });
   }
 

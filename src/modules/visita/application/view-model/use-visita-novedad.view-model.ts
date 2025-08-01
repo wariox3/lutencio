@@ -15,9 +15,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { obtenerEntregasSeleccionadas } from "../slice/entrega.selector";
-import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
-import { quitarEntregaSeleccionada } from "../slice/entrega.slice";
+import { cambiarEstadoNovedad, quitarEntregaSeleccionada } from "../slice/entrega.slice";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -112,11 +110,16 @@ export default function useVisitaNovedadViewModel() {
     visitasSeleccionadas: number[]
   ) => {
     visitasSeleccionadas.forEach((id) => {
+      const idNovedad =
+        Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15);
+
+      console.log("idNovedad", idNovedad);
       dispatch(
         addNovedad({
-          id: uuidv4(),
+          id: idNovedad,
           visita_id: id,
-          arrImagenes: [{ uri: state?.arrImagenes[0]?.uri || '' }],
+          arrImagenes: [{ uri: state?.arrImagenes[0]?.uri || "" }],
           novedad_tipo_id: Number(data.novedad_tipo),
           descripcion: data.descripcion,
           fecha: obtenerFechaYHoraActualFormateada(),
@@ -126,6 +129,12 @@ export default function useVisitaNovedadViewModel() {
         })
       );
 
+      dispatch(
+        cambiarEstadoNovedad({
+          entregaId: id,
+          nuevoEstado: true,
+        })
+      );
       dispatch(quitarEntregaSeleccionada(id));
     });
 

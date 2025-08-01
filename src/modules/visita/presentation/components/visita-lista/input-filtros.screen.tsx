@@ -40,7 +40,7 @@ const InputFiltros: React.FC<InputFiltrosProps> = ({ onFilterChange }) => {
         <Search size={"$1.5"} opacity={0.5}></Search>
         <Input
           flex={1}
-          placeholder="Buscar número o guía"
+          placeholder="Buscar por número"
           keyboardType="number-pad"
           borderStyle="unset"
           borderColor={"transparent"}
