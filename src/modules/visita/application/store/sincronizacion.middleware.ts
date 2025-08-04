@@ -3,7 +3,7 @@ import * as Network from 'expo-network';
 import { SincronizacionService } from "../services/sincronizacion.service";
 
 // Tiempo de espera antes de intentar sincronizar para permitir que la red se estabilice
-const SYNC_DELAY = 3000; // 1 segundo
+const SYNC_DELAY = 1000; // 1 segundo
 
 // Función para verificar la conexión de manera más robusta
 const verificarConexionRobusta = async (): Promise<boolean> => {
