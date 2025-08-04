@@ -40,13 +40,14 @@ const novedadSlice = createSlice({
     },
     changeEstadoSincronizadoError: (
       state,
-      action: PayloadAction<{ id: string; nuevoEstado: boolean; mensaje?: string }>
+      action: PayloadAction<{ id: string; nuevoEstado: boolean; mensaje?: string; codigo: number }>
     ) => {
       state.novedades = state.novedades.map((novedad) => {
         if (novedad.id === action.payload.id) {
           return {
             ...novedad,
             estado_sincronizada_error: action.payload.nuevoEstado,
+            estado_sincronizado_codigo: action.payload.codigo,
             estado_sincronizada_error_mensaje: action.payload.mensaje || "",
           };
         }

@@ -3,13 +3,13 @@ import { STORAGE_KEYS } from "@/src/core/constants";
 import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
 import storageService from "@/src/core/services/storage.service";
+import { cleanNovedades } from "@/src/modules/novedad/application/store/novedad.slice";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import { ClipboardX } from "@tamagui/lucide-icons";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
-import React from "react";
 import { Card, Text, XStack, YStack } from "tamagui";
 import { obtenerEntregasSeleccionadas } from "../../../application/slice/entrega.selector";
 import {
@@ -68,6 +68,9 @@ const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
 
       //   //retirar las entregas
       dispatch(quitarEntregas());
+
+      //   //retirar novedades
+      dispatch(cleanNovedades());
 
       //   //retirar entregas seleccionadas
       retirarSeleccionadas();

@@ -5,9 +5,8 @@ import { obtenerUsuarioId } from "@/src/modules/user/application/slice/usuario.s
 import { usePermisos } from "@/src/shared/hooks/usePermisos";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { useFocusEffect } from "expo-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTheme } from "tamagui";
-import { Entrega } from "../../domain/interfaces/vista.interface";
 import {
   obtenerEntregasPendientesOrdenadas,
   obtenerEntregasSeleccionadas
@@ -26,7 +25,7 @@ export default function useVisitaListaViewModel() {
   storageService.setItem(STORAGE_KEYS.usuarioId, `${usuarioId}`);
   const [refreshing, setRefreshing] = useState(false);
   const { validarPermisos } = usePermisos();
-  const { obtenerColor } = useTemaVisual()
+  const { obtenerColor } = useTemaVisual();
   const theme = useTheme();
 
   // Estado local para los filtros
@@ -34,7 +33,7 @@ export default function useVisitaListaViewModel() {
     guia: 0,
     numero: 0,
   });
-  
+
   // Optimización: Usar useMemo para calcular las entregas filtradas en lugar de useState + useEffect
   // Esto evita un re-render adicional y mejora el rendimiento
   const entregasFiltradas = useMemo(() => {
@@ -45,23 +44,29 @@ export default function useVisitaListaViewModel() {
       // Aplicar filtros con coincidencia parcial
       const valorBusqueda = filtros.guia || filtros.numero;
       const valorBusquedaStr = valorBusqueda.toString();
-      
+
       // Aplicar filtros
       return todasLasEntregas.filter((entrega) => {
         // Convertir los valores a string para buscar coincidencias parciales
-        const guiaStr = entrega.guia?.toString() || '';
-        const numeroStr = entrega.numero?.toString() || '';
-        
+        const guiaStr = entrega.guia?.toString() || "";
+        const numeroStr = entrega.numero?.toString() || "";
+
         // Buscar si el valor de búsqueda está contenido en alguno de los campos
-        return guiaStr.includes(valorBusquedaStr) || numeroStr.includes(valorBusquedaStr);
+        return (
+          guiaStr.includes(valorBusquedaStr) ||
+          numeroStr.includes(valorBusquedaStr)
+        );
       });
     }
   }, [filtros, todasLasEntregas]);
 
   // Optimización: Memoizar la función de actualización de filtros
-  const actualizarFiltros = useCallback((nuevosFiltros: { guia: number; numero: number }) => {
-    setFiltros(nuevosFiltros);
-  }, []);
+  const actualizarFiltros = useCallback(
+    (nuevosFiltros: { guia: number; numero: number }) => {
+      setFiltros(nuevosFiltros);
+    },
+    []
+  );
 
   // Optimización: Memoizar la función que verifica si hay filtros aplicados
   const filtrosAplicados = useCallback(() => {
@@ -97,10 +102,13 @@ export default function useVisitaListaViewModel() {
   }, [dispatch]);
 
   // limpiar unicamente una entrega o agregar
-  const gestionEntrega = useCallback((id: number) => {
-    // Usar la nueva función unificada toggleSeleccionado que maneja todo en una sola acción
-    dispatch(toggleSeleccionado(id));
-  }, [dispatch]);
+  const gestionEntrega = useCallback(
+    (id: number) => {
+      // Usar la nueva función unificada toggleSeleccionado que maneja todo en una sola acción
+      dispatch(toggleSeleccionado(id));
+    },
+    [dispatch]
+  );
 
   return {
     gestionEntrega,
@@ -112,6 +120,6 @@ export default function useVisitaListaViewModel() {
     theme,
     filtrosAplicados,
     obtenerColor,
-    validarPermisos
+    validarPermisos,
   };
 }

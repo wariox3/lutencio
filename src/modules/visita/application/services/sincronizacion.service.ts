@@ -38,7 +38,8 @@ interface ErrorRespuesta {
 
 export class SincronizacionService {
   private static instance: SincronizacionService;
-  private sincronizando = false;
+  private sincronizandoVisita = false;
+  private sincronizandoNovedad = false;
   private storeRef: any = null;
   private lastSyncAttemptEntrega: number = 0;
   private lastSyncAttemptNovedad: number = 0;
@@ -237,7 +238,7 @@ export class SincronizacionService {
     }
 
     // Evitar sincronizaciones simultáneas
-    if (this.sincronizando) {
+    if (this.sincronizandoVisita) {
       console.log(
         `[Sync ${syncId}] Sincronización rechazada: ya hay una sincronización en curso`
       );
@@ -284,7 +285,7 @@ export class SincronizacionService {
       }
 
       // Iniciar sincronización - usar un bloque atómico para evitar condiciones de carrera
-      this.sincronizando = true;
+      this.sincronizandoVisita = true;
       this.storeRef.dispatch(setSincronizandoEntregas(true));
 
       // Procesar todas las entregas en paralelo
@@ -351,6 +352,7 @@ export class SincronizacionService {
               this.storeRef.dispatch(
                 cambiarEstadoSincronizadoError({
                   visitaId: entrega.id,
+                  codigo: 400,
                   nuevoEstado: true,
                   mensaje: resultado.value.respuesta?.mensaje,
                 })
@@ -364,6 +366,7 @@ export class SincronizacionService {
               this.storeRef.dispatch(
                 cambiarEstadoSincronizadoError({
                   visitaId: entrega.id,
+                  codigo: 500,
                   nuevoEstado: true,
                   mensaje:
                     "máximo de intentos alcanzado. No se pudo sincronizar.",
@@ -391,7 +394,7 @@ export class SincronizacionService {
         );
         setTimeout(() => {
           this.sincronizarEntregas();
-        }, 5000); // Reintento en 5 segundos
+        }, 10000); // Reintento en 10 segundos
       }
 
       return exitoTotal;
@@ -400,7 +403,7 @@ export class SincronizacionService {
       return false;
     } finally {
       console.log(`[Sync ${syncId}] Finalizando proceso de sincronización`);
-      this.sincronizando = false;
+      this.sincronizandoVisita = false;
       this.storeRef.dispatch(setSincronizandoEntregas(false));
     }
   }
@@ -424,7 +427,7 @@ export class SincronizacionService {
     }
 
     // Evitar sincronizaciones simultáneas
-    if (this.sincronizando) {
+    if (this.sincronizandoNovedad) {
       console.log(
         `[Sync ${syncId}] Sincronización rechazada: ya hay una sincronización en curso`
       );
@@ -471,7 +474,7 @@ export class SincronizacionService {
       }
 
       // Iniciar sincronización - usar un bloque atómico para evitar condiciones de carrera
-      this.sincronizando = true;
+      this.sincronizandoNovedad = true;
       this.storeRef.dispatch(changeSincronizandoNovedades(true));
 
       // Procesar todas las entregas en paralelo
@@ -545,6 +548,7 @@ export class SincronizacionService {
               this.storeRef.dispatch(
                 changeEstadoSincronizadoError({
                   id: novedad.id,
+                  codigo: 400,
                   nuevoEstado: true,
                   mensaje: resultado.value.respuesta?.mensaje,
                 })
@@ -557,9 +561,10 @@ export class SincronizacionService {
               this.storeRef.dispatch(
                 changeEstadoSincronizadoError({
                   id: novedad.id,
+                  codigo: 500,
                   nuevoEstado: true,
                   mensaje:
-                    "máximo de intentos alcanzado. No se pudo sincronizar la novedad.",
+                    "máximo de intentos alcanzado. No se pudo sincronizar.",
                 })
               );
             }
@@ -584,7 +589,7 @@ export class SincronizacionService {
         );
         setTimeout(() => {
           this.sincronizarNovedades();
-        }, 5000); // Reintento en 5 segundos
+        }, 10000); // Reintento en 10 segundos
       }
 
       return exitoTotal;
@@ -593,7 +598,7 @@ export class SincronizacionService {
       return false;
     } finally {
       console.log(`[Sync ${syncId}] Finalizando proceso de sincronización`);
-      this.sincronizando = false;
+      this.sincronizandoNovedad = false;
       this.storeRef.dispatch(changeSincronizandoNovedades(false));
     }
   }

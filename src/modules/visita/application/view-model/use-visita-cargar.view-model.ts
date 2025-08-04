@@ -12,18 +12,26 @@ import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { alertas } from "@/src/core/constants";
 import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import { cleanNovedades } from "@/src/modules/novedad/application/store/novedad.slice";
+import { selectCantidadNovedadesConErrorTemporal } from "@/src/modules/novedad/application/store/novedad.selector";
+import { selectCantidadVisitasConErrorTemporal } from "../slice/entrega.selector";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
     codigo: "",
   };
   const { loading } = useAppSelector(({ entregas }) => entregas);
-  const { obtenerColor } = useTemaVisual()
+  const { obtenerColor } = useTemaVisual();
   const estaEnLinea = useNetworkStatus();
   const { control, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: valoresFormularioCargar,
   });
   const router = useRouter();
+  const cantidadNovedadesErrorTemporal = useAppSelector(
+    selectCantidadNovedadesConErrorTemporal
+  );
+  const cantidadEntregasErrorTemporal = useAppSelector(
+    selectCantidadVisitasConErrorTemporal
+  );
   const dispatch = useAppDispatch();
 
   useFocusEffect(
@@ -33,7 +41,16 @@ export default function useVisitaCargarViewModel() {
   );
 
   const cargarOrden = async (data: FieldValues) => {
-    Keyboard.dismiss()
+    if (cantidadNovedadesErrorTemporal + cantidadEntregasErrorTemporal > 0) {
+      mostrarAlertHook({
+        titulo: "Error",
+        mensaje: "No se puede cargar una orden de entrega con pendientes por sincronizar",
+        onAceptar: () => {},
+      });
+      return;
+    }
+
+    Keyboard.dismiss();
     reset({
       codigo: "",
     });
@@ -43,14 +60,10 @@ export default function useVisitaCargarViewModel() {
           cargarOrdenThunk({ codigo: data.codigo })
         ).unwrap();
 
-        await dispatch(
-          configuracionThunk()
-        ).unwrap()
-        
+        await dispatch(configuracionThunk()).unwrap();
+
         if (respuesta) {
-          dispatch(
-           cleanNovedades() 
-          )
+          dispatch(cleanNovedades());
           router.replace(rutasApp.visitas);
         }
       } catch (error: any) {
@@ -65,7 +78,7 @@ export default function useVisitaCargarViewModel() {
         titulo: alertas.titulo.error,
         mensaje: alertas.mensaje.sinConexionInternet,
       });
-    };
+    }
   };
 
   return { control, handleSubmit, loading, cargarOrden, obtenerColor };

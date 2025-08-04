@@ -61,7 +61,6 @@ const entregasSlice = createSlice({
         }
 
         entrega.arrImagenes.push(...imagenes);
-        console.log("entrega al agregar imagen", JSON.stringify(entrega));
       }
     },
     setSincronizandoEntregas: (state, action: PayloadAction<boolean>) => {
@@ -132,24 +131,15 @@ const entregasSlice = createSlice({
     },
     cambiarEstadoSincronizadoError: (
       state,
-      action: PayloadAction<{ visitaId: number; nuevoEstado: boolean; mensaje?: string }>
+      action: PayloadAction<{ visitaId: number; nuevoEstado: boolean; mensaje?: string; codigo: number }>
     ) => {
       const visita = state.entregas.find(
         (e) => e.id === action.payload.visitaId
       );
       if (visita) {
         visita.entregada_sincronizada_error = action.payload.nuevoEstado;
+        visita.entregada_sincronizada_codigo = action.payload.codigo;
         visita.entregada_sincronizada_error_mensaje = action.payload.mensaje || "";
-      }
-    },
-    cambiarEstadoNovedadError: (
-      state,
-      action: PayloadAction<{ entregaId: number; nuevoEstado: boolean; mensaje?: string }>
-    ) => {
-      const entrega = state.entregas.find((e) => e.id === action.payload.entregaId);
-      if (entrega) {
-        entrega.novedad_sincronizada_error = action.payload.nuevoEstado;
-        entrega.novedad_sincronizada_error_mensaje = action.payload.mensaje || "";
       }
     },
     cambiarEstadoNovedad: (state, action: PayloadAction<{ entregaId: number; nuevoEstado: boolean }>) => {
@@ -283,7 +273,6 @@ const entregasSlice = createSlice({
       if (visita) {
         visita.seleccionado = !visita.seleccionado;
 
-        console.log(visita.seleccionado);
 
         if (visita.seleccionado) {
           // Si ahora está seleccionado, agregar a la lista
@@ -294,7 +283,6 @@ const entregasSlice = createSlice({
             state.entregasSeleccionadas.push(id);
           }
 
-          console.log(state.entregasSeleccionadas);
         } else {
           // Si ahora está deseleccionado, quitar de la lista
           if (state.entregasSeleccionadas) {
@@ -302,18 +290,8 @@ const entregasSlice = createSlice({
               (entregaId) => entregaId !== id
             );
           }
-
-          console.log(state.entregasSeleccionadas);
         }
       }
-    },
-    novedadesProcesadas: (
-      state,
-      action: PayloadAction<{
-        novedadesIds: number[];
-      }>
-    ) => {
-      console.log(`Procesadas ${action.payload.novedadesIds.length} novedades`);
     },
   },
 
@@ -390,7 +368,5 @@ export const {
   actualizarEntrega,
   setSincronizandoEntregas,
   entregasProcesadas,
-  cambiarEstadoNovedadError,
-  novedadesProcesadas,
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

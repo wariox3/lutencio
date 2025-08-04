@@ -31,6 +31,7 @@ export class GetListaVisitaUseCase {
       },
       estado_sincronizado: false,
       entregada_sincronizada_error: false,
+      entregada_sincronizada_codigo: 0,
       entregada_sincronizada_error_mensaje: "",
       novedad_sincronizada_error: false,
       novedad_sincronizada_error_mensaje: "",

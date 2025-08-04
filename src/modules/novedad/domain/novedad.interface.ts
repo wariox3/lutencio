@@ -7,6 +7,7 @@ export interface Novedad {
   descripcion: string;
   arrImagenes: { uri: string }[];
   estado_sincronizado: boolean;
+  estado_sincronizado_codigo: number;
   estado_sincronizada_error: boolean;
   estado_sincronizada_error_mensaje: string;
 }

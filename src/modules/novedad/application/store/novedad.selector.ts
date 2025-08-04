@@ -17,6 +17,19 @@ export const selectNovedadesSinSincronizar = createSelector(
     )
 );
 
+export const selectNovedadesConErrorTemporal = createSelector(
+  [selectNovedades],
+  (novedades) =>
+    novedades.novedades.filter(
+      (novedad) => novedad.estado_sincronizada_error && novedad.estado_sincronizado_codigo === 500
+    )
+);
+
+export const selectCantidadNovedadesConErrorTemporal = createSelector(
+  [selectNovedadesConErrorTemporal],
+  (novedades) => novedades.length
+);
+
 export const selectSincronizandoNovedades = createSelector(
   [selectNovedades],
   (novedades) => novedades.sincronizando

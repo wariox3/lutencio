@@ -1,25 +1,32 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
-import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import {
   selectCantidadNovedades,
+  selectCantidadNovedadesConErrorTemporal,
+  selectNovedadesConErrorTemporal,
   selectSincronizandoNovedades,
 } from "@/src/modules/novedad/application/store/novedad.selector";
 import {
+  changeEstadoSincronizadoError,
+  finishedSavingProcessNovedades,
+} from "@/src/modules/novedad/application/store/novedad.slice";
+import {
   getSincronizandoEntregas,
-  selectEntregasSincronizadas
+  selectCantidadVisitasConErrorTemporal,
+  selectEntregasSincronizadas,
+  selectVisitasConErrorTemporal,
 } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
+  cambiarEstadoSincronizadoError,
+  entregasProcesadas,
   limpiarEntregaSeleccionada,
 } from "@/src/modules/visita/application/slice/entrega.slice";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import {
+  CloudUpload,
   FileCheck,
-  FileQuestion,
-  FileUp,
   FileWarning,
   FileX,
   Loader2,
@@ -31,7 +38,7 @@ import {
 import { Sheet } from "@tamagui/sheet";
 import { useRouter } from "expo-router";
 import { memo, useEffect, useRef, useState } from "react";
-import { Animated, ScrollView } from "react-native";
+import { Alert, Animated, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shallowEqual } from "react-redux";
 import {
@@ -47,6 +54,8 @@ import {
 } from "tamagui";
 import CardDesvincularOrdenEntrega from "./card-desvincular-orden-entrega";
 import CardInformativa from "./card-informativa";
+import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
+import { mostrarAlertHook, useAlertaGlobal } from "@/src/shared/hooks/useAlertaGlobal";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -61,6 +70,12 @@ export const EntregaOpciones = () => {
   const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
   const sincronizandoEntregas = useAppSelector(getSincronizandoEntregas);
   const sincronizandoLoader = useAppSelector(selectSincronizandoNovedades);
+  const cantidadEntregasErrorTemporal = useAppSelector(
+    selectCantidadVisitasConErrorTemporal
+  );
+  const cantidadNovedadesErrorTemporal = useAppSelector(
+    selectCantidadNovedadesConErrorTemporal
+  );
 
   // Add this inside the EntregaOpciones component
   const spinValue = useRef(new Animated.Value(0)).current;
@@ -97,6 +112,15 @@ export const EntregaOpciones = () => {
             </Animated.View>
           ))}
         <XStack gap="$2">
+          {cantidadEntregasErrorTemporal + cantidadNovedadesErrorTemporal >
+            0 && (
+            <XStack items="center" gap="$1">
+              <CloudUpload size={12} color="$red10" />
+              <Text fontSize="$2" fontWeight="600" color="$red10">
+                {cantidadEntregasErrorTemporal + cantidadNovedadesErrorTemporal}
+              </Text>
+            </XStack>
+          )}
           <XStack items="center" gap="$1">
             <Package size={12} color="$blue10" />
             <Text fontSize="$2" fontWeight="600" color="$blue10">
@@ -159,6 +183,8 @@ export const EntregaOpciones = () => {
 // in general good to memoize the contents to avoid expensive renders during animations
 const SheetContents = memo(({ setOpen }: any) => {
   const router = useRouter();
+  const { cancel } = useAlertaGlobal();
+  const isOnline = useNetworkStatus();
   const dispatch = useAppDispatch();
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
@@ -170,36 +196,24 @@ const SheetContents = memo(({ setOpen }: any) => {
     shallowEqual
   );
 
-  const arrEntregasPendientes = useAppSelector(
-    ({ entregas }) =>
-      entregas.entregas.filter(
-        (entrega) =>
-          entrega.estado_entregado === true &&
-          entrega.estado_sincronizado === false &&
-          entrega.estado_error === false
-      ) || [],
-    shallowEqual
+  const cargandoEntregas = useAppSelector(getSincronizandoEntregas);
+  const cargandoNovedades = useAppSelector(selectSincronizandoNovedades);
+  const cantidadNovedadesErrorTemporal = useAppSelector(
+    selectCantidadNovedadesConErrorTemporal
   );
-
-  const arrEntregasConErrores = useAppSelector(
-    ({ entregas }) =>
-      entregas.entregas.filter((entrega) => entrega.estado_error === true) ||
-      [],
-    shallowEqual
+  const novedadesErrorTemporal = useAppSelector(
+    selectNovedadesConErrorTemporal
   );
+  const cantidadVisitasErrorTemporal = useAppSelector(
+    selectCantidadVisitasConErrorTemporal
+  );
+  const visitasErrorTemporal = useAppSelector(selectVisitasConErrorTemporal);
 
   const cantidadNovedades = useAppSelector(selectCantidadNovedades);
   const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
 
   const { eliminarArchivo } = useEliminarEnGaleria();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
-  const [loadSincronizandoNovedad, setLoadSincronizandoNovedad] =
-    useState(false);
-
-  const navegarEntregaPendietes = () => {
-    router.navigate(rutasApp.vistaPendiente);
-    setOpen(false);
-  };
 
   const retirarSeleccionadas = () => {
     entregasSeleccionadas.map((entrega: number) => {
@@ -219,16 +233,60 @@ const SheetContents = memo(({ setOpen }: any) => {
     setOpen(false);
   };
 
-  const confirmarSincornizarEntregas = async () => {
+  const sincronizarPendientes = async () => {
+    if (!isOnline) {
+      mostrarAlertHook({
+        titulo: "Error",
+        mensaje: "No hay conexión a internet",
+        onAceptar: () => {},
+      });
+      setOpen(false);
+
+      return;
+    }
+
+    cancel();
+    sincronizarVisitasPendientes();
+    sincronizarNovedadesPedientes();
     setOpen(false);
-    mostrarAlertHook({
-      titulo: alertas.titulo.advertencia,
-      mensaje: alertas.mensaje.accionIrreversible,
-      onAceptar: () => gestionGuias(),
-    });
   };
 
-  const gestionGuias = async () => {};
+  const sincronizarNovedadesPedientes = async () => {
+    if (novedadesErrorTemporal?.length === 0) return;
+
+    const novedadesIds: number[] = [];
+    novedadesErrorTemporal?.forEach((novedad) => {
+      novedadesIds.push(Number(novedad.id));
+      dispatch(
+        changeEstadoSincronizadoError({
+          id: novedad.id,
+          nuevoEstado: false,
+          codigo: 0,
+          mensaje: "",
+        })
+      );
+    });
+    dispatch(finishedSavingProcessNovedades({ novedadesIds }));
+  };
+
+  const sincronizarVisitasPendientes = async () => {
+    if (visitasErrorTemporal?.length === 0) return;
+
+    const visitasIds: number[] = [];
+    visitasErrorTemporal?.forEach((visita) => {
+      visitasIds.push(visita.id);
+      dispatch(
+        cambiarEstadoSincronizadoError({
+          visitaId: visita.id,
+          nuevoEstado: false,
+          codigo: 0,
+          mensaje: "",
+        })
+      );
+    });
+
+    dispatch(entregasProcesadas({ entregasIds: visitasIds }));
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -286,71 +344,33 @@ const SheetContents = memo(({ setOpen }: any) => {
               </>
             ) : null}
 
-            {arrEntregasPendientes.length > 0 ||
-            arrEntregasConErrores.length > 0 ||
-            cantidadNovedades > 0 ? (
+            {cantidadNovedadesErrorTemporal > 0 ||
+            cantidadVisitasErrorTemporal > 0 ? (
               <>
                 <H6 mb="$2">Sincronizar</H6>
                 <>
-                  {arrEntregasPendientes.length > 0 ? (
+                  {cantidadNovedadesErrorTemporal > 0 ||
+                  cantidadVisitasErrorTemporal > 0 ? (
                     <>
                       <ListItem
                         hoverTheme
-                        icon={<FileUp size="$2" />}
+                        icon={<CloudUpload size="$2" />}
                         iconAfter={
                           <>
-                            {loadSincronizando ? (
+                            {cargandoEntregas || cargandoNovedades ? (
                               <Spinner size="small" color="$green10" />
                             ) : null}
                           </>
                         }
                         title="Sincronizar"
-                        subTitle="Entregas pendientes por entregar"
-                        onPress={() => confirmarSincornizarEntregas()}
-                      />
-
-                      <ListItem
-                        hoverTheme
-                        icon={<FileQuestion size="$2" />}
-                        title="Pendientes"
-                        subTitle={
-                          "Cantidad pendientes por sincronizar: " +
-                          arrEntregasPendientes.length
+                        subTitle="Sincronizar visitas/novedades pendientes"
+                        onPress={sincronizarPendientes}
+                        disabled={cargandoEntregas || cargandoNovedades}
+                        opacity={
+                          cargandoEntregas || cargandoNovedades ? 0.5 : 1
                         }
-                        onPress={() => navegarEntregaPendietes()}
                       />
                     </>
-                  ) : null}
-                </>
-                <>
-                  {arrEntregasConErrores.length > 0 ? (
-                    <ListItem
-                      hoverTheme
-                      icon={<FileQuestion size="$2" />}
-                      title="Errores"
-                      subTitle={
-                        "Cantidad con errores: " + arrEntregasConErrores.length
-                      }
-                      onPress={() => navegarEntregaPendietes()}
-                    />
-                  ) : null}
-                </>
-                <>
-                  {cantidadNovedades > 0 ? (
-                    <ListItem
-                      hoverTheme
-                      icon={<FileWarning size="$2" />}
-                      iconAfter={
-                        <>
-                          {loadSincronizandoNovedad ? (
-                            <Spinner size="small" color="$green10" />
-                          ) : null}
-                        </>
-                      }
-                      title="Novedades"
-                      subTitle={"Cantidad con novedades: " + cantidadNovedades}
-                      onPress={() => navegarEntregaPendietes()}
-                    />
                   ) : null}
                 </>
               </>
