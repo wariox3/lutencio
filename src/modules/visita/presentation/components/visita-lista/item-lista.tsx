@@ -15,6 +15,7 @@ import React, { useCallback, useMemo } from "react";
 import { Linking, Platform, TouchableOpacity, StyleSheet } from "react-native";
 import { Card, Separator, Text, View, XStack, YStack } from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 // Componente optimizado para evitar re-renders innecesarios
 const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
@@ -27,6 +28,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   const hasCobro = useMemo(() => visita.cobro > 0, [visita.cobro]);
   const hasEstadoEntregado = useMemo(() => visita.estado_entregado, [visita.estado_entregado]);
   const hasEstadoNovedad = useMemo(() => visita.estado_novedad, [visita.estado_novedad]);
+    const { obtenerColor } = useTemaVisual();
   
   // Memoizar la función para llamar al destinatario
   const llamarDestinatario = useCallback((telefono: string) => {
@@ -87,7 +89,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
             <Text color={COLORES.BLANCO} fontWeight="bold" fontSize="$1">#{visita.numero}</Text>
           </XStack>
         </View>
-        <Text fontSize="$2" color={COLORES.GRIS_OSCURO}>Doc: {visita.documento}</Text>
+        <Text fontSize="$2" color={obtenerColor("GRIS_OSCURO", "BLANCO")}>Doc: {visita.documento}</Text>
       </XStack>
 
       <Separator mb="$1.5" />
@@ -97,7 +99,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
         {/* Destinatario */}
         <XStack items="center" gap="$2">
           <CircleUser size="$1.5" color={COLORES.AZUL_FUERTE} />
-          <Text flex={1} fontSize="$3" fontWeight="bold" color={COLORES.NEGRO}>
+          <Text flex={1} fontSize="$3" fontWeight="bold" color={obtenerColor("NEGRO", "BLANCO")}>
             {visita.destinatario}
           </Text>
         </XStack>
@@ -105,7 +107,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
         {/* Dirección */}
         <XStack items="center" gap="$2">
           <MapPin size="$1.5" color={COLORES.VERDE_FUERTE} />
-          <Text flex={1} fontSize="$2" color={COLORES.GRIS_OSCURO}>
+          <Text flex={1} fontSize="$2" color={obtenerColor("GRIS_OSCURO", "BLANCO")}>
             {visita.destinatario_direccion}
           </Text>
         </XStack>
@@ -120,8 +122,8 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
               activeOpacity={0.7}
             >
               <XStack items="center" gap="$2">
-                <Phone size="$1" color={COLORES.AZUL_FUERTE} />
-                <Text color={COLORES.AZUL_FUERTE} fontSize="$2" fontWeight="500">
+                <Phone size="$1" color={obtenerColor("AZUL_FUERTE", "BLANCO")} />
+                <Text color={obtenerColor("AZUL_FUERTE", "BLANCO")} fontSize="$2" fontWeight="500">
                   {visita.destinatario_telefono}
                 </Text>
               </XStack>
@@ -140,7 +142,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
             >
               <XStack items="center" gap="$1">
                 <DollarSign size="$1" color={COLORES.ROJO_FUERTE} />
-                <Text color={COLORES.ROJO_FUERTE} fontWeight="bold">
+                <Text color={obtenerColor("ROJO_FUERTE", "BLANCO")} fontWeight="bold">
                   {visita.cobro.toLocaleString()}
                 </Text>
               </XStack>
@@ -155,16 +157,16 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
         {hasEstadoEntregado && (
           <View bg={COLORES.VERDE_SUAVE} borderRadius="$2" p="$1.5">
             <XStack items="center" gap="$1">
-              <Text color={COLORES.VERDE_FUERTE} fontSize="$2" fontWeight="500">Entregado</Text>
+              <Text color={obtenerColor("VERDE_FUERTE", "BLANCO")} fontSize="$2" fontWeight="500">Entregado</Text>
             </XStack>
           </View>
         )}
         
         {hasEstadoNovedad && (
-          <View bg={COLORES.NARANJA_SUAVE} borderRadius="$2" p="$1.5">
+          <View bg={COLORES.NARANJA_SUAVE} borderrRadraius="$2" p="$1.5">
             <XStack items="center" gap="$1">
               {/* <AlertTriangle size="$1" color={'yellow'} /> */}
-              <Text color={COLORES.NARANJA_FUERTE} fontSize="$2" fontWeight="500">Novedad</Text>
+              <Text color={obtenerColor("NARANJA_FUERTE", "BLANCO")} fontSize="$2" fontWeight="500">Novedad</Text>
             </XStack>
           </View>
         )}
