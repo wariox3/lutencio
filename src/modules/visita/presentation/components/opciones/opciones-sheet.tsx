@@ -8,8 +8,7 @@ import {
 } from "@/src/modules/novedad/application/store/novedad.selector";
 import {
   getSincronizandoEntregas,
-  selectEntregasConNovedad,
-  selectEntregasSincronizadas,
+  selectEntregasSincronizadas
 } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
@@ -30,9 +29,8 @@ import {
   XCircle,
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
-import * as Location from "expo-location";
-import { useFocusEffect, useRouter } from "expo-router";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "expo-router";
+import { memo, useEffect, useRef, useState } from "react";
 import { Animated, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shallowEqual } from "react-redux";
@@ -56,8 +54,6 @@ export const EntregaOpciones = () => {
   const [position, setPosition] = useState(0);
   const [open, setOpen] = useState(false);
   const [modal] = useState(true);
-  const [permiso, setPermiso] = useState<string | null>(null);
-  const [cargando, setCargando] = useState(true);
   const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
@@ -85,43 +81,6 @@ export const EntregaOpciones = () => {
       spinValue.setValue(0);
     }
   }, [sincronizandoEntregas, sincronizandoLoader]);
-
-  // Iniciar la verificación de permisos al montar el componente
-  useEffect(() => {
-    validacionPermisoLocalizacion();
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      // Solo verificar permisos si aún no se han verificado o si se necesita actualizar
-      if (permiso === null) {
-        validacionPermisoLocalizacion();
-      }
-    }, [permiso])
-  );
-
-  const validacionPermisoLocalizacion = async () => {
-    try {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      setPermiso(status);
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  // Mostrar un indicador de carga mientras se verifica el permiso
-  if (cargando) {
-    return (
-      <XStack justify="flex-end" items="center" gap="$2">
-        <Spinner size="small" />
-      </XStack>
-    );
-  }
-
-  // Verificar permisos y entregas después de cargar
-  if (permiso !== "granted" || entregas.length === 0) {
-    return null;
-  }
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],

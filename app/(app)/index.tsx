@@ -1,6 +1,4 @@
 import { networkMonitor } from "@/src/core/services/network-monitor.service";
-import { useSincronizacionEntregas } from "@/src/modules/visita/application/hooks/useSinconizarEntregas";
-import { useSincronizacionNovedades } from "@/src/modules/visita/application/hooks/useSincronizacionNovedades";
 import { useCameraPermissions } from "expo-camera";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";

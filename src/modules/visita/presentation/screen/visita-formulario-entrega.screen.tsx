@@ -20,6 +20,7 @@ const VisitaFormularioEntregaScreen = () => {
     handleSubmit,
     removerFirma,
     state,
+    isLoading,
     removerFoto,
     obtenerColor
   } = useVisitaFormularioViewModel();
@@ -103,8 +104,9 @@ const VisitaFormularioEntregaScreen = () => {
 
       <Button
         theme="blue"
-        icon={state.mostrarAnimacionCargando ? () => <Spinner /> : undefined}
+        icon={isLoading ? () => <Spinner /> : undefined}
         onPress={handleSubmit(guardarEntrega)}
+        disabled={isLoading}
         mb={"$2.5"}
       >
         Entregar

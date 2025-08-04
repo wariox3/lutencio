@@ -2,27 +2,21 @@ import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import storageService from "@/src/core/services/storage.service";
 import { obtenerUsuarioId } from "@/src/modules/user/application/slice/usuario.selector";
+import { usePermisos } from "@/src/shared/hooks/usePermisos";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
-import * as Location from "expo-location";
-import { useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTheme } from "tamagui";
+import { Entrega } from "../../domain/interfaces/vista.interface";
 import {
-  comprobarFiltrosActivos,
-  obtenerEntregasFiltros,
   obtenerEntregasPendientesOrdenadas,
   obtenerEntregasSeleccionadas
 } from "../slice/entrega.selector";
 import {
-  cambiarEstadoSeleccionado,
   cambiarEstadoSeleccionadoATodas,
   limpiarEntregaSeleccionada,
-  quitarEntregaSeleccionada,
-  seleccionarEntrega,
+  toggleSeleccionado
 } from "../slice/entrega.slice";
-import { usePermisos } from "@/src/shared/hooks/usePermisos";
-import { AppState, AppStateStatus } from "react-native";
-import { Entrega } from "../../domain/interfaces/vista.interface";
 
 export default function useVisitaListaViewModel() {
   const dispatch = useAppDispatch();
@@ -41,41 +35,38 @@ export default function useVisitaListaViewModel() {
     numero: 0,
   });
   
-  // Estado derivado para las entregas filtradas
-  const [entregasFiltradas, setEntregasFiltradas] = useState<Entrega[]>(todasLasEntregas);
-
-  // Actualizar las entregas filtradas cuando cambien los filtros o las entregas
-  useEffect(() => {
+  // Optimización: Usar useMemo para calcular las entregas filtradas en lugar de useState + useEffect
+  // Esto evita un re-render adicional y mejora el rendimiento
+  const entregasFiltradas = useMemo(() => {
     if (filtros.guia === 0 && filtros.numero === 0) {
       // Si no hay filtros activos, mostrar todas las entregas
-      setEntregasFiltradas(todasLasEntregas);
+      return todasLasEntregas;
     } else {
       // Aplicar filtros con coincidencia parcial
       const valorBusqueda = filtros.guia || filtros.numero;
       const valorBusquedaStr = valorBusqueda.toString();
+      
       // Aplicar filtros
-      const filtradas = todasLasEntregas.filter((entrega) => {
+      return todasLasEntregas.filter((entrega) => {
         // Convertir los valores a string para buscar coincidencias parciales
         const guiaStr = entrega.guia?.toString() || '';
         const numeroStr = entrega.numero?.toString() || '';
         
         // Buscar si el valor de búsqueda está contenido en alguno de los campos
-        const coincideGuia = guiaStr.includes(valorBusquedaStr);
-        const coincideNumero = numeroStr.includes(valorBusquedaStr);
-        
-        return coincideGuia || coincideNumero;
+        return guiaStr.includes(valorBusquedaStr) || numeroStr.includes(valorBusquedaStr);
       });
-      setEntregasFiltradas(filtradas);
     }
   }, [filtros, todasLasEntregas]);
 
-  const actualizarFiltros = (nuevosFiltros: { guia: number; numero: number }) => {
+  // Optimización: Memoizar la función de actualización de filtros
+  const actualizarFiltros = useCallback((nuevosFiltros: { guia: number; numero: number }) => {
     setFiltros(nuevosFiltros);
-  };
+  }, []);
 
-  const filtrosAplicados = () => {
+  // Optimización: Memoizar la función que verifica si hay filtros aplicados
+  const filtrosAplicados = useCallback(() => {
     return filtros.guia > 0 || filtros.numero > 0;
-  };
+  }, [filtros.guia, filtros.numero]);
 
   // Escucha cuando la app vuelve a primer plano (active)
   // useEffect(() => {
@@ -99,22 +90,17 @@ export default function useVisitaListaViewModel() {
     }, [])
   );
 
-  // limpiar las entregas seleccionadas
-  const gestionEntregas = () => {
+  // Optimización: Memoizar la función para limpiar las entregas seleccionadas
+  const gestionEntregas = useCallback(() => {
     dispatch(cambiarEstadoSeleccionadoATodas());
     dispatch(limpiarEntregaSeleccionada());
-  };
+  }, [dispatch]);
 
   // limpiar unicamente una entrega o agregar
-  const gestionEntrega = (id: number) => {
-    if (entregasSeleccionadas.includes(id)) {
-      dispatch(quitarEntregaSeleccionada(id));
-      dispatch(cambiarEstadoSeleccionado(id));
-    } else {
-      dispatch(seleccionarEntrega(id));
-      dispatch(cambiarEstadoSeleccionado(id));
-    }
-  };
+  const gestionEntrega = useCallback((id: number) => {
+    // Usar la nueva función unificada toggleSeleccionado que maneja todo en una sola acción
+    dispatch(toggleSeleccionado(id));
+  }, [dispatch]);
 
   return {
     gestionEntrega,

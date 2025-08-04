@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import useFecha from "@/src/shared/hooks/useFecha";
 import { useGuardarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
-import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -26,8 +25,8 @@ type VisitaFormType = {
 export default function useVisitaFormularioViewModel() {
   const dispatch = useAppDispatch();
   const { guardarArchivo } = useGuardarEnGaleria();
+  const [isLoading, setIsLoading] = useState(false);
   const { obtenerFechaYHoraActualFormateada } = useFecha();
-  const estaEnLinea = useNetworkStatus();
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
   );
@@ -136,13 +135,10 @@ export default function useVisitaFormularioViewModel() {
 
   const guardarEntrega = async (data: VisitaFormType) => {
     try {
-      actualizarState({ mostrarAnimacionCargando: true });
-        await guardarEntregaLocal(data, dispatch);
-        return;
-    } catch (error) {
-      actualizarState({ mostrarAnimacionCargando: false });
+      setIsLoading(true);
+      guardarEntregaLocal(data, dispatch);
     } finally {
-      actualizarState({ mostrarAnimacionCargando: false });
+      setIsLoading(false);
       router.back();
     }
   };
@@ -187,6 +183,7 @@ export default function useVisitaFormularioViewModel() {
     entregasSeleccionadas,
     state,
     handleCapture,
+    isLoading,
     handleFirma,
     removerFirma,
     handleSubmit,

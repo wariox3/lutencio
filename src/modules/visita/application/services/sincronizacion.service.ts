@@ -1,19 +1,40 @@
 // src/modules/visita/application/services/sincronizacion.service.ts
 
 import { STORAGE_KEYS } from "@/src/core/constants";
+import {
+  eventBus,
+  NETWORK_EVENTS,
+} from "@/src/core/services/event-bus.service";
 import storageService from "@/src/core/services/storage.service";
 import { selectNovedadesSinSincronizar } from "@/src/modules/novedad/application/store/novedad.selector";
-import { changeEstadoSincronizado, changeEstadoSincronizadoError, changeSincronizandoNovedades } from "@/src/modules/novedad/application/store/novedad.slice";
+import {
+  changeEstadoSincronizado,
+  changeEstadoSincronizadoError,
+  changeSincronizandoNovedades,
+} from "@/src/modules/novedad/application/store/novedad.slice";
 import { VisitaApiRepository } from "../../infraestructure/api/visita-api.service";
 import { PenditesService } from "../../infraestructure/services/penditente.service";
-import {
-  obtenerEntregasPendientes
-} from "../slice/entrega.selector";
+import { obtenerEntregasPendientes } from "../slice/entrega.selector";
 import {
   cambiarEstadoSincronizado,
   cambiarEstadoSincronizadoError,
-  setSincronizandoEntregas
+  setSincronizandoEntregas,
 } from "../slice/entrega.slice";
+
+// Definir tipos de errores para clasificación
+enum TipoError {
+  TEMPORAL = "temporal", // Errores que pueden resolverse con reintentos (500, timeout, etc)
+  PERMANENTE = "permanente", // Errores que no se resolverán con reintentos (400, 403, etc)
+  DESCONOCIDO = "desconocido", // Errores que no podemos clasificar
+}
+
+// Interfaz para respuestas de error enriquecidas
+interface ErrorRespuesta {
+  codigo?: number;
+  mensaje?: string;
+  tipo: TipoError;
+  original?: any;
+}
 
 export class SincronizacionService {
   private static instance: SincronizacionService;
@@ -23,6 +44,11 @@ export class SincronizacionService {
   private lastSyncAttemptNovedad: number = 0;
   private readonly MIN_SYNC_INTERVAL = 2000; // Mínimo 2 segundos entre intentos
   private readonly visitaService = new VisitaApiRepository();
+  private networkEventUnsubscribe: (() => void) | null = null;
+
+  // Mapa para seguir los intentos de sincronización por ID
+  private intentosSincronizacion: Map<string, number> = new Map();
+  private readonly MAX_INTENTOS = 5; // Máximo número de intentos para errores temporales
 
   // Patrón Singleton para asegurar una única instancia
   public static getInstance(): SincronizacionService {
@@ -32,11 +58,164 @@ export class SincronizacionService {
     return SincronizacionService.instance;
   }
 
-  private constructor() {}
+  private constructor() {
+    // Suscribirse al evento de conexión restaurada
+    this.networkEventUnsubscribe = eventBus.on(
+      NETWORK_EVENTS.ONLINE,
+      async () => {
+        console.log(
+          "SincronizacionService: Evento de conexión online recibido"
+        );
+        try {
+          const resultadoSincronizacionEntregas =
+            await this.sincronizarEntregas();
+          const resultadoSincronizacionNovedades =
+            await this.sincronizarNovedades();
+          console.log(
+            `Resultado de sincronización de entregas: ${
+              resultadoSincronizacionEntregas ? "exitoso" : "fallido"
+            }`
+          );
+          console.log(
+            `Resultado de sincronización de novedades: ${
+              resultadoSincronizacionNovedades ? "exitoso" : "fallido"
+            }`
+          );
+        } catch (error) {
+          console.error("Error al ejecutar sincronización:", error);
+        }
+      }
+    );
+  }
 
   // Método para inyectar la store después de su inicialización
   public setStore(store: any): void {
     this.storeRef = store;
+  }
+
+  /**
+   * Clasifica un error según su tipo para determinar si se debe reintentar
+   * @param error Error recibido de la API
+   * @returns Objeto con información del error clasificado
+   */
+  private clasificarError(error: any): ErrorRespuesta {
+    // Si no hay error, retornamos un error desconocido
+    if (!error) {
+      return {
+        mensaje: "Error desconocido",
+        tipo: TipoError.DESCONOCIDO,
+      };
+    }
+
+    // Si el error tiene un código HTTP
+    if (error.status || error.statusCode || error.codigo) {
+      const codigo = error.status || error.statusCode || error.codigo;
+
+      // Errores 5xx son temporales (problemas del servidor)
+      if (codigo >= 500 && codigo < 600) {
+        return {
+          codigo,
+          mensaje:
+            error.mensaje || error.message || `Error del servidor (${codigo})`,
+          tipo: TipoError.TEMPORAL,
+          original: error,
+        };
+      }
+
+      // Errores 4xx son permanentes (problemas con la solicitud)
+      if (codigo >= 400 && codigo < 500) {
+        return {
+          codigo,
+          mensaje:
+            error.mensaje ||
+            error.message ||
+            `Error en la solicitud (${codigo})`,
+          tipo: TipoError.PERMANENTE,
+          original: error,
+        };
+      }
+    }
+
+    // Errores de red o timeout son temporales
+    if (
+      error.name === "TimeoutError" ||
+      error.message?.includes("timeout") ||
+      error.message?.includes("network") ||
+      error.message?.includes("Network") ||
+      error.message?.includes("connection")
+    ) {
+      return {
+        mensaje: "Error de conexión",
+        tipo: TipoError.TEMPORAL,
+        original: error,
+      };
+    }
+
+    // Por defecto, clasificamos como desconocido
+    return {
+      mensaje: error.mensaje || error.message || "Error desconocido",
+      tipo: TipoError.DESCONOCIDO,
+      original: error,
+    };
+  }
+
+  /**
+   * Gestiona el resultado de una sincronización según el tipo de error
+   * @param id ID único del elemento (entrega o novedad)
+   * @param error Error recibido
+   * @returns true si se debe marcar como error permanente, false si se reintentará
+   */
+  private gestionarResultadoSincronizacion(
+    id: string,
+    error: any
+  ): {
+    marcarComoError: boolean;
+    maximoIntentosAlcanzado: boolean;
+    reintentoProgramado: boolean;
+  } {
+    // Clasificar el error
+    const errorClasificado = this.clasificarError(error);
+
+    // Si es un error permanente, no reintentamos
+    if (errorClasificado.tipo === TipoError.PERMANENTE) {
+      console.log(
+        `Error permanente para ID ${id}: ${errorClasificado.mensaje}`
+      );
+      return {
+        marcarComoError: true,
+        maximoIntentosAlcanzado: false,
+        reintentoProgramado: false,
+      }; // Marcar como error permanente
+    }
+
+    // Para errores temporales o desconocidos, verificamos los intentos
+    const intentosActuales = this.intentosSincronizacion.get(id) || 0;
+    const nuevosIntentos = intentosActuales + 1;
+
+    // Actualizar contador de intentos
+    this.intentosSincronizacion.set(id, nuevosIntentos);
+
+    // Si superamos el máximo de intentos, marcamos como error permanente
+    if (nuevosIntentos >= this.MAX_INTENTOS) {
+      console.log(
+        `Máximo de intentos (${this.MAX_INTENTOS}) alcanzado para ID ${id}`
+      );
+      return {
+        marcarComoError: false,
+        maximoIntentosAlcanzado: true,
+        reintentoProgramado: false,
+      }; // Marcar como error permanente
+    }
+
+    // Si aún no alcanzamos el máximo, programamos un reintento
+    console.log(
+      `Programando reintento ${nuevosIntentos}/${this.MAX_INTENTOS} para ID ${id}`
+    );
+    return {
+      marcarComoError: false,
+      maximoIntentosAlcanzado: false,
+      reintentoProgramado: true,
+    }; // No marcar como error permanente, se reintentará
   }
 
   /**
@@ -135,6 +314,7 @@ export class SincronizacionService {
       let exitoTotal = true;
       let exitosos = 0;
       let fallidos = 0;
+      let pendientesReintento = 0;
 
       resultados.forEach((resultado) => {
         if (resultado.status === "fulfilled") {
@@ -148,30 +328,72 @@ export class SincronizacionService {
               })
             );
             exitosos++;
+            // Limpiar contador de intentos si fue exitoso
+            this.intentosSincronizacion.delete(entrega.id.toString());
           } else {
             console.log(
               `[Sync ${syncId}] Error al sincronizar entrega:`,
               resultado.value.respuesta
             );
-            this.storeRef.dispatch(
-              cambiarEstadoSincronizadoError({
-                visitaId: entrega.id,
-                nuevoEstado: true,
-                mensaje: resultado.value.respuesta?.mensaje,
-              })
+
+            // Determinar si se debe marcar como error o programar reintento
+            const {
+              marcarComoError,
+              maximoIntentosAlcanzado,
+              reintentoProgramado,
+            } = this.gestionarResultadoSincronizacion(
+              entrega.id.toString(),
+              resultado.value.respuesta
             );
-            fallidos++;
+
+            if (marcarComoError) {
+              // Marcar como error permanente
+              this.storeRef.dispatch(
+                cambiarEstadoSincronizadoError({
+                  visitaId: entrega.id,
+                  nuevoEstado: true,
+                  mensaje: resultado.value.respuesta?.mensaje,
+                })
+              );
+
+              fallidos++;
+            } else if (reintentoProgramado) {
+              // No marcar como error, se reintentará en próxima sincronización
+              pendientesReintento++;
+            } else if (maximoIntentosAlcanzado) {
+              this.storeRef.dispatch(
+                cambiarEstadoSincronizadoError({
+                  visitaId: entrega.id,
+                  nuevoEstado: true,
+                  mensaje:
+                    "máximo de intentos alcanzado. No se pudo sincronizar.",
+                })
+              );
+            }
+
             exitoTotal = false;
           }
         } else {
+          // Error en la promesa
           fallidos++;
           exitoTotal = false;
         }
       });
 
       console.log(
-        `[Sync ${syncId}] Sincronización completada - Exitosos: ${exitosos}, Fallidos: ${fallidos}`
+        `[Sync ${syncId}] Sincronización completada - Exitosos: ${exitosos}, Fallidos: ${fallidos}, Pendientes de reintento: ${pendientesReintento}`
       );
+
+      // Si hay pendientes de reintento, programar próxima sincronización
+      if (pendientesReintento > 0) {
+        console.log(
+          `[Sync ${syncId}] Programando reintento para ${pendientesReintento} entregas en 5 segundos`
+        );
+        setTimeout(() => {
+          this.sincronizarEntregas();
+        }, 5000); // Reintento en 5 segundos
+      }
+
       return exitoTotal;
     } catch (error) {
       console.error(`[Sync ${syncId}] Error en sincronización:`, error);
@@ -286,6 +508,7 @@ export class SincronizacionService {
       let exitoTotal = true;
       let exitosos = 0;
       let fallidos = 0;
+      let pendientesReintento = 0;
 
       resultados.forEach((resultado) => {
         if (resultado.status === "fulfilled") {
@@ -299,30 +522,71 @@ export class SincronizacionService {
               })
             );
             exitosos++;
+            // Limpiar contador de intentos si fue exitoso
+            this.intentosSincronizacion.delete(novedad.id);
           } else {
             console.log(
               `[Sync ${syncId}] Error al sincronizar novedad:`,
               resultado.value.respuesta
             );
-            this.storeRef.dispatch(
-              changeEstadoSincronizadoError({
-                id: novedad.id,
-                nuevoEstado: true,
-                mensaje: resultado.value.respuesta?.mensaje,
-              })
+
+            // Determinar si se debe marcar como error o programar reintento
+            const {
+              marcarComoError,
+              maximoIntentosAlcanzado,
+              reintentoProgramado,
+            } = this.gestionarResultadoSincronizacion(
+              novedad.id,
+              resultado.value.respuesta
             );
-            fallidos++;
+
+            if (marcarComoError) {
+              // Marcar como error permanente
+              this.storeRef.dispatch(
+                changeEstadoSincronizadoError({
+                  id: novedad.id,
+                  nuevoEstado: true,
+                  mensaje: resultado.value.respuesta?.mensaje,
+                })
+              );
+              fallidos++;
+            } else if (reintentoProgramado) {
+              // No marcar como error, se reintentará en próxima sincronización
+              pendientesReintento++;
+            } else if (maximoIntentosAlcanzado) {
+              this.storeRef.dispatch(
+                changeEstadoSincronizadoError({
+                  id: novedad.id,
+                  nuevoEstado: true,
+                  mensaje:
+                    "máximo de intentos alcanzado. No se pudo sincronizar la novedad.",
+                })
+              );
+            }
+
             exitoTotal = false;
           }
         } else {
+          // Error en la promesa
           fallidos++;
           exitoTotal = false;
         }
       });
 
       console.log(
-        `[Sync ${syncId}] Sincronización completada - Exitosos: ${exitosos}, Fallidos: ${fallidos}`
+        `[Sync ${syncId}] Sincronización completada - Exitosos: ${exitosos}, Fallidos: ${fallidos}, Pendientes de reintento: ${pendientesReintento}`
       );
+
+      // Si hay pendientes de reintento, programar próxima sincronización
+      if (pendientesReintento > 0) {
+        console.log(
+          `[Sync ${syncId}] Programando reintento para ${pendientesReintento} novedades en 5 segundos`
+        );
+        setTimeout(() => {
+          this.sincronizarNovedades();
+        }, 5000); // Reintento en 5 segundos
+      }
+
       return exitoTotal;
     } catch (error) {
       console.error(`[Sync ${syncId}] Error en sincronización:`, error);
@@ -331,6 +595,16 @@ export class SincronizacionService {
       console.log(`[Sync ${syncId}] Finalizando proceso de sincronización`);
       this.sincronizando = false;
       this.storeRef.dispatch(changeSincronizandoNovedades(false));
+    }
+  }
+
+  /**
+   * Limpia los recursos al destruir la instancia
+   */
+  public dispose(): void {
+    if (this.networkEventUnsubscribe) {
+      this.networkEventUnsubscribe();
+      this.networkEventUnsubscribe = null;
     }
   }
 }

@@ -276,6 +276,37 @@ const entregasSlice = createSlice({
     ) => {
       console.log(`Procesadas ${action.payload.entregasIds.length} entregas`);
     },
+    toggleSeleccionado: (state, action: PayloadAction<number>) => {
+      const id = action.payload;
+      const visita = state.entregas.find((e) => e.id === id);
+
+      if (visita) {
+        visita.seleccionado = !visita.seleccionado;
+
+        console.log(visita.seleccionado);
+
+        if (visita.seleccionado) {
+          // Si ahora está seleccionado, agregar a la lista
+          if (!state.entregasSeleccionadas) {
+            state.entregasSeleccionadas = [];
+          }
+          if (!state.entregasSeleccionadas.includes(id)) {
+            state.entregasSeleccionadas.push(id);
+          }
+
+          console.log(state.entregasSeleccionadas);
+        } else {
+          // Si ahora está deseleccionado, quitar de la lista
+          if (state.entregasSeleccionadas) {
+            state.entregasSeleccionadas = state.entregasSeleccionadas.filter(
+              (entregaId) => entregaId !== id
+            );
+          }
+
+          console.log(state.entregasSeleccionadas);
+        }
+      }
+    },
     novedadesProcesadas: (
       state,
       action: PayloadAction<{
@@ -339,6 +370,7 @@ export const {
   cambiarEstadoSincronizado,
   quitarEntregas,
   quitarVisita,
+  toggleSeleccionado,
   agregarImagenEntrega,
   quitarImagenEntrega,
   actualizarFirmaEntrega,

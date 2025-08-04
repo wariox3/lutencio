@@ -33,6 +33,7 @@ export default function useVisitaNovedadViewModel() {
   const { guardarArchivo } = useGuardarEnGaleria();
   const { eliminarArchivo } = useEliminarEnGaleria();
   const { obtenerFechaYHoraActualFormateada } = useFecha();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { control, handleSubmit, setValue } = useForm<NovedadFormType>({
     defaultValues: valoresFormulario,
@@ -145,11 +146,11 @@ export default function useVisitaNovedadViewModel() {
 
   const guardarNovedad = async (data: NovedadFormType) => {
     try {
-      actualizarState({ mostrarAnimacionCargando: true });
+      setIsLoading(true);
       guardarNovedadLocal(data, visitasSeleccionadas);
     } catch (error) {
     } finally {
-      actualizarState({ mostrarAnimacionCargando: false });
+      setIsLoading(false);
       router.back();
     }
   };
@@ -163,5 +164,6 @@ export default function useVisitaNovedadViewModel() {
     handleSubmit,
     novedadesTipo,
     obtenerColor,
+    isLoading,
   };
 }

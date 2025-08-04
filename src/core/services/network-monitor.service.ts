@@ -1,6 +1,5 @@
-import { sincronizacionService } from '@/src/modules/visita/application/services/sincronizacion.service';
 import * as Network from 'expo-network';
-import { Alert } from 'react-native';
+import { eventBus, NETWORK_EVENTS } from './event-bus.service';
 
 /**
  * Servicio para monitorear cambios en la conectividad de red
@@ -44,10 +43,16 @@ export class NetworkMonitorService {
       // Actualizar el estado primero
       this.isOnline = nuevoEstado;
       
-      // Si pasamos de offline a online, intentar sincronizar con debounce
+      // Emitir evento de cambio de conectividad
+      eventBus.emit(NETWORK_EVENTS.CONNECTIVITY_CHANGED, nuevoEstado);
+      
+      // Si pasamos de offline a online, emitir evento específico con debounce
       if (nuevoEstado && !estadoAnterior) {
         console.log('Conexión restaurada, programando sincronización...');
         this.debounceSyncAttempt();
+      } else if (!nuevoEstado && estadoAnterior) {
+        // Si pasamos de online a offline, emitir evento específico
+        eventBus.emit(NETWORK_EVENTS.OFFLINE);
       }
     });
   }
@@ -63,16 +68,10 @@ export class NetworkMonitorService {
     }
 
     // Programar nuevo intento con debounce
-    this.syncDebounceTimeout = setTimeout(async () => {
-      console.log('Ejecutando sincronización después de debounce');
-      try {
-        const resultadoSincronizacionEntregas = await sincronizacionService.sincronizarEntregas();
-        const resultadoSincronizacionNovedades = await sincronizacionService.sincronizarNovedades();
-        console.log(`Resultado de sincronización de entregas: ${resultadoSincronizacionEntregas ? 'exitoso' : 'fallido'}`);
-        console.log(`Resultado de sincronización de novedades: ${resultadoSincronizacionNovedades ? 'exitoso' : 'fallido'}`);
-      } catch (error) {
-        console.error('Error al ejecutar sincronización:', error);
-      }
+    this.syncDebounceTimeout = setTimeout(() => {
+      console.log('Emitiendo evento de conexión online después de debounce');
+      // Emitir evento para que los servicios interesados puedan reaccionar
+      eventBus.emit(NETWORK_EVENTS.ONLINE);
       this.syncDebounceTimeout = null;
     }, this.DEBOUNCE_TIME);
   }

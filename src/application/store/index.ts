@@ -12,6 +12,7 @@ import {
 } from "redux-persist";
 import rootReducer from "./root-reducer";
 import { sincronizacionMiddleware } from "@/src/modules/visita/application/store/sincronizacion.middleware";
+import { SincronizacionService } from "@/src/modules/visita/application/services/sincronizacion.service";
 
 const persistConfig = {
   key: "root",
@@ -35,9 +36,8 @@ export const store = configureStore({
 export const persistor = persistStore(store);
 
 // Importar el servicio después de crear la store para evitar la circularidad
-import { sincronizacionService } from "@/src/modules/visita/application/services/sincronizacion.service";
 // Inyectar la store en el servicio
-sincronizacionService.setStore(store);
+SincronizacionService.getInstance().setStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

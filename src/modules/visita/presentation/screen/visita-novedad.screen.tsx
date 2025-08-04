@@ -14,6 +14,7 @@ import {
   YStack
 } from "tamagui";
 import useVisitaNovedadViewModel from "../../application/view-model/use-visita-novedad.view-model";
+import { isLoaded } from "expo-font";
 
 const VisitaNovedadScreen = () => {
   const {
@@ -22,6 +23,7 @@ const VisitaNovedadScreen = () => {
     handleCapture,
     removerFoto,
     state,
+    isLoading,
     handleSubmit,
     novedadesTipo,
     obtenerColor
@@ -105,8 +107,9 @@ const VisitaNovedadScreen = () => {
       ) : null}
       <Button
         theme="blue"
-        icon={state.mostrarAnimacionCargando ? () => <Spinner /> : undefined}
+        icon={isLoading ? () => <Spinner /> : undefined}
         onPress={handleSubmit(guardarNovedad)}
+        disabled={isLoading}
       >
         Guardar
       </Button>
