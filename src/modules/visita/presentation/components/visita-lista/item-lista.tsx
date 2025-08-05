@@ -53,29 +53,18 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
       default: `tel:${telefono}`,
     });
 
-    Linking.openURL(`tel:${telefono}`);
-
-    // Linking.canOpenURL(phoneUrl)
-    //   .then((supported) => {
-    //     console.log(supported);
-
-    //     if (!supported) {
-    //       mostrarAlertHook({
-    //         titulo: alertas.titulo.advertencia,
-    //         mensaje: alertas.mensaje.numeroNoValido,
-    //       });
-    //     } else {
-    //       return Linking.openURL(phoneUrl);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error al intentar realizar la llamada:", error);
-    //     mostrarAlertHook({
-    //       titulo: alertas.titulo.error,
-    //       mensaje:
-    //         "No se pudo realizar la llamada. Por favor intente más tarde.",
-    //     });
-    //   });
+    Linking.canOpenURL(phoneUrl)
+      .then((supported) => {
+        return Linking.openURL(phoneUrl);
+      })
+      .catch((error) => {
+        console.error("Error al intentar realizar la llamada:", error);
+        mostrarAlertHook({
+          titulo: alertas.titulo.error,
+          mensaje:
+            "No se pudo realizar la llamada. Por favor intente más tarde.",
+        });
+      });
   }, []);
 
   // Memoizar la función para manejar el onPress
