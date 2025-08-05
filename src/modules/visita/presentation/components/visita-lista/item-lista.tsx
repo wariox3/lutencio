@@ -21,8 +21,9 @@ import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   // Memoizar valores que se usan en la UI para evitar recálculos
   const isSelected = useMemo(() => visita.seleccionado, [visita.seleccionado]);
-  const hasTelefono = useMemo(() => 
-    visita.destinatario_telefono !== "None" && !!visita.destinatario_telefono, 
+  const hasTelefono = useMemo(
+    () =>
+      visita.destinatario_telefono !== "None" && !!visita.destinatario_telefono,
     [visita.destinatario_telefono]
   );
   const hasCobro = useMemo(() => visita.cobro > 0, [visita.cobro]);
@@ -32,13 +33,26 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   
   // Memoizar la función para llamar al destinatario
   const llamarDestinatario = useCallback((telefono: string) => {
-    let numeroTelefonico = telefono;
-    if (Platform.OS !== "android") {
-      numeroTelefonico = `telprompt:${telefono}`;
-    } else {
-      numeroTelefonico = `tel:${telefono}`;
+    // Validate phone number format
+    const isValidPhoneNumber =
+      /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im.test(telefono);
+
+    if (!isValidPhoneNumber) {
+      mostrarAlertHook({
+        titulo: alertas.titulo.advertencia,
+        mensaje: alertas.mensaje.numeroNoValido,
+      });
+      return;
     }
-    Linking.canOpenURL(numeroTelefonico)
+
+    // Create the appropriate URL scheme based on platform
+    const phoneUrl = Platform.select({
+      ios: `telprompt:${telefono}`,
+      android: `tel:${telefono}`,
+      default: `tel:${telefono}`,
+    });
+
+    Linking.canOpenURL(phoneUrl)
       .then((supported) => {
         if (!supported) {
           mostrarAlertHook({
@@ -46,21 +60,28 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
             mensaje: alertas.mensaje.numeroNoValido,
           });
         } else {
-          return Linking.openURL(numeroTelefonico);
+          return Linking.openURL(phoneUrl);
         }
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        console.error("Error al intentar realizar la llamada:", error);
+        mostrarAlertHook({
+          titulo: alertas.titulo.error,
+          mensaje:
+            "No se pudo realizar la llamada. Por favor intente más tarde.",
+        });
+      });
   }, []);
 
   // Memoizar la función para manejar el onPress
   const handlePress = useCallback(() => {
     onPress(visita.id);
   }, [visita.id, onPress]);
-  
+
   // Memoizar el handler para llamar al teléfono del destinatario
   const handleCallPhone = useCallback(() => {
     if (visita.destinatario_telefono) {
-      llamarDestinatario("+57" + visita.destinatario_telefono);
+      llamarDestinatario(visita.destinatario_telefono);
     }
   }, [visita.destinatario_telefono, llamarDestinatario]);
 
@@ -86,7 +107,9 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
         <View bg={COLORES.AZUL_FUERTE} borderRadius="$2" p="$1.5">
           <XStack items="center" gap="$1">
             <Package size="$1" color={COLORES.BLANCO} />
-            <Text color={COLORES.BLANCO} fontWeight="bold" fontSize="$1">#{visita.numero}</Text>
+            <Text color={COLORES.BLANCO} fontWeight="bold" fontSize="$1">
+              #{visita.numero}
+            </Text>
           </XStack>
         </View>
         <Text fontSize="$2" color={obtenerColor("GRIS_OSCURO", "BLANCO")}>Doc: {visita.documento}</Text>
@@ -116,7 +139,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
         <XStack justify="space-between" items="center">
           {/* Teléfono */}
           {hasTelefono ? (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.phoneButton}
               onPress={handleCallPhone}
               activeOpacity={0.7}
@@ -134,11 +157,8 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
 
           {/* Cobro */}
           {hasCobro && (
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
             <View
-              bg={COLORES.ROJO_SUAVE}
-              borderRadius="$2"
-              p="$1"
+              style={{ flexDirection: "row", alignItems: "center", gap: 2 }}
             >
               <XStack items="center" gap="$1">
                 <DollarSign size="$1" color={COLORES.ROJO_FUERTE} />
@@ -161,7 +181,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
             </XStack>
           </View>
         )}
-        
+
         {hasEstadoNovedad && (
           <View bg={COLORES.NARANJA_SUAVE} borderrRadraius="$2" p="$1.5">
             <XStack items="center" gap="$1">
@@ -182,8 +202,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 8,
     paddingHorizontal: 12,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
@@ -193,7 +213,8 @@ const areEqual = (prevProps: ItemListaProps, nextProps: ItemListaProps) => {
   return (
     prevProps.visita.id === nextProps.visita.id &&
     prevProps.visita.seleccionado === nextProps.visita.seleccionado &&
-    prevProps.visita.destinatario_telefono === nextProps.visita.destinatario_telefono &&
+    prevProps.visita.destinatario_telefono ===
+      nextProps.visita.destinatario_telefono &&
     prevProps.visita.cobro === nextProps.visita.cobro &&
     prevProps.visita.estado_entregado === nextProps.visita.estado_entregado &&
     prevProps.visita.estado_novedad === nextProps.visita.estado_novedad
