@@ -33,6 +33,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   
   // Memoizar la función para llamar al destinatario
   const llamarDestinatario = useCallback((telefono: string) => {
+    
     // Validate phone number format
     const isValidPhoneNumber =
       /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im.test(telefono);
@@ -52,25 +53,29 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
       default: `tel:${telefono}`,
     });
 
-    Linking.canOpenURL(phoneUrl)
-      .then((supported) => {
-        if (!supported) {
-          mostrarAlertHook({
-            titulo: alertas.titulo.advertencia,
-            mensaje: alertas.mensaje.numeroNoValido,
-          });
-        } else {
-          return Linking.openURL(phoneUrl);
-        }
-      })
-      .catch((error) => {
-        console.error("Error al intentar realizar la llamada:", error);
-        mostrarAlertHook({
-          titulo: alertas.titulo.error,
-          mensaje:
-            "No se pudo realizar la llamada. Por favor intente más tarde.",
-        });
-      });
+    Linking.openURL(`tel:${telefono}`);
+
+    // Linking.canOpenURL(phoneUrl)
+    //   .then((supported) => {
+    //     console.log(supported);
+
+    //     if (!supported) {
+    //       mostrarAlertHook({
+    //         titulo: alertas.titulo.advertencia,
+    //         mensaje: alertas.mensaje.numeroNoValido,
+    //       });
+    //     } else {
+    //       return Linking.openURL(phoneUrl);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error al intentar realizar la llamada:", error);
+    //     mostrarAlertHook({
+    //       titulo: alertas.titulo.error,
+    //       mensaje:
+    //         "No se pudo realizar la llamada. Por favor intente más tarde.",
+    //     });
+    //   });
   }, []);
 
   // Memoizar la función para manejar el onPress
@@ -167,7 +172,6 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
                 </Text>
               </XStack>
             </View>
-            </View>
           )}
         </XStack>
       </YStack>
@@ -183,7 +187,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
         )}
 
         {hasEstadoNovedad && (
-          <View bg={COLORES.NARANJA_SUAVE} borderrRadraius="$2" p="$1.5">
+          <View bg={COLORES.NARANJA_SUAVE} borderRadraius="$2" p="$1.5">
             <XStack items="center" gap="$1">
               {/* <AlertTriangle size="$1" color={'yellow'} /> */}
               <Text color={obtenerColor("NARANJA_FUERTE", "BLANCO")} fontSize="$2" fontWeight="500">Novedad</Text>
