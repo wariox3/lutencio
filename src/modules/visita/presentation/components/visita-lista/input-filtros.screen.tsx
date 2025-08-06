@@ -6,23 +6,18 @@ import { Pressable } from "react-native";
 import { Card, Input, XStack } from "tamagui";
 
 interface InputFiltrosProps {
-  onFilterChange: (filters: { guia: number; numero: number }) => void;
+  onFilterChange: (valor: string) => void;
+  placeholder: string;
 }
 
-const InputFiltros: React.FC<InputFiltrosProps> = ({ onFilterChange }) => {
+const InputFiltros: React.FC<InputFiltrosProps> = ({ onFilterChange, placeholder }) => {
   const [valorInput, setValorInput] = useState("");
 
   const filtrarVisitas = (valor: string) => {
     setValorInput(valor);
-    
-    // Convertir el valor a número o usar 0 si no es un número válido
-    const numeroValor = Number(valor) || 0;
-    
+        
     // Llamar al callback con los nuevos valores de filtro
-    onFilterChange({
-      guia: numeroValor,
-      numero: numeroValor,
-    });
+    onFilterChange(valor);
   };
 
   return (
@@ -40,7 +35,7 @@ const InputFiltros: React.FC<InputFiltrosProps> = ({ onFilterChange }) => {
         <Search size={"$1.5"} opacity={0.5}></Search>
         <Input
           flex={1}
-          placeholder="Buscar por número"
+          placeholder={placeholder || "Buscar por número"}
           keyboardType="number-pad"
           borderStyle="unset"
           borderColor={"transparent"}

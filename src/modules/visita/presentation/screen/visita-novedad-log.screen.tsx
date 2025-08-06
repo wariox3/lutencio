@@ -26,7 +26,7 @@ export default function VisitaNovedadLogScreen() {
           obtenerColor("HEADER_BACKGROUND_COLOR_LIGHT", "HEADER_BACKGROUND_COLOR_DARK")
         }
       >
-        <InputFiltros onFilterChange={actualizarFiltros} />
+        <InputFiltros onFilterChange={actualizarFiltros} placeholder="Buscar por id" />
       </YStack>
       <FlatList
         data={arrVisitas}

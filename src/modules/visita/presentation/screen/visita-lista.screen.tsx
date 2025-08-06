@@ -118,7 +118,7 @@ export default function VisitaListaScreen() {
             cantidad={entregasSeleccionadas.length}
           />
         </XStack>
-        <InputFiltros onFilterChange={actualizarFiltros} />
+        <InputFiltros onFilterChange={actualizarFiltros} placeholder="Buscar por número o documento" />
       </YStack>
       <FlatList
         data={visibleItems}

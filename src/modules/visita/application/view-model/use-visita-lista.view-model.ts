@@ -29,49 +29,39 @@ export default function useVisitaListaViewModel() {
   const theme = useTheme();
 
   // Estado local para los filtros
-  const [filtros, setFiltros] = useState<{ guia: number; numero: number }>({
-    guia: 0,
-    numero: 0,
-  });
+  const [filtro, setFiltro] = useState<string>("");
 
   // Optimización: Usar useMemo para calcular las entregas filtradas en lugar de useState + useEffect
   // Esto evita un re-render adicional y mejora el rendimiento
   const entregasFiltradas = useMemo(() => {
-    if (filtros.guia === 0 && filtros.numero === 0) {
+    if (filtro === "") {
       // Si no hay filtros activos, mostrar todas las entregas
       return todasLasEntregas;
     } else {
-      // Aplicar filtros con coincidencia parcial
-      const valorBusqueda = filtros.guia || filtros.numero;
-      const valorBusquedaStr = valorBusqueda.toString();
-
-      // Aplicar filtros
+      // Aplicar filtros con coincidencia exacta
       return todasLasEntregas.filter((entrega) => {
-        // Convertir los valores a string para buscar coincidencias parciales
-        const guiaStr = entrega.guia?.toString() || "";
-        const numeroStr = entrega.numero?.toString() || "";
+        // Comparar valores exactos
+        const coincideDocumento = filtro !== "" && entrega.documento === filtro;
+        const coincideNumero = filtro !== "" && entrega.numero === Number(filtro);
 
-        // Buscar si el valor de búsqueda está contenido en alguno de los campos
-        return (
-          guiaStr.includes(valorBusquedaStr) ||
-          numeroStr.includes(valorBusquedaStr)
-        );
+        // Retornar true si coincide exactamente con alguno de los filtros activos
+        return coincideDocumento || coincideNumero;
       });
     }
-  }, [filtros, todasLasEntregas]);
+  }, [filtro, todasLasEntregas]);
 
   // Optimización: Memoizar la función de actualización de filtros
   const actualizarFiltros = useCallback(
-    (nuevosFiltros: { guia: number; numero: number }) => {
-      setFiltros(nuevosFiltros);
+    (valor: string) => {
+      setFiltro(valor);
     },
     []
   );
 
   // Optimización: Memoizar la función que verifica si hay filtros aplicados
   const filtrosAplicados = useCallback(() => {
-    return filtros.guia > 0 || filtros.numero > 0;
-  }, [filtros.guia, filtros.numero]);
+    return filtro !== "";
+  }, [filtro]);
 
   // Escucha cuando la app vuelve a primer plano (active)
   // useEffect(() => {

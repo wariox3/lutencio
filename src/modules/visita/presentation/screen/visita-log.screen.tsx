@@ -26,7 +26,7 @@ export default function VisitaListaScreen() {
           obtenerColor("HEADER_BACKGROUND_COLOR_LIGHT", "HEADER_BACKGROUND_COLOR_DARK")
         }
       >
-        <InputFiltros onFilterChange={actualizarFiltros} />
+        <InputFiltros onFilterChange={actualizarFiltros} placeholder="Buscar por número" />
       </YStack>
       <FlatList
         data={arrVisitas}

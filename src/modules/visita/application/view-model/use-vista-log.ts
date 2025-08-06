@@ -12,25 +12,22 @@ export default function useVisitaLogViewModel() {
     const theme = useTheme();
     
     // Estado local para los filtros
-    const [filtros, setFiltros] = useState<{ guia: number; numero: number }>({
-        guia: 0,
-        numero: 0,
-    });
+    const [filtro, setFiltro] = useState<string>("");
     
     // Estado derivado para las novedades filtradas
     const [visitasFiltradas, setVisitasFiltradas] = useState<Entrega[]>(todasLasVisitas);
     
     // Comprobar si hay filtros activos
-    const hayFiltrosActivos = filtros.guia > 0 || filtros.numero > 0;
+    const hayFiltrosActivos = filtro !== "";
 
     // Actualizar las novedades filtradas cuando cambien los filtros o las novedades
     useEffect(() => {
-        if (filtros.guia === 0 && filtros.numero === 0) {
+        if (filtro === "") {
             // Si no hay filtros activos, mostrar todas las novedades
             setVisitasFiltradas(todasLasVisitas);
         } else {
             // Aplicar filtros con coincidencia parcial
-            const valorBusqueda = filtros.guia || filtros.numero;
+            const valorBusqueda = filtro;
             const valorBusquedaStr = valorBusqueda.toString();
             
             const filtradas = todasLasVisitas.filter((visita) => {
@@ -47,14 +44,14 @@ export default function useVisitaLogViewModel() {
             
             setVisitasFiltradas(filtradas);
         }
-    }, [filtros, todasLasVisitas]);
+    }, [filtro, todasLasVisitas]);
 
     const recargarVisitas = async () => {
         return visitasFiltradas;
     };
 
-    const actualizarFiltros = (nuevosFiltros: { guia: number; numero: number }) => {
-        setFiltros(nuevosFiltros);
+    const actualizarFiltros = (nuevosFiltros: string) => {
+        setFiltro(nuevosFiltros);
     };
 
     return {

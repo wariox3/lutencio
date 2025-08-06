@@ -12,24 +12,22 @@ export default function useVisitaNovedadLogViewModel() {
     const theme = useTheme();
     
     // Estado local para los filtros
-    const [filtros, setFiltros] = useState<{ guia: number }>({
-        guia: 0,
-    });
+    const [filtro, setFiltro] = useState<string>("");
     
     // Estado derivado para las novedades filtradas
     const [novedadesFiltradas, setNovedadesFiltradas] = useState<Novedad[]>(todasLasNovedades);
     
     // Comprobar si hay filtros activos
-    const hayFiltrosActivos = filtros.guia > 0;
+    const hayFiltrosActivos = filtro !== "";
 
     // Actualizar las novedades filtradas cuando cambien los filtros o las novedades
     useEffect(() => {
-        if (filtros.guia === 0) {
+        if (filtro === "") {
             // Si no hay filtros activos, mostrar todas las novedades
             setNovedadesFiltradas(todasLasNovedades);
         } else {
             // Aplicar filtros con coincidencia parcial
-            const valorBusqueda = filtros.guia;
+            const valorBusqueda = filtro;
             const valorBusquedaStr = valorBusqueda.toString();
             
             const filtradas = todasLasNovedades.filter((novedad) => {
@@ -44,14 +42,14 @@ export default function useVisitaNovedadLogViewModel() {
             
             setNovedadesFiltradas(filtradas);
         }
-    }, [filtros, todasLasNovedades]);
+    }, [filtro, todasLasNovedades]);
 
     const recargarVisitas = async () => {
         return novedadesFiltradas;
     };
 
-    const actualizarFiltros = (nuevosFiltros: { guia: number }) => {
-        setFiltros(nuevosFiltros);
+    const actualizarFiltros = (nuevosFiltros: string) => {
+        setFiltro(nuevosFiltros);
     };
 
     return {
