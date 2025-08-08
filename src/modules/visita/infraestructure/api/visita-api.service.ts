@@ -24,7 +24,8 @@ export class VisitaApiRepository implements VisitaRepository {
         estado_entregado: estadoEntregado ? 'True' : 'False',
         estado_novedad: 'False',
         lista: true,
-        serializador: 'lista'
+        serializador: 'lista',
+        ordering: 'orden'
       },
       {
         "X-Schema-Name": subdominio,
