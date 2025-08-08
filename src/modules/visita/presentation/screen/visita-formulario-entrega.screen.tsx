@@ -9,6 +9,7 @@ import React from "react";
 import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
 import useVisitaFormularioViewModel from "../../application/view-model/use-visita-formulario.view-model";
 import { SafeAreaView } from "react-native";
+import { CamaraConOverlay } from "../components/form/camara-con-overlay";
 
 const VisitaFormularioEntregaScreen = () => {
   const {
@@ -45,7 +46,16 @@ const VisitaFormularioEntregaScreen = () => {
           {state.exigeImagenEntrega ? <Text> Requerido * </Text> : null}
         </Text>
         {state.arrImagenes.length <= 4 ? (
-          <EntregaCamara onCapture={handleCapture}></EntregaCamara>
+          <></>
+          // <CamaraConOverlay 
+          //   onCapture={handleCapture}
+          //   showOverlay={true}
+          //   overlayData={{
+          //     date: new Date().toLocaleDateString('es-ES'),
+          //     time: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+          //     temperature: '25' // Puedes obtener esto de un sensor o API del clima
+          //   }}
+          // />
         ) : null}
       </XStack>
       {state.arrImagenes.length > 0 ? (
