@@ -7,6 +7,7 @@ export interface CrearCuentaResponse {
 export type CrearCuentaFormType = {
     username: string,
     password: string,
+    aplicacion: string,
     confirmarPassword: string,
     aceptarTerminosCondiciones: boolean,
 };

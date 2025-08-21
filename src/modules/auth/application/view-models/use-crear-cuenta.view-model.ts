@@ -22,6 +22,7 @@ export const useCrearCuentaViewModel = () => {
     defaultValues: {
       username: "",
       password: "",
+      aplicacion: "ruteo",
       confirmarPassword: "",
       aceptarTerminosCondiciones: false,
     },

@@ -5,7 +5,7 @@ const APIS = {
   seguridad: {
     login: `${URL_BASE}/seguridad/login/`,
     refreshToken: `${URL_BASE}/seguridad/token/refresh/`,
-    usuario: `${URL_BASE}/seguridad/usuario/`,
+    usuario: `${URL_BASE}/seguridad/usuario/nuevo/`,
     verificar: `${URL_BASE}/seguridad/usuario/verificar/`,
     cambioClaveSolicitar: `${URL_BASE}/seguridad/usuario/cambio-clave-solicitar/`,
     verificacion: `${URL_BASE}/seguridad/verificacion/`,
