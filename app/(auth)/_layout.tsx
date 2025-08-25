@@ -3,7 +3,7 @@ import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { Settings } from "@tamagui/lucide-icons";
 import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { Pressable } from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import "react-native-reanimated";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -31,9 +31,26 @@ export default function LoginLayout() {
         options={{
           title: "",
           headerRight: () => (
-            <Pressable onPress={() => router.push("configuracion")}>
-              <Settings size={"$1.5"} />
-            </Pressable>
+            <TouchableOpacity 
+              onPress={() => router.push("configuracion")}
+              activeOpacity={0.7}
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 24,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <View style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 10,
+                borderRadius: 20,
+}}>
+                <Settings size={"$1.5"} />
+              </View>
+            </TouchableOpacity>
           ),
         }}
       />

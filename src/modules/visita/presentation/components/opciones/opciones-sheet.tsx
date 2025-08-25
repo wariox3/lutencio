@@ -145,11 +145,20 @@ export const EntregaOpciones = () => {
       </XStack>
 
       <Button
-        icon={<MoreVertical size={"$3"} />}
+        icon={<MoreVertical size={"$2"} />}
         onPress={() => setOpen(true)}
-        mx={"$2"}
-        unstyled
-      ></Button>
+        ml={"$2"}
+        paddingBlock={"$2"}
+        paddingInline={"$2"}
+        borderEndStartRadius={'$10'}
+        borderEndEndRadius={'$10'}
+        borderStartEndRadius={'$10'}
+        borderStartStartRadius={'$10'}
+        style={{
+          backgroundColor: "transparent",
+          borderColor: "transparent",
+        }}
+></Button>
 
       <Sheet
         forceRemoveScrollEnabled={open}

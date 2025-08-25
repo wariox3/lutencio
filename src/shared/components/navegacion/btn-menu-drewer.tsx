@@ -4,6 +4,7 @@ import { Menu } from "@tamagui/lucide-icons";
 import React from "react";
 import { Pressable } from "react-native";
 import { useTemaVisual } from "../../hooks/useTemaVisual";
+import { Button } from "tamagui";
 
 const BtnMenuDrawer = () => {
   const navigation = useNavigation<DrawerNavigationProp<any>>();
@@ -14,9 +15,9 @@ const BtnMenuDrawer = () => {
   };
 
   return (
-    <Pressable onPress={handleOpenMenuDrawer} style={{ padding: 10 }}>
+    <Button onPress={handleOpenMenuDrawer} style={{ padding: 10, backgroundColor: "transparent", borderColor: "transparent" }}>
       <Menu color={obtenerColor("NEGRO","BLANCO")} size={24} />
-    </Pressable>
+    </Button>
   );
 };
 
