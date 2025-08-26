@@ -15,7 +15,7 @@ const BtnMenuDrawer = () => {
   };
 
   return (
-    <Button onPress={handleOpenMenuDrawer} style={{ padding: 10, backgroundColor: "transparent", borderColor: "transparent" }}>
+    <Button onPressIn={handleOpenMenuDrawer} style={{ padding: 10, backgroundColor: "transparent", borderColor: "transparent" }}>
       <Menu color={obtenerColor("NEGRO","BLANCO")} size={24} />
     </Button>
   );

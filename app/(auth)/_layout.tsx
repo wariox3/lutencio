@@ -32,7 +32,7 @@ export default function LoginLayout() {
           title: "",
           headerRight: () => (
             <TouchableOpacity 
-              onPress={() => router.push("configuracion")}
+              onPressIn={() => router.push("configuracion")}
               activeOpacity={0.7}
               style={{
                 width: 48,

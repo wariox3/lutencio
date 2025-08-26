@@ -146,7 +146,7 @@ export const EntregaOpciones = () => {
 
       <Button
         icon={<MoreVertical size={"$2"} />}
-        onPress={() => setOpen(true)}
+        onPressIn={() => setOpen(true)}
         ml={"$2"}
         paddingBlock={"$2"}
         paddingInline={"$2"}
