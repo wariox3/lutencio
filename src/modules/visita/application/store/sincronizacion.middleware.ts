@@ -1,31 +1,10 @@
 import { Middleware } from "@reduxjs/toolkit";
 import * as Network from 'expo-network';
 import { SincronizacionService } from "../services/sincronizacion.service";
+import { networkMonitor } from "@/src/core/services/network-monitor.service";
 
 // Tiempo de espera antes de intentar sincronizar para permitir que la red se estabilice
 const SYNC_DELAY = 1000; // 1 segundo
-
-// Función para verificar la conexión de manera más robusta
-const verificarConexionRobusta = async (): Promise<boolean> => {
-  try {
-    try {
-      const networkState = await Network.getNetworkStateAsync();
-      if (!networkState.isConnected) {
-        console.log('Sincronización cancelada: sin conexión según verificación activa');
-        return false;
-      }
-      
-      console.log('Sincronización autorizada: conexión verificada');
-      return true;
-    } catch (networkError) {
-      console.error('Error al verificar estado de red:', networkError);
-      return false;
-    }
-  } catch (error) {
-    console.error('Error al verificar conexión:', error);
-    return false;
-  }
-};
 
 // Función para programar sincronización con verificación de conexión
 const programarSincronizacion = (tipoSincronizacion: 'entregas' | 'novedades') => {
@@ -33,7 +12,7 @@ const programarSincronizacion = (tipoSincronizacion: 'entregas' | 'novedades') =
   setTimeout(async () => {
     try {
       // Verificamos nuevamente la conexión antes de sincronizar
-      const hayConexion = await verificarConexionRobusta();
+      const hayConexion = networkMonitor.isConnected();
       
       if (!hayConexion) {
         console.log(`Sincronización de ${tipoSincronizacion} cancelada: sin conexión estable`);

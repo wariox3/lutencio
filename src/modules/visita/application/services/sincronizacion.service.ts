@@ -43,7 +43,7 @@ export class SincronizacionService {
   private storeRef: any = null;
   private lastSyncAttemptEntrega: number = 0;
   private lastSyncAttemptNovedad: number = 0;
-  private readonly MIN_SYNC_INTERVAL = 2000; // Mínimo 2 segundos entre intentos
+  private readonly MIN_SYNC_INTERVAL = 500; // Mínimo 0.5 segundos entre intentos
   private readonly visitaService = new VisitaApiRepository();
   private networkEventUnsubscribe: (() => void) | null = null;
 
