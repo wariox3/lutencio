@@ -82,7 +82,7 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
     );
   }
 
-  if (!permission.granted && !hasMediaLibraryPermission) {
+  if (!permission?.granted && !hasMediaLibraryPermission) {
     // Camera permissions are not granted yet.
     return (
       <View px="$4">
@@ -114,14 +114,14 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button}>
               <Button
-                onPress={tomarFoto}
-                size="$4"
+                onPressIn={tomarFoto}
+                size="$7"
                 circular
                 color={"$red10"}
                 theme={"red"}
                 icon={
                   <Circle
-                    size="$4"
+                    size="$6"
                     color={'$red10'}
                   />
                 }
