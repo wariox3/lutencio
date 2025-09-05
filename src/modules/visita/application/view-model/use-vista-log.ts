@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/src/application/store/hooks";
-import { obtenerEntregas, obtenerEntregasPendientesOrdenadas, obtenerNovedades } from "../slice/entrega.selector";
+import { obtenerEntregas } from "../slice/entrega.selector";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { useEffect, useState } from "react";
 import { useTheme } from "tamagui";

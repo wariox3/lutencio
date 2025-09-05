@@ -18,39 +18,13 @@ export const obtenerVisitasLog = createSelector(
   }
 );
 
-export const obtenerNovedadesLog = createSelector(
-  [selectEntregas, selectFiltros],
-  (entregas, filtros) => {
-    return entregas.entregas
-      .filter((entrega) => entrega.estado_novedad)
-      .filter((entrega) => {
-        const coincideGuia = filtros.guia
-          ? entrega.guia === filtros.guia
-          : true;
-        const coincideNumero = filtros.numero
-          ? entrega.numero === filtros.numero
-          : true;
-        return coincideGuia || coincideNumero;
-      });
-  }
+export const obtenerEntregas = createSelector([selectEntregas], (entregas) =>
+  entregas.entregas
+    ? entregas.entregas
+        .filter((entrega) => entrega)
+        .sort((a, b) => a.orden - b.orden)
+    : []
 );
-
-export const obtenerNovedades = createSelector(
-  [selectEntregas],
-  (entregas) => 
-    entregas.entregas
-      ? entregas.entregas
-          .filter((entrega) => entrega.estado_novedad)
-          .sort((a, b) => a.orden - b.orden)
-      : []
-);
-export const obtenerEntregas = createSelector(
-  [selectEntregas],
-  (entregas) => (entregas.entregas ? entregas.entregas
-    .filter((entrega) => entrega)
-    .sort((a, b) => a.orden - b.orden) : [])
-);
-
 
 export const obtenerEntregasPendientesOrdenadas = createSelector(
   [selectEntregas],
@@ -65,32 +39,6 @@ export const obtenerEntregasPendientesOrdenadas = createSelector(
 export const obtenerEntregasSeleccionadas = (state: RootState) =>
   state.entregas.entregasSeleccionadas;
 
-export const obtenerEntregasMapa = createSelector(
-  [obtenerEntregasSeleccionadas, obtenerEntregasPendientesOrdenadas],
-  (idsSeleccionados, entregasPendientes) => {
-    if (
-      !idsSeleccionados ||
-      idsSeleccionados.length === 0 ||
-      !entregasPendientes
-    ) {
-      return [];
-    }
-
-    // Convertir el array de IDs a un Set para mejor performance
-    const idsSet = new Set(idsSeleccionados);
-
-    return entregasPendientes
-      .filter((entrega) => idsSet.has(entrega.id))
-      .sort((a, b) => a.orden - b.orden);
-  }
-);
-
-export const selectEntregasConNovedad = createSelector(
-  [selectEntregas],
-  (entregas) =>
-    entregas.entregas.filter((entrega) => entrega.estado_novedad === true)
-);
-
 export const selectEntregasSincronizadas = createSelector(
   [selectEntregas],
   (entregas) =>
@@ -102,21 +50,7 @@ export const obtenerVisita = (visitaId: number) =>
     [selectEntregas],
     (entregas) =>
       entregas.entregas.filter((visita) => visita.id === visitaId) || []
-  );
-
-export const obtenerVisitaFiltroPorNumero = (numero: number) =>
-  createSelector(
-    [selectEntregas],
-    (entregas) =>
-      entregas.entregas.filter((visita) => visita.numero === numero) || []
-  );
-
-export const obtenerVisitaFiltroPorGuia = (guia: number) =>
-  createSelector(
-    [selectEntregas],
-    (entregas) =>
-      entregas.entregas.filter((visita) => visita.guia === guia) || []
-  );
+);
 
 export const obtenerEntregasPendientes = createSelector(
   [selectEntregas],
@@ -127,25 +61,6 @@ export const obtenerEntregasPendientes = createSelector(
         entrega.estado_sincronizado === false &&
         entrega.entregada_sincronizada_error === false
     );
-  }
-);
-
-export const obtenerNovedadesPendientes = createSelector(
-  [selectEntregas],
-  (entregas) => {
-    return entregas.entregas.filter(
-      (entrega) =>
-        entrega.estado_novedad === true &&
-        entrega.estado_sincronizado === false &&
-        entrega.novedad_sincronizada_error === false
-    );
-  }
-);
-
-export const comprobarFiltrosActivos = createSelector(
-  [selectFiltros],
-  (filtros) => {
-    return filtros.guia > 0 || filtros.numero > 0;
   }
 );
 
@@ -171,11 +86,13 @@ export const selectVisitasConErrorTemporal = createSelector(
   [selectEntregas],
   (entregas) =>
     entregas.entregas.filter(
-      (entrega) => entrega.entregada_sincronizada_error && entrega.entregada_sincronizada_codigo === 500
+      (entrega) =>
+        entrega.entregada_sincronizada_error &&
+        entrega.entregada_sincronizada_codigo === 500
     )
 );
 
 export const selectCantidadVisitasConErrorTemporal = createSelector(
   [selectVisitasConErrorTemporal],
   (entregas) => entregas.length
-);  
+);
