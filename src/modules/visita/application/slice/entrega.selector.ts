@@ -1,4 +1,5 @@
 import { RootState } from "@/src/application/store/root-reducer";
+import { selectAllNovedades } from "@/src/modules/novedad/application/store/novedad.selector";
 import { createSelector } from "@reduxjs/toolkit";
 
 const selectEntregas = (state: RootState) => state.entregas;
@@ -16,6 +17,24 @@ export const obtenerVisitasLog = createSelector(
       return coincideGuia || coincideNumero;
     });
   }
+);
+
+
+export const obtenerEntregasPendientes = createSelector(
+  [selectEntregas],
+  (entregas) => {
+    return entregas.entregas.filter(
+      (entrega) =>
+        entrega.estado_entregado === true &&
+        entrega.estado_sincronizado === false &&
+        entrega.entregada_sincronizada_error === false
+    );
+  }
+);
+
+export const selectTotalEntregasCounter = createSelector(
+  [obtenerEntregasPendientes, selectAllNovedades],
+  (entregas, novedades) => entregas.length - novedades.length
 );
 
 export const obtenerEntregas = createSelector([selectEntregas], (entregas) =>
@@ -50,18 +69,6 @@ export const obtenerVisita = (visitaId: number) =>
     [selectEntregas],
     (entregas) =>
       entregas.entregas.filter((visita) => visita.id === visitaId) || []
-);
-
-export const obtenerEntregasPendientes = createSelector(
-  [selectEntregas],
-  (entregas) => {
-    return entregas.entregas.filter(
-      (entrega) =>
-        entrega.estado_entregado === true &&
-        entrega.estado_sincronizado === false &&
-        entrega.entregada_sincronizada_error === false
-    );
-  }
 );
 
 export const obtenerFiltroGuia = createSelector([selectFiltros], (filtros) => {
