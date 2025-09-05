@@ -14,6 +14,7 @@ import {
 import {
   getSincronizandoEntregas,
   selectCantidadVisitasConErrorTemporal,
+  selectEntregadas,
   selectEntregasSincronizadas,
   selectTotalEntregasCounter,
   selectVisitasConErrorTemporal,
@@ -67,7 +68,7 @@ export const EntregaOpciones = () => {
   const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
   const cantidadNovedades = useAppSelector(selectCantidadNovedades);
-  const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
+  const entregadas = useAppSelector(selectEntregadas);
   const totalEntregas = useAppSelector(selectTotalEntregasCounter);
   const sincronizandoEntregas = useAppSelector(getSincronizandoEntregas);
   const sincronizandoLoader = useAppSelector(selectSincronizandoNovedades);
@@ -139,7 +140,7 @@ export const EntregaOpciones = () => {
           <XStack items="center" gap="$1">
             <FileCheck size={12} color="$green10" />
             <Text fontSize="$2" fontWeight="600" color="$green10">
-              {arrEntregasSinconizado.length}
+              {entregadas.length}
             </Text>
           </XStack>
         </XStack>
@@ -216,7 +217,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   const visitasErrorTemporal = useAppSelector(selectVisitasConErrorTemporal);
 
   const cantidadNovedades = useAppSelector(selectCantidadNovedades);
-  const arrEntregasSincronizado = useAppSelector(selectEntregasSincronizadas);
+  const entregadas = useAppSelector(selectEntregadas);
 
   const { eliminarArchivo } = useEliminarEnGaleria();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
@@ -326,7 +327,7 @@ const SheetContents = memo(({ setOpen }: any) => {
               <CardInformativa
                 backgroundColor={COLORES.VERDE_SUAVE}
                 titulo="Entregas"
-                cantidad={arrEntregasSincronizado.length}
+                cantidad={entregadas.length}
                 icono={<FileCheck size={28} opacity={0.7} />}
               ></CardInformativa>
             </XStack>

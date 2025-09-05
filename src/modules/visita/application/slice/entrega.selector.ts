@@ -40,6 +40,15 @@ export const obtenerEntregasPendientes = createSelector(
   }
 );
 
+export const selectEntregadas = createSelector(
+  [selectEntregas],
+  (entregas) => {
+    return entregas.entregas.filter(
+      (entrega) => entrega.estado_entregado === true
+    );
+  }
+);
+
 export const selectTotalEntregasCounter = createSelector(
   [selectPendientesPorEntregar, selectAllNovedades],
   (entregas, novedades) => entregas.length - novedades.length
