@@ -1,11 +1,11 @@
-import React from "react";
-import { Button, Card, Text, View, ScrollView } from "tamagui";
-import usePerfilViewModel from "../../application/view-model/use-perfil.view-model";
-import { perfilStyles } from "../../stylesheet/perfil.stylesheet";
 import * as Application from 'expo-application';
+import { Linking, Platform } from 'react-native';
+import { Button, Card, Image, ScrollView, Text, View, XStack } from "tamagui";
+import usePerfilViewModel from "../../application/view-model/use-acercade.view-model";
+import { perfilStyles } from "../../stylesheet/acercade.stylesheet";
 
 const acercadeScreen = () => {
-  const { navegarPoliticas, navegarTerminos, navegarEliminarCuenta, auth, obtenerColor } =
+  const { obtenerColor, navegarTerminos, navegarPoliticas, needsUpdate, storeUrl } =
     usePerfilViewModel();
 
   return (
@@ -16,9 +16,16 @@ const acercadeScreen = () => {
         obtenerColor("BLANCO", "NEGRO")
       }
     >
+      <XStack justify={"center"}>
+        <Image
+          source={require("../../../../../assets/images/logocontexto.png")}
+          width={150}
+          height={150}
+        ></Image>
+      </XStack>
       <View style={perfilStyles.wrapper}>
         <Card style={perfilStyles.profileSection}>
-          <Text style={perfilStyles.title}>Información personal</Text>
+          <Text style={perfilStyles.title}>Ruteo.co para {Platform.OS === "ios" ? "iOS" : "Android"}</Text>
 
           <View style={perfilStyles.profileInfo}>
             <Text style={perfilStyles.value}>Versión:</Text>
@@ -28,41 +35,21 @@ const acercadeScreen = () => {
             <Text style={perfilStyles.value}>{Application.nativeApplicationVersion}</Text>
           </View>
 
-          <View style={perfilStyles.profileInfo}>
-            <Text style={perfilStyles.value}>Build:</Text>
-          </View>
-
-          <View style={perfilStyles.profileInfo}>
-            <Text style={perfilStyles.value}>{Application.nativeBuildVersion}</Text>
-          </View>
         </Card>
-        {/* 
-        <Card style={perfilStyles.linksSection}>
-          <Text style={perfilStyles.sectionTitle}>Enlaces importantes</Text>
 
-          <Button
-            theme="blue"
-            onPress={() => navegarTerminos()}
-            style={perfilStyles.button}
-          >
-            Términos de Uso
-          </Button>
+        {needsUpdate && storeUrl !== null && (
+          <Card style={perfilStyles.linksSection}>
+            <Text style={perfilStyles.sectionTitle}>Enlaces importantes</Text>
+            <Button
+              theme="red"
+              style={[perfilStyles.button, { marginTop: 10 }]}
+              onPress={() => Linking.openURL(storeUrl)}
+            >
+              Actualizar
+            </Button>
+          </Card>
+        )}
 
-          <Button
-            theme="blue"
-            onPress={() => navegarPoliticas()}
-            style={perfilStyles.button}
-          >
-            Políticas de Privacidad
-          </Button>
-          <Button
-            theme="red"
-            onPress={() => navegarEliminarCuenta()}
-            style={perfilStyles.button}
-          >
-            Eliminar cuenta
-          </Button>
-        </Card> */}
       </View>
     </ScrollView>
   );

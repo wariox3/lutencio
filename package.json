@@ -29,8 +29,10 @@
     "@tamagui/core": "^1.123.4",
     "@tamagui/lucide-icons": "^1.123.4",
     "@tamagui/types": "^1.123.4",
+    "@types/react-native-version-check": "^3.4.8",
     "axios": "^1.7.9",
     "expo": "~52.0.28",
+    "expo-application": "~6.0.2",
     "expo-background-fetch": "~13.0.6",
     "expo-background-task": "~0.1.4",
     "expo-blur": "~14.0.3",
@@ -62,12 +64,12 @@
     "react-native-screens": "~4.4.0",
     "react-native-signature-canvas": "^4.7.2",
     "react-native-svg": "^15.11.1",
+    "react-native-version-check": "^3.5.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
-    "tamagui": "^1.123.4",
-    "expo-application": "~6.0.2"
+    "tamagui": "^1.123.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

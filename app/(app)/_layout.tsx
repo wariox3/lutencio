@@ -29,6 +29,18 @@ export default function AppLayout() {
           },
         }}
       />
+      <Drawer.Screen
+        name="(acercaDe)"
+        options={{
+          headerShown: false,
+          headerTitle: "",
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+        }}
+      />
     </Drawer>
   );
 }
