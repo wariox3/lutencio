@@ -16,5 +16,6 @@ export const rutasApp = {
   perfil: "/(app)/(profile)",
   terminos: "/(app)/(profile)/terminos",
   privacidad: "/(app)/(profile)/privacidad",
+  acercaDe:  "/(app)/(acercaDe)/",
   eliminarCuenta: "/(app)/(profile)/eliminar-cuenta"
 } as const;
