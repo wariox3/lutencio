@@ -19,6 +19,14 @@ export const obtenerVisitasLog = createSelector(
   }
 );
 
+export const selectPendientesPorEntregar = createSelector(
+  [selectEntregas],
+  (entregas) => {
+    return entregas.entregas.filter(
+      (entrega) => entrega.estado_entregado === false
+    );
+  }
+);
 
 export const obtenerEntregasPendientes = createSelector(
   [selectEntregas],
@@ -33,7 +41,7 @@ export const obtenerEntregasPendientes = createSelector(
 );
 
 export const selectTotalEntregasCounter = createSelector(
-  [obtenerEntregasPendientes, selectAllNovedades],
+  [selectPendientesPorEntregar, selectAllNovedades],
   (entregas, novedades) => entregas.length - novedades.length
 );
 

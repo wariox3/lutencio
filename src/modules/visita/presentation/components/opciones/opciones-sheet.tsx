@@ -66,7 +66,6 @@ export const EntregaOpciones = () => {
   const [modal] = useState(true);
   const [snapPointsMode] = useState<(typeof spModes)[number]>("mixed");
   const snapPoints = ["100%"];
-  const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
   const cantidadNovedades = useAppSelector(selectCantidadNovedades);
   const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
   const totalEntregas = useAppSelector(selectTotalEntregasCounter);
@@ -201,11 +200,7 @@ const SheetContents = memo(({ setOpen }: any) => {
     ({ entregas }) => entregas.entregasSeleccionadas || []
   );
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
-  const arrEntregas = useAppSelector(
-    ({ entregas }) =>
-      entregas.entregas.filter((entrega) => !entrega.estado_entregado) || [],
-    shallowEqual
-  );
+  const totalEntregas = useAppSelector(selectTotalEntregasCounter);
 
   const cargandoEntregas = useAppSelector(getSincronizandoEntregas);
   const cargandoNovedades = useAppSelector(selectSincronizandoNovedades);
@@ -221,7 +216,7 @@ const SheetContents = memo(({ setOpen }: any) => {
   const visitasErrorTemporal = useAppSelector(selectVisitasConErrorTemporal);
 
   const cantidadNovedades = useAppSelector(selectCantidadNovedades);
-  const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
+  const arrEntregasSincronizado = useAppSelector(selectEntregasSincronizadas);
 
   const { eliminarArchivo } = useEliminarEnGaleria();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
@@ -319,7 +314,7 @@ const SheetContents = memo(({ setOpen }: any) => {
               <CardInformativa
                 backgroundColor={COLORES.AZUL_SUAVE}
                 titulo="Cargadas"
-                cantidad={arrEntregas.length}
+                cantidad={totalEntregas}
                 icono={<Package size={28} opacity={0.7} />}
               ></CardInformativa>
               <CardInformativa
@@ -331,7 +326,7 @@ const SheetContents = memo(({ setOpen }: any) => {
               <CardInformativa
                 backgroundColor={COLORES.VERDE_SUAVE}
                 titulo="Entregas"
-                cantidad={arrEntregasSinconizado.length}
+                cantidad={arrEntregasSincronizado.length}
                 icono={<FileCheck size={28} opacity={0.7} />}
               ></CardInformativa>
             </XStack>
