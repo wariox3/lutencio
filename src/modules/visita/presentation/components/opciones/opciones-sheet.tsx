@@ -15,6 +15,7 @@ import {
   getSincronizandoEntregas,
   selectCantidadVisitasConErrorTemporal,
   selectEntregasSincronizadas,
+  selectTotalEntregasCounter,
   selectVisitasConErrorTemporal,
 } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
@@ -68,6 +69,7 @@ export const EntregaOpciones = () => {
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
   const cantidadNovedades = useAppSelector(selectCantidadNovedades);
   const arrEntregasSinconizado = useAppSelector(selectEntregasSincronizadas);
+  const totalEntregas = useAppSelector(selectTotalEntregasCounter);
   const sincronizandoEntregas = useAppSelector(getSincronizandoEntregas);
   const sincronizandoLoader = useAppSelector(selectSincronizandoNovedades);
   const cantidadEntregasErrorTemporal = useAppSelector(
@@ -124,7 +126,7 @@ export const EntregaOpciones = () => {
           <XStack items="center" gap="$1">
             <Package size={12} color="$blue10" />
             <Text fontSize="$2" fontWeight="600" color="$blue10">
-              {entregas.length}
+              {totalEntregas}
             </Text>
           </XStack>
           <XStack items="center" gap="$1">
