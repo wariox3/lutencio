@@ -16,7 +16,6 @@ import {
   selectCantidadVisitasConErrorTemporal,
   selectCantidadVisitasTotal,
   selectEntregadas,
-  selectEntregasSincronizadas,
   selectTotalEntregasCounter,
   selectVisitasConErrorTemporal,
 } from "@/src/modules/visita/application/slice/entrega.selector";
@@ -26,8 +25,14 @@ import {
   entregasProcesadas,
   limpiarEntregaSeleccionada,
 } from "@/src/modules/visita/application/slice/entrega.slice";
-import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import {
+  mostrarAlertHook,
+  useAlertaGlobal,
+} from "@/src/shared/hooks/useAlertaGlobal";
+import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
+import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
+import {
+  ClipboardX,
   CloudUpload,
   FileCheck,
   FileWarning,
@@ -41,9 +46,8 @@ import {
 import { Sheet } from "@tamagui/sheet";
 import { useRouter } from "expo-router";
 import { memo, useEffect, useRef, useState } from "react";
-import { Alert, Animated, ScrollView } from "react-native";
+import { Animated, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { shallowEqual } from "react-redux";
 import {
   Button,
   H4,
@@ -57,8 +61,6 @@ import {
 } from "tamagui";
 import CardDesvincularOrdenEntrega from "./card-desvincular-orden-entrega";
 import CardInformativa from "./card-informativa";
-import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
-import { mostrarAlertHook, useAlertaGlobal } from "@/src/shared/hooks/useAlertaGlobal";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -74,7 +76,6 @@ export const EntregaOpciones = () => {
   const sincronizandoEntregas = useAppSelector(getSincronizandoEntregas);
   const sincronizandoLoader = useAppSelector(selectSincronizandoNovedades);
   const cantidadVisitasTotal = useAppSelector(selectCantidadVisitasTotal);
-  
 
   const cantidadEntregasErrorTemporal = useAppSelector(
     selectCantidadVisitasConErrorTemporal
@@ -156,15 +157,15 @@ export const EntregaOpciones = () => {
         ml={"$2"}
         paddingBlock={"$2"}
         paddingInline={"$2"}
-        borderEndStartRadius={'$10'}
-        borderEndEndRadius={'$10'}
-        borderStartEndRadius={'$10'}
-        borderStartStartRadius={'$10'}
+        borderEndStartRadius={"$10"}
+        borderEndEndRadius={"$10"}
+        borderStartEndRadius={"$10"}
+        borderStartStartRadius={"$10"}
         style={{
           backgroundColor: "transparent",
           borderColor: "transparent",
         }}
-></Button>
+      ></Button>
 
       <Sheet
         forceRemoveScrollEnabled={open}
@@ -223,7 +224,6 @@ const SheetContents = memo(({ setOpen }: any) => {
   const cantidadNovedades = useAppSelector(selectCantidadNovedades);
   const entregadas = useAppSelector(selectEntregadas);
   const cantidadVisitasTotal = useAppSelector(selectCantidadVisitasTotal);
-  
 
   const { eliminarArchivo } = useEliminarEnGaleria();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
@@ -321,7 +321,9 @@ const SheetContents = memo(({ setOpen }: any) => {
               <CardInformativa
                 backgroundColor={COLORES.AZUL_SUAVE}
                 titulo="Cargadas"
-                cantidad={`${cantidadNovedades+entregadas.length} de ${cantidadVisitasTotal}`}
+                cantidad={`${
+                  cantidadNovedades + entregadas.length
+                } de ${cantidadVisitasTotal}`}
                 icono={<Package size={28} opacity={0.7} />}
               ></CardInformativa>
               <CardInformativa
@@ -340,7 +342,14 @@ const SheetContents = memo(({ setOpen }: any) => {
 
             {entregas.length > 0 ? (
               <View my="$2">
-                <CardDesvincularOrdenEntrega close={() => setOpen(false)} />
+                <CardDesvincularOrdenEntrega
+                  close={() => setOpen(false)}
+                  titulo="Desvincular"
+                  mensaje="Retirar la orden de entrega actual y visitas"
+                  textoColor="VERDE_FUERTE"
+                  bgColor="VERDE_SUAVE"
+                  validaEntregasPendentesSincronizar={true}
+                />
               </View>
             ) : null}
 
@@ -357,37 +366,23 @@ const SheetContents = memo(({ setOpen }: any) => {
               </>
             ) : null}
 
-            {cantidadNovedadesErrorTemporal > 0 ||
-            cantidadVisitasErrorTemporal > 0 ? (
-              <>
-                <H6 mb="$2">Sincronizar</H6>
+            <H6 mb="$2">Sincronizar</H6>
+            <ListItem
+              hoverTheme
+              icon={<CloudUpload size="$2" />}
+              iconAfter={
                 <>
-                  {cantidadNovedadesErrorTemporal > 0 ||
-                  cantidadVisitasErrorTemporal > 0 ? (
-                    <>
-                      <ListItem
-                        hoverTheme
-                        icon={<CloudUpload size="$2" />}
-                        iconAfter={
-                          <>
-                            {cargandoEntregas || cargandoNovedades ? (
-                              <Spinner size="small" color="$green10" />
-                            ) : null}
-                          </>
-                        }
-                        title="Sincronizar"
-                        subTitle="Sincronizar visitas/novedades pendientes"
-                        onPress={sincronizarPendientes}
-                        disabled={cargandoEntregas || cargandoNovedades}
-                        opacity={
-                          cargandoEntregas || cargandoNovedades ? 0.5 : 1
-                        }
-                      />
-                    </>
+                  {cargandoEntregas || cargandoNovedades ? (
+                    <Spinner size="small" color="$green10" />
                   ) : null}
                 </>
-              </>
-            ) : null}
+              }
+              title="Sincronizar"
+              subTitle="Sincronizar visitas/novedades pendientes"
+              onPress={sincronizarPendientes}
+              disabled={cargandoEntregas || cargandoNovedades}
+              opacity={cargandoEntregas || cargandoNovedades ? 0.5 : 1}
+            />
 
             <H6 mb="$2">Log</H6>
             <View my="$2">
@@ -409,6 +404,18 @@ const SheetContents = memo(({ setOpen }: any) => {
               />
             </View>
           </YGroup.Item>
+          {entregas.length > 0 ? (
+            <View my="$2">
+              <CardDesvincularOrdenEntrega
+                close={() => setOpen(false)}
+                titulo="Forzar desvincular"
+                mensaje="Esto eliminará todos los registros guardados en tu dispositivo."
+                textoColor="ROJO_FUERTE"
+                bgColor="ROJO_SUAVE"
+                validaEntregasPendentesSincronizar={false}
+              />
+            </View>
+          ) : null}
         </ScrollView>
       </YGroup>
     </SafeAreaView>

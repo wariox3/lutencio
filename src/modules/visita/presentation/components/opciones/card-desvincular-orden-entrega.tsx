@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import { alertas } from "@/src/core/constants/alertas.const";
-import COLORES from "@/src/core/constants/colores.constant";
+import COLORES, { ColorKey } from "@/src/core/constants/colores.constant";
 import storageService from "@/src/core/services/storage.service";
 import { cleanNovedades } from "@/src/modules/novedad/application/store/novedad.slice";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
@@ -11,7 +11,10 @@ import { ClipboardX } from "@tamagui/lucide-icons";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { Card, Text, XStack, YStack } from "tamagui";
-import { obtenerEntregasSeleccionadas } from "../../../application/slice/entrega.selector";
+import {
+  obtenerEntregasPendientesTodas,
+  obtenerEntregasSeleccionadas,
+} from "../../../application/slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
   limpiarEntregaSeleccionada,
@@ -19,14 +22,44 @@ import {
   quitarFiltros,
 } from "../../../application/slice/entrega.slice";
 
-const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
+const CardDesvincularOrdenEntrega = ({
+  close,
+  titulo,
+  mensaje,
+  textoColor,
+  bgColor,
+  validaEntregasPendentesSincronizar
+}: {
+  close: () => void;
+  titulo: string;
+  mensaje: string;
+  textoColor: ColorKey; 
+  bgColor: ColorKey;
+  validaEntregasPendentesSincronizar: boolean
+}) => {
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
   const entregasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
+  const entregasPendientesTodas = useAppSelector(
+    obtenerEntregasPendientesTodas
+  );
   const dispatch = useAppDispatch();
   const { eliminarArchivo } = useEliminarEnGaleria();
 
   const confirmarRetirarDespacho = async () => {
     close();
+
+
+    if(validaEntregasPendentesSincronizar){
+      if(entregasPendientesTodas.length > 0){
+        mostrarAlertHook({
+          titulo: 'No puede desvincular la orden',
+          mensaje: 'Tiene visitas entregadas localmente pendientes por sinconizar',
+        })
+        return true
+      }
+    }
+
+
     mostrarAlertHook({
       titulo: alertas.titulo.advertencia,
       mensaje: alertas.mensaje.accionIrreversible,
@@ -93,7 +126,7 @@ const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
 
   return (
     <Card
-      backgroundColor={COLORES.ROJO_SUAVE}
+      backgroundColor={COLORES[bgColor]}
       borderRadius="$4"
       padding="$3.5"
       width="100%"
@@ -101,13 +134,17 @@ const CardDesvincularOrdenEntrega = ({ close }: { close: () => void }) => {
       onPress={() => confirmarRetirarDespacho()}
     >
       <XStack gap="$2" items="center" flexWrap="wrap">
-        <ClipboardX size="$2" color={COLORES.ROJO_FUERTE} />
+        <ClipboardX size="$2" color={COLORES[textoColor]} />
         <YStack flex={1} gap="$2">
-          <Text color={COLORES.ROJO_FUERTE} fontWeight="bold">
-            Desvincular
+          <Text color={COLORES[textoColor]} fontWeight="bold">
+            { titulo }
           </Text>
-          <Text color={COLORES.ROJO_FUERTE} numberOfLines={3} ellipsizeMode="tail">
-            Se eliminará la vinculación con la orden de entrega actual.
+          <Text
+            color={COLORES[textoColor]}
+            numberOfLines={3}
+            ellipsizeMode="tail"
+          >
+            { mensaje }
           </Text>
         </YStack>
       </XStack>

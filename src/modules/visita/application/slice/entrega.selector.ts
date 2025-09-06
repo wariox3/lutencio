@@ -28,6 +28,19 @@ export const selectPendientesPorEntregar = createSelector(
   }
 );
 
+export const obtenerEntregasPendientesTodas = createSelector(
+  [selectEntregas],
+  (entregas) => {
+    return entregas.entregas.filter(
+      (entrega) =>
+        entrega.estado_entregado === true &&
+        entrega.estado_sincronizado === false
+    );
+  }
+);
+
+
+
 export const obtenerEntregasPendientes = createSelector(
   [selectEntregas],
   (entregas) => {
@@ -40,14 +53,11 @@ export const obtenerEntregasPendientes = createSelector(
   }
 );
 
-export const selectEntregadas = createSelector(
-  [selectEntregas],
-  (entregas) => {
-    return entregas.entregas.filter(
-      (entrega) => entrega.estado_entregado === true
-    );
-  }
-);
+export const selectEntregadas = createSelector([selectEntregas], (entregas) => {
+  return entregas.entregas.filter(
+    (entrega) => entrega.estado_entregado === true
+  );
+});
 
 export const selectTotalEntregasCounter = createSelector(
   [selectPendientesPorEntregar, selectAllNovedades],
@@ -86,7 +96,7 @@ export const obtenerVisita = (visitaId: number) =>
     [selectEntregas],
     (entregas) =>
       entregas.entregas.filter((visita) => visita.id === visitaId) || []
-);
+  );
 
 export const obtenerFiltroGuia = createSelector([selectFiltros], (filtros) => {
   return filtros.guia;
