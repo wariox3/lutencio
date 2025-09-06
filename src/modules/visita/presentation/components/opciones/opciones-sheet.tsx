@@ -130,7 +130,7 @@ export const EntregaOpciones = () => {
           <XStack items="center" gap="$1">
             <Package size={12} color="$blue10" />
             <Text fontSize="$2" fontWeight="600" color="$blue10">
-              {totalEntregas}/{cantidadVisitasTotal} 
+              {cantidadNovedades+entregadas.length} de {cantidadVisitasTotal}
             </Text>
           </XStack>
           <XStack items="center" gap="$1">
@@ -222,6 +222,8 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   const cantidadNovedades = useAppSelector(selectCantidadNovedades);
   const entregadas = useAppSelector(selectEntregadas);
+  const cantidadVisitasTotal = useAppSelector(selectCantidadVisitasTotal);
+  
 
   const { eliminarArchivo } = useEliminarEnGaleria();
   const [loadSincronizando, setLoadSincronizando] = useState(false);
@@ -319,7 +321,7 @@ const SheetContents = memo(({ setOpen }: any) => {
               <CardInformativa
                 backgroundColor={COLORES.AZUL_SUAVE}
                 titulo="Cargadas"
-                cantidad={totalEntregas}
+                cantidad={`${cantidadNovedades+entregadas.length} de ${cantidadVisitasTotal}`}
                 icono={<Package size={28} opacity={0.7} />}
               ></CardInformativa>
               <CardInformativa

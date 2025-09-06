@@ -5,7 +5,7 @@ interface cardInterfomativa {
   backgroundColor: any;
   titulo: string;
   icono: ReactElement;
-  cantidad: number;
+  cantidad: number | string;
 }
 
 const CardInformativa = ({
@@ -26,7 +26,7 @@ const CardInformativa = ({
           {titulo}
         </Text>
         <XStack items="center" justify="space-between" gap={"$2"}>
-          <Text fontSize="$8" fontWeight="bold">
+          <Text fontSize="$4" fontWeight="bold">
             {cantidad}
           </Text>
           <>{icono}</>
