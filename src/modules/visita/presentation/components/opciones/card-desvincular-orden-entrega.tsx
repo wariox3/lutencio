@@ -14,6 +14,8 @@ import { Card, Text, XStack, YStack } from "tamagui";
 import {
   obtenerEntregasPendientesTodas,
   obtenerEntregasSeleccionadas,
+  selectEntregadas,
+  selectEntregasSincronizadas,
 } from "../../../application/slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
@@ -21,6 +23,8 @@ import {
   quitarEntregas,
   quitarFiltros,
 } from "../../../application/slice/entrega.slice";
+import { visitaSeguimientoThunk } from "../../../application/slice/visita.thunk";
+import { selectCantidadNovedades } from "@/src/modules/novedad/application/store/novedad.selector";
 
 const CardDesvincularOrdenEntrega = ({
   close,
@@ -28,17 +32,20 @@ const CardDesvincularOrdenEntrega = ({
   mensaje,
   textoColor,
   bgColor,
-  validaEntregasPendentesSincronizar
+  validaEntregasPendentesSincronizar,
 }: {
   close: () => void;
   titulo: string;
   mensaje: string;
-  textoColor: ColorKey; 
+  textoColor: ColorKey;
   bgColor: ColorKey;
-  validaEntregasPendentesSincronizar: boolean
+  validaEntregasPendentesSincronizar: boolean;
 }) => {
   const entregas = useAppSelector(({ entregas }) => entregas.entregas || []);
   const entregasSeleccionadas = useAppSelector(obtenerEntregasSeleccionadas);
+  const entregadasEntregadas = useAppSelector(selectEntregadas);
+  const cantidadNovedades = useAppSelector(selectCantidadNovedades);  
+  
   const entregasPendientesTodas = useAppSelector(
     obtenerEntregasPendientesTodas
   );
@@ -48,17 +55,16 @@ const CardDesvincularOrdenEntrega = ({
   const confirmarRetirarDespacho = async () => {
     close();
 
-
-    if(validaEntregasPendentesSincronizar){
-      if(entregasPendientesTodas.length > 0){
+    if (validaEntregasPendentesSincronizar) {
+      if (entregasPendientesTodas.length > 0) {
         mostrarAlertHook({
-          titulo: 'No puede desvincular la orden',
-          mensaje: 'Tiene visitas entregadas localmente pendientes por sinconizar',
-        })
-        return true
+          titulo: "No puede desvincular la orden",
+          mensaje:
+            "Tiene visitas entregadas localmente pendientes por sinconizar",
+        });
+        return true;
       }
     }
-
 
     mostrarAlertHook({
       titulo: alertas.titulo.advertencia,
@@ -72,6 +78,16 @@ const CardDesvincularOrdenEntrega = ({
     if (status === "granted") {
       // deterner servicio de la ubicación
       await detenerTareaSeguimientoUbicacion();
+
+      // post de seguimiento
+      await dispatch(
+        visitaSeguimientoThunk({
+          cantidadCargadas: entregas.length,
+          cantidadEntregasLocales: entregadasEntregadas.length,
+          cantidadNovedadesLocales: cantidadNovedades,
+          cantidadNovedadesLocalesPendienteSinconizar: entregasPendientesTodas.length,
+        })
+      ).unwrap();
 
       // Limpiar el despacho almacenado
       await storageService.removeItem(STORAGE_KEYS.despacho);
@@ -99,13 +115,13 @@ const CardDesvincularOrdenEntrega = ({
         }
       }
 
-      //   //retirar las entregas
+      // retirar las entregas
       dispatch(quitarEntregas());
 
-      //   //retirar novedades
+      // retirar novedades
       dispatch(cleanNovedades());
 
-      //   //retirar entregas seleccionadas
+      // retirar entregas seleccionadas
       retirarSeleccionadas();
 
       // retirar filtros
@@ -137,14 +153,14 @@ const CardDesvincularOrdenEntrega = ({
         <ClipboardX size="$2" color={COLORES[textoColor]} />
         <YStack flex={1} gap="$2">
           <Text color={COLORES[textoColor]} fontWeight="bold">
-            { titulo }
+            {titulo}
           </Text>
           <Text
             color={COLORES[textoColor]}
             numberOfLines={3}
             ellipsizeMode="tail"
           >
-            { mensaje }
+            {mensaje}
           </Text>
         </YStack>
       </XStack>

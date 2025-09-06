@@ -24,4 +24,11 @@ export interface VisitaRepository {
     longitud: any,
     subdominio: string
   ): Promise<any>
+
+  setSeguimiento(
+    cantidadCargadas: number,
+    cantidadEntregasLocales: number,
+    cantidadNovedadesLocales: number,
+    cantidadNovedadesLocalesPendienteSinconizar: number
+  ) : Promise<any>
 }

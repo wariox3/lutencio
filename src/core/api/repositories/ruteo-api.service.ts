@@ -24,7 +24,6 @@ export class RuteoApiRepository implements RuteoRepository {
     );
   }
 
-
   async getNovedadTipoLista() {
     const subdominio = (await storageService.getItem(
       STORAGE_KEYS.subdominio
@@ -81,6 +80,25 @@ export class RuteoApiRepository implements RuteoRepository {
         latitud,
         longitud,
       },
+      {
+        "X-Schema-Name": subdominio,
+      }
+    );
+  }
+
+  async postSeguimiento(
+    despacho: string,
+    usuario_id: string,
+    comentario: string,
+    subdominio: string
+  ) {
+    console.log({
+      despacho, usuario_id, comentario, subdominio
+    });
+    
+    return apiService.post<any>(
+      APIS.ruteo.seguimiento,
+      { despacho, usuario_id, comentario },
       {
         "X-Schema-Name": subdominio,
       }

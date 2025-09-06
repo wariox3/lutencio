@@ -2,15 +2,16 @@ import APIS from "@/src/core/api/domain/constants/endpoint.constant";
 import { GeneralApiRepository } from "@/src/core/api/repositories/general-api.service";
 import { RuteoApiRepository } from "@/src/core/api/repositories/ruteo-api.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
-import storageService from "@/src/core/services/storage.service";
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
+import storageService from "@/src/core/services/storage.service";
+import React from "react";
 
 export class VisitaApiRepository implements VisitaRepository {
   constructor(
     private generalApiService = new GeneralApiRepository(),
     private ruteoApiRepository = new RuteoApiRepository()
-  ) { }
+  ) {}
 
   async getLista(
     despachoId: number,
@@ -109,4 +110,24 @@ export class VisitaApiRepository implements VisitaRepository {
     return this.ruteoApiRepository.postUbicacionVisita(usuario_id, despacho, latitud, longitud, subdominio)
   }
 
+  async setSeguimiento(
+    cantidadCargadas: number,
+    cantidadEntregasLocales: number,
+    cantidadNovedadesLocales: number,
+    cantidadNovedadesLocalesPendienteSinconizar: number
+  ) {
+    const subdominio = (await storageService.getItem(
+      STORAGE_KEYS.subdominio
+    )) as string;
+    const despacho = await storageService.getItem(
+      STORAGE_KEYS.despacho
+    ) as string;
+    const usuario_id = (await storageService.getItem(
+      STORAGE_KEYS.usuarioId
+    )) as string;
+    const comentario = `cargadas: ${cantidadCargadas}, entregadas local: ${cantidadEntregasLocales}, novedad local: ${cantidadNovedadesLocales} , sincronizar : ${cantidadNovedadesLocalesPendienteSinconizar}`;
+    console.log('despacho', despacho);
+    
+    return this.ruteoApiRepository.postSeguimiento(despacho, usuario_id, comentario.slice(0, 500), subdominio)
+  }
 }

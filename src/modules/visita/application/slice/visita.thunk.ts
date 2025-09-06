@@ -6,7 +6,8 @@ import { VerticalApiRepository } from "../../infraestructure/api/vertical-api.se
 import {
   GetListaVisitaUseCase,
   SetNovedadSolucionVisitaUseCase,
-  SetEntregaVisitaUseCase
+  SetEntregaVisitaUseCase,
+  SetSeguiminetoVisitaUseCase,
 } from "../use-cases";
 import { SetNovedadVisitaUseCase } from "../use-cases/set-novedad-visita.use-case";
 
@@ -48,16 +49,16 @@ export const cargarOrdenThunk = createAsyncThunk(
 
 export const visitaEntregaThunk = createAsyncThunk(
   "visita/guardar-visita",
-  async (payload: { formData: any, visitaId: number }, { rejectWithValue }) => {
+  async (payload: { formData: any; visitaId: number }, { rejectWithValue }) => {
     try {
       const respuestaVistaEntrega =
-        await new SetEntregaVisitaUseCase().setVisita(payload.formData)
-      return {...respuestaVistaEntrega, visita: payload.visitaId};
-    } catch (error: any) {      
+        await new SetEntregaVisitaUseCase().setVisita(payload.formData);
+      return { ...respuestaVistaEntrega, visita: payload.visitaId };
+    } catch (error: any) {
       return rejectWithValue(error);
     }
   }
-)
+);
 
 export const visitaNovedadThunk = createAsyncThunk(
   "visita/guardar-novedad",
@@ -67,7 +68,7 @@ export const visitaNovedadThunk = createAsyncThunk(
       descripcion: string;
       novedad_tipo: string;
       imagenes: any;
-      fecha_entrega: any
+      fecha_entrega: any;
     },
     { rejectWithValue }
   ) => {
@@ -100,6 +101,32 @@ export const visitaNovedadSolucionThunk = createAsyncThunk(
           payload.solucion
         );
       return { ...respuestaVisitaSolucionNovedad, visita: payload.visita };
+    } catch (error: any) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const visitaSeguimientoThunk = createAsyncThunk(
+  "visita/seguimiento",
+  async (
+    payload: {
+      cantidadCargadas: number;
+      cantidadEntregasLocales: number;
+      cantidadNovedadesLocales: number;
+      cantidadNovedadesLocalesPendienteSinconizar: number;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const respuestaVisitaSeguimiento =
+        await new SetSeguiminetoVisitaUseCase().setSeguimiento(
+          payload.cantidadCargadas,
+          payload.cantidadEntregasLocales,
+          payload.cantidadNovedadesLocales,
+          payload.cantidadNovedadesLocalesPendienteSinconizar
+        );
+        return { ...respuestaVisitaSeguimiento };
     } catch (error: any) {
       return rejectWithValue(error);
     }
