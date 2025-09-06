@@ -120,3 +120,8 @@ export const selectCantidadVisitasConErrorTemporal = createSelector(
   [selectVisitasConErrorTemporal],
   (entregas) => entregas.length
 );
+
+export const selectCantidadVisitasTotal = createSelector(
+  [selectEntregas],
+  (entregas) => entregas.entregas.length
+);

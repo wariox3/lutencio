@@ -14,6 +14,7 @@ import {
 import {
   getSincronizandoEntregas,
   selectCantidadVisitasConErrorTemporal,
+  selectCantidadVisitasTotal,
   selectEntregadas,
   selectEntregasSincronizadas,
   selectTotalEntregasCounter,
@@ -72,6 +73,9 @@ export const EntregaOpciones = () => {
   const totalEntregas = useAppSelector(selectTotalEntregasCounter);
   const sincronizandoEntregas = useAppSelector(getSincronizandoEntregas);
   const sincronizandoLoader = useAppSelector(selectSincronizandoNovedades);
+  const cantidadVisitasTotal = useAppSelector(selectCantidadVisitasTotal);
+  
+
   const cantidadEntregasErrorTemporal = useAppSelector(
     selectCantidadVisitasConErrorTemporal
   );
@@ -126,7 +130,7 @@ export const EntregaOpciones = () => {
           <XStack items="center" gap="$1">
             <Package size={12} color="$blue10" />
             <Text fontSize="$2" fontWeight="600" color="$blue10">
-              {totalEntregas}
+              {totalEntregas}/{cantidadVisitasTotal} 
             </Text>
           </XStack>
           <XStack items="center" gap="$1">
