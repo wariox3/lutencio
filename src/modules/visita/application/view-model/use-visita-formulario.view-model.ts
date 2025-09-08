@@ -13,6 +13,7 @@ import {
   entregasProcesadas,
   quitarEntregaSeleccionada
 } from "../slice/entrega.slice";
+import { networkMonitor } from "@/src/core/services/network-monitor.service";
 
 type VisitaFormType = {
   recibe: string;
@@ -167,8 +168,13 @@ export default function useVisitaFormularioViewModel() {
           },
         },
       }));
+
+      if(!networkMonitor.isConnected()){
+        dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: true, codigo: 500, mensaje: "" }));
+      } else {
+        dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: false, codigo: 0, mensaje: "" }));
+      }
        
-      dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: false, codigo: 0, mensaje: "" }));
       dispatch(cambiarEstadoSincronizado({ visitaId, nuevoEstado: false }));
       dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
       dispatch(quitarEntregaSeleccionada(visitaId));

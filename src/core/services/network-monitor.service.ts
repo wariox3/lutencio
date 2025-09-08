@@ -49,7 +49,7 @@ export class NetworkMonitorService {
       // Si pasamos de offline a online, emitir evento específico con debounce
       if (nuevoEstado && !estadoAnterior) {
         console.log('Conexión restaurada, programando sincronización...');
-        this.debounceSyncAttempt();
+        // this.debounceSyncAttempt();
       } else if (!nuevoEstado && estadoAnterior) {
         // Si pasamos de online a offline, emitir evento específico
         eventBus.emit(NETWORK_EVENTS.OFFLINE);

@@ -1,5 +1,6 @@
 export type OlvidoClaveFormType = {
   username: string;
+  aplicacion: string;
 };
 
 export type OlvidoClaveResponse = {

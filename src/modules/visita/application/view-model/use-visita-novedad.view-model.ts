@@ -2,6 +2,7 @@ import { obtenerConfiguracionSelectorNovedadTipo } from "@/src/application/selec
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
 import {
   addNovedad,
+  changeEstadoSincronizadoError,
   finishedSavingProcessNovedades,
 } from "@/src/modules/novedad/application/store/novedad.slice";
 import { NovedadTipo } from "@/src/modules/visita/domain/interfaces/novedad-tipo.interface";
@@ -16,6 +17,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { obtenerEntregasSeleccionadas } from "../slice/entrega.selector";
 import { cambiarEstadoNovedad, quitarEntregaSeleccionada } from "../slice/entrega.slice";
+import { networkMonitor } from "@/src/core/services/network-monitor.service";
 
 const valoresFormulario: NovedadFormType = {
   descripcion: "",
@@ -115,7 +117,6 @@ export default function useVisitaNovedadViewModel() {
         Math.random().toString(36).substring(2, 15) +
         Math.random().toString(36).substring(2, 15);
 
-      console.log("idNovedad", idNovedad);
       dispatch(
         addNovedad({
           id: idNovedad,
@@ -127,8 +128,13 @@ export default function useVisitaNovedadViewModel() {
           estado_sincronizado: false,
           estado_sincronizada_error: false,
           estado_sincronizada_error_mensaje: "",
+          estado_sincronizado_codigo: 0,
         })
       );
+
+      if(!networkMonitor.isConnected()){
+        dispatch(changeEstadoSincronizadoError({ id: idNovedad, nuevoEstado: true, codigo: 500, mensaje: "" }));
+      }
 
       dispatch(
         cambiarEstadoNovedad({

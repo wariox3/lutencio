@@ -15,6 +15,7 @@ export default function useOlvidoClaveViewModel() {
   const { control, handleSubmit } = useForm<OlvidoClaveFormType>({
     defaultValues: {
       username: "",
+      aplicacion: "ruteo",
     },
   });
   const { obtenerColor } = useTemaVisual();

@@ -328,6 +328,14 @@ export class SincronizacionService {
                 nuevoEstado: true,
               })
             );
+            this.storeRef.dispatch(
+              cambiarEstadoSincronizadoError({
+                visitaId: entrega.id,
+                codigo: 0,
+                nuevoEstado: false,
+                mensaje: "",
+              })
+            );
             exitosos++;
             // Limpiar contador de intentos si fue exitoso
             this.intentosSincronizacion.delete(entrega.id.toString());
@@ -522,6 +530,14 @@ export class SincronizacionService {
               changeEstadoSincronizado({
                 id: novedad.id,
                 nuevoEstado: true,
+              })
+            );
+            this.storeRef.dispatch(
+              changeEstadoSincronizadoError({
+                id: novedad.id,
+                codigo: 0,
+                nuevoEstado: false,
+                mensaje: "",
               })
             );
             exitosos++;
