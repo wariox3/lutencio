@@ -1,4 +1,6 @@
+import { cambiarEstadoModoPrueba } from "@/src/application/slices/configuracion.slice";
 import { useAppDispatch } from "@/src/application/store/hooks";
+import COLORES from "@/src/core/constants/colores.constant";
 import { menuItems } from "@/src/core/constants/menuItems.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import storageService from "@/src/core/services/storage.service";
@@ -8,17 +10,15 @@ import {
   quitarEntregas,
 } from "@/src/modules/visita/application/slice/entrega.slice";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { DrawerContentComponentProps, DrawerContentScrollView } from "@react-navigation/drawer";
 import { LogOut } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
-import React from "react";
 import { Avatar, ListItem, XStack, YGroup } from "tamagui";
 import { useAlertaGlobal } from "../../hooks/useAlertaGlobal";
 import { useTemaVisual } from "../../hooks/useTemaVisual";
-import COLORES from "@/src/core/constants/colores.constant";
-import { cambiarEstadoModoPrueba } from "@/src/application/slices/configuracion.slice";
+import { CustomDrawerContentItemProps } from "../../interface/comun/custom-drawer-content-item-props.interface";
 
-export default function CustomDrawerContent(props: any) {
+export default function CustomDrawerContent(props: DrawerContentComponentProps) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { abrirAlerta } = useAlertaGlobal();
@@ -27,7 +27,7 @@ export default function CustomDrawerContent(props: any) {
   const cerrarSession = () => {
     return abrirAlerta({
       titulo: "Cerrar sesión",
-      mensaje: "Esta seguro de cerrar la sesión",
+      mensaje: "¿Está seguro de cerrar la sesión?",
       onAceptar: async () => {
         await storageService.clear();
         await detenerTareaSeguimientoUbicacion();
@@ -47,7 +47,10 @@ export default function CustomDrawerContent(props: any) {
   const miAvatar = require("@/assets/images/usuario.jpeg");
 
   return (
-    <DrawerContentScrollView {...props} style={{ backgroundColor: obtenerColor("BLANCO", "NEGRO") }}>
+    <DrawerContentScrollView
+      {...props}
+      style={{ backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
+    >
       <XStack justify={"center"}>
         <Avatar circular size="$8">
           <Avatar.Image src={miAvatar} />
@@ -57,8 +60,13 @@ export default function CustomDrawerContent(props: any) {
 
       <XStack $sm={{ flexDirection: "column" }}>
         <YGroup width={300} size="$4">
-          {Object.keys(menuItems).map((name: any, index: number) =>
-            CutomDrawerContentItem(index, name)
+          {Object.entries(menuItems).map(([key, item]) =>
+            <CustomDrawerContentItem
+              key={key}
+              name={item.etiqueta}
+              item={item}
+              onPress={() => navegar(item.ruta)}
+            />
           )}
 
           <YGroup width={300} size="$4">
@@ -66,30 +74,27 @@ export default function CustomDrawerContent(props: any) {
               <ListItem
                 icon={LogOut}
                 title={"Salir"}
-                onPress={() => cerrarSession()}
+                onPress={cerrarSession}
                 mt={"$2"}
               />
             </YGroup.Item>
           </YGroup>
         </YGroup>
       </XStack>
-      <XStack $sm={{ flexDirection: "column" }}></XStack>
     </DrawerContentScrollView>
   );
+}
 
-  function CutomDrawerContentItem(index: number, name: string) {
-    const item = menuItems[name] || menuItems.home; // Usa home si no encuentra el nombre
-    const IconComponent = item.icon;
-
-    return (
-      <YGroup.Item key={index.toString()}>
-        <ListItem
-          icon={IconComponent}
-          title={name}
-          onPress={() => navegar(item.ruta)}
-          mt={"$2"}
-        />
-      </YGroup.Item>
-    );
-  }
+function CustomDrawerContentItem({ name, item, onPress }: CustomDrawerContentItemProps) {
+  const IconComponent = item.icon;
+  return (
+    <YGroup.Item>
+      <ListItem
+        icon={IconComponent}
+        title={name}
+        onPress={onPress}
+        mt={"$2"}
+      />
+    </YGroup.Item>
+  );
 }

@@ -5,7 +5,6 @@ export const BotonAccion = ({
     onPress,
     icon,
     texto,
-    themeColor,
     mostrarCantidad,
     cantidad = 0,
   }: BtnAccionProps) => {
@@ -13,12 +12,14 @@ export const BotonAccion = ({
       <Button
         onPress={onPress}
         size="$4.5"
-        theme={mostrarCantidad ? themeColor : "accent"}
+        bg={mostrarCantidad ? "$blue10" : "$blue4"}
         icon={icon}
         disabled={!mostrarCantidad}
+        flex={1}
+        color={mostrarCantidad ? "white" : "black"}
       >
         {texto}
-        {mostrarCantidad && <Text>({cantidad})</Text>}
+        {mostrarCantidad && <Text color={'white'}>({cantidad})</Text>}
       </Button>
     );
   };

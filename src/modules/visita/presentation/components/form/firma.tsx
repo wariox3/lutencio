@@ -1,13 +1,12 @@
+import COLORES from "@/src/core/constants/colores.constant";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { PencilLine, XCircle } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
-import React, { memo, useEffect, useMemo, useRef, useState } from "react";
+import * as FileSystem from "expo-file-system";
+import { memo, useMemo, useRef, useState } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import SignatureScreen from "react-native-signature-canvas";
-import { Button, H4, Text, View } from "tamagui";
-import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
-import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
-import COLORES from "@/src/core/constants/colores.constant";
+import { Button, View } from "tamagui";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -24,33 +23,6 @@ export const EntregaFirma = ({
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] =
     useState<boolean>(false);
   const { obtenerColor } = useTemaVisual();
-
-  useEffect(() => {
-    (async () => {
-      const mediaStatus = await MediaLibrary.requestPermissionsAsync();
-      setHasMediaLibraryPermission(mediaStatus.status === "granted");
-    })();
-  }, []);
-
-  if (!hasMediaLibraryPermission) {
-    return (
-      <View px="$4">
-        <H4 mb="$2">Información</H4>
-        <Text mb="$4">No se cuenta con el permiso de la galeria</Text>
-      </View>
-    );
-  }
-
-  if (!hasMediaLibraryPermission) {
-    return (
-      <View px="$4">
-        <H4 mb="$2">Información</H4>
-
-        <Text mb="$4">Necesitamos su permiso para mostrar galeria.</Text>
-        <Button variant="outlined">Conceder permiso</Button>
-      </View>
-    );
-  }
 
   return (
     <>
@@ -182,7 +154,7 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
 
       <SignatureScreen
         ref={ref}
-        onEnd={() => handleEnd}
+        onEnd={handleEnd}
         onOK={handleOK}
         onEmpty={handleEmpty}
         onClear={handleClear}

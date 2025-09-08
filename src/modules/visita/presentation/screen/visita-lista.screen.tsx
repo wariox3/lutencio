@@ -94,18 +94,16 @@ export default function VisitaListaScreen() {
   return (
     <>
       <YStack
-        p={"$2"}
         height={100}
         bg={
           obtenerColor("HEADER_BACKGROUND_COLOR_LIGHT", "HEADER_BACKGROUND_COLOR_DARK")
         }
       >
-        <XStack justify={"space-around"}>
+        <XStack  justify={'space-between'} px={'$2'} gap={"$3"}>
           <BotonAccion
             onPress={() => router.navigate(rutasApp.visitaEntregar)}
             icon={<ArrowDownToLine size="$2" />}
             texto="Entregar"
-            themeColor="blue"
             mostrarCantidad={entregasSeleccionadas.length > 0}
             cantidad={entregasSeleccionadas.length}
           />
@@ -113,7 +111,6 @@ export default function VisitaListaScreen() {
             onPress={() => router.navigate(rutasApp.visitaNovedad)}
             icon={<FileWarning size="$2" />}
             texto="Novedad"
-            themeColor="yellow"
             mostrarCantidad={entregasSeleccionadas.length > 0}
             cantidad={entregasSeleccionadas.length}
           />
