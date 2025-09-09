@@ -48,6 +48,7 @@ export interface Entrega {
   seleccionado: boolean;
   arrImagenes: { uri: string }[];
   firmarBase64: string | null;
+  unidades: string;
 }
 
 export interface Resultado {
