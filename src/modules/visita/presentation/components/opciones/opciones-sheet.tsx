@@ -76,6 +76,8 @@ export const EntregaOpciones = () => {
   const sincronizandoEntregas = useAppSelector(getSincronizandoEntregas);
   const sincronizandoLoader = useAppSelector(selectSincronizandoNovedades);
   const cantidadVisitasTotal = useAppSelector(selectCantidadVisitasTotal);
+  const isOnline = useNetworkStatus();
+  const dispatch = useAppDispatch();
 
   const cantidadEntregasErrorTemporal = useAppSelector(
     selectCantidadVisitasConErrorTemporal
@@ -109,6 +111,66 @@ export const EntregaOpciones = () => {
     outputRange: ["0deg", "360deg"],
   });
 
+  const sincronizarVisitasPendientes = async () => {
+    if (visitasErrorTemporal?.length === 0) return;
+
+    const visitasIds: number[] = [];
+    visitasErrorTemporal?.forEach((visita) => {
+      visitasIds.push(visita.id);
+      dispatch(
+        cambiarEstadoSincronizadoError({
+          visitaId: visita.id,
+          nuevoEstado: false,
+          codigo: 0,
+          mensaje: "",
+        })
+      );
+    });
+
+    dispatch(entregasProcesadas({ entregasIds: visitasIds }));
+  };
+
+  const sincronizarNovedadesPedientes = async () => {
+    if (novedadesErrorTemporal?.length === 0) return;
+
+    const novedadesIds: number[] = [];
+    novedadesErrorTemporal?.forEach((novedad) => {
+      novedadesIds.push(Number(novedad.id));
+      dispatch(
+        changeEstadoSincronizadoError({
+          id: novedad.id,
+          nuevoEstado: false,
+          codigo: 0,
+          mensaje: "",
+        })
+      );
+    });
+    dispatch(finishedSavingProcessNovedades({ novedadesIds }));
+  };
+
+  const visitasErrorTemporal = useAppSelector(selectVisitasConErrorTemporal);
+
+  const novedadesErrorTemporal = useAppSelector(
+    selectNovedadesConErrorTemporal
+  );
+
+  const sincronizarPendientes = async () => {
+    if (!isOnline) {
+      mostrarAlertHook({
+        titulo: "Error",
+        mensaje: "No hay conexión a internet",
+        onAceptar: () => {},
+      });
+      setOpen(false);
+
+      return;
+    }
+
+    sincronizarVisitasPendientes();
+    sincronizarNovedadesPedientes();
+    setOpen(false);
+  };
+
   return (
     <>
       <XStack justify={"flex-end"} items="center" gap="$2">
@@ -121,7 +183,7 @@ export const EntregaOpciones = () => {
         <XStack gap="$2">
           {cantidadEntregasErrorTemporal + cantidadNovedadesErrorTemporal >
             0 && (
-            <XStack items="center" gap="$1">
+            <XStack items="center" gap="$1" onPress={sincronizarPendientes}>
               <CloudUpload size={12} color="$red10" />
               <Text fontSize="$2" fontWeight="600" color="$red10">
                 {cantidadEntregasErrorTemporal + cantidadNovedadesErrorTemporal}
@@ -131,7 +193,7 @@ export const EntregaOpciones = () => {
           <XStack items="center" gap="$1">
             <Package size={12} color="$blue10" />
             <Text fontSize="$2" fontWeight="600" color="$blue10">
-              {cantidadNovedades+entregadas.length} de {cantidadVisitasTotal}
+              {cantidadNovedades + entregadas.length} de {cantidadVisitasTotal}
             </Text>
           </XStack>
           <XStack items="center" gap="$1">
