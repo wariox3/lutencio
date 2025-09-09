@@ -4,6 +4,7 @@ import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import {
   AlertTriangle,
   CheckCircle,
+  CircleAlert,
   CircleUser,
   Clock,
   DollarSign,
@@ -86,8 +87,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
 
   return (
     <Card
-      pt="$2"
-      pb="$0"
+      py="$2"
       px="$3"
       mx="$2"
       mt="$1.5"
@@ -103,14 +103,27 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
     >
       {/* Encabezado con número y documento */}
       <XStack justify="space-between" items="center" mb="$1.5">
-        <Card bg={COLORES.AZUL_FUERTE} borderRadius="$2" p="$1.5">
-          <XStack items="center" gap="$1">
-            <Package size="$1" color={COLORES.BLANCO} />
-            <Text color={COLORES.BLANCO} fontWeight="bold" fontSize="$1">
-              #{visita.numero}
-            </Text>
-          </XStack>
-        </Card>
+        <XStack mt="$1.5" gap="$1.5" flexWrap="wrap">
+          <Card bg={COLORES.AZUL_FUERTE} borderRadius="$2" p="$1.5">
+            <XStack items="center" gap="$1.5">
+              <Package size="$1" color={COLORES.BLANCO} />
+              <Text color={COLORES.BLANCO} fontWeight="bold" fontSize="$1">
+                #{visita.numero}
+              </Text>
+            </XStack>
+          </Card>
+          {hasEstadoNovedad && (
+            <Card bg={COLORES.AZUL_FUERTE} borderRadius="$2" p="$1.5">
+              <XStack items="center" gap="$1.5">
+                <CircleAlert size="$1" color={COLORES.BLANCO} />
+                <Text color={COLORES.BLANCO} fontWeight="bold" fontSize="$1">
+                  Novedad
+                </Text>
+              </XStack>
+            </Card>
+          )}
+        </XStack>
+
         <Text fontSize="$2" color={obtenerColor("GRIS_OSCURO", "BLANCO")}>
           Doc: {visita.documento}
         </Text>
@@ -173,21 +186,36 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
               <View />
             )}
             <YStack>
-              <Text
-                flex={1}
-                fontSize="$2"
-                color={obtenerColor("GRIS_OSCURO", "BLANCO")}
-              >
-                Und: {visita.unidades}
-
-              </Text>
-              <Text
-                flex={1}
-                fontSize="$2"
-                color={obtenerColor("GRIS_OSCURO", "BLANCO")}
-              >
-                Peso: {visita.peso}
-              </Text>
+              <XStack gap={'$1.5'}>
+                <Text
+                  fontSize="$2"
+                  fontWeight={"bold"}
+                  color={obtenerColor("GRIS_OSCURO", "BLANCO")}
+                >
+                  Und
+                </Text>
+                <Text
+                  fontSize="$2"
+                  color={obtenerColor("GRIS_OSCURO", "BLANCO")}
+                >
+                  {visita.unidades}
+                </Text>
+              </XStack>
+              <XStack gap={'$1.5'}>
+                <Text
+                  fontSize="$2"
+                  fontWeight={"bold"}
+                  color={obtenerColor("GRIS_OSCURO", "BLANCO")}
+                >
+                  Peso
+                </Text>
+                <Text
+                  fontSize="$2"
+                  color={obtenerColor("GRIS_OSCURO", "BLANCO")}
+                >
+                  {visita.peso}
+                </Text>
+              </XStack>
             </YStack>
           </XStack>
 
@@ -197,7 +225,10 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
               style={{ flexDirection: "row", alignItems: "center", gap: 2 }}
             >
               <XStack items="center" gap="$1">
-                <DollarSign size="$1" color={obtenerColor("ROJO_FUERTE", "BLANCO")} />
+                <DollarSign
+                  size="$1"
+                  color={obtenerColor("ROJO_FUERTE", "BLANCO")}
+                />
                 <Text
                   color={obtenerColor("ROJO_FUERTE", "BLANCO")}
                   fontWeight="bold"
@@ -209,38 +240,6 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
           )}
         </XStack>
       </YStack>
-
-      {/* Estados y alertas */}
-      <XStack mt="$1.5" mb="$2" gap="$1" flexWrap="wrap">
-        {hasEstadoEntregado && (
-          <Card bg={COLORES.VERDE_SUAVE} borderRadius="$2" p="$1.5">
-            <XStack items="center" gap="$1">
-              <Text
-                color={obtenerColor("VERDE_FUERTE", "BLANCO")}
-                fontSize="$2"
-                fontWeight="500"
-              >
-                Entregado
-              </Text>
-            </XStack>
-          </Card>
-        )}
-
-        {hasEstadoNovedad && (
-          <Card bg={COLORES.AZUL_FUERTE} borderRadius="$2" p="$1.5">
-            <XStack items="center" gap="$1">
-              {/* <AlertTriangle size="$1" color={'yellow'} /> */}
-              <Text
-                color={obtenerColor("BLANCO", "BLANCO")}
-                fontSize="$2"
-                fontWeight="500"
-              >
-                Novedad
-              </Text>
-            </XStack>
-          </Card>
-        )}
-      </XStack>
     </Card>
   );
 };
