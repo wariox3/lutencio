@@ -36,7 +36,7 @@ const InputFiltros: React.FC<InputFiltrosProps> = ({ onFilterChange, placeholder
         <Input
           flex={1}
           placeholder={placeholder || "Buscar por número"}
-          keyboardType="number-pad"
+          keyboardType="default"
           borderStyle="unset"
           borderColor={"transparent"}
           focusStyle={{ borderColor: "transparent" }}
