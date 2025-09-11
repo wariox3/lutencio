@@ -5,7 +5,6 @@ import { STORAGE_KEYS } from "@/src/core/constants";
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { VisitaRepository } from "../../domain/interfaces/visita-repository.interface";
 import storageService from "@/src/core/services/storage.service";
-import React from "react";
 
 export class VisitaApiRepository implements VisitaRepository {
   constructor(
