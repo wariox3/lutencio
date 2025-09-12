@@ -1,10 +1,8 @@
-import Titulo from "@/src/shared/components/comun/titulo";
+import { Validaciones } from "@/src/core/constants";
+import MensajeModoPrueba from "@/src/modules/auth/presentation/components/mensaje-modo-prueba";
 import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
 import { PasswordInput } from "@/src/shared/components/form/inputs/password-Input";
-import MensajeModoPrueba from "@/src/modules/auth/presentation/components/mensaje-modo-prueba";
-import ModoPruebaSheet from "@/src/modules/auth/presentation/components/modo-prueba-sheet";
-import { Validaciones } from "@/src/core/constants";
-import React from "react";
+import { SafeAreaView } from "react-native";
 import {
   Button,
   Image,
@@ -15,9 +13,7 @@ import {
   XStack,
 } from "tamagui";
 import { useLoginViewModel } from "../../application/view-models/use-login.view-model";
-import ReusableSheet from "@/src/shared/components/comun/modal-sheet";
-import { SafeAreaView } from "react-native";
-import { Settings } from "@tamagui/lucide-icons";
+import * as Application from 'expo-application';
 
 export default function LoginScreen() {
   const {
@@ -98,6 +94,9 @@ export default function LoginScreen() {
           >
             ¿Olvidaste la contraseña?
           </Button>
+          <View flex={1} items={'center'}>
+            <Text fontWeight={"$1"} theme={'blue'}>V {Application.nativeApplicationVersion}</Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

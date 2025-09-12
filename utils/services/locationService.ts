@@ -42,7 +42,7 @@ export async function iniciarTareaSeguimientoUbicacion() {
     const { status: backgroundStatus } =
       await Location.requestBackgroundPermissionsAsync();
     if (backgroundStatus !== "granted") {
-      alert(
+      console.error(
         "Activa 'Permitir siempre' en ajustes para el rastreo en segundo plano."
       );
       return;
@@ -75,7 +75,8 @@ export async function iniciarTareaSeguimientoUbicacion() {
     );
   } catch (error: any) {
     //console.error("Error crítico:", error);
-    alert("Error al iniciar el servicio: " + error.message);
+    console.error("Error al iniciar el servicio: " + error.message);
+    return;
   }
 }
 
