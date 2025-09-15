@@ -37,7 +37,7 @@ const FotoMetadata = ({ imagen }: { imagen: ImagenMetaData }) => {
             />
           </MapView>
         </Card>
-        <Card  style={FotoMetadataStyles.mapContainer} flex={1} bg={'blue'}>
+        <Card  style={FotoMetadataStyles.mapContainer} flex={1}>
         <YStack gap={4} flex={1} bg={'blue'}>
           <XStack items="center" gap={6} >
             <MapPin size={16} color="red" />
