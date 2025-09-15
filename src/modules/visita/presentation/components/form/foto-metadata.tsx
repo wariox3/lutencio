@@ -21,13 +21,13 @@ const FotoMetadata = ({ imagen }: { imagen: ImagenMetaData }) => {
       position="absolute"
       bottom={10}
       left={10}
-      width={"80%"}
+      width={"95%"}
     >
-      <XStack gap={2} flex={1}>
-        <Card borderRadius={10} flex={2} >
+      <XStack gap={2}>
+        <Card  style={FotoMetadataStyles.mapContainer} flex={1.2} bg={'red'}>
           <MapView
             style={FotoMetadataStyles.map}
-            initialRegion={region}
+            region={region}
           >
             <Marker
               coordinate={{
@@ -37,23 +37,25 @@ const FotoMetadata = ({ imagen }: { imagen: ImagenMetaData }) => {
             />
           </MapView>
         </Card>
+        <Card  style={FotoMetadataStyles.mapContainer} flex={1} bg={'blue'}>
+        <YStack gap={4} flex={1} bg={'blue'}>
+          <XStack items="center" gap={6} >
+            <MapPin size={16} color="red" />
+            <Text wordWrap='normal'>{imagen.localizacionNombre?.slice(0, 20) || "Ubicación desconocida"}</Text>
+          </XStack>
+
+          <XStack items="center" gap={6}>
+            <Calendar size={16} color="black" />
+            <Text>{imagen.fecha}</Text>
+          </XStack>
+
+          <XStack items="center" gap={6}>
+            <Clock size={16} color="black" />
+            <Text>{imagen.hora}</Text>
+          </XStack>
+        </YStack>
+        </Card>
         
-      <YStack gap={4} mt={8}>
-        <XStack items="center" gap={6}>
-          <MapPin size={16} color="red" />
-          <Text>{imagen.localizacionNombre?.slice(0, 25) || "Ubicación desconocida"}</Text>
-        </XStack>
-
-        <XStack items="center" gap={6}>
-          <Calendar size={16} color="black" />
-          <Text>{imagen.fecha}</Text>
-        </XStack>
-
-        <XStack items="center" gap={6}>
-          <Clock size={16} color="black" />
-          <Text>{imagen.hora}</Text>
-        </XStack>
-      </YStack>
       </XStack>
 
     </Card>
@@ -61,6 +63,12 @@ const FotoMetadata = ({ imagen }: { imagen: ImagenMetaData }) => {
 };
 
 export const FotoMetadataStyles = StyleSheet.create({
+    mapContainer: {
+    width: "100%",
+    marginTop: 10,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
   map: {
     ...StyleSheet.absoluteFillObject,
   },

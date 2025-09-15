@@ -25,7 +25,7 @@ const EntregaImagenesPreview = ({
             source={{ uri: item.uri }}
             imageStyle={{ borderRadius: 15 }}
             style={{
-              height: 200,
+              height: 220,
               width: width - 110,
               marginVertical: 5,
               alignItems: "flex-end",
