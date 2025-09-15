@@ -1,5 +1,5 @@
-import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { useAppDispatch, useAppSelector } from "@/src/application/store/hooks";
+import { rutasApp } from "@/src/core/constants/rutas.constant";
 import {
   obtenerEntregasPendientesOrdenadas,
   obtenerEntregasSeleccionadas,
@@ -9,6 +9,8 @@ import {
   limpiarEntregaSeleccionada,
   seleccionarEntrega,
 } from "@/src/modules/visita/application/slice/entrega.slice";
+import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import {
   ArrowDownToLine,
   ArrowLeftCircle,
@@ -18,14 +20,12 @@ import {
 import { Image } from "expo-image";
 import * as Location from "expo-location";
 import { router, useFocusEffect, useNavigation } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList } from "react-native";
 import MapView, { MapMarker, Marker, Region } from "react-native-maps";
-import { Button, Card, H6, Text, View, XStack } from "tamagui";
-import { gpsStyles } from "../stylesheet/gps.stylessheet";
-import { BotonAccion } from "@/src/shared/components/navegacion/btn-accion";
+import { Button, Card, Text, View, XStack } from "tamagui";
 import SinElementos from "../components/sin-elementos";
-import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
+import { gpsStyles } from "../stylesheet/gps.stylessheet";
 
 const { width } = Dimensions.get("window");
 

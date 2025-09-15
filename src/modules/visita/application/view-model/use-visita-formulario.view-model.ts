@@ -14,6 +14,8 @@ import {
   quitarEntregaSeleccionada
 } from "../slice/entrega.slice";
 import { networkMonitor } from "@/src/core/services/network-monitor.service";
+import { ImagenMetaData } from "../../domain/interfaces/visita-imagen-metadata.interfase";
+import * as Location from "expo-location";
 
 type VisitaFormType = {
   recibe: string;
@@ -27,7 +29,7 @@ export default function useVisitaFormularioViewModel() {
   const dispatch = useAppDispatch();
   const { guardarArchivo } = useGuardarEnGaleria();
   const [isLoading, setIsLoading] = useState(false);
-  const { obtenerFechaYHoraActualFormateada } = useFecha();
+  const { obtenerFechaYHoraActualFormateada, obtenerFechaActualFormateada, obtenerHoraActualFormateada } = useFecha();
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
   );
@@ -44,7 +46,7 @@ export default function useVisitaFormularioViewModel() {
   });
 
   const estadoInicial: {
-    arrImagenes: { uri: string }[];
+    arrImagenes: ImagenMetaData[];
     mostrarAnimacionCargando: boolean;
     ubicacionHabilitada: boolean;
     activarCamara: boolean;
@@ -55,6 +57,9 @@ export default function useVisitaFormularioViewModel() {
     camaraTipo: string;
     firmarBase64: string | null;
     fotoSeleccionada: any[];
+    ultimaUbicacion?: string;
+    latitude?: number;
+    longitude?: number;
   } = {
     arrImagenes: [],
     mostrarAnimacionCargando: false,
@@ -67,13 +72,45 @@ export default function useVisitaFormularioViewModel() {
     camaraTipo: "",
     firmarBase64: null,
     fotoSeleccionada: [],
+    ultimaUbicacion: "",
+    latitude: undefined,
+    longitude: undefined,
   };
 
   const [state, setState] = useState(estadoInicial);
 
+  // ✅ useEffect limpio
   useEffect(() => {
     reiniciarEstadoCompleto();
+    inicializarUbicacionYClima();
   }, [entregasSeleccionadas]);
+
+  // 🔹 inicializa ubicación y temperatura
+  const inicializarUbicacionYClima = async () => {
+    try {
+      const loc = await Location.getCurrentPositionAsync({});
+      const address = await Location.reverseGeocodeAsync({
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+      });
+
+      const direccion = address[0]
+        ? `${address[0].city ?? ""}, ${address[0].region ?? ""}, ${address[0].country ?? ""}`
+        : "Ubicación desconocida";
+
+      actualizarState({
+        ubicacionHabilitada: true,
+        ultimaUbicacion: direccion,
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+      });
+    } catch (error) {
+      console.error("Error obteniendo ubicación:", error);
+      actualizarState({
+        ubicacionHabilitada: false,
+      });
+    }
+  };
 
   const reiniciarEstadoCompleto = () => {
     setState(estadoInicial);
@@ -94,22 +131,30 @@ export default function useVisitaFormularioViewModel() {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
 
+  // ✅ ahora usa la info ya guardada en el useEffect
   const handleCapture = async (uri: string) => {
-    //1. guardar la foto en el celular
     const nuevaUri = await guardarArchivo(uri);
-    if (!nuevaUri) {
-      throw new Error("Error al guardar la imagen");
-    }
+    if (!nuevaUri) throw new Error("Error al guardar la imagen");
+
     actualizarState({
-      arrImagenes: [...state.arrImagenes, { uri: nuevaUri }],
+      arrImagenes: [
+        ...state.arrImagenes,
+        {
+          uri: nuevaUri,
+          fecha: obtenerFechaActualFormateada(),
+          hora: obtenerHoraActualFormateada(),
+          localizacionNombre: state.ultimaUbicacion || "Ubicación desconocida",
+          latitude: state.latitude,
+          longitude: state.longitude,
+        },
+      ],
     });
   };
 
   const handleFirma = async (firma: string) => {
     const nuevaUri = await guardarArchivo(firma);
-    if (!nuevaUri) {
-      throw new Error("Error al guardar la imagen");
-    }
+    if (!nuevaUri) throw new Error("Error al guardar la firma");
+
     actualizarState({
       firmarBase64: nuevaUri,
     });
@@ -117,11 +162,8 @@ export default function useVisitaFormularioViewModel() {
 
   const removerFoto = async (indexArrImagen: number) => {
     try {
-      const imagen = state.arrImagenes[indexArrImagen];
-      // Aquí deberías también actualizar tu estado para reflejar la eliminación
       const newArrImagenes = [...state.arrImagenes];
       newArrImagenes.splice(indexArrImagen, 1);
-      // Suponiendo que tienes una función para actualizar el estado
       setState((prev) => ({ ...prev, arrImagenes: newArrImagenes }));
     } catch (error) {
       console.error("Error al eliminar el archivo:", error);
@@ -129,9 +171,7 @@ export default function useVisitaFormularioViewModel() {
   };
 
   const removerFirma = async () => {
-    actualizarState({
-      firmarBase64: null,
-    });
+    actualizarState({ firmarBase64: null });
   };
 
   const guardarEntrega = async (data: VisitaFormType) => {
@@ -145,13 +185,12 @@ export default function useVisitaFormularioViewModel() {
   };
 
   const guardarEntregaLocal = async (data: VisitaFormType, dispatch: any) => {
-    // Agregar imágenes a entregas seleccionadas
-    
     entregasSeleccionadas.forEach((visitaId) => {
-      const imagenesEntrega: { uri: string }[] = []
-      const firmaEntrega = state.firmarBase64 ? state.firmarBase64 : null
+      const imagenesEntrega: { uri: string }[] = [];
+      const firmaEntrega = state.firmarBase64 ? state.firmarBase64 : null;
+
       state.arrImagenes?.forEach((imagen) => {
-        imagenesEntrega.push({ uri: imagen.uri })
+        imagenesEntrega.push({ uri: imagen.uri });
       });
 
       dispatch(actualizarEntrega({
@@ -169,18 +208,17 @@ export default function useVisitaFormularioViewModel() {
         },
       }));
 
-      if(!networkMonitor.isConnected()){
+      if (!networkMonitor.isConnected()) {
         dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: true, codigo: 500, mensaje: "" }));
       } else {
         dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: false, codigo: 0, mensaje: "" }));
       }
-       
+
       dispatch(cambiarEstadoSincronizado({ visitaId, nuevoEstado: false }));
       dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
       dispatch(quitarEntregaSeleccionada(visitaId));
     });
 
-    // notificamos que las entregas han sido procesadas
     dispatch(entregasProcesadas({ entregasIds: entregasSeleccionadas }));
   };
 

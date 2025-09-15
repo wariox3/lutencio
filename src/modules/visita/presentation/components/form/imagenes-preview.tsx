@@ -1,7 +1,9 @@
-import { XCircle } from "@tamagui/lucide-icons";
+import { XCircle, MapPin, Calendar, Clock, Thermometer } from "@tamagui/lucide-icons";
 import React from "react";
 import { Dimensions, FlatList, ImageBackground } from "react-native";
-import { Button, View } from "tamagui";
+import { Button, View, Text, XStack, YStack, Card } from "tamagui";
+import FotoMetadata from "./foto-metadata";
+import { ImagenMetaData } from "../../../domain/interfaces/visita-imagen-metadata.interfase";
 
 const { width } = Dimensions.get("window");
 
@@ -9,9 +11,9 @@ const EntregaImagenesPreview = ({
   arrImagenes,
   removerFoto,
 }: {
-  arrImagenes: { uri: string }[];
+  arrImagenes: ImagenMetaData[];
   removerFoto?: (index: number) => void;
-}) => {  
+}) => {
   return (
     <View>
       <FlatList
@@ -23,21 +25,25 @@ const EntregaImagenesPreview = ({
             source={{ uri: item.uri }}
             imageStyle={{ borderRadius: 15 }}
             style={{
-              height: item.uri ? 180 : 0,
-              width: width-110,
-              marginVertical: item.uri ? 5 : 0,
+              height: 200,
+              width: width - 110,
+              marginVertical: 5,
               alignItems: "flex-end",
               marginRight: 20,
+              overflow: "hidden",
             }}
           >
+            {/* Botón para eliminar */}
             {removerFoto !== undefined ? (
               <Button
                 size="$4"
                 circular
                 icon={<XCircle size="$3" color={"red"} />}
                 onPress={() => removerFoto(index)}
+                style={{ margin: 6 }}
               />
             ) : null}
+            <FotoMetadata imagen={item}></FotoMetadata>
           </ImageBackground>
         )}
         keyExtractor={(_, index) => index.toString()}
