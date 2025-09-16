@@ -14,6 +14,7 @@ const EntregaImagenesPreview = ({
   arrImagenes: ImagenMetaData[];
   removerFoto?: (index: number) => void;
 }) => {
+  
   return (
     <View>
       <FlatList
@@ -43,7 +44,7 @@ const EntregaImagenesPreview = ({
                 style={{ margin: 6 }}
               />
             ) : null}
-            <FotoMetadata imagen={item}></FotoMetadata>
+            {/* <FotoMetadata imagen={item}></FotoMetadata> */}
           </ImageBackground>
         )}
         keyExtractor={(_, index) => index.toString()}

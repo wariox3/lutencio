@@ -96,7 +96,7 @@ export const useGuardarEnGaleria = () => {
     setError(null);
     try {
       // 2. Comprobar si la carpeta existe
-    const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
+      const subdominio = await storageService.getItem(STORAGE_KEYS.subdominio) as string;
       const rutaCarpeta = FileSystem.documentDirectory + subdominio! + "/";
 
       const carpetaInfo = await FileSystem.getInfoAsync(rutaCarpeta);
@@ -105,18 +105,24 @@ export const useGuardarEnGaleria = () => {
           intermediates: true,
         });
       }
+      console.log(carpetaInfo);
+
 
       // 3. Definir el nombre del nuevo archivo
       const nombreArchivo = uri.split("/").pop();
-      const nuevaRuta = rutaCarpeta + nombreArchivo;
 
+      const nuevaRuta = rutaCarpeta + nombreArchivo;
+      const fromUri = normalizeUri(uri);
+      const toUri = normalizeUri(nuevaRuta);
       // 4. Copiar el archivo
       await FileSystem.copyAsync({
-        from: uri,
-        to: nuevaRuta,
+        from: fromUri,
+        to: toUri,
       });
       return nuevaRuta; // Devuelve la nueva ruta por si la necesitas
     } catch (error: any) {
+      console.log(error);
+
       setError(error.message);
       return false;
     } finally {
@@ -134,15 +140,22 @@ export const useGuardarEnGaleria = () => {
 export const useProcesarImagenes = async (imagenes: Array<{ uri: string }>) => {
   const imagenesProcesadas: any[] = [];
   for (const imagen of imagenes) {
-      const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
-        if (!fileInfo.exists) {
-          console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
-            continue;
-        }
-        const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
-          imagenesProcesadas.push({ base64: `data:image/jpeg;base64,${base64}` });
+    const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
+    if (!fileInfo.exists) {
+      console.warn(`⚠️ Imagen no encontrada: ${imagen.uri}`);
+      continue;
     }
-    return imagenesProcesadas;
+    const base64 = await FileSystem.readAsStringAsync(imagen.uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+    imagenesProcesadas.push({ base64: `data:image/jpeg;base64,${base64}` });
+  }
+  return imagenesProcesadas;
 }
+
+const normalizeUri = (uri: string) => {
+  if (!uri.startsWith("file://")) {
+    return "file://" + uri;
+  }
+  return uri;
+};

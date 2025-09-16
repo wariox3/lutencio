@@ -73,7 +73,8 @@
           "isAccessMediaLocationEnabled": true
         }
       ],
-      "expo-file-system"
+      "expo-file-system",
+      "react-native-image-marker"
     ],
     "experiments": {
       "typedRoutes": true
