@@ -134,13 +134,13 @@ export default function useVisitaFormularioViewModel() {
   // ✅ ahora usa la info ya guardada en el useEffect
   const handleCapture = async (uri: string) => {
     const nuevaUri = await guardarArchivo(uri);
-    // if (!nuevaUri) throw new Error("Error al guardar la imagen");
+    if (!nuevaUri) throw new Error("Error al guardar la imagen");
     
     actualizarState({
       arrImagenes: [
         ...state.arrImagenes,
         {
-          uri,
+          uri: nuevaUri,
           fecha: obtenerFechaActualFormateada(),
           hora: obtenerHoraActualFormateada(),
           localizacionNombre: state.ultimaUbicacion || "Ubicación desconocida",
