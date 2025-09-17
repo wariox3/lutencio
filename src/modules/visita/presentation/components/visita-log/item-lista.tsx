@@ -1,10 +1,16 @@
 import COLORES from "@/src/core/constants/colores.constant";
-import { Check, TimerReset, X } from "@tamagui/lucide-icons";
-import React from "react";
-import { Card, Separator, Text, View, XStack, YStack } from "tamagui";
+import { Check, TimerReset, X as XIcon } from "@tamagui/lucide-icons";
+import React, { useState } from "react";
+import { Button, Card, Dialog, H3, Image, ScrollView, Separator, Text, View, XStack, YStack } from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista-log";
 
 const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
+
+  console.log(visita);
+  const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(
+    null
+  );
+
   return (
     <Card p="$3" mx="$2" mt={"$2"} borderStyle={"dashed"} bordered>
       <YStack gap={"$1"}>
@@ -39,7 +45,7 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
               ) : (
                 <>
                   {visita.estado_entrega === true &&
-                  visita.estado_sinconizado === false ? (
+                    visita.estado_sinconizado === false ? (
                     <TimerReset size={"$1"} color={COLORES.VERDE_FUERTE} />
                   ) : null}
                 </>
@@ -51,7 +57,7 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
             <Text>Error</Text>
             {visita.entregada_sincronizada_error ? (
               <>
-                <X size={"$1"} color={COLORES.ROJO_FUERTE} />
+                <XIcon size={"$1"} color={COLORES.ROJO_FUERTE} />
               </>
             ) : null}
           </YStack>
@@ -63,6 +69,64 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
             </Text>
           ) : null}
         </View>
+        {
+          visita.arrImagenes?.length > 0 ? (
+            <XStack mt={8}>
+              <Dialog modal>
+                <Dialog.Trigger asChild>
+                  <Text color={COLORES.AZUL_FUERTE} my={2}>
+                    {visita?.arrImagenes
+                      ? `Evidencia: imágenes ${visita.arrImagenes.length}`
+                      : null}
+                  </Text>
+                </Dialog.Trigger>
+
+                <Dialog.Portal>
+                  <Dialog.Overlay
+                    key="overlay"
+                    animation="quick"
+                    opacity={0.5}
+                    enterStyle={{ opacity: 0.5 }}
+                    exitStyle={{ opacity: 0.5 }}
+                  />
+                  <Dialog.Content
+                    bordered
+                    elevate
+                    width="90%"
+                    height="32%"
+                  >
+                    {/* Header del modal */}
+                    <XStack justify="space-between" items="center" mb="$3">
+                      <H3>Imágenes</H3>
+                      <Dialog.Close asChild>
+                        <Button size="$5" chromeless>
+                          <XIcon size={'$5'} color={COLORES.ROJO_FUERTE} />
+                        </Button>
+                      </Dialog.Close>
+                    </XStack>
+                    {/* Galería scrollable horizontal */}
+                    {visita?.arrImagenes?.length ? (
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        <XStack gap="$3">
+                          {visita.arrImagenes.map((item: any, i: number) => (
+                            <Image
+                              key={i}
+                              source={{ uri: item.uri }}
+                              width={200}
+                              height={200} />
+                          ))}
+                        </XStack>
+                      </ScrollView>
+                    ) : (
+                      null
+                    )}
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog>
+            </XStack>
+          ) : null
+        }
+
       </YStack>
     </Card>
   );
