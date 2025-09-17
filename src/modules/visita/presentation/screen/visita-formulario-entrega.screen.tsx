@@ -1,14 +1,12 @@
+import { parentescos } from "@/src/core/constants/parentesco.constant";
 import { EntregaCamara } from "@/src/modules/visita/presentation/components/form/camara";
 import { EntregaFirma } from "@/src/modules/visita/presentation/components/form/firma";
 import EntregaFirmaPreview from "@/src/modules/visita/presentation/components/form/firma-preview";
 import EntregaImagenesPreview from "@/src/modules/visita/presentation/components/form/imagenes-preview";
 import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
 import { SelectInput } from "@/src/shared/components/form/inputs/select-Input";
-import { parentescos } from "@/src/core/constants/parentesco.constant";
-import React from "react";
-import { Button, H4, ScrollView, Spinner, Text, View, XStack } from "tamagui";
+import { Button, ScrollView, Spinner, Text, XStack } from "tamagui";
 import useVisitaFormularioViewModel from "../../application/view-model/use-visita-formulario.view-model";
-import { SafeAreaView } from "react-native";
 
 const VisitaFormularioEntregaScreen = () => {
   const {
@@ -25,6 +23,9 @@ const VisitaFormularioEntregaScreen = () => {
     obtenerColor
   } = useVisitaFormularioViewModel();
 
+  console.log(state.ultimaUbicacion);
+  
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -35,7 +36,7 @@ const VisitaFormularioEntregaScreen = () => {
       }}
       paddingInline="$4"
       bg={
-        obtenerColor("BLANCO","NEGRO")
+        obtenerColor("BLANCO", "NEGRO")
       }
     >
       <Text>Seleccionas: {entregasSeleccionadas.join(", ")}</Text>
@@ -45,7 +46,15 @@ const VisitaFormularioEntregaScreen = () => {
           {state.exigeImagenEntrega ? <Text> Requerido * </Text> : null}
         </Text>
         {state.arrImagenes.length <= 4 ? (
-          <EntregaCamara onCapture={handleCapture}></EntregaCamara>
+          <EntregaCamara onCapture={handleCapture} imagenMetaData={{
+            fecha: '',
+            hora: '',
+            localizacionNombre: state!.ultimaUbicacion,
+            longitude: state?.longitude,
+            latitude: state?.latitude,
+            uri: '',
+            mapColor: ''
+          }}></EntregaCamara>
         ) : null}
       </XStack>
       {state.arrImagenes.length > 0 ? (

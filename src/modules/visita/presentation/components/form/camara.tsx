@@ -5,13 +5,17 @@ import React, { memo, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Text, View } from "tamagui";
 import Marker, { ImageFormat, Position, TextBackgroundType, TextMarkOptions } from "react-native-image-marker";
+import useFecha from "@/src/shared/hooks/useFecha";
+import { ImagenMetaData } from "../../../domain/interfaces/visita-imagen-metadata.interfase";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
 export const EntregaCamara = ({
   onCapture,
+  imagenMetaData
 }: {
   onCapture: (base64: string) => void;
+  imagenMetaData: ImagenMetaData;
 }) => {
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
@@ -48,65 +52,74 @@ export const EntregaCamara = ({
 
         <Sheet.Handle />
         <Sheet.Frame>
-          <SheetContentsEntregaCamara setOpen={setOpen} onCapture={onCapture} />
+          <SheetContentsEntregaCamara setOpen={setOpen} onCapture={onCapture} imagenMetaData={imagenMetaData} />
         </Sheet.Frame>
       </Sheet>
     </>
   );
 };
 
-const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
+const SheetContentsEntregaCamara = memo(({ setOpen, onCapture, imagenMetaData }: { setOpen: any; onCapture: (base64: string) => void; imagenMetaData: ImagenMetaData; }) => {
+
 
   const cameraRef = useRef<any>(null);
   const [facing] = useState<CameraType>("back");
-  const direccion = "Calle 48A #99A-136\nEl Socorro, Medellín, Antioquia";
-  const fecha = "16 de sept 2025";
+  const { obtenerFechaYHoraActualFormateada } = useFecha();
 
   const tomarFoto = async () => {
     try {
       if (cameraRef.current) {
         const photo = await cameraRef.current.takePictureAsync({ quality: 1 });
 
-        const options: TextMarkOptions = {
-          // background image
+        // ✅ Obtén tus textos dinámicos
+        const fecha = obtenerFechaYHoraActualFormateada();
+        const localizacion = imagenMetaData.localizacionNombre;
+
+        const options = {
           backgroundImage: {
             src: photo.uri,
             scale: 1,
           },
-          watermarkTexts: [{
-            text: 'text marker \n multiline text',
-            position: {
-              position: Position.topLeft,
-            },
-            style: {
-              color: '#ff00ff',
-              fontSize: 30,
-              fontName: 'Arial',
-              shadowStyle: {
-                dx: 10,
-                dy: 10,
-                radius: 10,
-                color: '#008F6D',
+          watermarkTexts: [
+            {
+              text: `${fecha}\n${localizacion}`,
+              position: {
+                position: Position.bottomRight,
+                offsetX: 20,
+                offsetY: 20,
               },
-              textBackgroundStyle: {
-                padding: '10% 10%',
-                type: TextBackgroundType.none,
-                color: '#0FFF00',
+              style: {
+                color: '#ffffff',
+                fontSize: 30,
+                fontName: 'Arial',
+                shadowStyle: {
+                  dx: 2,
+                  dy: 2,
+                  radius: 2,
+                  color: '#000000',
+                },
+                textBackgroundStyle: {
+                  padding: '2% 2%',
+                  type: TextBackgroundType.none,
+                  color: 'transparent',
+                },
               },
             },
-          }],
+          ],
+          scale: 1,
           quality: 100,
-          filename: 'test',
-          saveFormat: ImageFormat.jpg
+          filename: 'foto_con_metadata',
+          saveFormat: ImageFormat.png,
         };
-        const photo2 = await Marker.markText(options);
-        
-        onCapture(photo2);
+
+        // ✅ Genera la nueva foto con metadata
+        const photoWithMeta = await Marker.markText(options);
+
+        onCapture(photoWithMeta);
         setOpen(false);
       }
     } catch (error) {
       console.log(error);
-      
     }
   };
 
@@ -114,10 +127,13 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
     <>
       <View style={styles.container}>
         <CameraView style={styles.camera} ref={cameraRef} facing={facing}>
+          <View style={styles.overlay}>
+            <Text style={styles.overlayText}>{obtenerFechaYHoraActualFormateada()}</Text>
+            <Text style={styles.overlayText}>{imagenMetaData.localizacionNombre}</Text>
+          </View>
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button}>
-              <Text items={'flex-end'} color={'white'} fontSize={'$4'}>{direccion}</Text>
-              <Text items={'flex-end'} color={'white'} fontSize={'$4'}>{fecha}</Text>
               <Button
                 onPressIn={tomarFoto}
                 size="$7"
@@ -161,5 +177,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: "flex-end",
     alignItems: "center",
+  },
+  overlay: {
+    position: "absolute",
+    bottom: 20,
+    right: 10,
+    marginBottom: 180,
+    alignItems: "flex-end",
+  },
+  overlayText: {
+    color: "white",
+    fontSize: 16,
+    textAlign: "right",
+    textShadowColor: "black",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
 });
