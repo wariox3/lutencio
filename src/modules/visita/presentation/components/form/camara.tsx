@@ -65,15 +65,16 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture, imagenMetaData }:
   const cameraRef = useRef<any>(null);
   const [facing] = useState<CameraType>("back");
   const { obtenerFechaYHoraActualFormateada } = useFecha();
+  // ✅ Obtén tus textos dinámicos
+  const fecha = obtenerFechaYHoraActualFormateada();
+  const localizacion = imagenMetaData.localizacionNombre === ""
+    ? "Sin cobertura GPS"
+    : imagenMetaData.localizacionNombre;
 
   const tomarFoto = async () => {
     try {
       if (cameraRef.current) {
         const photo = await cameraRef.current.takePictureAsync({ quality: 1 });
-
-        // ✅ Obtén tus textos dinámicos
-        const fecha = obtenerFechaYHoraActualFormateada();
-        const localizacion = imagenMetaData.localizacionNombre;
 
         const options = {
           backgroundImage: {
@@ -129,7 +130,7 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture, imagenMetaData }:
         <CameraView style={styles.camera} ref={cameraRef} facing={facing}>
           <View style={styles.overlay}>
             <Text style={styles.overlayText}>{obtenerFechaYHoraActualFormateada()}</Text>
-            <Text style={styles.overlayText}>{imagenMetaData.localizacionNombre}</Text>
+            <Text style={styles.overlayText}>{localizacion}</Text>
           </View>
 
           <View style={styles.buttonContainer}>
