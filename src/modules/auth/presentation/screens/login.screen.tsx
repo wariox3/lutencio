@@ -13,7 +13,7 @@ import {
   XStack,
 } from "tamagui";
 import { useLoginViewModel } from "../../application/view-models/use-login.view-model";
-import * as Application from 'expo-application';
+import { useAppVersion } from "@/src/shared/hooks/useAppVersion";
 
 export default function LoginScreen() {
   const {
@@ -26,6 +26,7 @@ export default function LoginScreen() {
     submit,
     obtenerColor,
   } = useLoginViewModel();
+  const {version } = useAppVersion()
 
   return (
     <SafeAreaView
@@ -95,7 +96,7 @@ export default function LoginScreen() {
             ¿Olvidaste la contraseña?
           </Button>
           <View flex={1} items={'center'}>
-            <Text fontWeight={"$1"} theme={'blue'}>V {Application.nativeApplicationVersion}</Text>
+            <Text fontWeight={"$1"} theme={'blue'}>V {version}</Text>
           </View>
         </View>
       </ScrollView>

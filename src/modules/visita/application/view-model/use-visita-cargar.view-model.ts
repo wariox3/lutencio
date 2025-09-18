@@ -14,6 +14,7 @@ import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import { cleanNovedades } from "@/src/modules/novedad/application/store/novedad.slice";
 import { selectCantidadNovedadesConErrorTemporal } from "@/src/modules/novedad/application/store/novedad.selector";
 import { selectCantidadVisitasConErrorTemporal } from "../slice/entrega.selector";
+import { validarVersionApp } from "@/src/core/services/validar-version-app.service";
 
 export default function useVisitaCargarViewModel() {
   const valoresFormularioCargar = {
@@ -56,6 +57,9 @@ export default function useVisitaCargarViewModel() {
     });
     if (estaEnLinea) {
       try {
+        const puedeContinuar = await validarVersionApp();
+        if (!puedeContinuar) return;
+
         const respuesta = await dispatch(
           cargarOrdenThunk({ codigo: data.codigo })
         ).unwrap();

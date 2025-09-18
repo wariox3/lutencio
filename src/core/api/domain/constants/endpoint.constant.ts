@@ -29,6 +29,9 @@ const APIS = {
     novedadSolucionar: `${URL_SUBDOMINIO}/ruteo/novedad/solucionar/`,
     seguimiento: `${URL_SUBDOMINIO}/ruteo/seguimiento/`,
   },
+  vertical: {
+    versionRuteo: `${URL_BASE}/vertical/parametro/version-ruteo/`
+  }
 };
 
 export default APIS;
