@@ -7,12 +7,8 @@ import { VerticalApiRepository } from "@/src/modules/visita/infraestructure/api/
 
 export async function validarVersionApp(opcional = false) {
   try {
-
-
     const version = await new VerticalApiRepository().getVersionRuteo()
-    console.log(version);
-    const estado: "requiere_actualizacion" | "actualizacion_disponible" = checkVersion(appInfoService.getVersion(),   Platform.OS === "ios" ? version.version_version_ios : version.version_version_android  );
-
+    const estado: "requiere_actualizacion" | "actualizacion_disponible" = checkVersion(`${appInfoService.getVersion()}`, Platform.OS === "ios" ? version.version_ruteo_ios : version.version_ruteo_android);
     if (estado === "requiere_actualizacion") {
       mostrarAlertHook({
         mensaje: "Debes actualizar la aplicación para continuar usando el servicio.",

@@ -14,6 +14,7 @@ import {
   quitarEntregaSeleccionada
 } from "../slice/entrega.slice";
 import { networkMonitor } from "@/src/core/services/network-monitor.service";
+import { Alert } from "react-native";
 
 type VisitaFormType = {
   recibe: string;
@@ -95,14 +96,28 @@ export default function useVisitaFormularioViewModel() {
   };
 
   const handleCapture = async (uri: string) => {
-    //1. guardar la foto en el celular
-    const nuevaUri = await guardarArchivo(uri);
-    if (!nuevaUri) {
-      throw new Error("Error al guardar la imagen");
+    try {
+      // 1. Guardar la foto en el dispositivo
+      const nuevaUri = await guardarArchivo(uri);
+      if (!nuevaUri) {
+        Alert.alert("Error", "No se pudo guardar la imagen en el dispositivo.");
+        throw new Error("Error al guardar la imagen");
+      }
+
+      // 2. Actualizar el estado con la nueva imagen
+      try {
+        actualizarState({
+          arrImagenes: [...state.arrImagenes, { uri: nuevaUri }],
+        });
+      } catch (e) {
+        Alert.alert("Error de estado", "No se pudo actualizar la lista de imágenes.");
+        throw e;
+      }
+
+    } catch (error: any) {
+      Alert.alert("Error general", error.message || "Ha ocurrido un error inesperado.");
+      console.error("handleCapture error:", error);
     }
-    actualizarState({
-      arrImagenes: [...state.arrImagenes, { uri: nuevaUri }],
-    });
   };
 
   const handleFirma = async (firma: string) => {
