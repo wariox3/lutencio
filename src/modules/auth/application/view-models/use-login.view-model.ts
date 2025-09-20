@@ -33,13 +33,11 @@ export const useLoginViewModel = () => {
 
   const submit = async (data: LoginFormType) => {
     try {
-      const puedeContinuar = await validarVersionApp();
-      if (!puedeContinuar) return;
-
       await dispatch(
         loginThunk({ username: data.username, password: data.password })
       ).unwrap();
-
+      const puedeContinuar = await validarVersionApp();
+      if (!puedeContinuar) return;
       handleNavegarApp();
     } catch (error: any) {
       const errorParseado = error as ApiErrorResponse
