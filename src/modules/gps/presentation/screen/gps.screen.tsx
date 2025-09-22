@@ -177,13 +177,12 @@ const GpsScreen = () => {
   const blurhash = "=IQcr5bI^*-:_NM|?bof%M";
 
   return (
-    <View style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}>
-      <XStack justify={"space-around"} mx="$2" mt={"$2"}>
+    <>
+      <XStack justify={"space-between"} p={"$2"} gap={"$2"} style={{ backgroundColor: obtenerColor("BLANCO", "NEGRO") }}>
         <BotonAccion
           onPress={() => router.navigate(rutasApp.visitaEntregar)}
           icon={<ArrowDownToLine size="$2" />}
           texto="Entregar"
-          themeColor="blue"
           mostrarCantidad={entregasSeleccionadas.length > 0}
           cantidad={entregasSeleccionadas.length}
         />
@@ -191,122 +190,127 @@ const GpsScreen = () => {
           onPress={() => router.navigate(rutasApp.visitaNovedad)}
           icon={<FileWarning size="$2" />}
           texto="Novedad"
-          themeColor="yellow"
           mostrarCantidad={entregasSeleccionadas.length > 0}
           cantidad={entregasSeleccionadas.length}
         />
       </XStack>
-      {entregasPendientesOrdenadas.length > 0 ? (
-        <>
-          <View style={gpsStyles.mapContainer}>
-            {region ? (
-              <MapView
-                style={gpsStyles.map}
-                initialRegion={region}
-                showsUserLocation={true}
-                ref={mapRef}
-              >
-                <Marker
-                  coordinate={region}
-                  image={require("../../../../../assets/images/marca-mapa.png")}
-                />
+      <View
+        style={{ flex: 1, backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
+      >
+        {entregasPendientesOrdenadas.length > 0 ? (
+          <>
+            <View style={gpsStyles.mapContainer}>
+              {region ? (
+                <MapView
+                  style={gpsStyles.map}
+                  region={region}
+                  showsUserLocation={true}
+                  ref={mapRef}
+                >
+                  <Marker
+                    coordinate={region}
+                    image={require("../../../../../assets/images/marca-mapa.png")}
+                  />
 
-                {entregasPendientesOrdenadas[currentIndex] ? (
-                  <>
-                    <Marker
-                      ref={markerRef}
-                      coordinate={{
-                        latitude:
-                          entregasPendientesOrdenadas[currentIndex].latitud,
-                        longitude:
-                          entregasPendientesOrdenadas[currentIndex].longitud,
-                      }}
-                      image={require("../../../../../assets/images/marca-mapa-azul.png")}
-                      title={markerTitle}
-                      description={markerDescription}
-                    />
-                  </>
-                ) : null}
-              </MapView>
-            ) : (
-              <View style={gpsStyles.loader}>
-                <Image
-                  source={require("../../../../../assets/images/mapa.gif")}
-                  placeholder={{ blurhash }}
-                  contentFit="cover"
-                  transition={1000}
-                  style={{
-                    width: 66,
-                    height: 58,
-                  }}
-                />
-                <Text>Procesando mapa</Text>
-              </View>
-            )}
-          </View>
-          <XStack
-            flex={0.1}
-            my={"$1"}
-            justify={"space-between"}
-            items="center"
-            gap={"$4"}
-          >
-            <Button
-              onPress={() => scrollTo("left")}
-              disabled={currentIndex === 0}
-              variant="outlined"
-              icon={
-                <ArrowLeftCircle
-                  size={"$2"}
-                  color={
-                    currentIndex === 0
-                      ? "rgba(131, 181, 143, 1)"
-                      : "rgba(74, 177, 104, 1)"
-                  }
-                ></ArrowLeftCircle>
-              }
-            ></Button>
-            <FlatList
-              ref={flatListRef}
-              data={entregasPendientesOrdenadas}
-              keyExtractor={(_, index) => index.toString()}
-              renderItem={({ item }) => (
-                <Card width={width} padding={10}>
-                  <Text>Número: {item.numero}</Text>
-                  <Text>{item.destinatario.slice(0, 17)}</Text>
-                </Card>
+                  {entregasPendientesOrdenadas[currentIndex] ? (
+                    <>
+                      <Marker
+                        ref={markerRef}
+                        coordinate={{
+                          latitude:
+                            entregasPendientesOrdenadas[currentIndex].latitud,
+                          longitude:
+                            entregasPendientesOrdenadas[currentIndex].longitud,
+                        }}
+                        image={require("../../../../../assets/images/marca-mapa-azul.png")}
+                        title={markerTitle}
+                        description={markerDescription}
+                      />
+                    </>
+                  ) : null}
+                </MapView>
+              ) : (
+                <View style={gpsStyles.loader}>
+                  <Image
+                    source={require("../../../../../assets/images/mapa.gif")}
+                    placeholder={{ blurhash }}
+                    contentFit="cover"
+                    transition={1000}
+                    style={{
+                      width: 66,
+                      height: 58,
+                    }}
+                  />
+                  <Text>Procesando mapa</Text>
+                </View>
               )}
-              horizontal
-              pagingEnabled
-              scrollEnabled={false}
-              showsHorizontalScrollIndicator={false}
-            />
-            <View>
-              <Text>
-                {currentIndex + 1} de {entregasPendientesOrdenadas.length}
-              </Text>
             </View>
-            <Button
-              onPress={() => scrollTo("right")}
-              disabled={currentIndex === entregasPendientesOrdenadas.length - 1}
-              variant="outlined"
-              icon={
-                <ArrowRightCircle
-                  size={"$2"}
-                  color={
-                    currentIndex === entregasPendientesOrdenadas.length - 1
-                      ? "rgba(131, 181, 143, 1)"
-                      : "rgba(74, 177, 104, 1)"
-                  }
-                ></ArrowRightCircle>
-              }
-            ></Button>
-          </XStack>
-        </>
-      ) : (
-        <SinElementos></SinElementos>
-      )}
-    </View>
+            <XStack
+              flex={0.1}
+              my={"$1"}
+              justify={"space-between"}
+              items="center"
+              gap={"$4"}
+            >
+              <Button
+                onPress={() => scrollTo("left")}
+                disabled={currentIndex === 0}
+                variant="outlined"
+                icon={
+                  <ArrowLeftCircle
+                    size={"$2"}
+                    color={
+                      currentIndex === 0
+                        ? "rgba(131, 181, 143, 1)"
+                        : "rgba(74, 177, 104, 1)"
+                    }
+                  ></ArrowLeftCircle>
+                }
+              ></Button>
+              <FlatList
+                ref={flatListRef}
+                data={entregasPendientesOrdenadas}
+                keyExtractor={(_, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <Card width={width} padding={10}>
+                    <Text>Número: {item.numero}</Text>
+                    <Text>{item.destinatario.slice(0, 17)}</Text>
+                  </Card>
+                )}
+                horizontal
+                pagingEnabled
+                scrollEnabled={false}
+                showsHorizontalScrollIndicator={false}
+              />
+              <View>
+                <Text>
+                  {currentIndex + 1} de {entregasPendientesOrdenadas.length}
+                </Text>
+              </View>
+              <Button
+                onPress={() => scrollTo("right")}
+                disabled={
+                  currentIndex === entregasPendientesOrdenadas.length - 1
+                }
+                variant="outlined"
+                icon={
+                  <ArrowRightCircle
+                    size={"$2"}
+                    color={
+                      currentIndex === entregasPendientesOrdenadas.length - 1
+                        ? "rgba(131, 181, 143, 1)"
+                        : "rgba(74, 177, 104, 1)"
+                    }
+                  ></ArrowRightCircle>
+                }
+              ></Button>
+            </XStack>
+          </>
+        ) : (
+          <SinElementos></SinElementos>
+        )}
+      </View>
+    </>
   );
 };
 
