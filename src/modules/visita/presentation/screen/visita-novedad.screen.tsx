@@ -3,18 +3,20 @@ import EntregaImagenesPreview from "@/src/modules/visita/presentation/components
 import { SelectInput } from "@/src/shared/components/form/inputs/select-Input";
 import { TextAreaInput } from "@/src/shared/components/form/inputs/text-area-Input";
 import { Validaciones } from "@/src/core/constants";
-import React from "react";
 import { Controller } from "react-hook-form";
 import {
   Button,
   ScrollView,
   Spinner,
   Text,
+  View,
   XStack,
   YStack
 } from "tamagui";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useVisitaNovedadViewModel from "../../application/view-model/use-visita-novedad.view-model";
-import { isLoaded } from "expo-font";
+import React from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
 
 const VisitaNovedadScreen = () => {
   const {
@@ -29,91 +31,100 @@ const VisitaNovedadScreen = () => {
     obtenerColor
   } = useVisitaNovedadViewModel();
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={{
-        rowGap: "$4",
-      }}
-      flex={1}
-      paddingInline="$4"
-      bg={
-        obtenerColor("BLANCO", "NEGRO")
-      }
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      <TextAreaInput
-        name="descripcion"
-        control={control}
-        label="Descripción"
-        isRequired={true}
-        placeholder="Descripción"
-        rules={{
-          required: Validaciones.comunes.requerido,
+      {/* Scroll con inputs */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentInsetAdjustmentBehavior="automatic"
+        keyboardShouldPersistTaps="handled"
+        flex={1}
+        px="$4"
+        pb={insets.bottom + 80} // 👈 hereda de Tamagui + espacio extra
+        bg={obtenerColor("BLANCO", "NEGRO")}
+        contentContainerStyle={{
+          rowGap: 16, // más natural para Tamagui
         }}
-      ></TextAreaInput>
-      <SelectInput
-        name="novedad_tipo"
-        control={control}
-        label="Tipo de novedad"
-        isRequired={true}
-        placeholder="Seleccionar un tipo de novedad"
-        data={novedadesTipo}
-        rules={{
-          required: Validaciones.comunes.requerido,
-          validate: (value: string) =>
-            value !== "0" || Validaciones.comunes.requerido,
-        }}
-      />
-      <XStack justify={"space-between"}>
-        <Controller
-          name="foto"
+      >
+        <TextAreaInput
+          name="descripcion"
           control={control}
+          label="Descripción"
+          isRequired
+          placeholder="Descripción"
           rules={{
             required: Validaciones.comunes.requerido,
           }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <YStack>
-              <Text>
-                Fotografías disponibles {state.arrImagenes.length} de 1
-                {state.exigeImagenEntrega ? (
-                  <Text
-                    // can add theme values
-                    color="red"
-                    paddingStart="$2"
-                  >
-                    {" "}
-                    *
-                  </Text>
-                ) : null}
-              </Text>
-              {error && (
-                <Text color="$red10" fontSize="$3" mt="$1">
-                  {error.message}
-                </Text>
-              )}
-            </YStack>
-          )}
         />
-        {state.arrImagenes.length <= 0 ? (
-          <EntregaCamara onCapture={handleCapture}></EntregaCamara>
+
+        <SelectInput
+          name="novedad_tipo"
+          control={control}
+          label="Tipo de novedad"
+          isRequired
+          placeholder="Seleccionar un tipo de novedad"
+          data={novedadesTipo}
+          rules={{
+            required: Validaciones.comunes.requerido,
+            validate: (value: string) =>
+              value !== "0" || Validaciones.comunes.requerido,
+          }}
+        />
+
+        <XStack justify="space-between">
+          <Controller
+            name="foto"
+            control={control}
+            rules={{
+              required: Validaciones.comunes.requerido,
+            }}
+            render={({ fieldState: { error } }) => (
+              <YStack>
+                <Text>
+                  Fotografías disponibles {state.arrImagenes.length} de 1
+                  {state.exigeImagenEntrega ? (
+                    <Text color="red" paddingStart="$2"> *</Text>
+                  ) : null}
+                </Text>
+                {error && (
+                  <Text color="$red10" fontSize="$3" mt="$1">
+                    {error.message}
+                  </Text>
+                )}
+              </YStack>
+            )}
+          />
+          {state.arrImagenes.length <= 0 ? (
+            <EntregaCamara onCapture={handleCapture} />
+          ) : null}
+        </XStack>
+
+        {state.arrImagenes.length > 0 ? (
+          <EntregaImagenesPreview
+            arrImagenes={state.arrImagenes}
+            removerFoto={removerFoto}
+          />
         ) : null}
-      </XStack>
-      {state.arrImagenes.length > 0 ? (
-        <EntregaImagenesPreview
-          arrImagenes={state.arrImagenes}
-          removerFoto={removerFoto}
-        ></EntregaImagenesPreview>
-      ) : null}
-      <Button
-        theme="blue"
-        icon={isLoading ? () => <Spinner /> : undefined}
-        onPress={handleSubmit(guardarNovedad)}
-        disabled={isLoading}
-      >
-        Guardar
-      </Button>
-    </ScrollView>
+      </ScrollView>
+
+      {/* Footer con botón fijo */}
+      <View p="$4" bg={obtenerColor("BLANCO", "NEGRO")}>
+        <Button
+          theme="blue"
+          icon={isLoading ? () => <Spinner /> : undefined}
+          onPress={handleSubmit(guardarNovedad)}
+          disabled={isLoading}
+        >
+          Guardar
+        </Button>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
