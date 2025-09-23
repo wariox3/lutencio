@@ -32,7 +32,6 @@ import {
 import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import {
-  ClipboardX,
   CloudUpload,
   FileCheck,
   FileWarning,
@@ -41,6 +40,7 @@ import {
   Logs,
   MoreVertical,
   Package,
+  PauseCircle,
   XCircle,
 } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
@@ -61,6 +61,7 @@ import {
 } from "tamagui";
 import CardDesvincularOrdenEntrega from "./card-desvincular-orden-entrega";
 import CardInformativa from "./card-informativa";
+import { sincronizacionService } from "../../../application/services/sincronizacion.service";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -363,6 +364,10 @@ const SheetContents = memo(({ setOpen }: any) => {
     dispatch(entregasProcesadas({ entregasIds: visitasIds }));
   };
 
+  const detenerSincronizacion = () => {
+    sincronizacionService.detenerSincronizacion();
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <XStack justify="space-between">
@@ -379,26 +384,26 @@ const SheetContents = memo(({ setOpen }: any) => {
         <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
           <H6>Orden de entrega</H6>
           <YGroup.Item>
-            <XStack gap="$2">
+            <XStack gap="$2" flex={1}>
               <CardInformativa
                 backgroundColor={COLORES.AZUL_SUAVE}
                 titulo="Cargadas"
                 cantidad={`${
                   cantidadNovedades + entregadas.length
                 } de ${cantidadVisitasTotal}`}
-                icono={<Package size={28} opacity={0.7} />}
+                icono={<Package size={25} opacity={0.7} />}
               ></CardInformativa>
               <CardInformativa
                 backgroundColor={COLORES.NARANJA_SUAVE}
                 titulo="Novedades"
                 cantidad={cantidadNovedades}
-                icono={<FileWarning size={28} opacity={0.7} />}
+                icono={<FileWarning size={25} opacity={0.7} />}
               ></CardInformativa>
               <CardInformativa
                 backgroundColor={COLORES.VERDE_SUAVE}
                 titulo="Entregas"
                 cantidad={entregadas.length}
-                icono={<FileCheck size={28} opacity={0.7} />}
+                icono={<FileCheck size={25} opacity={0.7} />}
               ></CardInformativa>
             </XStack>
 
