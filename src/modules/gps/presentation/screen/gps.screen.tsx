@@ -44,6 +44,10 @@ const GpsScreen = () => {
   const markerRef = useRef<MapMarker>(null);
   const [markerTitle, setMarkerTitle] = useState("Título inicial");
   const [markerDescription, setMarkerDescription] = useState("Título inicial");
+  const [ubicacionEstado, setUbicacionEstado] = useState<
+    "cargando" | "ok" | "sin-senal"
+  >("cargando");
+
   const { obtenerColor } = useTemaVisual();
 
   useFocusEffect(
@@ -101,23 +105,7 @@ const GpsScreen = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.warn("Permiso de ubicación no concedido");
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      const { latitude, longitude } = location.coords;
-
-      setRegion({
-        latitude,
-        longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
-    })();
+    obtenerUbicacion();
   }, [navigation]);
 
   useEffect(() => {
@@ -176,9 +164,41 @@ const GpsScreen = () => {
 
   const blurhash = "=IQcr5bI^*-:_NM|?bof%M";
 
+  const obtenerUbicacion = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setUbicacionEstado("sin-senal");
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+        timeInterval: 5000,
+      });
+
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+
+      setUbicacionEstado("ok");
+    } catch (error) {
+      console.error("Error obteniendo ubicación:", error);
+      setUbicacionEstado("sin-senal");
+    }
+  };
+
   return (
     <>
-      <XStack justify={"space-between"} p={"$2"} gap={"$2"} style={{ backgroundColor: obtenerColor("BLANCO", "NEGRO") }}>
+      <XStack
+        justify={"space-between"}
+        p={"$2"}
+        gap={"$2"}
+        style={{ backgroundColor: obtenerColor("BLANCO", "NEGRO") }}
+      >
         <BotonAccion
           onPress={() => router.navigate(rutasApp.visitaEntregar)}
           icon={<ArrowDownToLine size="$2" />}
@@ -230,19 +250,35 @@ const GpsScreen = () => {
                   ) : null}
                 </MapView>
               ) : (
-                <View style={gpsStyles.loader}>
-                  <Image
-                    source={require("../../../../../assets/images/mapa.gif")}
-                    placeholder={{ blurhash }}
-                    contentFit="cover"
-                    transition={1000}
-                    style={{
-                      width: 66,
-                      height: 58,
-                    }}
-                  />
-                  <Text>Procesando mapa</Text>
-                </View>
+                <>
+                  {ubicacionEstado === "cargando" && (
+                    <View style={gpsStyles.loader}>
+                      <Image
+                        source={require("../../../../../assets/images/mapa.gif")}
+                        placeholder={{ blurhash }}
+                        style={{ width: 66, height: 58 }}
+                      />
+                      <Text>Buscando señal...</Text>
+                    </View>
+                  )}
+
+                  {ubicacionEstado === "sin-senal" && (
+                    <View style={gpsStyles.loader}>
+                      <Text
+                        style={{
+                          color: "red",
+                          fontWeight: "bold",
+                          fontSize: 16,
+                        }}
+                      >
+                        SIN SEÑAL
+                      </Text>
+                      <Button mt="$2" onPress={obtenerUbicacion}>
+                        Reintentar
+                      </Button>
+                    </View>
+                  )}
+                </>
               )}
             </View>
             <XStack
