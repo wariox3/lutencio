@@ -293,6 +293,15 @@ const entregasSlice = createSlice({
         }
       }
     },
+    eliminarEntrega: (state, action: PayloadAction<number>) => {
+      const entregaId = action.payload;
+      // 1. Quitar de la lista de entregas
+      state.entregas = state.entregas.filter((e) => e.id !== entregaId);
+      // 2. Quitar de la lista de seleccionadas si estaba
+      state.entregasSeleccionadas = state.entregasSeleccionadas.filter(
+        (id) => id !== entregaId
+      );
+    },
   },
 
   extraReducers(builder) {
@@ -368,5 +377,6 @@ export const {
   actualizarEntrega,
   setSincronizandoEntregas,
   entregasProcesadas,
+  eliminarEntrega
 } = entregasSlice.actions;
 export default entregasSlice.reducer;

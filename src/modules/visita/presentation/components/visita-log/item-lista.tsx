@@ -1,15 +1,43 @@
 import COLORES from "@/src/core/constants/colores.constant";
-import { Check, DatabaseBackup, TimerReset, X as XIcon, LoaderCircle, Package, Eye } from "@tamagui/lucide-icons";
+import {
+  Check,
+  DatabaseBackup,
+  TimerReset,
+  X as XIcon,
+  LoaderCircle,
+  Package,
+  Eye,
+  Trash2,
+} from "@tamagui/lucide-icons";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Card, Dialog, H3, Image, ScrollView, Separator, Text, View, XStack, YStack } from "tamagui";
+import {
+  Button,
+  Card,
+  Dialog,
+  H3,
+  Image,
+  ScrollView,
+  Separator,
+  Text,
+  View,
+  XStack,
+  YStack,
+} from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista-log";
 import { Animated, Pressable } from "react-native";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
-import { cambiarEstadoSincronizadoError, entregasProcesadas } from "../../../application/slice/entrega.slice";
+import {
+  cambiarEstadoSincronizadoError,
+  eliminarEntrega,
+  entregasProcesadas,
+} from "../../../application/slice/entrega.slice";
+import MensajeFiltroAplicado from "../visita-filtros/mensaje-filtro-aplicado";
+import { alertas } from "@/src/core/constants";
 
 const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
+  console.log(visita);
 
   const dispatch = useAppDispatch();
   const isOnline = useNetworkStatus();
@@ -44,7 +72,7 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
       mostrarAlertHook({
         titulo: "Error",
         mensaje: "No hay conexión a internet",
-        onAceptar: () => { },
+        onAceptar: () => {},
       });
       return;
     }
@@ -64,10 +92,23 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
       );
 
       await dispatch(entregasProcesadas({ entregasIds: [visita.id] }));
-
     } finally {
       setCargando(false);
     }
+  };
+
+  const confirmarRetirarVisita = (id: number, numero: number) => {
+    console.log(numero);
+
+    mostrarAlertHook({
+      titulo: alertas.titulo.advertencia,
+      mensaje: `${alertas.mensaje.accionIrreversible} Número de guía: ${numero}`,
+      onAceptar: () => retirarDespacho(id),
+    });
+  };
+
+  const retirarDespacho = async (id: number) => {
+    dispatch(eliminarEntrega(id));
   };
 
   return (
@@ -86,7 +127,7 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
       <YStack gap={"$1"}>
         <XStack justify={"space-between"}>
           <Card bg={COLORES.AZUL_FUERTE} borderRadius="$2" p="$1.5">
-            <XStack justify={'center'} items="baseline">
+            <XStack justify={"center"} items="baseline">
               <Text color={COLORES.BLANCO} fontWeight="bold" fontSize="$2">
                 ID: {visita.id}
               </Text>
@@ -128,8 +169,8 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
                 <Check size={"$1"} color={COLORES.VERDE_FUERTE} />
               ) : (
                 <>
-                  {visita.estado_entrega === true &&
-                    visita.estado_sinconizado === false ? (
+                  {visita.estado_entregado === true &&
+                  visita.estado_sincronizado === false ? (
                     <TimerReset size={"$1"} color={COLORES.VERDE_FUERTE} />
                   ) : null}
                 </>
@@ -146,83 +187,129 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
             ) : null}
           </YStack>
         </XStack>
-        <XStack justify={'space-between'} items="center">
-          {
-            visita.arrImagenes?.length > 0 ? (
-              <XStack mt={8}>
-                <Dialog modal>
-                  <Dialog.Trigger asChild>
-                    <Card   bg={COLORES.AZUL_FUERTE} my={2} p={"$2"}>
-                      <XStack gap={"$2"} items={'center'}>
-                        <Eye size={'$1'} color={COLORES.BLANCO}></Eye>
-                        <Text color={COLORES.BLANCO} fontWeight={"bold"}>
-                          {visita?.arrImagenes
-                            ? `Imágenes: ${visita.arrImagenes.length}`
-                            : null}
-                        </Text>
-                      </XStack>
+        <XStack justify={"space-between"} items="center">
+          {visita.arrImagenes?.length > 0 ? (
+            <XStack mt={8}>
+              <Dialog modal>
+                <Dialog.Trigger asChild>
+                  <Card bg={COLORES.AZUL_FUERTE} my={2} p={"$2"}>
+                    <XStack gap={"$2"} items={"center"}>
+                      <Eye size={"$1"} color={COLORES.BLANCO}></Eye>
+                      <Text color={COLORES.BLANCO} fontWeight={"bold"}>
+                        {visita?.arrImagenes
+                          ? `Imágenes: ${visita.arrImagenes.length}`
+                          : null}
+                      </Text>
+                    </XStack>
+                  </Card>
+                </Dialog.Trigger>
 
-                    </Card>
-
-                  </Dialog.Trigger>
-
-                  <Dialog.Portal>
-                    <Dialog.Overlay
-                      key="overlay"
-                      animation="quick"
-                      opacity={0.5}
-                      enterStyle={{ opacity: 0.5 }}
-                      exitStyle={{ opacity: 0.5 }}
-                    />
-                    <Dialog.Content
-                      bordered
-                      elevate
-                      width="90%"
-                      height="32%"
-                    >
-                      {/* Header del modal */}
+                <Dialog.Portal>
+                  <Dialog.Overlay
+                    key="overlay"
+                    animation="quick"
+                    opacity={0.5}
+                    enterStyle={{ opacity: 0.5 }}
+                    exitStyle={{ opacity: 0.5 }}
+                  />
+                  <Dialog.Content bordered elevate width="90%" height="45%">
+                    {/* Header del modal */}
+                    <YStack gap={"$2"}>
                       <XStack justify="space-between" items="center" mb="$3">
                         <H3>Imágenes</H3>
                         <Dialog.Close asChild>
                           <Button size="$5" chromeless>
-                            <XIcon size={'$5'} color={COLORES.ROJO_FUERTE} />
+                            <XIcon size={"$5"} color={COLORES.ROJO_FUERTE} />
                           </Button>
                         </Dialog.Close>
                       </XStack>
+                      <XStack justify={"space-between"}>
+                        <Card
+                          bg={COLORES.AZUL_FUERTE}
+                          borderRadius="$2"
+                          p="$1.5"
+                        >
+                          <XStack justify={"center"} items="baseline">
+                            <Text
+                              color={COLORES.BLANCO}
+                              fontWeight="bold"
+                              fontSize="$2"
+                            >
+                              ID: {visita.id}
+                            </Text>
+                          </XStack>
+                        </Card>
+
+                        <Card
+                          bg={COLORES.AZUL_FUERTE}
+                          borderRadius="$2"
+                          p="$1.5"
+                        >
+                          <XStack items="center" gap="$1.5">
+                            <Package size="$1" color={COLORES.BLANCO} />
+                            <Text
+                              color={COLORES.BLANCO}
+                              fontWeight="bold"
+                              fontSize="$1"
+                            >
+                              #{visita.numero}
+                            </Text>
+                          </XStack>
+                        </Card>
+                      </XStack>
                       {/* Galería scrollable horizontal */}
                       {visita?.arrImagenes?.length ? (
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        <ScrollView
+                          horizontal
+                          showsHorizontalScrollIndicator={false}
+                        >
                           <XStack gap="$3">
                             {visita.arrImagenes.map((item: any, i: number) => (
                               <Image
                                 key={i}
                                 source={{ uri: item.uri }}
                                 width={200}
-                                height={200} />
+                                height={200}
+                              />
                             ))}
                           </XStack>
                         </ScrollView>
-                      ) : (
-                        null
-                      )}
-                    </Dialog.Content>
-                  </Dialog.Portal>
-                </Dialog>
-              </XStack>
-            ) : null
-          }
-          {visita.entregada_sincronizada_error ? (
-            <Pressable onPress={sincronizarVisita} disabled={cargando}>
-              {cargando ? (
-                <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                  <LoaderCircle size={'$3'} color={COLORES.AZUL_FUERTE} />
-                </Animated.View>
-              ) : (
-                <DatabaseBackup size={'$3'} color={COLORES.AZUL_FUERTE} />
-              )}
-            </Pressable>
-          ) : null}
-
+                      ) : null}
+                    </YStack>
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog>
+            </XStack>
+          ) : (
+            <View />
+          )}
+          <XStack items="center" gap={"$7"}>
+            {visita.entregada_sincronizada_error ? (
+              <Pressable onPress={sincronizarVisita} disabled={cargando}>
+                {cargando ? (
+                  <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                    <LoaderCircle size={"$3"} color={COLORES.AZUL_FUERTE} />
+                  </Animated.View>
+                ) : (
+                  <>
+                    <DatabaseBackup size={"$3"} color={COLORES.AZUL_FUERTE} />
+                  </>
+                )}
+              </Pressable>
+            ) : (
+              <View />
+            )}
+            {visita.entregada_sincronizada_codigo >= 400 &&
+            visita.entregada_sincronizada_codigo <= 499 ? (
+              <Pressable
+                onPress={() => confirmarRetirarVisita(visita.id, visita.numero)}
+              >
+                <Trash2 size={"$3"} color={COLORES.ROJO_FUERTE} />
+              </Pressable>
+            ) : (
+              <View />
+            )}
+          </XStack>
         </XStack>
         <View mt={8}>
           {visita.entregada_sincronizada_error_mensaje ? (
