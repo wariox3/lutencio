@@ -1,5 +1,5 @@
-import { Novedad } from "@/src/modules/novedad/domain/novedad.interface";
+import { Entrega } from "./vista.interface";
 
 export interface ItemListaProps {
-  novedad: Novedad;
+  visita: Entrega;
 }
