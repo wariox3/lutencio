@@ -194,8 +194,6 @@ class ApiService {
     params?: ParametrosApi,
     headers?: Record<string, any>
   ): Promise<T> {
-    console.log(endpoint);
-    
     try {
       const response: AxiosResponse<T> = await this.instance.get(endpoint, {
         params,

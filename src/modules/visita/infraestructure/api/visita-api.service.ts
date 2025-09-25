@@ -10,7 +10,7 @@ export class VisitaApiRepository implements VisitaRepository {
   constructor(
     private generalApiService = new GeneralApiRepository(),
     private ruteoApiRepository = new RuteoApiRepository()
-  ) {}
+  ) { }
 
   async getLista(
     despachoId: number,
@@ -125,8 +125,6 @@ export class VisitaApiRepository implements VisitaRepository {
       STORAGE_KEYS.usuarioId
     )) as string;
     const comentario = `cargadas: ${cantidadCargadas}, entregadas local: ${cantidadEntregasLocales}, novedad local: ${cantidadNovedadesLocales} , sincronizar : ${cantidadNovedadesLocalesPendienteSinconizar}`;
-    console.log('despacho', despacho);
-    
     return this.ruteoApiRepository.postSeguimiento(despacho, usuario_id, comentario.slice(0, 500), subdominio)
   }
 }

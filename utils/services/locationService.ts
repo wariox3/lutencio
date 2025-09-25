@@ -26,7 +26,6 @@ const enviarUbicacion = async (locations: any) => {
     }
   } catch (error) {
     console.log("error enviarUbicacion", error);
-    
   }
 };
 

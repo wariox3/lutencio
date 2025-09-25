@@ -37,8 +37,6 @@ import MensajeFiltroAplicado from "../visita-filtros/mensaje-filtro-aplicado";
 import { alertas } from "@/src/core/constants";
 
 const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
-  console.log(visita);
-
   const dispatch = useAppDispatch();
   const isOnline = useNetworkStatus();
   const [cargando, setCargando] = useState(false);
@@ -98,8 +96,6 @@ const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
   };
 
   const confirmarRetirarVisita = (id: number, numero: number) => {
-    console.log(numero);
-
     mostrarAlertHook({
       titulo: alertas.titulo.advertencia,
       mensaje: `${alertas.mensaje.accionIrreversible} Número de guía: ${numero}`,

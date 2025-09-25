@@ -92,10 +92,6 @@ export class RuteoApiRepository implements RuteoRepository {
     comentario: string,
     subdominio: string
   ) {
-    console.log({
-      despacho, usuario_id, comentario, subdominio
-    });
-    
     return apiService.post<any>(
       APIS.ruteo.seguimiento,
       { despacho, usuario_id, comentario },
