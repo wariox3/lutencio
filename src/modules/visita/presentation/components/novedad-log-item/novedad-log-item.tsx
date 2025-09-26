@@ -6,10 +6,27 @@ import { ItemNovedadListaProps } from "../../../domain/interfaces/visita-novedad
 
 const NovedadLogItem: React.FC<ItemNovedadListaProps> = ({ novedad }) => {
   return (
-    <Card p="$3" mx="$2" mt={"$2"} borderStyle={"dashed"} bordered>
+    <Card
+      py="$2"
+      px="$3"
+      mx="$2"
+      mt="$1.5"
+      borderRadius="$3"
+      borderWidth={1}
+      bg={undefined}
+      borderColor={"$borderColor"}
+      borderStyle={"solid"}
+      bordered={false}
+    >
       <YStack gap={"$1"}>
         <XStack justify={"space-between"}>
-          <Text>Visita ID: {novedad.visita_id}</Text>
+          <Card bg={COLORES.AZUL_FUERTE} borderRadius="$2" p="$1.5">
+            <XStack justify={"center"} items="baseline">
+              <Text color={COLORES.BLANCO} fontWeight="bold" fontSize="$2">
+                ID: {novedad.visita_id}
+              </Text>
+            </XStack>
+          </Card>
         </XStack>
         <XStack justify={"space-between"}>
           <YStack items={"center"} gap={"$1.5"} flex={1}>
