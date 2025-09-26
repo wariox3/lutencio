@@ -96,29 +96,29 @@ export default function useVisitaFormularioViewModel() {
   };
 
   const handleCapture = async (uri: string) => {
+    if (!uri) {
+      Alert.alert("Error", "No se recibió una imagen válida.");
+      return;
+    }
+  
     try {
       // 1. Guardar la foto en el dispositivo
       const nuevaUri = await guardarArchivo(uri);
       if (!nuevaUri) {
-        Alert.alert("Error", "No se pudo guardar la imagen en el dispositivo.");
-        throw new Error("Error al guardar la imagen");
+        throw new Error("No se pudo guardar la imagen en el dispositivo.");
       }
-
-      // 2. Actualizar el estado con la nueva imagen
-      try {
-        actualizarState({
-          arrImagenes: [...state.arrImagenes, { uri: nuevaUri }],
-        });
-      } catch (e) {
-        Alert.alert("Error de estado", "No se pudo actualizar la lista de imágenes.");
-        throw e;
-      }
-
+  
+      // 2. Actualizar el estado de forma segura (función updater)
+      actualizarState({
+        arrImagenes: [...state.arrImagenes, { uri: nuevaUri }],
+      });
     } catch (error: any) {
-      Alert.alert("Error general", error.message || "Ha ocurrido un error inesperado.");
+      const mensaje = error?.message || "Ha ocurrido un error inesperado.";
+      Alert.alert("Error", mensaje);
       console.error("handleCapture error:", error);
     }
   };
+
 
   const handleFirma = async (firma: string) => {
     const nuevaUri = await guardarArchivo(firma);
