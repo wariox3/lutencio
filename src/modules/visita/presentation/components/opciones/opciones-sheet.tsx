@@ -434,23 +434,39 @@ const SheetContents = memo(({ setOpen }: any) => {
             ) : null}
 
             <H6 mb="$2">Sincronizar</H6>
-            <ListItem
-              hoverTheme
-              icon={<CloudUpload size="$2" />}
-              iconAfter={
-                <>
-                  {cargandoEntregas || cargandoNovedades ? (
-                    <Spinner size="small" color="$green10" />
-                  ) : null}
-                </>
-              }
-              title="Sincronizar"
-              subTitle="Sincronizar visitas/novedades pendientes"
-              onPress={sincronizarPendientes}
-              disabled={cargandoEntregas || cargandoNovedades}
-              opacity={cargandoEntregas || cargandoNovedades ? 0.5 : 1}
-            />
-
+            <XStack
+              flex={1}
+              justify={"space-between"}
+              items={"center"}
+              gap={"$2"}
+            >
+              <ListItem
+                hoverTheme
+                icon={<CloudUpload size="$2" />}
+                iconAfter={
+                  <>
+                    {cargandoEntregas || cargandoNovedades ? (
+                      <Spinner size="small" color="$green10" />
+                    ) : null}
+                  </>
+                }
+                title="Sincronizar"
+                subTitle="visitas/novedades pendientes"
+                onPress={sincronizarPendientes}
+                disabled={cargandoEntregas || cargandoNovedades}
+                opacity={cargandoEntregas || cargandoNovedades ? 0.5 : 1}
+                flex={cargandoEntregas || cargandoNovedades ? 0.99 : 1}
+              />
+              {cargandoEntregas || cargandoNovedades ? (
+                <Button
+                  size="$4"
+                  circular
+                  icon={<PauseCircle size="$2" color="$red10" />}
+                  onPress={detenerSincronizacion}
+                  theme={"red"}
+                />
+              ) : null}
+            </XStack>
             <H6 mb="$2">Log</H6>
             <View my="$2">
               <ListItem
