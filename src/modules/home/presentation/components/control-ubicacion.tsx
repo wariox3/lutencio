@@ -1,19 +1,25 @@
 import { useIntervalActivo } from "@/src/shared/hooks/useIntervalActivo";
+import { useAppSelector } from "@/src/application/store/hooks";
+import { obtenerEntregasPendientesOrdenadas } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   comprobarRegistroTareaGeolocalizacion,
   detenerTareaSeguimientoUbicacion,
   iniciarTareaSeguimientoUbicacion,
 } from "@/utils/services/locationService";
 import { useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Button, Card, YStack } from "tamagui";
+import storageService from "@/src/core/services/storage.service";
+import { STORAGE_KEYS } from "@/src/core/constants";
 
 const ControlUbicacion = () => {
   const [seguimientoUbicacion, setSeguimientoUbicacion] = useState(true);
+  const [ordenEntrega, setOrdenEntrega] = useState<string | null>(null);
 
   useFocusEffect(
     useCallback(() => {
       obtenerInformacion();
+      obtenerOrdenEntrega();
     }, [])
   );
 
@@ -21,6 +27,13 @@ const ControlUbicacion = () => {
     const valorComprobarRegistroTareaGeolocalizacion =
       await comprobarRegistroTareaGeolocalizacion();
     setSeguimientoUbicacion(valorComprobarRegistroTareaGeolocalizacion);
+  };
+
+  const obtenerOrdenEntrega = async () => {
+    const valorOrdenEntrega = (await storageService.getItem(
+      STORAGE_KEYS.ordenEntrega
+    )) as string;
+    setOrdenEntrega(valorOrdenEntrega);
   };
 
   // Mover la lógica del intervalo aquí
@@ -48,6 +61,8 @@ const ControlUbicacion = () => {
       alert("Ocurrió un error al cambiar el estado del seguimiento");
     }
   };
+
+  if (ordenEntrega === null) return null;
 
   return (
     <Card
