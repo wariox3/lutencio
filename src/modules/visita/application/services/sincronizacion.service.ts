@@ -41,6 +41,7 @@ export class SincronizacionService {
   private sincronizandoVisita = false;
   private sincronizandoNovedad = false;
   private storeRef: any = null;
+  private cancelarSync = false; 
   private lastSyncAttemptEntrega: number = 0;
   private lastSyncAttemptNovedad: number = 0;
   private readonly MIN_SYNC_INTERVAL = 500; // Mínimo 0.5 segundos entre intentos
@@ -224,6 +225,7 @@ export class SincronizacionService {
    * @returns {Promise<boolean>} Éxito de la sincronización
    */
   public async sincronizarEntregas(): Promise<boolean> {
+    this.prepararNuevaSync();
     const now = Date.now();
     const syncId = Math.random().toString(36).substring(2, 9); // ID único para rastrear esta sincronización
 
@@ -421,6 +423,7 @@ export class SincronizacionService {
    * @returns {Promise<boolean>} Éxito de la sincronización
    */
   public async sincronizarNovedades(): Promise<boolean> {
+    this.prepararNuevaSync();
     const now = Date.now();
     const syncId = Math.random().toString(36).substring(2, 9); // ID único para rastrear esta sincronización
 
@@ -617,6 +620,26 @@ export class SincronizacionService {
       this.sincronizandoNovedad = false;
       this.storeRef.dispatch(changeSincronizandoNovedades(false));
     }
+  }
+
+
+  public detenerSincronizacion(): void {
+    console.log("🛑 Deteniendo sincronización en curso...");
+    this.cancelarSync = true;
+    this.sincronizandoVisita = false;
+    this.sincronizandoNovedad = false;
+
+    if (this.storeRef) {
+      this.storeRef.dispatch(setSincronizandoEntregas(false));
+      this.storeRef.dispatch(changeSincronizandoNovedades(false));
+    }
+  }
+
+  /**
+   * Resetear la bandera antes de iniciar un nuevo proceso
+   */
+  private prepararNuevaSync(): void {
+    this.cancelarSync = false;
   }
 
   /**
