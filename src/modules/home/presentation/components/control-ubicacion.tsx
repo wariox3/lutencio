@@ -1,18 +1,15 @@
 import { useIntervalActivo } from "@/src/shared/hooks/useIntervalActivo";
-import { useAppSelector } from "@/src/application/store/hooks";
-import { obtenerEntregasPendientesOrdenadas } from "@/src/modules/visita/application/slice/entrega.selector";
 import {
   comprobarRegistroTareaGeolocalizacion,
   detenerTareaSeguimientoUbicacion,
   iniciarTareaSeguimientoUbicacion,
 } from "@/utils/services/locationService";
 import { useFocusEffect } from "expo-router";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { Button, Card, YStack } from "tamagui";
 
 const ControlUbicacion = () => {
   const [seguimientoUbicacion, setSeguimientoUbicacion] = useState(true);
-  const arrEntregas = useAppSelector(obtenerEntregasPendientesOrdenadas);
 
   useFocusEffect(
     useCallback(() => {
@@ -51,8 +48,6 @@ const ControlUbicacion = () => {
       alert("Ocurrió un error al cambiar el estado del seguimiento");
     }
   };
-
-  if (arrEntregas.length === 0) return null;
 
   return (
     <Card
