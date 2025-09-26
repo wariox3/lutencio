@@ -371,8 +371,8 @@ const SheetContents = memo(({ setOpen }: any) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <XStack justify="space-between">
-        <H4 mb="$2">Opciones</H4>
+      <XStack justify="space-between" items={'center'} mb="$2">
+        <H4 >Opciones</H4>
         <Button
           size="$4"
           circular
