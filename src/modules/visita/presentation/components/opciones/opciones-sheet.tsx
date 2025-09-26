@@ -13,6 +13,7 @@ import {
 } from "@/src/modules/novedad/application/store/novedad.slice";
 import {
   getSincronizandoEntregas,
+  selectCantidadVisitasConError400,
   selectCantidadVisitasConErrorTemporal,
   selectCantidadVisitasTotal,
   selectEntregadas,
@@ -279,8 +280,8 @@ const SheetContents = memo(({ setOpen }: any) => {
   const novedadesErrorTemporal = useAppSelector(
     selectNovedadesConErrorTemporal
   );
-  const cantidadVisitasErrorTemporal = useAppSelector(
-    selectCantidadVisitasConErrorTemporal
+  const cantidadVisitasError400 = useAppSelector(
+    selectCantidadVisitasConError400
   );
   const visitasErrorTemporal = useAppSelector(selectVisitasConErrorTemporal);
 
@@ -382,9 +383,8 @@ const SheetContents = memo(({ setOpen }: any) => {
       </XStack>
       <YGroup width={"auto"} flex={1} size="$4" gap="$4" overflow="hidden">
         <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-          <H6>Orden de entrega</H6>
           <YGroup.Item>
-            <XStack gap="$2" flex={1}>
+            <XStack gap="$2" flex={1} mb={"$2"}>
               <CardInformativa
                 backgroundColor={COLORES.AZUL_SUAVE}
                 titulo="Cargadas"
@@ -399,11 +399,19 @@ const SheetContents = memo(({ setOpen }: any) => {
                 cantidad={cantidadNovedades}
                 icono={<FileWarning size={25} opacity={0.7} />}
               ></CardInformativa>
+            </XStack>
+            <XStack gap="$2" flex={1}>
               <CardInformativa
                 backgroundColor={COLORES.VERDE_SUAVE}
                 titulo="Entregas"
                 cantidad={entregadas.length}
                 icono={<FileCheck size={25} opacity={0.7} />}
+              ></CardInformativa>
+              <CardInformativa
+                backgroundColor={COLORES.ROJO_SUAVE}
+                titulo="Errores"
+                cantidad={cantidadVisitasError400}
+                icono={<FileX size={25} opacity={0.7} />}
               ></CardInformativa>
             </XStack>
 

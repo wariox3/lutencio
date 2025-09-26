@@ -126,6 +126,17 @@ export const selectVisitasConErrorTemporal = createSelector(
     )
 );
 
+export const selectVisitasConError400 = createSelector(
+  [selectEntregas],
+  (entregas) =>
+    entregas.entregas.filter(
+      (entrega) =>
+        entrega.entregada_sincronizada_error &&
+        entrega.entregada_sincronizada_codigo >= 400 &&
+        entrega.entregada_sincronizada_codigo <= 499
+    )
+);
+
 export const selectCantidadVisitasConErrorTemporal = createSelector(
   [selectVisitasConErrorTemporal],
   (entregas) => entregas.length
@@ -134,4 +145,9 @@ export const selectCantidadVisitasConErrorTemporal = createSelector(
 export const selectCantidadVisitasTotal = createSelector(
   [selectEntregas],
   (entregas) => entregas.entregas.length
+);
+
+export const selectCantidadVisitasConError400 = createSelector(
+  [selectVisitasConError400],
+  (entregas) => entregas.length
 );
