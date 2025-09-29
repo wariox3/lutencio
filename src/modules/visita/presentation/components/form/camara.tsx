@@ -2,7 +2,7 @@ import { Camera as CameraIcons, Circle } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import React, { memo, useRef, useState, useCallback } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Keyboard, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, H4, Text, View } from "tamagui";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
@@ -11,10 +11,14 @@ export const EntregaCamara = ({ onCapture }: { onCapture: (uri: string) => void 
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState(0);
 
+  const abrirCamara = useCallback(() => {
+    Keyboard.dismiss();
+    setOpen(true);
+  }, []);
+
   return (
     <>
-      <Button icon={<CameraIcons size="$2" />} onPress={() => setOpen(true)} />
-
+      <Button icon={<CameraIcons size="$2" />} onPress={() => abrirCamara()} />
       <Sheet
         modal
         open={open}
@@ -29,7 +33,7 @@ export const EntregaCamara = ({ onCapture }: { onCapture: (uri: string) => void 
       >
         <Sheet.Overlay
           animation="lazy"
-          bg="$shadow6"
+          bg="transparent"
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
         />
