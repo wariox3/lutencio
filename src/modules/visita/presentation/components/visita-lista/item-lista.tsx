@@ -113,7 +113,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
             </XStack>
           </Card>
           {hasEstadoNovedad && (
-            <Card bg={COLORES.AZUL_FUERTE} borderRadius="$2" p="$1.5">
+            <Card bg={COLORES.NARANJA_FUERTE} borderRadius="$2" p="$1.5">
               <XStack items="center" gap="$1.5">
                 <CircleAlert size="$1" color={COLORES.BLANCO} />
                 <Text color={COLORES.BLANCO} fontWeight="bold" fontSize="$1">
