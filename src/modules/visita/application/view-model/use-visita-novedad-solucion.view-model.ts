@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { actualizarNovedadSolucion, cambiarEstadoNovedadSolucion } from "../slice/entrega.slice";
 import { visitaNovedadSolucionThunk } from "../slice/visita.thunk";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 
 const valoresFormulario: NovedadSolucionFormType = {
   solucion: "",
@@ -24,6 +25,7 @@ export default function useVisitaNovedadSolucionViewModel() {
   });
   const { id, visita_id } = useLocalSearchParams();
   const dispatch = useAppDispatch();
+  const { obtenerColor } = useTemaVisual();
 
   const novedad_id = Array.isArray(id) ? id[0] : id;
   const vistaId = Array.isArray(visita_id) ? visita_id[0] : visita_id;
@@ -91,5 +93,6 @@ export default function useVisitaNovedadSolucionViewModel() {
     state,
     guardarSolucion,
     handleSubmit,
+    obtenerColor
   };
 }

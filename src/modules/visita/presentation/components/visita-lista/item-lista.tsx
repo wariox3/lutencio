@@ -1,22 +1,21 @@
 import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import {
-  AlertTriangle,
   CheckCircle,
   CircleAlert,
   CircleUser,
-  Clock,
   DollarSign,
   MapPin,
   Package,
-  Phone,
+  Phone
 } from "@tamagui/lucide-icons";
 import React, { useCallback, useMemo } from "react";
-import { Linking, Platform, TouchableOpacity, StyleSheet } from "react-native";
-import { Card, Separator, Text, View, XStack, YStack } from "tamagui";
+import { Linking, Platform, StyleSheet, TouchableOpacity } from "react-native";
+import { Button, Card, Separator, Text, View, XStack, YStack } from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista";
-import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
+import { router } from "expo-router";
 
 // Componente optimizado para evitar re-renders innecesarios
 const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
@@ -77,6 +76,11 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   const handlePress = useCallback(() => {
     onPress(visita.id);
   }, [visita.id, onPress]);
+
+  const solucionNavegacion = useCallback(() => {
+    router.push("/modal-novedad-solucion");
+    //
+  }, [visita.id]);
 
   // Memoizar el handler para llamar al teléfono del destinatario
   const handleCallPhone = useCallback(() => {
@@ -186,7 +190,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
               <View />
             )}
             <YStack>
-              <XStack gap={'$1.5'}>
+              <XStack gap={"$1.5"}>
                 <Text
                   fontSize="$2"
                   fontWeight={"bold"}
@@ -201,7 +205,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
                   {visita.unidades}
                 </Text>
               </XStack>
-              <XStack gap={'$1.5'}>
+              <XStack gap={"$1.5"}>
                 <Text
                   fontSize="$2"
                   fontWeight={"bold"}
@@ -240,6 +244,20 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
           )}
         </XStack>
       </YStack>
+      <XStack justify="space-between" items="center" mb="$1.5">
+        <XStack mt="$1.5" gap="$1.5" flexWrap="wrap">
+          {hasEstadoNovedad && (
+            <Button
+              size="$3.5"
+              theme="green"
+              icon={CheckCircle}
+              onPress={() => solucionNavegacion()}
+            >
+              Solucionar novedad
+            </Button>
+          )}
+        </XStack>
+      </XStack>
     </Card>
   );
 };
