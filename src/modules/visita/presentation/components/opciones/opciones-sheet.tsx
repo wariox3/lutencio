@@ -195,7 +195,7 @@ export const EntregaOpciones = () => {
           <XStack items="center" gap="$1">
             <Package size={12} color="$blue10" />
             <Text fontSize="$2" fontWeight="600" color="$blue10">
-              {cantidadNovedades + entregadas.length} de {cantidadVisitasTotal}
+              {entregadas.length} de {cantidadVisitasTotal}
             </Text>
           </XStack>
           <XStack items="center" gap="$1">
@@ -389,7 +389,7 @@ const SheetContents = memo(({ setOpen }: any) => {
                 backgroundColor={COLORES.AZUL_SUAVE}
                 titulo="Cargadas"
                 cantidad={`${
-                  cantidadNovedades + entregadas.length
+                  entregadas.length
                 } de ${cantidadVisitasTotal}`}
                 icono={<Package size={25} opacity={0.7} />}
               ></CardInformativa>
