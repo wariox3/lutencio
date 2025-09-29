@@ -1,5 +1,6 @@
 import COLORES from "@/src/core/constants/colores.constant";
 import CamaraLectorCodigo from "@/src/shared/components/comun/camara-lector-codigos";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { Search, XCircle } from "@tamagui/lucide-icons";
 import React, { useState } from "react";
 import { Pressable } from "react-native";
@@ -12,6 +13,7 @@ interface InputFiltrosProps {
 
 const InputFiltros: React.FC<InputFiltrosProps> = ({ onFilterChange, placeholder }) => {
   const [valorInput, setValorInput] = useState("");
+  const { esClaro, obtenerColor } = useTemaVisual();
 
   const filtrarVisitas = (valor: string) => {
     setValorInput(valor);
@@ -30,12 +32,13 @@ const InputFiltros: React.FC<InputFiltrosProps> = ({ onFilterChange, placeholder
       borderStyle={"dashed"}
       bordered
     >
-      <XStack items={"center"} gap={"$2"} p={0} >
+      <XStack items={"center"} gap={"$1.5"} p={0} >
         <>
-        <Search size={"$1.5"} opacity={0.5}></Search>
+        <Search size={"$1.5"} opacity={esClaro ? 0.5: 1} ></Search>
         <Input
           flex={1}
           placeholder={placeholder || "Buscar por número"}
+          placeholderTextColor={esClaro ?'unset' : 'white'}
           keyboardType="default"
           borderStyle="unset"
           borderColor={"transparent"}
