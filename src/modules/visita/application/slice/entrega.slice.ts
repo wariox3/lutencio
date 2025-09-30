@@ -328,6 +328,7 @@ const entregasSlice = createSlice({
         const entrega = state.entregas.find((e) => e.id === payload.visita);
         if (entrega) {
           entrega.estado_novedad_solucion = !entrega.estado_novedad_solucion;
+          entrega.estado_novedad = false;
         }
       }
     );

@@ -9,7 +9,7 @@ import {
   DollarSign,
   MapPin,
   Package,
-  Phone
+  Phone,
 } from "@tamagui/lucide-icons";
 import React, { useCallback, useMemo } from "react";
 import { Linking, Platform, StyleSheet, TouchableOpacity } from "react-native";
@@ -74,7 +74,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
 
   // Memoizar la función para manejar el onPress
   const handlePress = useCallback(() => {
-    if(visita.estado_novedad){
+    if (visita.estado_novedad) {
       mostrarAlertHook({
         titulo: alertas.titulo.advertencia,
         mensaje: "No se puede seleccionar una visita con novedad.",
@@ -86,8 +86,13 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   }, [visita.id, onPress]);
 
   const solucionNavegacion = useCallback(() => {
-    router.push("/modal-novedad-solucion");
-    //
+    router.push({
+      pathname: "/modal-novedad-solucion",
+      params: {
+        id: visita.novedad_id,
+        visita_id: visita.id,
+      },
+    });
   }, [visita.id]);
 
   // Memoizar el handler para llamar al teléfono del destinatario
