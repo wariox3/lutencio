@@ -79,9 +79,10 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   }, [visita.id, onPress]);
 
   // Memoizar el handler para llamar al teléfono del destinatario
-  const handleCallPhone = useCallback(() => {
+  const LlamarTelefono = useCallback(() => {
     if (visita.destinatario_telefono) {
-      llamarDestinatario(visita.destinatario_telefono);
+      const numeroTelefono = visita.destinatario_telefono.replace(/\s+/g, "").slice(0, 10);
+      llamarDestinatario(numeroTelefono);
     }
   }, [visita.destinatario_telefono, llamarDestinatario]);
 
@@ -165,7 +166,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
             {hasTelefono ? (
               <TouchableOpacity
                 style={styles.phoneButton}
-                onPress={handleCallPhone}
+                onPress={LlamarTelefono}
                 activeOpacity={0.7}
               >
                 <XStack items="center" gap="$2">
@@ -178,7 +179,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
                     fontSize="$2"
                     fontWeight="500"
                   >
-                    {visita.destinatario_telefono}
+                    {visita.destinatario_telefono.replace(/\s+/g, "").slice(0, 10)}
                   </Text>
                 </XStack>
               </TouchableOpacity>
