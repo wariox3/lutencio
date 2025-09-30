@@ -17,7 +17,6 @@ import { Linking, Platform, TouchableOpacity, StyleSheet } from "react-native";
 import { Card, Separator, Text, View, XStack, YStack } from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
-import CardLlamarDestinatario from "./card-llamar-destinatario";
 
 // Componente optimizado para evitar re-renders innecesarios
 const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
@@ -39,10 +38,52 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   );
   const { obtenerColor } = useTemaVisual();
 
+  // Memoizar la función para llamar al destinatario
+  const llamarDestinatario = useCallback((telefono: string) => {
+    // Validate phone number format
+    const isValidPhoneNumber =
+      /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im.test(telefono);
+
+    if (!isValidPhoneNumber) {
+      mostrarAlertHook({
+        titulo: alertas.titulo.advertencia,
+        mensaje: alertas.mensaje.numeroNoValido,
+      });
+      return;
+    }
+
+    // Create the appropriate URL scheme based on platform
+    const phoneUrl = Platform.select({
+      ios: `telprompt:${telefono}`,
+      android: `tel:${telefono}`,
+      default: `tel:${telefono}`,
+    });
+
+    Linking.canOpenURL(phoneUrl)
+      .then((supported) => {
+        return Linking.openURL(phoneUrl);
+      })
+      .catch((error) => {
+        console.error("Error al intentar realizar la llamada:", error);
+        mostrarAlertHook({
+          titulo: alertas.titulo.error,
+          mensaje:
+            "No se pudo realizar la llamada. Por favor intente más tarde.",
+        });
+      });
+  }, []);
+
   // Memoizar la función para manejar el onPress
   const handlePress = useCallback(() => {
     onPress(visita.id);
   }, [visita.id, onPress]);
+
+  // Memoizar el handler para llamar al teléfono del destinatario
+  const handleCallPhone = useCallback(() => {
+    if (visita.destinatario_telefono) {
+      llamarDestinatario(visita.destinatario_telefono);
+    }
+  }, [visita.destinatario_telefono, llamarDestinatario]);
 
   return (
     <Card
@@ -122,7 +163,25 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
           <XStack items="center" gap="$3">
             {/* Teléfono */}
             {hasTelefono ? (
-              <CardLlamarDestinatario telefono={visita.destinatario_telefono} destinatario={visita.destinatario} numero={visita.numero} />
+              <TouchableOpacity
+                style={styles.phoneButton}
+                onPress={handleCallPhone}
+                activeOpacity={0.7}
+              >
+                <XStack items="center" gap="$2">
+                  <Phone
+                    size="$1"
+                    color={obtenerColor("AZUL_FUERTE", "BLANCO")}
+                  />
+                  <Text
+                    color={obtenerColor("AZUL_FUERTE", "BLANCO")}
+                    fontSize="$2"
+                    fontWeight="500"
+                  >
+                    {visita.destinatario_telefono}
+                  </Text>
+                </XStack>
+              </TouchableOpacity>
             ) : (
               <View />
             )}
