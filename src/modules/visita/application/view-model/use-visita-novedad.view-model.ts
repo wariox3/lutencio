@@ -129,6 +129,7 @@ export default function useVisitaNovedadViewModel() {
           estado_sincronizada_error: false,
           estado_sincronizada_error_mensaje: "",
           estado_sincronizado_codigo: 0,
+          estado_entregado: false
         })
       );
 

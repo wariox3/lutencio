@@ -15,6 +15,7 @@ import {
 } from "../slice/entrega.slice";
 import { networkMonitor } from "@/src/core/services/network-monitor.service";
 import { Alert } from "react-native";
+import { changeNovedadEstadoEntregado } from "@/src/modules/novedad/application/store/novedad.slice";
 
 type VisitaFormType = {
   recibe: string;
@@ -161,7 +162,6 @@ export default function useVisitaFormularioViewModel() {
 
   const guardarEntregaLocal = async (data: VisitaFormType, dispatch: any) => {
     // Agregar imágenes a entregas seleccionadas
-    
     entregasSeleccionadas.forEach((visitaId) => {
       const imagenesEntrega: { uri: string }[] = []
       const firmaEntrega = state.firmarBase64 ? state.firmarBase64 : null
@@ -189,9 +189,10 @@ export default function useVisitaFormularioViewModel() {
       } else {
         dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: false, codigo: 0, mensaje: "" }));
       }
-       
       dispatch(cambiarEstadoSincronizado({ visitaId, nuevoEstado: false }));
       dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
+      dispatch(changeNovedadEstadoEntregado({ visitaId, nuevoEstado: true }));
+      
       dispatch(quitarEntregaSeleccionada(visitaId));
     });
 

@@ -21,6 +21,20 @@ const novedadSlice = createSlice({
     addNovedad: (state, action: PayloadAction<Novedad>) => {
       state.novedades.push(action.payload);
     },
+    changeNovedadEstadoEntregado: (
+      state,
+      action: PayloadAction<{ visitaId: number; nuevoEstado: boolean }>
+    ) => {
+       state.novedades = state.novedades.map((novedad) => {
+        if (novedad.visita_id === action.payload.visitaId) {
+          return {
+            ...novedad,
+            estado_entregado: action.payload.nuevoEstado,
+          };
+        }
+        return novedad;
+      });
+    } ,
     changeEstadoSincronizado: (
       state,
       action: PayloadAction<{ id: string; nuevoEstado: boolean }>
@@ -72,5 +86,6 @@ export const {
   changeEstadoSincronizado,
   changeEstadoSincronizadoError,
   changeSincronizandoNovedades,
+  changeNovedadEstadoEntregado
 } = novedadSlice.actions;
 export default novedadSlice.reducer;

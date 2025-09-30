@@ -37,5 +37,8 @@ export const selectSincronizandoNovedades = createSelector(
 
 export const selectCantidadNovedades = createSelector(
   [selectNovedades],
-  (novedades) => novedades.novedades.length
+  (novedades) => {
+    const novedadesFiltradas = novedades.novedades.filter(novedad => !novedad.estado_entregado);
+    return novedadesFiltradas.length;
+  }
 );

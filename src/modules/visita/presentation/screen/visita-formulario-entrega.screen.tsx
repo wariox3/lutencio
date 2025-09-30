@@ -40,7 +40,7 @@ const VisitaFormularioEntregaScreen = () => {
         flex={1}
         rowGap="$4"
         px="$4"
-        pb={insets.bottom + 80} // 👈 hereda de Tamagui + espacio extra
+        pb={insets.bottom + 80}
         bg={obtenerColor("BLANCO", "NEGRO")}
         contentContainerStyle={{
           rowGap: "$4",
