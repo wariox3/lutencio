@@ -74,6 +74,14 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
 
   // Memoizar la función para manejar el onPress
   const handlePress = useCallback(() => {
+    if(visita.estado_novedad){
+      mostrarAlertHook({
+        titulo: alertas.titulo.advertencia,
+        mensaje: "No se puede seleccionar una visita con novedad.",
+      });
+      return;
+    }
+
     onPress(visita.id);
   }, [visita.id, onPress]);
 
