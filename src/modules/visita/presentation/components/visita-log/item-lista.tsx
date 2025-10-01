@@ -23,7 +23,7 @@ import {
   XStack,
   YStack,
 } from "tamagui";
-import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista-log";
+import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista-log.interface";
 import { Animated, Pressable } from "react-native";
 import { useAppDispatch } from "@/src/application/store/hooks";
 import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";

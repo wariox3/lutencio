@@ -2,7 +2,7 @@ import APIS from "@/src/core/api/domain/constants/endpoint.constant";
 import apiService from "@/src/core/api/repositories";
 import { VerticalRepository } from "../../domain/interfaces/vertical-repository.interface";
 import { EntregaVertical } from "../../domain/interfaces/entrega.interface";
-import { VerticalVersionRuteo } from "../../domain/interfaces/version-ruteo";
+import { VerticalVersionRuteo } from "../../domain/interfaces/version-ruteo.interface";
 
 export class VerticalApiRepository implements VerticalRepository {
   async getEntregaPorCodigo(codigo: string) {

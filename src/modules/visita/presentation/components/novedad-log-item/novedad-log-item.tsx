@@ -2,7 +2,7 @@ import COLORES from "@/src/core/constants/colores.constant";
 import { Check, X } from "@tamagui/lucide-icons";
 import React from "react";
 import { Card, Separator, Text, View, XStack, YStack } from "tamagui";
-import { ItemNovedadListaProps } from "../../../domain/interfaces/visita-novedad-item-lista-log";
+import { ItemNovedadListaProps } from "../../../domain/interfaces/visita-novedad-item-lista-log.interface";
 
 const NovedadLogItem: React.FC<ItemNovedadListaProps> = ({ novedad }) => {
   return (
