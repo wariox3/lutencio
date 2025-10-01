@@ -1,9 +1,10 @@
 import { RootState } from "@/src/application/store/root-reducer";
 import { selectAllNovedades } from "@/src/modules/novedad/application/store/novedad.selector";
 import { createSelector } from "@reduxjs/toolkit";
+import { Entrega } from "../../domain/interfaces/vista.interface";
 
 const selectEntregas = (state: RootState) => state.entregas;
-
+const selectEntregasSeleccionadas = (state: RootState) => state.entregas.entregasSeleccionadas;
 const selectFiltros = (state: RootState) => state.entregas.filtros;
 
 export const obtenerVisitasLog = createSelector(
@@ -150,4 +151,13 @@ export const selectCantidadVisitasTotal = createSelector(
 export const selectCantidadVisitasConError400 = createSelector(
   [selectVisitasConError400],
   (entregas) => entregas.length
+);
+
+
+export const selectInformacionEntregasSeleccionadas = createSelector(
+  [selectEntregasSeleccionadas, selectEntregas],
+  (entregasSeleccionadas, entregasState) =>
+    entregasSeleccionadas
+      .map((id) => entregasState.entregas.find((entrega) => entrega.id === id))
+      .filter((entrega): entrega is Entrega => entrega !== undefined)
 );

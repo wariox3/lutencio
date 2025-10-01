@@ -11,11 +11,12 @@ import {
   cambiarEstadoSincronizado,
   cambiarEstadoSincronizadoError,
   entregasProcesadas,
-  quitarEntregaSeleccionada
+  quitarEntregaSeleccionada,
 } from "../slice/entrega.slice";
 import { networkMonitor } from "@/src/core/services/network-monitor.service";
 import { Alert } from "react-native";
 import { changeNovedadEstadoEntregado } from "@/src/modules/novedad/application/store/novedad.slice";
+import { selectInformacionEntregasSeleccionadas } from "../slice/entrega.selector";
 
 type VisitaFormType = {
   recibe: string;
@@ -32,6 +33,9 @@ export default function useVisitaFormularioViewModel() {
   const { obtenerFechaYHoraActualFormateada } = useFecha();
   const entregasSeleccionadas = useAppSelector(
     ({ entregas }) => entregas.entregasSeleccionadas || []
+  );
+  const informacionEntregasSeleccionadas = useAppSelector(
+    selectInformacionEntregasSeleccionadas
   );
   const { obtenerColor } = useTemaVisual();
   const router = useRouter();
@@ -101,14 +105,14 @@ export default function useVisitaFormularioViewModel() {
       Alert.alert("Error", "No se recibió una imagen válida.");
       return;
     }
-  
+
     try {
       // 1. Guardar la foto en el dispositivo
       const nuevaUri = await guardarArchivo(uri);
       if (!nuevaUri) {
         throw new Error("No se pudo guardar la imagen en el dispositivo.");
       }
-  
+
       // 2. Actualizar el estado de forma segura (función updater)
       actualizarState({
         arrImagenes: [...state.arrImagenes, { uri: nuevaUri }],
@@ -119,7 +123,6 @@ export default function useVisitaFormularioViewModel() {
       console.error("handleCapture error:", error);
     }
   };
-
 
   const handleFirma = async (firma: string) => {
     const nuevaUri = await guardarArchivo(firma);
@@ -163,36 +166,52 @@ export default function useVisitaFormularioViewModel() {
   const guardarEntregaLocal = async (data: VisitaFormType, dispatch: any) => {
     // Agregar imágenes a entregas seleccionadas
     entregasSeleccionadas.forEach((visitaId) => {
-      const imagenesEntrega: { uri: string }[] = []
-      const firmaEntrega = state.firmarBase64 ? state.firmarBase64 : null
+      const imagenesEntrega: { uri: string }[] = [];
+      const firmaEntrega = state.firmarBase64 ? state.firmarBase64 : null;
       state.arrImagenes?.forEach((imagen) => {
-        imagenesEntrega.push({ uri: imagen.uri })
+        imagenesEntrega.push({ uri: imagen.uri });
       });
 
-      dispatch(actualizarEntrega({
-        entregaId: visitaId,
-        camposActualizados: {
-          firmarBase64: firmaEntrega,
-          fecha_entrega: obtenerFechaYHoraActualFormateada(),
-          arrImagenes: imagenesEntrega,
-          datosAdicionales: {
-            recibe: data.recibe,
-            recibeParentesco: data.parentesco,
-            recibeNumeroIdentificacion: data.numeroIdentificacion,
-            recibeCelular: data.celular,
+      dispatch(
+        actualizarEntrega({
+          entregaId: visitaId,
+          camposActualizados: {
+            firmarBase64: firmaEntrega,
+            fecha_entrega: obtenerFechaYHoraActualFormateada(),
+            arrImagenes: imagenesEntrega,
+            datosAdicionales: {
+              recibe: data.recibe,
+              recibeParentesco: data.parentesco,
+              recibeNumeroIdentificacion: data.numeroIdentificacion,
+              recibeCelular: data.celular,
+            },
           },
-        },
-      }));
+        })
+      );
 
-      if(!networkMonitor.isConnected()){
-        dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: true, codigo: 500, mensaje: "" }));
+      if (!networkMonitor.isConnected()) {
+        dispatch(
+          cambiarEstadoSincronizadoError({
+            visitaId,
+            nuevoEstado: true,
+            codigo: 500,
+            mensaje: "",
+          })
+        );
       } else {
-        dispatch(cambiarEstadoSincronizadoError({ visitaId, nuevoEstado: false, codigo: 0, mensaje: "" }));
+        dispatch(
+          cambiarEstadoSincronizadoError({
+            visitaId,
+            nuevoEstado: false,
+            codigo: 0,
+            mensaje: "",
+          })
+        );
       }
       dispatch(cambiarEstadoSincronizado({ visitaId, nuevoEstado: false }));
       dispatch(cambiarEstadoEntrega({ visitaId, nuevoEstado: true }));
       dispatch(changeNovedadEstadoEntregado({ visitaId, nuevoEstado: true }));
-      
+
       dispatch(quitarEntregaSeleccionada(visitaId));
     });
 
@@ -203,6 +222,7 @@ export default function useVisitaFormularioViewModel() {
   return {
     control,
     entregasSeleccionadas,
+    informacionEntregasSeleccionadas,
     state,
     handleCapture,
     isLoading,
