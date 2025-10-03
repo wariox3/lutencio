@@ -68,6 +68,12 @@ const cardTelefonoDestinatario = ({
     setOpen(true);
   }, [numerosUnicos, abrirLlamada]);
 
+    // ✅ mostrar un solo número o resumen
+    const textoTelefono =
+    numerosUnicos.length > 1
+      ? `${numerosUnicos[0].slice(0,10)} (+${numerosUnicos.length - 1})`
+      : numerosUnicos[0];
+
   return (
     <>
       <TouchableOpacity
@@ -82,7 +88,7 @@ const cardTelefonoDestinatario = ({
             fontSize="$2"
             fontWeight="500"
           >
-            {telefono}
+            {textoTelefono}
           </Text>
         </XStack>
       </TouchableOpacity>
@@ -127,6 +133,7 @@ const cardTelefonoDestinatario = ({
                 {destinatario} tiene más de un número.
               </Text>
               <XStack justify={"space-between"} flexWrap="wrap" gap="$2">
+                
                 {numerosUnicos.map((num) => (
                   <Button
                     key={num}
