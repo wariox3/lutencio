@@ -4,7 +4,13 @@ import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { Package, Phone } from "@tamagui/lucide-icons";
 import React, { useState, useCallback, useMemo } from "react";
-import { Platform, Linking, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  Platform,
+  Linking,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import {
   Dialog,
   Button,
@@ -16,7 +22,7 @@ import {
   Card,
 } from "tamagui";
 
-const extraerNumeros = (texto: string) => {  
+const extraerNumeros = (texto: string) => {
   return texto.match(/\+?\d{7,15}/g) || [];
 };
 
@@ -51,7 +57,7 @@ const cardTelefonoDestinatario = ({
 
   const llamarDestinatario = useCallback(() => {
     console.log(numerosUnicos);
-    
+
     if (numerosUnicos.length === 0) {
       mostrarAlertHook({
         titulo: alertas.titulo.advertencia,
@@ -68,10 +74,10 @@ const cardTelefonoDestinatario = ({
     setOpen(true);
   }, [numerosUnicos, abrirLlamada]);
 
-    // ✅ mostrar un solo número o resumen
-    const textoTelefono =
+  // ✅ mostrar un solo número o resumen
+  const textoTelefono =
     numerosUnicos.length > 1
-      ? `${numerosUnicos[0].slice(0,10)} (+${numerosUnicos.length - 1})`
+      ? `${numerosUnicos[0].slice(0, 10)} (+${numerosUnicos.length - 1})`
       : numerosUnicos[0];
 
   return (
@@ -132,28 +138,33 @@ const cardTelefonoDestinatario = ({
               <Text fontSize="$3" items="center" flexWrap="nowrap">
                 {destinatario} tiene más de un número.
               </Text>
-              <XStack justify={"space-between"} flexWrap="wrap" gap="$2">
-                
-                {numerosUnicos.map((num) => (
-                  <Button
-                    key={num}
-                    onPress={() => {
-                      setOpen(false);
-                      abrirLlamada(num);
-                    }}
-                    size="$4"
-                    theme="blue"
-                    icon={
-                      <Phone
-                        size={16}
-                        color={obtenerColor("AZUL_FUERTE", "AZUL_FUERTE")}
-                      />
-                    }
-                    flex={1}
-                  >
-                    {num}
-                  </Button>
-                ))}
+              <XStack>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ gap: 8, paddingHorizontal: 0 }}
+                >
+                  {numerosUnicos.map((num) => (
+                    <Button
+                      key={num}
+                      onPress={() => {
+                        setOpen(false);
+                        abrirLlamada(num);
+                      }}
+                      size="$4"
+                      theme="blue"
+                      icon={
+                        <Phone
+                          size={16}
+                          color={obtenerColor("AZUL_FUERTE", "AZUL_FUERTE")}
+                        />
+                      }
+                      style={{ minWidth: 150 }}
+                    >
+                      {num}
+                    </Button>
+                  ))}
+                </ScrollView>
               </XStack>
 
               <Dialog.Close asChild>
