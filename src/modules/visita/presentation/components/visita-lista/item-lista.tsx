@@ -17,6 +17,7 @@ import { Linking, Platform, TouchableOpacity, StyleSheet } from "react-native";
 import { Card, Separator, Text, View, XStack, YStack } from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista.interface";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
+import CardTelefonoDestinatario from "./card-telefono-destinatario";
 
 // Componente optimizado para evitar re-renders innecesarios
 const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
@@ -77,14 +78,6 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   const handlePress = useCallback(() => {
     onPress(visita.id);
   }, [visita.id, onPress]);
-
-  // Memoizar el handler para llamar al teléfono del destinatario
-  const LlamarTelefono = useCallback(() => {
-    if (visita.destinatario_telefono) {
-      const numeroTelefono = visita.destinatario_telefono.replace(/\D/g, "").slice(0, 10);
-      llamarDestinatario(numeroTelefono);
-    }
-  }, [visita.destinatario_telefono, llamarDestinatario]);
 
   return (
     <Card
@@ -164,30 +157,16 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
           <XStack items="center" gap="$3">
             {/* Teléfono */}
             {hasTelefono ? (
-              <TouchableOpacity
-                style={styles.phoneButton}
-                onPress={LlamarTelefono}
-                activeOpacity={0.7}
-              >
-                <XStack items="center" gap="$2">
-                  <Phone
-                    size="$1"
-                    color={obtenerColor("AZUL_FUERTE", "BLANCO")}
-                  />
-                  <Text
-                    color={obtenerColor("AZUL_FUERTE", "BLANCO")}
-                    fontSize="$2"
-                    fontWeight="500"
-                  >
-                    {visita.destinatario_telefono.replace(/\D/g, "").slice(0, 10)}
-                  </Text>
-                </XStack>
-              </TouchableOpacity>
+              <CardTelefonoDestinatario
+                telefono={visita.destinatario_telefono}
+                destinatario={visita.destinatario}
+                numero={visita.numero.toLocaleString()}
+              ></CardTelefonoDestinatario>
             ) : (
               <View />
             )}
             <YStack>
-              <XStack gap={'$1.5'}>
+              <XStack gap={"$1.5"}>
                 <Text
                   fontSize="$2"
                   fontWeight={"bold"}
@@ -202,7 +181,7 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
                   {visita.unidades}
                 </Text>
               </XStack>
-              <XStack gap={'$1.5'}>
+              <XStack gap={"$1.5"}>
                 <Text
                   fontSize="$2"
                   fontWeight={"bold"}
