@@ -6,17 +6,19 @@ import { Validaciones } from "@/src/core/constants";
 import { Controller } from "react-hook-form";
 import {
   Button,
+  H6,
   ScrollView,
   Spinner,
   Text,
   View,
   XStack,
-  YStack
+  YStack,
 } from "tamagui";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useVisitaNovedadViewModel from "../../application/view-model/use-visita-novedad.view-model";
 import React from "react";
 import { KeyboardAvoidingView, Platform } from "react-native";
+import CardInformacionVisita from "../components/form/card-informacion-visita";
 
 const VisitaNovedadScreen = () => {
   const {
@@ -28,7 +30,8 @@ const VisitaNovedadScreen = () => {
     isLoading,
     handleSubmit,
     novedadesTipo,
-    obtenerColor
+    obtenerColor,
+    informacionEntregasSeleccionadas,
   } = useVisitaNovedadViewModel();
 
   const insets = useSafeAreaInsets();
@@ -39,7 +42,6 @@ const VisitaNovedadScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
-      {/* Scroll con inputs */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentInsetAdjustmentBehavior="automatic"
@@ -52,6 +54,28 @@ const VisitaNovedadScreen = () => {
           rowGap: 16, // más natural para Tamagui
         }}
       >
+        <YStack mt="$4" mb="$2">
+          <H6 mb={"$0.75"}>Seleccionas</H6>
+          <XStack>
+            <ScrollView
+              horizontal
+              rowGap="$4"
+              contentContainerStyle={{
+                rowGap: "$2",
+              }}
+              showsHorizontalScrollIndicator={false}
+              contentInsetAdjustmentBehavior="automatic"
+              keyboardShouldPersistTaps="handled"
+            >
+              {informacionEntregasSeleccionadas.map((visita, index) => (
+                <CardInformacionVisita
+                  visita={visita}
+                  key={index.toLocaleString()}
+                ></CardInformacionVisita>
+              ))}
+            </ScrollView>
+          </XStack>
+        </YStack>
         <TextAreaInput
           name="descripcion"
           control={control}
@@ -89,7 +113,10 @@ const VisitaNovedadScreen = () => {
                 <Text>
                   Fotografías disponibles {state.arrImagenes.length} de 1
                   {state.exigeImagenEntrega ? (
-                    <Text color="red" paddingStart="$2"> *</Text>
+                    <Text color="red" paddingStart="$2">
+                      {" "}
+                      *
+                    </Text>
                   ) : null}
                 </Text>
                 {error && (

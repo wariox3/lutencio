@@ -15,7 +15,7 @@ import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { obtenerEntregasSeleccionadas } from "../slice/entrega.selector";
+import { obtenerEntregasSeleccionadas, selectInformacionEntregasSeleccionadas } from "../slice/entrega.selector";
 import { cambiarEstadoNovedad, quitarEntregaSeleccionada } from "../slice/entrega.slice";
 import { networkMonitor } from "@/src/core/services/network-monitor.service";
 
@@ -71,7 +71,9 @@ export default function useVisitaNovedadViewModel() {
     fotoSeleccionada: [],
   };
   const [state, setState] = useState(estadoInicial);
-
+  const informacionEntregasSeleccionadas = useAppSelector(
+    selectInformacionEntregasSeleccionadas
+  );
   const actualizarState = (newState: Partial<typeof state>) => {
     setState((prevState) => ({ ...prevState, ...newState }));
   };
@@ -172,5 +174,6 @@ export default function useVisitaNovedadViewModel() {
     novedadesTipo,
     obtenerColor,
     isLoading,
+    informacionEntregasSeleccionadas
   };
 }
