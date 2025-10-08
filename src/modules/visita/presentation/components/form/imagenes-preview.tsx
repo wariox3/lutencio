@@ -83,7 +83,7 @@ const EntregaImagenesPreview = ({
         >
           {/* Gradiente sutil para contraste del texto */}
           <LinearGradient
-            colors={["transparent", "rgba(0,0,0,0.6)"]}
+            colors={["transparent", "black"]}
             start={{ x: 0, y: 0.4 }}
             end={{ x: 0, y: 1 }}
             style={{
@@ -91,7 +91,7 @@ const EntregaImagenesPreview = ({
               bottom: 0,
               left: 0,
               right: 0,
-              height: 60,
+              height: 100,
               borderBottomLeftRadius: 16,
               borderBottomRightRadius: 16,
             }}
