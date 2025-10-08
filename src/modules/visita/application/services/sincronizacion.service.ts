@@ -41,7 +41,7 @@ export class SincronizacionService {
   private sincronizandoVisita = false;
   private sincronizandoNovedad = false;
   private storeRef: any = null;
-  private cancelarSync = false; 
+  private cancelarSync = false;
   private lastSyncAttemptEntrega: number = 0;
   private lastSyncAttemptNovedad: number = 0;
   private readonly MIN_SYNC_INTERVAL = 500; // Mínimo 0.5 segundos entre intentos
@@ -379,7 +379,7 @@ export class SincronizacionService {
                   codigo: 500,
                   nuevoEstado: true,
                   mensaje:
-                    "máximo de intentos alcanzado. No se pudo sincronizar.",
+                    "Conexión inestable. Intenta más tarde o conéctate a una red Wi-Fi.",
                 })
               );
             }
@@ -621,7 +621,6 @@ export class SincronizacionService {
       this.storeRef.dispatch(changeSincronizandoNovedades(false));
     }
   }
-
 
   public detenerSincronizacion(): void {
     console.log("🛑 Deteniendo sincronización en curso...");
