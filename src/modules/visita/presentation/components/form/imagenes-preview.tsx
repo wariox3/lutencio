@@ -6,7 +6,7 @@ import {
   ImageBackground,
   ListRenderItem,
 } from "react-native";
-import { Button, Text, View, YStack } from "tamagui";
+import { Button, Text, View, XStack, YStack } from "tamagui";
 import * as FileSystem from "expo-file-system";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -81,7 +81,7 @@ const EntregaImagenesPreview = ({
           }}
           imageStyle={{ borderRadius: 16 }}
         >
-          {/* Gradiente sutil para contraste del texto */}
+          {/* Gradiente inferior */}
           <LinearGradient
             colors={["transparent", "black"]}
             start={{ x: 0, y: 0.4 }}
@@ -91,7 +91,7 @@ const EntregaImagenesPreview = ({
               bottom: 0,
               left: 0,
               right: 0,
-              height: 100,
+              height: 80,
               borderBottomLeftRadius: 16,
               borderBottomRightRadius: 16,
             }}
@@ -112,17 +112,25 @@ const EntregaImagenesPreview = ({
             />
           )}
 
-          {/* Peso en la esquina inferior derecha */}
-          <Text
-            color="white"
-            fontSize={12}
-            position="absolute"
-            b={8}
-            r={12}
-            opacity={0.9}
+          {/* Texto inferior: "Imagen X" a la izquierda y peso a la derecha */}
+          <View
+            style={{
+              position: "absolute",
+              bottom: 8,
+              left: 10,
+              right: 10,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
           >
-            {pesos[item.uri] ?? "Calculando..."}
-          </Text>
+            <Text color="white" fontSize={14} opacity={0.95}>
+              Imagen {index + 1}
+            </Text>
+            <Text color="white" fontSize={14} opacity={0.9}>
+              {pesos[item.uri] ?? "Calculando..."}
+            </Text>
+          </View>
         </ImageBackground>
       </View>
     ),
