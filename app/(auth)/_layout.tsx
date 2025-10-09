@@ -3,7 +3,7 @@ import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { Settings } from "@tamagui/lucide-icons";
 import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { Pressable, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import "react-native-reanimated";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

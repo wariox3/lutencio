@@ -3,7 +3,6 @@ import { useTemaVisual } from '@/src/shared/hooks/useTemaVisual';
 import { SelectInputProps } from '@/src/shared/interface/forms';
 import { Picker } from '@react-native-picker/picker';
 import { Controller } from "react-hook-form";
-import { useColorScheme } from 'react-native';
 import { Label, Text, View } from "tamagui";
 
 

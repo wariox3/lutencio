@@ -1,7 +1,5 @@
-import React from "react";
-import { terminoStyles } from "../../stylesheet/terminos.stylesheet";
-import { ScrollView, Text, View } from "tamagui";
 import WebView from "react-native-webview";
+import { terminoStyles } from "../../stylesheet/terminos.stylesheet";
 
 export default function TerminosScreen() {
   return (

@@ -1,10 +1,8 @@
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { useNavigation } from "@react-navigation/native";
 import { Menu } from "@tamagui/lucide-icons";
-import React from "react";
-import { Pressable } from "react-native";
-import { useTemaVisual } from "../../hooks/useTemaVisual";
 import { Button } from "tamagui";
+import { useTemaVisual } from "../../hooks/useTemaVisual";
 
 const BtnMenuDrawer = () => {
   const navigation = useNavigation<DrawerNavigationProp<any>>();

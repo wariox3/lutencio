@@ -1,8 +1,6 @@
-import { tituloScreen } from "@/src/core/constants/titulo-screen.const";
 import BtnMenuDrewer from "@/src/shared/components/navegacion/btn-menu-drewer";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import { Stack } from "expo-router";
-import React from "react";
 
 export default function ProfileLayout() {
   const { obtenerColor } = useTemaVisual();

@@ -1,4 +1,3 @@
-import { ThemeName } from "tamagui";
 
 export interface BtnAccionProps {
   onPress: () => void;

@@ -1,22 +1,18 @@
 import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import {
-  AlertTriangle,
-  CheckCircle,
   CircleAlert,
   CircleUser,
-  Clock,
   DollarSign,
   MapPin,
-  Package,
-  Phone,
+  Package
 } from "@tamagui/lucide-icons";
 import React, { useCallback, useMemo } from "react";
-import { Linking, Platform, TouchableOpacity, StyleSheet } from "react-native";
+import { Linking, Platform, StyleSheet } from "react-native";
 import { Card, Separator, Text, View, XStack, YStack } from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista.interface";
-import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import CardTelefonoDestinatario from "./card-telefono-destinatario";
 
 // Componente optimizado para evitar re-renders innecesarios

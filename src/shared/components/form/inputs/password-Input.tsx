@@ -3,7 +3,7 @@ import { Eye, EyeOff } from "@tamagui/lucide-icons";
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
 import { Pressable } from "react-native";
-import { Button, Input, Label, Text, View, XStack } from "tamagui";
+import { Input, Label, Text, View, XStack } from "tamagui";
 
 export const PasswordInput: React.FC<PasswordInputProps> = ({
   name,

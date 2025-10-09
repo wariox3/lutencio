@@ -1,4 +1,3 @@
-import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { configuracionThunk } from "./configuracion.thunk";
 
