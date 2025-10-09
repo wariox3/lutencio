@@ -19,6 +19,7 @@ import {
 } from "tamagui";
 import useVisitaFormularioViewModel from "../../application/view-model/use-visita-formulario.view-model";
 import CardInformacionVisita from "../components/form/card-informacion-visita";
+import { Validaciones } from "@/src/core/constants";
 
 const VisitaFormularioEntregaScreen = () => {
   const {
@@ -109,6 +110,14 @@ const VisitaFormularioEntregaScreen = () => {
           isRequired={false}
           placeholder="000000"
           keyboardType="numeric"
+          rules={
+            {
+              pattern: {
+                value: /^[0-9]+$/,
+                message: Validaciones.comunes.soloNumeros,
+              },
+            }
+          }
         />
         <SelectInput
           name="parentesco"

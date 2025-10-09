@@ -7,6 +7,7 @@ export const Validaciones = {
     caracteresNoValidos: "Caracteres no permitidos",
     correoNoValido: "Correo no valido",
     clavesDiferentes: "Claves diferentes",
+    soloNumeros: "Solo se permiten números",
   },
 
 };
