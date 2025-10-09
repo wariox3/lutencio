@@ -4,9 +4,6 @@ import { ReusableSheetProps } from "../../interface/comun";
 import { useTemaVisual } from "../../hooks/useTemaVisual";
 
 type SnapPointsMode = "percent" | "constant" | "fit" | "mixed";
-
-const spModes: SnapPointsMode[] = ["percent", "constant", "fit", "mixed"];
-
 interface Props extends ReusableSheetProps {
   triggerContent?: React.ReactNode;
 }

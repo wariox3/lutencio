@@ -1,4 +1,4 @@
-import { AppState, AppStateStatus, Platform } from "react-native";
+import { AppState, AppStateStatus } from "react-native";
 import { Camera } from "expo-camera";
 import { useEffect, useState, useRef } from "react";
 

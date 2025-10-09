@@ -6,8 +6,7 @@ import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useMediaLibrary } from "@/src/shared/hooks/useMediaLibrary";
 import { Trash2 } from "@tamagui/lucide-icons";
 import * as FileSystem from "expo-file-system";
-import { useNavigation, useRouter } from "expo-router";
-import React from "react";
+import { useRouter } from "expo-router";
 import {
   FlatList
 } from "react-native";
@@ -16,9 +15,8 @@ import { obtenerEntregasPendientes } from "../../application/slice/entrega.selec
 import { quitarVisita } from "../../application/slice/entrega.slice";
 
 const VisitaPendienteScreen = () => {
-  const navigation = useNavigation();
   const router = useRouter();
-  const { deleteFileFromGallery, isDeleting, error } = useMediaLibrary();
+  const { deleteFileFromGallery } = useMediaLibrary();
   const dispatch = useAppDispatch();
 
   const arrEntregas = useAppSelector(obtenerEntregasPendientes);
@@ -27,13 +25,6 @@ const VisitaPendienteScreen = () => {
     router.navigate({
       pathname: rutasApp.vistaPendienteDetalle,
       params: { id: entregaId },
-    });
-  };
-
-  const navegarNovedadSolucion = (visita: Entrega) => {
-    router.push({
-      pathname: "/modal-novedad-solucion",
-      params: { id: visita.novedad_id, visita_id: visita.id },
     });
   };
 
