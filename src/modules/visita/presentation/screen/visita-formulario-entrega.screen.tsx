@@ -1,25 +1,23 @@
+import { parentescos } from "@/src/core/constants/parentesco.constant";
 import { EntregaCamara } from "@/src/modules/visita/presentation/components/form/camara";
 import { EntregaFirma } from "@/src/modules/visita/presentation/components/form/firma";
 import EntregaFirmaPreview from "@/src/modules/visita/presentation/components/form/firma-preview";
 import EntregaImagenesPreview from "@/src/modules/visita/presentation/components/form/imagenes-preview";
 import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
 import { SelectInput } from "@/src/shared/components/form/inputs/select-Input";
-import { parentescos } from "@/src/core/constants/parentesco.constant";
-import React from "react";
+import { KeyboardAvoidingView, Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Button,
-  H4,
   H6,
   ScrollView,
   Spinner,
   Text,
   View,
   XStack,
-  YStack,
+  YStack
 } from "tamagui";
 import useVisitaFormularioViewModel from "../../application/view-model/use-visita-formulario.view-model";
-import { KeyboardAvoidingView, Platform } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CardInformacionVisita from "../components/form/card-informacion-visita";
 
 const VisitaFormularioEntregaScreen = () => {
@@ -45,6 +43,7 @@ const VisitaFormularioEntregaScreen = () => {
       keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
     >
       <ScrollView
+        removeClippedSubviews={true}
         showsVerticalScrollIndicator={false}
         contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
@@ -79,14 +78,15 @@ const VisitaFormularioEntregaScreen = () => {
             </ScrollView>
           </XStack>
         </YStack>
-        <XStack justify={"space-between"}>
+        <XStack justify={"space-between"} items={'center'}>
           <Text>
             Fotografías disponibles {state.arrImagenes.length} de 5
             {state.exigeImagenEntrega ? <Text> Requerido * </Text> : null}
           </Text>
-          {state.arrImagenes.length <= 4 ? (
-            <EntregaCamara onCapture={handleCapture}></EntregaCamara>
-          ) : null}
+          <EntregaCamara
+            onCapture={handleCapture}
+            disabled={state.arrImagenes.length >= 5}
+          />
         </XStack>
         {state.arrImagenes.length > 0 ? (
           <EntregaImagenesPreview

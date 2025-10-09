@@ -88,6 +88,7 @@ export const useEliminarEnGaleria = () => {
   };
 };
 
+
 export const useGuardarEnGaleria = () => {
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -96,8 +97,9 @@ export const useGuardarEnGaleria = () => {
   const guardarArchivo = async (uri: string) => {
     setGuardando(true);
     setError(null);
+
     try {
-      // 1. Comprobar si la carpeta existe
+      //  Obtener subdominio para crear carpeta
       const subdominio = (await storageService.getItem(STORAGE_KEYS.subdominio)) as string;
       if (!subdominio) {
         Alert.alert("Error de configuración", "No se encontró el subdominio en el almacenamiento.");
@@ -108,32 +110,27 @@ export const useGuardarEnGaleria = () => {
       const carpetaInfo = await FileSystem.getInfoAsync(rutaCarpeta);
 
       if (!carpetaInfo.exists) {
-        try {
-          await FileSystem.makeDirectoryAsync(rutaCarpeta, { intermediates: true });
-        } catch (e) {
-          Alert.alert("Error al crear carpeta", "No fue posible crear la carpeta de destino.");
-          throw e;
-        }
+        await FileSystem.makeDirectoryAsync(rutaCarpeta, { intermediates: true });
       }
 
-      // 2. Definir el nombre del nuevo archivo
+      // Definir nombre y nueva ruta
       const nombreArchivo = uri.split("/").pop();
-      if (!nombreArchivo) {
-        Alert.alert("Error en archivo", "No se pudo obtener el nombre del archivo.");
-        throw new Error("No se pudo obtener el nombre del archivo");
-      }
+      if (!nombreArchivo) throw new Error("No se pudo obtener el nombre del archivo");
 
       const nuevaRuta = rutaCarpeta + nombreArchivo;
 
-      // 3. Copiar el archivo
+      // Copiar archivo desde caché → carpeta persistente
+      await FileSystem.copyAsync({ from: uri, to: nuevaRuta });
+
+      // Eliminar archivo temporal
       try {
-        await FileSystem.copyAsync({ from: uri, to: nuevaRuta });
+        await FileSystem.deleteAsync(uri, { idempotent: true });
+        if (__DEV__) console.log("🧹 Archivo temporal eliminado:", uri);
       } catch (e) {
-        Alert.alert("Error de copia", "No se pudo copiar el archivo en la ruta destino.");
-        throw e;
+        if (__DEV__) console.warn("⚠️ No se pudo eliminar el archivo temporal:", e);
       }
 
-      return nuevaRuta; // Devuelve la nueva ruta por si la necesitas
+      return nuevaRuta;
     } catch (error: any) {
       setError(error.message);
       Alert.alert("Error general", error.message || "Ha ocurrido un error inesperado.");
@@ -148,7 +145,8 @@ export const useGuardarEnGaleria = () => {
     guardando,
     error,
   };
-}
+};
+
 export const useProcesarImagenes = async (imagenes: Array<{ uri: string }>) => {
   const imagenesProcesadas: any[] = [];
   for (const imagen of imagenes) {

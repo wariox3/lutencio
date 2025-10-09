@@ -1,24 +1,34 @@
 import { Camera as CameraIcons, Circle } from "@tamagui/lucide-icons";
 import { Sheet } from "@tamagui/sheet";
-import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import React, { memo, useRef, useState, useCallback } from "react";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Keyboard, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, H4, Text, View } from "tamagui";
 
-const spModes = ["percent", "constant", "fit", "mixed"] as const;
-
-export const EntregaCamara = ({ onCapture }: { onCapture: (uri: string) => void }) => {
+export const EntregaCamara = ({
+  onCapture,
+  disabled = false,
+}: {
+  onCapture: (uri: string) => void;
+  disabled?: boolean;
+}) => {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState(0);
 
   const abrirCamara = useCallback(() => {
+    if (disabled) return; // Evita abrir si está deshabilitada
     Keyboard.dismiss();
     setOpen(true);
-  }, []);
+  }, [disabled]);
 
   return (
     <>
-      <Button icon={<CameraIcons size="$2" />} onPress={() => abrirCamara()} />
+      <Button
+        icon={<CameraIcons size="$2" />}
+        onPress={abrirCamara}
+        disabled={disabled}
+        opacity={disabled ? 0.5 : 1}
+      />
       <Sheet
         modal
         open={open}
@@ -30,6 +40,7 @@ export const EntregaCamara = ({ onCapture }: { onCapture: (uri: string) => void 
         onPositionChange={setPosition}
         zIndex={100_000}
         animation="medium"
+        unmountChildrenWhenHidden
       >
         <Sheet.Overlay
           animation="lazy"
@@ -47,23 +58,43 @@ export const EntregaCamara = ({ onCapture }: { onCapture: (uri: string) => void 
 };
 
 const SheetContentsEntregaCamara = memo(
-  ({ setOpen, onCapture }: { setOpen: (v: boolean) => void; onCapture: (uri: string) => void }) => {
+  ({
+    setOpen,
+    onCapture,
+  }: {
+    setOpen: (v: boolean) => void;
+    onCapture: (uri: string) => void;
+  }) => {
     const [permission, requestPermission] = useCameraPermissions();
     const cameraRef = useRef<any>(null);
+    const [isCapturing, setIsCapturing] = useState(false);
+
+    useEffect(() => {
+      return () => {
+        if (cameraRef.current) {
+          cameraRef.current.pausePreview?.();
+          cameraRef.current = null;
+        }
+      };
+    }, []);
 
     const tomarFoto = useCallback(async () => {
+      if (isCapturing) return;
+      setIsCapturing(true);
       try {
         if (cameraRef.current) {
-          setOpen(false); // UX: cerrar primero
           const photo = await cameraRef.current.takePictureAsync({
             skipProcessing: true,
           });
           onCapture(photo.uri);
+          setOpen(false);
         }
       } catch (error) {
         console.error("Error al tomar foto", error);
+      } finally {
+        setIsCapturing(false);
       }
-    }, [onCapture, setOpen]);
+    }, [isCapturing, onCapture, setOpen]);
 
     if (!permission) {
       return (
@@ -90,8 +121,16 @@ const SheetContentsEntregaCamara = memo(
       <View style={styles.container}>
         <CameraView style={styles.camera} ref={cameraRef} facing="back">
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={tomarFoto}>
-              <Circle size={64} color="red" mb={'$12'}/>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={tomarFoto}
+              disabled={isCapturing}
+            >
+              <Circle
+                size={64}
+                color={isCapturing ? "gray" : "red"}
+                mb={"$12"}
+              />
             </TouchableOpacity>
           </View>
         </CameraView>
