@@ -1,15 +1,20 @@
+import { useAppDispatch } from "@/src/application/store/hooks";
+import { alertas } from "@/src/core/constants";
 import COLORES from "@/src/core/constants/colores.constant";
+import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
+import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
 import {
   Check,
   DatabaseBackup,
-  TimerReset,
-  X as XIcon,
+  Eye,
   LoaderCircle,
   Package,
-  Eye,
+  TimerReset,
   Trash2,
+  X as XIcon,
 } from "@tamagui/lucide-icons";
 import React, { useEffect, useRef, useState } from "react";
+import { Animated, Pressable } from "react-native";
 import {
   Button,
   Card,
@@ -23,18 +28,12 @@ import {
   XStack,
   YStack,
 } from "tamagui";
-import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista-log.interface";
-import { Animated, Pressable } from "react-native";
-import { useAppDispatch } from "@/src/application/store/hooks";
-import useNetworkStatus from "@/src/shared/hooks/useNetworkStatus";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import {
   cambiarEstadoSincronizadoError,
   eliminarEntrega,
   entregasProcesadas,
 } from "../../../application/slice/entrega.slice";
-import MensajeFiltroAplicado from "../visita-filtros/mensaje-filtro-aplicado";
-import { alertas } from "@/src/core/constants";
+import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista-log.interface";
 
 const ItemListaLog: React.FC<ItemListaProps> = ({ visita }) => {
   const dispatch = useAppDispatch();

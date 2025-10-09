@@ -1,6 +1,4 @@
-import { alertas } from "@/src/core/constants/alertas.const";
 import COLORES from "@/src/core/constants/colores.constant";
-import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useTemaVisual } from "@/src/shared/hooks/useTemaVisual";
 import {
   CircleAlert,
@@ -10,7 +8,7 @@ import {
   Package
 } from "@tamagui/lucide-icons";
 import React, { useCallback, useMemo } from "react";
-import { Linking, Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Card, Separator, Text, View, XStack, YStack } from "tamagui";
 import { ItemListaProps } from "../../../domain/interfaces/visita-item-lista.interface";
 import CardTelefonoDestinatario from "./card-telefono-destinatario";
@@ -25,50 +23,12 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
     [visita.destinatario_telefono]
   );
   const hasCobro = useMemo(() => visita.cobro > 0, [visita.cobro]);
-  const hasEstadoEntregado = useMemo(
-    () => visita.estado_entregado,
-    [visita.estado_entregado]
-  );
+
   const hasEstadoNovedad = useMemo(
     () => visita.estado_novedad,
     [visita.estado_novedad]
   );
   const { obtenerColor } = useTemaVisual();
-
-  // Memoizar la función para llamar al destinatario
-  const llamarDestinatario = useCallback((telefono: string) => {
-    // Validate phone number format
-    const isValidPhoneNumber =
-      /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im.test(telefono);
-
-    if (!isValidPhoneNumber) {
-      mostrarAlertHook({
-        titulo: alertas.titulo.advertencia,
-        mensaje: alertas.mensaje.numeroNoValido,
-      });
-      return;
-    }
-
-    // Create the appropriate URL scheme based on platform
-    const phoneUrl = Platform.select({
-      ios: `telprompt:${telefono}`,
-      android: `tel:${telefono}`,
-      default: `tel:${telefono}`,
-    });
-
-    Linking.canOpenURL(phoneUrl)
-      .then((supported) => {
-        return Linking.openURL(phoneUrl);
-      })
-      .catch((error) => {
-        console.error("Error al intentar realizar la llamada:", error);
-        mostrarAlertHook({
-          titulo: alertas.titulo.error,
-          mensaje:
-            "No se pudo realizar la llamada. Por favor intente más tarde.",
-        });
-      });
-  }, []);
 
   // Memoizar la función para manejar el onPress
   const handlePress = useCallback(() => {

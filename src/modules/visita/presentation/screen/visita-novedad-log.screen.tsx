@@ -1,4 +1,3 @@
-import SinElementos from "@/src/modules/visita/presentation/components/visita-lista/sin-elementos";
 import { FlatList, Platform, RefreshControl, Text } from "react-native";
 import { View, YStack } from "tamagui";
 import useVisitaNovedadLogViewModel from "../../application/view-model/use-vista-novedad-log.view-model";

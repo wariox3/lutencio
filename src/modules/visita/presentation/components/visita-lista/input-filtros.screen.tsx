@@ -13,7 +13,7 @@ interface InputFiltrosProps {
 
 const InputFiltros: React.FC<InputFiltrosProps> = ({ onFilterChange, placeholder }) => {
   const [valorInput, setValorInput] = useState("");
-  const { esClaro, obtenerColor } = useTemaVisual();
+  const { esClaro } = useTemaVisual();
 
   const filtrarVisitas = (valor: string) => {
     setValorInput(valor);
