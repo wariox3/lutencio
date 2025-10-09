@@ -180,18 +180,6 @@ const ItemLista: React.FC<ItemListaProps> = ({ visita, onPress }) => {
   );
 };
 
-// Definir estilos para componentes nativos - memoizados para evitar recreaciones
-const styles = StyleSheet.create({
-  phoneButton: {
-    backgroundColor: COLORES.AZUL_SUAVE,
-    borderRadius: 8,
-    padding: 8,
-    paddingHorizontal: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-
 // Función de comparación personalizada para React.memo
 // Solo re-renderiza si cambian las propiedades importantes
 const areEqual = (prevProps: ItemListaProps, nextProps: ItemListaProps) => {

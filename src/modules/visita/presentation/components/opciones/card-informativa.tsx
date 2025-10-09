@@ -1,5 +1,5 @@
-import React, { ReactElement } from "react";
-import { Card, Text, XStack, YStack } from "tamagui";
+import { ReactElement } from "react";
+import { Card, Text, XStack } from "tamagui";
 
 interface CardInformativaProps {
   backgroundColor: any;

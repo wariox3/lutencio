@@ -1,7 +1,6 @@
 import { useState } from "react";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import storageService from "@/src/core/services/storage.service";
 import { STORAGE_KEYS } from "@/src/core/constants";
 import { Alert } from "react-native";
@@ -148,7 +147,7 @@ export const useGuardarEnGaleria = () => {
 };
 
 export const useProcesarImagenes = async (imagenes: Array<{ uri: string }>) => {
-  const imagenesProcesadas: any[] = [];
+  const imagenesProcesadas: any = [];
   for (const imagen of imagenes) {
     const fileInfo = await FileSystem.getInfoAsync(imagen.uri);
     if (!fileInfo.exists) {
