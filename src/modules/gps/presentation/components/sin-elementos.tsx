@@ -1,9 +1,7 @@
 import COLORES from "@/src/core/constants/colores.constant";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
-import { ChevronRight, FilePlus } from "@tamagui/lucide-icons";
 import { useRouter } from "expo-router";
-import React from "react";
-import { Card, H6, ListItem, Text, YGroup } from "tamagui";
+import { Card, H6, Text } from "tamagui";
 
 const SinElementos = () => {
   const router = useRouter();

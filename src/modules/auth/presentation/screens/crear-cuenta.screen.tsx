@@ -1,12 +1,9 @@
+import { Validaciones } from "@/src/core/constants";
 import { BasicInput } from "@/src/shared/components/form/inputs/basic-Input";
 import CheckInput from "@/src/shared/components/form/inputs/check-Input";
 import { PasswordInput } from "@/src/shared/components/form/inputs/password-Input";
-import React from "react";
-import { KeyboardAvoidingView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, H4, ScrollView, Spinner, View } from "tamagui";
+import { Button, ScrollView, Spinner } from "tamagui";
 import { useCrearCuentaViewModel } from "../../application/view-models/use-crear-cuenta.view-model";
-import { Validaciones } from "@/src/core/constants";
 
 const CrearCuentaScreen = () => {
   const { control, handleSubmit, submit, loading, obtenerColor } =
