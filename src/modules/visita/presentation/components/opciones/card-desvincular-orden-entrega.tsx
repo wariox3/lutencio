@@ -15,7 +15,6 @@ import {
   obtenerEntregasPendientesTodas,
   obtenerEntregasSeleccionadas,
   selectEntregadas,
-  selectEntregasSincronizadas,
 } from "../../../application/slice/entrega.selector";
 import {
   cambiarEstadoSeleccionado,
@@ -74,60 +73,84 @@ const CardDesvincularOrdenEntrega = ({
   };
 
   const retirarDespacho = async () => {
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status === "granted") {
-      // deterner servicio de la ubicación
+    console.log("🟡 [RETIRAR] Inicio del proceso de retiro...");
+  
+    try {
+      // 1️⃣ Permisos
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      console.log("🟢 [RETIRAR] Permisos MediaLibrary:", status);
+      if (status !== "granted") {
+        throw new Error("Permiso denegado para MediaLibrary");
+      }
+  
+      // 2️⃣ Detener seguimiento ubicación
+      console.log("🟢 [RETIRAR] Deteniendo tarea de seguimiento...");
       await detenerTareaSeguimientoUbicacion();
-
-      // post de seguimiento
+  
+      // 3️⃣ Seguimiento (POST)
+      console.log("🟢 [RETIRAR] Enviando seguimiento...");
       await dispatch(
         visitaSeguimientoThunk({
           cantidadCargadas: entregas.length,
           cantidadEntregasLocales: entregadasEntregadas.length,
           cantidadNovedadesLocales: cantidadNovedades,
-          cantidadNovedadesLocalesPendienteSinconizar: entregasPendientesTodas.length,
+          cantidadNovedadesLocalesPendienteSinconizar:
+            entregasPendientesTodas.length,
         })
       ).unwrap();
-
-      // Limpiar el despacho almacenado
+      console.log("🟢 [RETIRAR] Seguimiento enviado correctamente.");
+  
+      // 4️⃣ Limpiar almacenamiento
+      console.log("🟢 [RETIRAR] Limpiando almacenamiento local...");
       await storageService.removeItem(STORAGE_KEYS.despacho);
-      // Limpiar el subdominio almacenado
       await storageService.removeItem(STORAGE_KEYS.subdominio);
-      // Limpiar orden de entrega
       await storageService.removeItem(STORAGE_KEYS.ordenEntrega);
-
+  
+      // 5️⃣ Eliminar imágenes y firmas
+      console.log("🟢 [RETIRAR] Eliminando imágenes y firmas...");
       for (const entrega of entregas) {
         if (entrega.arrImagenes && entrega.arrImagenes.length > 0) {
           for (const img of entrega.arrImagenes) {
             const fileInfo = await FileSystem.getInfoAsync(img.uri);
             if (fileInfo.exists) {
+              console.log("   📸 Eliminando imagen:", img.uri);
               await eliminarArchivo(img.uri);
             }
           }
         }
-
-        //     //eliminar firma
+  
         if (entrega.firmarBase64) {
           const fileInfo = await FileSystem.getInfoAsync(entrega.firmarBase64);
           if (fileInfo.exists) {
+            console.log("   🖋️ Eliminando firma:", entrega.firmarBase64);
             await eliminarArchivo(entrega.firmarBase64);
           }
         }
       }
-
-      // retirar las entregas
+  
+      // 6️⃣ Limpiar Redux
+      console.log("🟢 [RETIRAR] Limpiando estados en Redux...");
       dispatch(quitarEntregas());
-
-      // retirar novedades
       dispatch(cleanNovedades());
-
-      // retirar entregas seleccionadas
       retirarSeleccionadas();
-
-      // retirar filtros
       retirarFiltros();
+  
+      console.log("✅ [RETIRAR] Proceso completado correctamente.");
+      setTimeout(() => {
+        close(); // cerrar después de 200ms
+      }, 200);
+    } catch (error) {
+      console.error("❌ [RETIRAR] Error detectado:", error);
+      mostrarAlertHook({
+        titulo: "Error durante el retiro",
+        mensaje:
+          error instanceof Error
+            ? error.message
+            : "Ocurrió un problema desconocido durante el retiro.",
+      });
     }
   };
+  
 
   const retirarSeleccionadas = () => {
     entregasSeleccionadas.map((entrega: number) => {

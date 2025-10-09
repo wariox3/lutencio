@@ -19,7 +19,7 @@ const CardTerminarEntrega = () => {
           desvincular el actual
         </Text>
         <CardDesvincularOrdenEntrega
-          close={() => ()=>{}}
+          close={() => {}}
           titulo="Terminar"
           mensaje="Retirar la orden de entrega actual y visitas"
           textoColor="VERDE_FUERTE"
