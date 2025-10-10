@@ -15,7 +15,7 @@ import {
   Text,
   View,
   XStack,
-  YStack
+  YStack,
 } from "tamagui";
 import useVisitaFormularioViewModel from "../../application/view-model/use-visita-formulario.view-model";
 import CardInformacionVisita from "../components/form/card-informacion-visita";
@@ -41,7 +41,7 @@ const VisitaFormularioEntregaScreen = () => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      keyboardVerticalOffset={100}
     >
       <ScrollView
         removeClippedSubviews={true}
@@ -58,7 +58,7 @@ const VisitaFormularioEntregaScreen = () => {
         }}
       >
         <YStack mt="$4" mb="$2">
-          <H6 mb={'$0.75'}>Seleccionas</H6>
+          <H6 mb={"$0.75"}>Seleccionas</H6>
           <XStack>
             <ScrollView
               horizontal
@@ -79,7 +79,7 @@ const VisitaFormularioEntregaScreen = () => {
             </ScrollView>
           </XStack>
         </YStack>
-        <XStack justify={"space-between"} items={'center'}>
+        <XStack justify={"space-between"} items={"center"}>
           <Text>
             Fotografías disponibles {state.arrImagenes.length} de 5
             {state.exigeImagenEntrega ? <Text> Requerido * </Text> : null}
@@ -110,14 +110,12 @@ const VisitaFormularioEntregaScreen = () => {
           isRequired={false}
           placeholder="000000"
           keyboardType="numeric"
-          rules={
-            {
-              pattern: {
-                value: /^[0-9]+$/,
-                message: Validaciones.comunes.soloNumeros,
-              },
-            }
-          }
+          rules={{
+            pattern: {
+              value: /^[0-9]+$/,
+              message: Validaciones.comunes.soloNumeros,
+            },
+          }}
         />
         <SelectInput
           name="parentesco"
@@ -150,18 +148,16 @@ const VisitaFormularioEntregaScreen = () => {
             removerFirma={removerFirma}
           ></EntregaFirmaPreview>
         ) : null}
+          <Button
+            theme="blue"
+            icon={isLoading ? () => <Spinner /> : undefined}
+            onPress={handleSubmit(guardarEntrega)}
+            disabled={isLoading}
+            mb={"$3"}
+          >
+            Entregar
+          </Button>
       </ScrollView>
-      <View p="$4" bg={obtenerColor("BLANCO", "NEGRO")}>
-        <Button
-          theme="blue"
-          icon={isLoading ? () => <Spinner /> : undefined}
-          onPress={handleSubmit(guardarEntrega)}
-          disabled={isLoading}
-          mb={"$2.5"}
-        >
-          Entregar
-        </Button>
-      </View>
     </KeyboardAvoidingView>
   );
 };
