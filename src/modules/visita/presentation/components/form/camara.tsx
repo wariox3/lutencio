@@ -3,7 +3,7 @@ import { Sheet } from "@tamagui/sheet";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Keyboard, StyleSheet, TouchableOpacity } from "react-native";
-import { Button, H4, Text, View } from "tamagui";
+import { Button, Text, View } from "tamagui";
 
 export const EntregaCamara = ({
   onCapture,
@@ -15,8 +15,8 @@ export const EntregaCamara = ({
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState(0);
 
-  const abrirCamara = useCallback(() => {
-    if (disabled) return; // Evita abrir si está deshabilitada
+  const abrirCamara = useCallback(async () => {
+    if (disabled) return;
     Keyboard.dismiss();
     setOpen(true);
   }, [disabled]);
@@ -42,12 +42,7 @@ export const EntregaCamara = ({
         animation="medium"
         unmountChildrenWhenHidden
       >
-        <Sheet.Overlay
-          animation="lazy"
-          bg="transparent"
-          enterStyle={{ opacity: 0 }}
-          exitStyle={{ opacity: 0 }}
-        />
+        <Sheet.Overlay bg="transparent" />
         <Sheet.Handle />
         <Sheet.Frame>
           <SheetContentsEntregaCamara setOpen={setOpen} onCapture={onCapture} />
@@ -65,7 +60,6 @@ const SheetContentsEntregaCamara = memo(
     setOpen: (v: boolean) => void;
     onCapture: (uri: string) => void;
   }) => {
-    const [permission, requestPermission] = useCameraPermissions();
     const cameraRef = useRef<any>(null);
     const [isCapturing, setIsCapturing] = useState(false);
 
@@ -95,27 +89,6 @@ const SheetContentsEntregaCamara = memo(
         setIsCapturing(false);
       }
     }, [isCapturing, onCapture, setOpen]);
-
-    if (!permission) {
-      return (
-        <View px="$4">
-          <H4 mb="$2">Información</H4>
-          <Text mb="$4">Cargando permisos...</Text>
-        </View>
-      );
-    }
-
-    if (!permission.granted) {
-      return (
-        <View px="$4">
-          <H4 mb="$2">Información</H4>
-          <Text mb="$4">Necesitamos tu permiso para usar la cámara.</Text>
-          <Button onPress={requestPermission} variant="outlined">
-            Conceder permiso
-          </Button>
-        </View>
-      );
-    }
 
     return (
       <View style={styles.container}>
