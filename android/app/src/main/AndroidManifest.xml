@@ -1,24 +1,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
   <!-- Permisos necesarios -->
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-  <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
-  <uses-permission android:name="android.permission.CAMERA"/>
-  <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-  <uses-permission android:name="android.permission.VIBRATE"/>
-  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-  <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
-  <!-- Permisos de almacenamiento / multimedia -->
-    <!-- Android 13- -->
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
-    <!-- Android 13+ -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+  <!-- PERMISOS DE UBICACIÓN -->
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- Acceso a ubicación aproximada (por WiFi y red móvil) -->
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- Acceso a ubicación precisa mediante GPS -->
+  <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/> <!-- Permite obtener ubicación incluso cuando la app está en segundo plano -->
+
+  <!-- SERVICIOS EN PRIMER PLANO -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> <!-- Permite ejecutar servicios en primer plano -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/> <!-- Permite que un servicio en primer plano acceda a la ubicación -->
+
+  <!-- PERMISOS DE CÁMARA E INTERNET -->
+  <uses-permission android:name="android.permission.CAMERA"/> <!-- Uso de la cámara del dispositivo -->
+  <uses-permission android:name="android.permission.INTERNET"/> <!-- Acceso a Internet (requerido para conexiones de red o APIs) -->
+
+  <!-- INTERFAZ Y NOTIFICACIONES -->
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> <!-- Mostrar ventanas o superposiciones sobre otras apps -->
+  <uses-permission android:name="android.permission.VIBRATE"/> <!-- Permitir vibración del dispositivo -->
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/> <!-- Mostrar notificaciones al usuario -->
+
+  <!-- PUBLICIDAD Y ANALÍTICA -->
+  <uses-permission android:name="com.google.android.gms.permission.AD_ID"/> <!-- Acceso al identificador de anuncios de Google -->
+
+  <!-- ALMACENAMIENTO Y MULTIMEDIA -->
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> <!-- Leer archivos del almacenamiento externo -->
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- Escribir archivos en el almacenamiento externo -->
+<uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/> <!-- Acceder a datos de ubicación de archivos multimedia (fotos, vídeos, etc.) -->
 
   <!-- Consultas de intent -->
   <queries>
