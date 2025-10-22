@@ -43,9 +43,6 @@ PODS:
     - ExpoModulesCore
   - ExpoLocation (18.0.10):
     - ExpoModulesCore
-  - ExpoMediaLibrary (17.0.6):
-    - ExpoModulesCore
-    - React-Core
   - ExpoModulesCore (2.2.3):
     - DoubleConversion
     - glog
@@ -2034,7 +2031,6 @@ DEPENDENCIES:
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoLinking (from `../node_modules/expo-linking/ios`)
   - ExpoLocation (from `../node_modules/expo-location/ios`)
-  - ExpoMediaLibrary (from `../node_modules/expo-media-library/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoNetwork (from `../node_modules/expo-network/ios`)
   - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
@@ -2170,8 +2166,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-linking/ios"
   ExpoLocation:
     :path: "../node_modules/expo-location/ios"
-  ExpoMediaLibrary:
-    :path: "../node_modules/expo-media-library/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoNetwork:
@@ -2357,7 +2351,6 @@ SPEC CHECKSUMS:
   ExpoLinearGradient: 35ebd83b16f80b3add053a2fd68cc328ed927f60
   ExpoLinking: 8d12bee174ba0cdf31239706578e29e74a417402
   ExpoLocation: de58a60756fad907139ec422ccabb1ba734e080d
-  ExpoMediaLibrary: 2709fc2e4fcf87d28767714abcc603c4bec228c6
   ExpoModulesCore: c25d77625038b1968ea1afefc719862c0d8dd993
   ExpoNetwork: 16083eb5ed34ce1c8e916fb6292fdb6e9daac0ca
   ExpoSplashScreen: 8261985ce9778f904abc7e31bed3538dce67ed4d
