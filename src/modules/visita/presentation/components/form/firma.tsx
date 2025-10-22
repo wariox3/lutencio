@@ -20,8 +20,6 @@ export const EntregaFirma = ({
   const [modal] = useState(true);
   const [snapPointsMode] = useState<(typeof spModes)[number]>("percent");
   const snapPoints = [100];
-  const [hasMediaLibraryPermission, setHasMediaLibraryPermission] =
-    useState<boolean>(false);
   const { obtenerColor } = useTemaVisual();
 
   return (
@@ -83,13 +81,6 @@ const SheetContentsEntregaCamara = memo(({ setOpen, onCapture }: any) => {
       await FileSystem.writeAsStringAsync(fileUri, base64Code, {
         encoding: FileSystem.EncodingType.Base64,
       });
-
-      // const { status } = await MediaLibrary.requestPermissionsAsync();
-      // if (status !== "granted") {
-      //   alert("❌ Permiso denegado para acceder a la galería");
-      //   return;
-      // }
-      //const asset = await MediaLibrary.createAssetAsync(fileUri);
       onCapture(fileUri);
       //setOpen(false);
     } catch (error) {

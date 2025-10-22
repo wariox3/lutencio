@@ -65,14 +65,6 @@
           "locationWhenInUsePermission": "$(PRODUCT_NAME) necesita tu ubicación mientras usas la app para mostrar contenido relevante cercano."
         }
       ],
-      [
-        "expo-media-library",
-        {
-          "photosPermission": "$(PRODUCT_NAME) necesita acceder a tus fotos para que puedas seleccionarlas desde tu galería.",
-          "savePhotosPermission": "Permite que $(PRODUCT_NAME) guarde fotos o archivos en tu galería.",
-          "isAccessMediaLocationEnabled": true
-        }
-      ],
       "expo-file-system"
     ],
     "experiments": {

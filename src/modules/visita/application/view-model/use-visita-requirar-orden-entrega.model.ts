@@ -5,7 +5,6 @@ import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
 import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 import { detenerTareaSeguimientoUbicacion } from "@/utils/services/locationService";
 import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
 import { cleanNovedades } from "@/src/modules/novedad/application/store/novedad.slice";
 import {
   obtenerEntregasPendientesTodas,
@@ -88,16 +87,10 @@ export const useRetirarDespachoViewModel = (close: () => void) => {
   const retirarDespacho = async () => {
     console.log("🟡 [RETIRAR] Inicio del proceso de retiro...");
     try {
-      // 1️⃣ Permisos MediaLibrary
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== "granted") {
-        throw new Error("Permiso denegado para acceder a la galería.");
-      }
-
-      // 2️⃣ Detener seguimiento
+      // Detener seguimiento
       await detenerTareaSeguimientoUbicacion();
 
-      // 3️⃣ Enviar seguimiento (con timeout de seguridad)
+      // Enviar seguimiento (con timeout de seguridad)
       await Promise.race([
         dispatch(
           visitaSeguimientoThunk({

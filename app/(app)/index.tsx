@@ -1,15 +1,13 @@
 import { networkMonitor } from "@/src/core/services/network-monitor.service";
 import { useCameraPermissions } from "expo-camera";
 import * as Location from "expo-location";
-import * as MediaLibrary from "expo-media-library";
 import { Redirect } from "expo-router";
 import { useEffect } from "react";
 import { PermissionsAndroid, Platform } from "react-native";
 
 export default function MainDreawerIndex() {
   const [permission, requestCamaraPermission] = useCameraPermissions();
-  const [permissionResponse, requestMadiaPermission] =
-    MediaLibrary.usePermissions();
+
 
   useEffect(() => {
     solicitarPermiso();
@@ -27,8 +25,6 @@ export default function MainDreawerIndex() {
     await Location.requestForegroundPermissionsAsync();
     //permiso localización
     await Location.requestBackgroundPermissionsAsync();
-    //Permiso multimedia
-    await requestMadiaPermission();
 
     if (Platform.OS === "android") {
       try {

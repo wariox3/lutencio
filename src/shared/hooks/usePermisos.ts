@@ -1,6 +1,5 @@
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
-import * as MediaLibrary from "expo-media-library";
 import { PermissionsAndroid, Platform } from "react-native";
 
 export const usePermisos = () => {
@@ -21,12 +20,6 @@ export const usePermisos = () => {
             // Permiso ubicación background
             const { status: bgLocStatus } = await Location.requestBackgroundPermissionsAsync();
             if (bgLocStatus !== "granted") {
-                return false;
-            }
-
-            // Permiso multimedia
-            const { status: mediaStatus } = await MediaLibrary.requestPermissionsAsync();
-            if (mediaStatus !== "granted") {
                 return false;
             }
 

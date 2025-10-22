@@ -3,7 +3,6 @@ import { alertas } from "@/src/core/constants/alertas.const";
 import { rutasApp } from "@/src/core/constants/rutas.constant";
 import { Entrega } from "@/src/modules/visita/domain/interfaces/vista.interface";
 import { mostrarAlertHook } from "@/src/shared/hooks/useAlertaGlobal";
-import { useMediaLibrary } from "@/src/shared/hooks/useMediaLibrary";
 import { Trash2 } from "@tamagui/lucide-icons";
 import * as FileSystem from "expo-file-system";
 import { useRouter } from "expo-router";
@@ -13,10 +12,11 @@ import {
 import { Button, Card, Text, View, XStack } from "tamagui";
 import { obtenerEntregasPendientes } from "../../application/slice/entrega.selector";
 import { quitarVisita } from "../../application/slice/entrega.slice";
+import { useEliminarEnGaleria } from "@/src/shared/hooks/useMediaLibrary";
 
 const VisitaPendienteScreen = () => {
   const router = useRouter();
-  const { deleteFileFromGallery } = useMediaLibrary();
+  const { eliminarArchivo } = useEliminarEnGaleria();
   const dispatch = useAppDispatch();
 
   const arrEntregas = useAppSelector(obtenerEntregasPendientes);
@@ -41,13 +41,13 @@ const VisitaPendienteScreen = () => {
       if (visita.arrImagenes?.length > 0) {
         for (const img of visita.arrImagenes) {
           const fileInfo = await FileSystem.getInfoAsync(img.uri);
-          if (fileInfo.exists) await deleteFileFromGallery(img.uri);
+          if (fileInfo.exists) await eliminarArchivo(img.uri);
         }
       }
 
       if (visita.firmarBase64) {
         const fileInfo = await FileSystem.getInfoAsync(visita.firmarBase64);
-        if (fileInfo.exists) await deleteFileFromGallery(visita.firmarBase64);
+        if (fileInfo.exists) await eliminarArchivo(visita.firmarBase64);
       }
       dispatch(quitarVisita({ entregaId: visita.id }));
     } catch (error: any) {
